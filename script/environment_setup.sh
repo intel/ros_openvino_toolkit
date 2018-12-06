@@ -5,9 +5,9 @@ set -euxo pipefail
 if [[ -n "$1" && -n "$2" ]]; then
 	HOST_NAME=$1
 	ROOT_PASSWD=$2
-	echo "set sudo password to $ROOT_PASSWD and your hostname is $HOST_NAME"
+	echo "set sudo password to $ROOT_PASSWD and your username is $HOST_NAME"
 else
-        echo "you have to input your hostname and sudo password!"
+        echo "you have to input your username and sudo password!"
         echo "    for example:./environment_setup.sh username password"
 	exit
 fi
