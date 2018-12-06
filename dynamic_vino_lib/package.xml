@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<!--
+Copyright (c) 2018 Intel Corporation
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+     http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<package>
+  <name>dynamic_vino_lib</name>
+  <version>0.3.0</version>
+  <description>a ROS wrapper package for Intel OpenVINO</description>
+  <author email="wei.zhi.liu@intel.com">Weizhi Liu</author>
+  <author email="chao1.li@intel.com">Chao Li</author>
+  <maintainer email="wei.zhi.liu@intel.com">Weizhi Liu</maintainer>
+  <maintainer email="chao1.li@intel.com">Chao Li</maintainer>
+  <license>Apache License 2.0</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>roslint</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>image_transport</build_depend>
+  <build_depend>cv_bridge</build_depend>
+  <build_depend>object_msgs</build_depend>
+  <build_depend>people_msgs</build_depend>
+  <build_depend>vino_param_lib</build_depend>
+
+  <run_depend>roscpp</run_depend>
+  <run_depend>roslint</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>image_transport</run_depend>
+  <run_depend>cv_bridge</run_depend>
+  <run_depend>object_msgs</run_depend>
+  <run_depend>people_msgs</run_depend>
+  <run_depend>vino_param_lib</run_depend>
+</package>
