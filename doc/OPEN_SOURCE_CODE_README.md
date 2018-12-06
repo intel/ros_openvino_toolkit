@@ -43,7 +43,7 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 - Install ROS Kinetic Desktop-Full [(guide)](http://wiki.ros.org/kinetic/Installation/Ubuntu)
 
 - Install OpenVINO™ Toolkit Open Source
-	* Install [OpenCV3: 3.3 or later](https://docs.opencv.org/master/d9/df8/tutorial_root.html)([guide](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html))
+	* Install [OpenCV 3.x: 3.3 or later](https://docs.opencv.org/master/d9/df8/tutorial_root.html)([guide](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html))
 	```
 	[compiler] sudo apt-get install build-essential
 	[required] sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
@@ -79,6 +79,7 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	mkdir ~/code && cd ~/code
 	git clone https://github.com/opencv/dldt.git
 	cd dldt/inference-engine/
+        git checkout 2018_R3
 	./install_dependencies.sh
 	mkdir build && cd build
 	cmake -DCMAKE_BUILD_TYPE=Release ..
@@ -91,6 +92,7 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	cd ~/code
 	git clone https://github.com/opencv/open_model_zoo.git
 	cd open_model_zoo/demos/
+        git checkout e238a1ac6bfacf133be223dd9debade7bfcf7dc5
 	mkdir build && cd build
 	cmake -DCMAKE_BUILD_TYPE=Release /opt/openvino_toolkit/dldt/inference-engine
 	make -j8
@@ -181,11 +183,11 @@ roslaunch vino_launch pipeline_with_param.launch
 - Face Detection:
 ```/openvino_toolkit/faces```([object_msgs:msg:ObjectsInBoxes](https://github.com/intel/object_msgs/blob/master/msg/ObjectsInBoxes.msg))
 - Emotion Detection:
-```/openvino_toolkit/emotions```([people_msgs:msg:EmotionsStamped](https://github.com/intel/openvino_toolkit/blob/master/people_msgs/msg/EmotionsStamped.msg))
+```/openvino_toolkit/emotions```([people_msgs:msg:EmotionsStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/EmotionsStamped.msg))
 - Age and Gender Detection:
-```/openvino_toolkit/age_genders```([people_msgs:msg:AgeGenderStamped](https://github.com/intel/openvino_toolkit/blob/master/people_msgs/msg/AgeGenderStamped.msg))
+```/openvino_toolkit/age_genders```([people_msgs:msg:AgeGenderStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/AgeGenderStamped.msg))
 - Head Pose:
-```/openvino_toolkit/headposes```([people_msgs:msg:HeadPoseStamped](https://github.com/intel/_openvino_toolkit/blob/master/people_msgs/msg/HeadPoseStamped.msg))
+```/openvino_toolkit/headposes```([people_msgs:msg:HeadPoseStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/HeadPoseStamped.msg))
 
 ## 7. Known Issues
 
