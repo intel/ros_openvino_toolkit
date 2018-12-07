@@ -32,15 +32,15 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
   3. Openvino: Download the install package, install_GUI.sh inside will check the GPU information before installation.
 
 ## 3. Environment Setup
-**Note**:You can choose to build the environment using *./environment_setup.sh* script in the script subfolder.
+**Note**:You can choose to build the environment using *./environment_setup_binary.sh* script in the script subfolder.
 ```bash
-./environment_setup_binary.sh hostname password
+./environment_setup_binary.sh username password
 ```
 **Note**:You can also choose to follow the steps below to build the environment step by step.
 
 - Install ROS Kinetic Desktop-Full ([guide](http://wiki.ros.org/kinetic/Installation/Ubuntu))
 
-- Install [OpenVINO™ Toolkit](https://software.intel.com/en-us/openvino-toolkit) ([guide](https://software.intel.com/en-us/articles/OpenVINO-Install-Linux))
+- Install [OpenVINO™ Toolkit](https://software.intel.com/en-us/openvino-toolkit) ([guide](https://software.intel.com/en-us/articles/OpenVINO-Install-Linux)). Choose "2018 R3" when download tarball.
 
 	**Note**: Please use  *root privileges* to run the installer when installing the core components.
 - Install OpenCL Driver for GPU
