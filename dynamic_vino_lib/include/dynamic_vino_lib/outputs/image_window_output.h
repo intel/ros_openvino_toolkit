@@ -73,6 +73,13 @@ class ImageWindowOutput : public BaseOutput
    * @param[in] An age gender detection result objetc.
    */
   void accept(const std::vector<dynamic_vino_lib::AgeGenderResult>&) override;
+  /**
+   * @brief Generate image window output content according to
+   * the object detection result.
+   * @param[in] An object detection result objetc.
+   */
+  void accept(const std::vector<dynamic_vino_lib::ObjectDetectionResult>&) override;
+
 
  private:
   void initOutputs(unsigned size);

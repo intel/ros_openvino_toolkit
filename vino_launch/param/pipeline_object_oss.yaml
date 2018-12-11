@@ -1,0 +1,22 @@
+Pipelines:
+- name: object
+  inputs: [StandardCamera]
+  infers:
+    - name: ObjectDetection
+      model: /opt/openvino_toolkit/open_model_zoo/model_downloader/Security/object_detection/crossroad/0078/dldt/person-vehicle-bike-detection-crossroad-0078.xml 
+      engine: CPU
+      label: to/be/set/xxx.labels
+      batch: 16
+  outputs: [ImageWindow, RosTopic, RViz]
+  confidence_threshold: 0.2
+  connects:
+    - left: StandardCamera
+      right: [ObjectDetection]
+    - left: ObjectDetection
+      right: [ImageWindow]
+    - left: ObjectDetection
+      right: [RosTopic]
+    - left: ObjectDetection
+      right: [RViz]
+
+OpenvinoCommon:

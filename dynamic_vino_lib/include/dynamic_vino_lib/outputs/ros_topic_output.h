@@ -86,6 +86,13 @@ class RosTopicOutput : public BaseOutput
    * @param[in] An head pose detection result objetc.
    */
   void accept(const std::vector<dynamic_vino_lib::HeadPoseResult>&) override;
+  /**
+   * @brief Generate ros topic infomation according to
+   * the headpose detection result.
+   * @param[in] An head pose detection result objetc.
+   */
+  void accept(const std::vector<dynamic_vino_lib::ObjectDetectionResult>&) override;
+
 
  private:
   std_msgs::Header getHeader();
@@ -101,6 +108,9 @@ class RosTopicOutput : public BaseOutput
   std::shared_ptr<people_msgs::AgeGenderStamped> age_gender_msg_ptr_;
   ros::Publisher pub_headpose_;
   std::shared_ptr<people_msgs::HeadPoseStamped> headpose_msg_ptr_;
+  ros::Publisher pub_object_;
+  std::shared_ptr<object_msgs::ObjectsInBoxes> object_msg_ptr_;
+
 };
 }  // namespace Outputs
 #endif  // DYNAMIC_VINO_LIB_OUTPUTS_ROS_TOPIC_OUTPUT_H
