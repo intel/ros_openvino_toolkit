@@ -16,4 +16,4 @@ Only OpenVINO <b>R3</b> release is supported currently. See more from [Release N
 **Note**:  
 Two methods are provided to install the OpenVINO™ toolkit:  
 Install from Binary version [OpenVINO™](https://software.intel.com/en-us/openvino-toolkit) toolkit, please refer to [BINARY_VERSION_README.md](https://github.com/intel/ros_openvino_toolkit/blob/master/doc/BINARY_VERSION_README.md).  
-Install from OpenVINO toolkit open source code, please refer to [OPEN_SOURCE_CODE_README.md](https://github.com/intel/ros_openvino_toolkit/blob/master/doc/OPEN_SOURCE_CODE_README.md)
+Install from OpenVINO toolkit [open source code](https://github.com/opencv/dldt), please refer to [OPEN_SOURCE_CODE_README.md](https://github.com/intel/ros_openvino_toolkit/blob/master/doc/OPEN_SOURCE_CODE_README.md)
