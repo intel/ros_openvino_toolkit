@@ -30,6 +30,7 @@
 #include "dynamic_vino_lib/inferences/emotions_detection.h"
 #include "dynamic_vino_lib/inferences/face_detection.h"
 #include "dynamic_vino_lib/inferences/head_pose_detection.h"
+#include "dynamic_vino_lib/inferences/object_detection.h"
 #include "opencv2/opencv.hpp"
 
 class Pipeline;
@@ -48,6 +49,13 @@ class BaseOutput
   BaseOutput()
   {
   };
+  /**
+  * @brief Generate output content according to the face detection result.
+  */
+  virtual void accept(
+      const std::vector<dynamic_vino_lib::ObjectDetectionResult>&) 
+  {
+  }
   /**
    * @brief Generate output content according to the face detection result.
    */

@@ -52,8 +52,6 @@
 #include "dynamic_vino_lib/outputs/ros_topic_output.h"
 #include "dynamic_vino_lib/pipeline.h"
 #include "dynamic_vino_lib/slog.h"
-#include "extension/ext_list.hpp"
-#include "gflags/gflags.h"
 #include "inference_engine.hpp"
 #include "mkldnn/mkldnn_extension_ptr.hpp"
 #include "opencv2/opencv.hpp"
@@ -74,7 +72,7 @@ bool parseAndCheckCommandLine(int argc, char** argv)
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "pipeline_with_params");
+  ros::init(argc, argv, "sample_pipeline_people");
   ros::NodeHandle n;
   std::string content;
   std::string prefix_path;
