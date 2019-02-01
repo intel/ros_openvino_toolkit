@@ -95,13 +95,17 @@ int main(int argc, char* argv[])
 
     Params::ParamManager::getInstance().parse(FLAGS_config);
     Params::ParamManager::getInstance().print();
+
+    auto pcommon = Params::ParamManager::getInstance().getCommon();
     auto pipelines = Params::ParamManager::getInstance().getPipelines();
     if (pipelines.size() < 1) {
       throw std::logic_error("Pipeline parameters should be set!");
     }
 
     FLAGS_i = pipelines[0].inputs[0];
+    FLAGS_d = pipelines[0].infers[0].engine;
     FLAGS_m = pipelines[0].infers[0].model;
+    FLAGS_c = pcommon.custom_cldnn_library;
 
     // ----------- 1. Load Plugin for inference engine
     //std::unique_ptr<InferenceEngine::InferencePlugin> plugin = Factory::makePluginByName(
