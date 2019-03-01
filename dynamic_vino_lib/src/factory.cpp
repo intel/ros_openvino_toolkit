@@ -80,9 +80,9 @@ std::shared_ptr<InferenceEngine::InferencePlugin> Factory::makePluginByName(
       // CPU(MKLDNN) extensions are loaded as a shared library and passed as a
       // pointer to base
       // extension
-      auto extension_ptr = InferenceEngine::make_so_pointer<InferenceEngine::MKLDNNPlugin::IMKLDNNExtension>(
+      auto extension_ptr = InferenceEngine::make_so_pointer<InferenceEngine::IExtension>(
           custom_cpu_library_message);
-      plugin.AddExtension(std::static_pointer_cast<InferenceEngine::IExtension>(extension_ptr));
+       plugin.AddExtension(extension_ptr);
     }
   }
   else if (!custom_cldnn_message.empty())

@@ -55,7 +55,6 @@
 #include "extension/ext_list.hpp"
 #include "gflags/gflags.h"
 #include "inference_engine.hpp"
-#include "mkldnn/mkldnn_extension_ptr.hpp"
 #include "opencv2/opencv.hpp"
 #include "sample/utility.hpp"
 
