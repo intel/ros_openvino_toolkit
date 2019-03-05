@@ -135,6 +135,25 @@ target_link_libraries(sample_pipeline_object
   ${OpenCV_LIBRARIES}
 )
 
+add_executable(pipeline_with_params
+  src/pipeline_with_params.cpp
+)
+
+add_dependencies(pipeline_with_params
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${dynamic_vino_lib_TARGETS}
+)
+
+target_link_libraries(pipeline_with_params
+  ${catkin_LIBRARIES}
+  cpu_extension
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
+
 if(UNIX OR APPLE)
   # Linker flags.
   if( ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Intel")

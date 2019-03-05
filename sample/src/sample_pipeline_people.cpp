@@ -258,7 +258,7 @@ int main(int argc, char** argv)
       {
         ros::spin();
       }
-      pipe.runOnce(FLAGS_i);
+      pipe.runOnce();
     }
 
     slog::info << "Execution successful" << slog::endl;
