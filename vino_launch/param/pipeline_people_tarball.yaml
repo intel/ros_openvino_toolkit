@@ -22,18 +22,18 @@ Pipelines:
       engine: GPU
       label: to/be/set/xxx.labels
       batch: 16
-  outputs: [ImageWindow, RosTopic]
+  outputs: [ImageWindow, RosTopic, RViz]
   confidence_threshold: 0.2
   connects:
     - left: RealSenseCamera
       right: [face_detection]
     - left: face_detection
-      right: [age_gender_detection, emotion_detection, head_pose_detection, ImageWindow, RosTopic]
+      right: [age_gender_detection, emotion_detection, head_pose_detection, ImageWindow, RosTopic, RViz]
     - left: age_gender_detection
-      right: [ImageWindow, RosTopic]
+      right: [ImageWindow, RosTopic, RViz]
     - left: emotion_detection
-      right: [ImageWindow, RosTopic]
+      right: [ImageWindow, RosTopic, RViz]
     - left: head_pose_detection
-      right: [ImageWindow, RosTopic]
+      right: [ImageWindow, RosTopic, RViz]
 
 OpenvinoCommon:
