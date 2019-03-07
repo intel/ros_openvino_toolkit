@@ -30,7 +30,6 @@
 #include "dynamic_vino_lib/common.h"
 #include "dynamic_vino_lib/inputs/base_input.h"
 #include "extension/ext_list.hpp"
-#include "mkldnn/mkldnn_extension_ptr.hpp"
 
 /**
 * @class Factory

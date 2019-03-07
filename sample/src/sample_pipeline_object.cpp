@@ -52,7 +52,6 @@
 #include "dynamic_vino_lib/slog.h"
 #include "inference_engine.hpp"
 #include "librealsense2/rs.hpp"
-#include "mkldnn/mkldnn_extension_ptr.hpp"
 #include "opencv2/opencv.hpp"
 #include "sample/utility.hpp"
 
