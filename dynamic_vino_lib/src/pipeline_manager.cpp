@@ -193,6 +193,9 @@ PipelineManager::parseInference(
     else if (infer.name == kInferTpye_ObjectSegmentation) {
       object = createObjectSegmentation(infer);
     }
+    else if (infer.name == kInferTpye_PersonReidentification) {
+      object = createPersonReidentification(infer);
+    } 
     else {
       slog::err << "Invalid inference name: " << infer.name << slog::endl;
     }
@@ -301,6 +304,22 @@ PipelineManager::createObjectSegmentation(const Params::ParamManager::InferenceP
   return segmentation_inference_ptr;
 }
 
+std::shared_ptr<dynamic_vino_lib::BaseInference>
+PipelineManager::createPersonReidentification(
+  const Params::ParamManager::InferenceParams & infer)
+{
+  auto person_reidentification_model =
+    std::make_shared<Models::PersonReidentificationModel>(infer.model, 1, 1, infer.batch);
+  person_reidentification_model->modelInit();
+  auto person_reidentification_engine = std::make_shared<Engines::Engine>(
+    plugins_for_devices_[infer.engine], person_reidentification_model);
+  auto reidentification_inference_ptr =
+    std::make_shared<dynamic_vino_lib::PersonReidentification>(infer.confidence_threshold);
+  reidentification_inference_ptr->loadNetwork(person_reidentification_model);
+  reidentification_inference_ptr->loadEngine(person_reidentification_engine);
+
+  return reidentification_inference_ptr;
+}
 
 void PipelineManager::threadPipeline(const char* name) {
   PipelineData& p = pipelines_[name];

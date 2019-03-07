@@ -289,6 +289,32 @@ void Outputs::ImageWindowOutput::accept(
   mergeMask(results);
 }
 
+unsigned Outputs::ImageWindowOutput::findOutput(
+  const cv::Rect & result_rect)
+{
+  for (unsigned i = 0; i < outputs_.size(); i++) {
+    if (outputs_[i].rect == result_rect) {
+      return i;
+    }
+  }
+  OutputData output;
+  output.desc = "";
+  output.scalar = cv::Scalar(255, 0, 0);
+  outputs_.push_back(output);
+  return outputs_.size() - 1;
+}
+
+void Outputs::ImageWindowOutput::accept(
+  const std::vector<dynamic_vino_lib::PersonReidentificationResult> & results)
+{
+  for (unsigned i = 0; i < results.size(); i++) {
+    cv::Rect result_rect = results[i].getLocation();
+    unsigned target_index = findOutput(result_rect);
+    outputs_[target_index].rect = result_rect;
+    outputs_[target_index].desc += "[" + results[i].getPersonID() + "]";
+  }
+}
+
 void Outputs::ImageWindowOutput::decorateFrame()
 {
   if (getPipeline()->getParameters()->isGetFps())

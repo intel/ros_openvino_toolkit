@@ -32,6 +32,7 @@
 #include "dynamic_vino_lib/inferences/head_pose_detection.h"
 #include "dynamic_vino_lib/inferences/object_detection.h"
 #include "dynamic_vino_lib/inferences/object_segmentation.h"
+#include "dynamic_vino_lib/inferences/person_reidentification.h"
 #include "opencv2/opencv.hpp"
 
 class Pipeline;
@@ -87,6 +88,12 @@ class BaseOutput
    * @brief Generate output content according to the object segmentation result.
    */
   virtual void accept(const std::vector<dynamic_vino_lib::ObjectSegmentationResult>&)
+  {
+  }
+  /**
+  * @brief Generate output content according to the person reidentification result.
+  */
+  virtual void accept(const std::vector<dynamic_vino_lib::PersonReidentificationResult> &)
   {
   }
   /**

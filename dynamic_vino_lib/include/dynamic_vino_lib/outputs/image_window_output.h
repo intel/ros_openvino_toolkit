@@ -89,14 +89,21 @@ class ImageWindowOutput : public BaseOutput
    * @param[in] An object segmentation result objetc.
    */
   void accept(const std::vector<dynamic_vino_lib::ObjectSegmentationResult>&) override;
-  /**
+   /**
+   * @brief Generate image window output content according to
+   * the person re-ID result.
+   * @param[in] An object segmentation result objetc.
+   */
+  void accept(const std::vector<dynamic_vino_lib::PersonReidentificationResult> &) override;
+ /**
    * @brief Merge mask for image window ouput
    * the object segmentation result.
    * @param[in] An object segmentation result objetc.
    */
   void mergeMask(const std::vector<dynamic_vino_lib::ObjectSegmentationResult> &);
-
  private:
+
+  unsigned findOutput(const cv::Rect &);
   void initOutputs(unsigned size);
   /**
    * @brief Calculate the axises of the coordinates for showing
