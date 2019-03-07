@@ -66,7 +66,6 @@ bool Pipeline::add(const std::string& parent, const std::string& name,
   next_.insert({parent, name});
 
   /**< Add pipeline instance to Output instance >**/
-  this->printPipeline();
   output->setPipeline(this);
   return true;
 }
