@@ -42,7 +42,7 @@ int Outputs::BaseOutput::getFPS() const
 
 void Outputs::BaseOutput::setPipeline(Pipeline* const pipeline)
 {
-  pipeline->printPipeline();
+  //pipeline->printPipeline();
   pipeline_ = pipeline;
 }
 

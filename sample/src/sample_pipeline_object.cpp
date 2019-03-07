@@ -178,13 +178,9 @@ int main(int argc, char* argv[])
     slog::info << "Pass Pipeline Init." << slog::endl;
 
     // ------- 5. Run Pipeline -----------
-    auto node = input_ptr->getHandler();
     while (cv::waitKey(1) < 0 )
     {
-      if (node != nullptr)
-      {
-        ros::spin();
-      }
+      ros::spinOnce();
       pipe.runOnce(FLAGS_i);
     }
 
