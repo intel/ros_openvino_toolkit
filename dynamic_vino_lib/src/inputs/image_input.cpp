@@ -30,6 +30,7 @@ Input::Image::Image(const std::string& file)
 
 bool Input::Image::initialize()
 {
+  setFrameID("image_frame");
   image_ = cv::imread(file_);
   if (image_.data != NULL)
   {

@@ -107,11 +107,28 @@ class BaseInputDevice : public Ros2Handler
   {
     is_init_ = is_init;
   }
+  /**
+   * @brief Set the frame_id of input device for ROSTopic outputs.
+   * @param[in] frame_id The frame_id of input device.
+   */
+  inline void setFrameID(std::string frame_id)
+  {
+    frame_id_ = frame_id;
+  }
+  /**
+   * @brief Get the frame_id of input device.
+   * @return Frame_id of input device.
+   */
+  inline std::string getFrameID()
+  {
+    return frame_id_;
+  }
 
  private:
   size_t width_ = 0;
   size_t height_ = 0;
   bool is_init_ = false;
+  std::string frame_id_;
 };
 }  // namespace Input
 #endif  // DYNAMIC_VINO_LIB_INPUTS_BASE_INPUT_H

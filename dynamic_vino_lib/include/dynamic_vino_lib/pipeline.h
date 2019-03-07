@@ -100,7 +100,11 @@ class Pipeline
   {
     return params_;
   };
-
+  std::shared_ptr<Input::BaseInputDevice> getInputDevice()
+  {
+    return input_device_;
+  }
+  
  private:
   void initInferenceCounter();
   void increaseInferenceCounter();

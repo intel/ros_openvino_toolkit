@@ -50,6 +50,7 @@
 #include "dynamic_vino_lib/inputs/realsense_camera_topic.h"
 #include "dynamic_vino_lib/outputs/image_window_output.h"
 #include "dynamic_vino_lib/outputs/ros_topic_output.h"
+#include "dynamic_vino_lib/outputs/rviz_output.h"
 #include "dynamic_vino_lib/pipeline.h"
 #include "dynamic_vino_lib/slog.h"
 #include "inference_engine.hpp"
@@ -174,6 +175,7 @@ int main(int argc, char** argv)
     std::string window_name = "Results";
     auto output_ptr = std::make_shared<Outputs::ImageWindowOutput>(window_name);
     auto ros_topic_output_ptr = std::make_shared<Outputs::RosTopicOutput>();
+    auto rviz_output_ptr = std::make_shared<Outputs::RvizOutput>();
 
     // ----- 3. Generate Inference Instance-----------------------------------
     // generate face detection inference
@@ -239,13 +241,18 @@ int main(int argc, char** argv)
     pipe.add("age_gender_detection", "ros_output", ros_topic_output_ptr);
     pipe.add("headpose_detection", "ros_output", ros_topic_output_ptr);
 
+    pipe.add("face_detection", "rviz_output", rviz_output_ptr);
+    pipe.add("emotions_detection", "rviz_output", rviz_output_ptr);
+    pipe.add("age_gender_detection", "rviz_output", rviz_output_ptr);
+    pipe.add("headpose_detection", "rviz_output", rviz_output_ptr);
+
     pipe.setCallback();
     pipe.printPipeline();
     // ------ 5. Run Pipeline -----------------------------------
 
     auto node = input_ptr->getHandler();
 
-    while (cv::waitKey(1) < 0 && cvGetWindowHandle(window_name.c_str()))
+    while (cv::waitKey(1) < 0) //&& cvGetWindowHandle(window_name.c_str()))
     {
       if (node != nullptr)
       {

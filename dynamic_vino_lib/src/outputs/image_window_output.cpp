@@ -29,7 +29,6 @@ Outputs::ImageWindowOutput::ImageWindowOutput(const std::string& window_name,
                                               int focal_length)
     : window_name_(window_name), focal_length_(focal_length)
 {
-  cv::namedWindow(window_name, cv::WINDOW_AUTOSIZE);
 }
 
 void Outputs::ImageWindowOutput::feedFrame(const cv::Mat& frame)
@@ -232,7 +231,7 @@ void Outputs::ImageWindowOutput::accept(
   }
 }
 
-void Outputs::ImageWindowOutput::handleOutput()
+void Outputs::ImageWindowOutput::decorateFrame()
 {
   if (getPipeline()->getParameters()->isGetFps())
   {
@@ -254,9 +253,14 @@ void Outputs::ImageWindowOutput::handleOutput()
     cv::line(frame_, o.hp_zs, o.hp_ze, cv::Scalar(255, 0, 0), 2);
     cv::circle(frame_, o.hp_ze, 3, cv::Scalar(255, 0, 0), 2);
   }
-  cv::imshow(window_name_, frame_);
 
   outputs_.clear();
+}
+void Outputs::ImageWindowOutput::handleOutput()
+{
+  cv::namedWindow(window_name_, cv::WINDOW_AUTOSIZE);
+  decorateFrame();
+  cv::imshow(window_name_, frame_);
 }
 
 void Outputs::ImageWindowOutput::initOutputs(unsigned size)
