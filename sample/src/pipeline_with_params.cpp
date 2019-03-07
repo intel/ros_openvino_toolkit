@@ -76,8 +76,9 @@ int main(int argc, char** argv)
 {
 
   ros::init(argc, argv, "sample_with_params"); 
+  
+  std::string FLAGS_config;
   ros::param::param<std::string>("~param_file", FLAGS_config, "/param/pipeline_people.yaml");
-
   slog::info << "FLAGS_config=" << FLAGS_config << slog::endl;
 
   try
