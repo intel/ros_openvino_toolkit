@@ -253,7 +253,7 @@ int main(int argc, char** argv)
     while (cv::waitKey(1) < 0) //&& cvGetWindowHandle(window_name.c_str()))
     {
       ros::spinOnce();
-      pipe.runOnce(FLAGS_i);
+      pipe.runOnce();
     }
 
     slog::info << "Execution successful" << slog::endl;

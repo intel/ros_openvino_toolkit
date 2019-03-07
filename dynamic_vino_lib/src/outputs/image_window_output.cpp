@@ -261,7 +261,10 @@ void Outputs::ImageWindowOutput::handleOutput()
   cv::namedWindow(window_name_, cv::WINDOW_AUTOSIZE);
   decorateFrame();
   cv::imshow(window_name_, frame_);
-  cv::waitKey(1);
+  if( cv::waitKey(1) > 0)
+  {
+     ros::shutdown();
+  }
 }
 
 void Outputs::ImageWindowOutput::initOutputs(unsigned size)

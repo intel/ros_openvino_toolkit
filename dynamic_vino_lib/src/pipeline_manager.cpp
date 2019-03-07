@@ -271,7 +271,7 @@ PipelineManager::createObjectDetection(
 
 void PipelineManager::threadPipeline(const char* name) {
   PipelineData& p = pipelines_[name];
-  while (p.state == PipelineState_ThreadRunning && p.pipeline != nullptr) {
+  while (p.state == PipelineState_ThreadRunning && p.pipeline != nullptr && ros::ok()) {
     for (auto& node : p.spin_nodes) {
       ros::spinOnce();
     }
