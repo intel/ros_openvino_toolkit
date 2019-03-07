@@ -248,17 +248,12 @@ int main(int argc, char** argv)
 
     pipe.setCallback();
     pipe.printPipeline();
+
     // ------ 5. Run Pipeline -----------------------------------
-
-    auto node = input_ptr->getHandler();
-
     while (cv::waitKey(1) < 0) //&& cvGetWindowHandle(window_name.c_str()))
     {
-      if (node != nullptr)
-      {
-        ros::spin();
-      }
-      pipe.runOnce();
+      ros::spinOnce();
+      pipe.runOnce(FLAGS_i);
     }
 
     slog::info << "Execution successful" << slog::endl;
