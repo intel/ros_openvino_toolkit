@@ -250,7 +250,7 @@ int main(int argc, char** argv)
     pipe.printPipeline();
 
     // ------ 5. Run Pipeline -----------------------------------
-    while (cv::waitKey(1) < 0) //&& cvGetWindowHandle(window_name.c_str()))
+    while (cv::waitKey(1) < 0 && ros::ok())
     {
       ros::spinOnce();
       pipe.runOnce(FLAGS_i);
