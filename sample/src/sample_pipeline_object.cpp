@@ -178,7 +178,7 @@ int main(int argc, char* argv[])
     slog::info << "Pass Pipeline Init." << slog::endl;
 
     // ------- 5. Run Pipeline -----------
-    while (cv::waitKey(1) < 0 )
+    while (cv::waitKey(1) < 0 && ros::ok())
     {
       ros::spinOnce();
       pipe.runOnce(FLAGS_i);
