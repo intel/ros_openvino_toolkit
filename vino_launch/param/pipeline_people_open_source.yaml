@@ -28,7 +28,7 @@ Pipelines:
     - left: RealSenseCamera
       right: [face_detection]
     - left: face_detection
-      right: [age_gender_detection, emotion_detection, head_pose_detection, ImageWindow, RosTopic,Rviz]
+      right: [age_gender_detection, emotion_detection, head_pose_detection, ImageWindow, RosTopic, Rviz]
     - left: age_gender_detection
       right: [ImageWindow, RosTopic,RViz]
     - left: emotion_detection

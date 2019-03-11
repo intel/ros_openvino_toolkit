@@ -77,6 +77,7 @@ class ParamManager  // singleton
     std::vector<std::string> inputs;
     std::vector<std::string> outputs;
     std::multimap<std::string, std::string> connects;
+    std::string input_meta;
   };
   struct CommonParams
   {

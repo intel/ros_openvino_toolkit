@@ -35,6 +35,26 @@
 #include "opencv2/opencv.hpp"
 #include "vino_param_lib/param_manager.h"
 
+
+const char kInputType_Image[] = "Image";
+const char kInputType_Video[] = "Video";
+const char kInputType_StandardCamera[] = "StandardCamera";
+const char kInputType_CameraTopic[] = "RealSenseCameraTopic";
+const char kInputType_RealSenseCamera[] = "RealSenseCamera";
+const char kInputType_ServiceImage[] = "ServiceImage";
+
+const char kOutputTpye_RViz[] = "RViz";
+const char kOutputTpye_ImageWindow[] = "ImageWindow";
+const char kOutputTpye_RosTopic[] = "RosTopic";
+const char kOutputTpye_RosService[] = "RosService";
+
+const char kInferTpye_FaceDetection[] = "face_detection";
+const char kInferTpye_AgeGenderRecognition[] = "age_gender_detection";
+const char kInferTpye_EmotionRecognition[] = "emotion_detection";
+const char kInferTpye_HeadPoseEstimation[] = "head_pose_detection";
+const char kInferTpye_ObjectDetection[] = "ObjectDetection";
+const char kInferTpye_ObjectSegmentation[] = "ObjectSegmentation";
+
 /**
  * @class PipelineParams
  * @brief This class is a pipeline parameter management that stores parameters
@@ -49,6 +69,7 @@ class PipelineParams
       const std::string& name);
   PipelineParams& operator=(const Params::ParamManager::PipelineParams& params);
   void update();
+  void update(const Params::ParamManager::PipelineParams& params);
   bool isOutputTo(std::string& name);
   bool isGetFps();
 

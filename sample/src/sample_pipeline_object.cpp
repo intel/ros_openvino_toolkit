@@ -181,7 +181,7 @@ int main(int argc, char* argv[])
     while (cv::waitKey(1) < 0 && ros::ok())
     {
       ros::spinOnce();
-      pipe.runOnce(FLAGS_i);
+      pipe.runOnce();
     }
 
     slog::info << "Execution successful" << slog::endl;

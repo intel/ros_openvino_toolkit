@@ -79,6 +79,7 @@ void operator>>(const YAML::Node& node,
   YAML_PARSE(node, "infers", pipeline.infers)
   YAML_PARSE(node, "outputs", pipeline.outputs)
   YAML_PARSE(node, "connects", pipeline.connects)
+  YAML_PARSE(node, "input_path", pipeline.input_meta)
   slog::info << "Pipeline Params:name=" << pipeline.name << slog::endl;
 }
 
