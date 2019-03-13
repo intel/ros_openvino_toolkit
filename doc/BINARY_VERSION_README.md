@@ -40,7 +40,7 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 
 - Install ROS Kinetic Desktop-Full ([guide](http://wiki.ros.org/kinetic/Installation/Ubuntu))
 
-- Install [OpenVINO™ Toolkit](https://software.intel.com/en-us/openvino-toolkit) ([guide](https://software.intel.com/en-us/articles/OpenVINO-Install-Linux)). Choose "2018 R3" when download tarball.
+- Install [OpenVINO™ Toolkit](https://software.intel.com/en-us/openvino-toolkit) ([guide](https://software.intel.com/en-us/articles/OpenVINO-Install-Linux)). Choose "2018 R4" when download tarball.
 
 	**Note**: Please use  *root privileges* to run the installer when installing the core components.
 - Install OpenCL Driver for GPU
@@ -49,9 +49,9 @@ cd /opt/intel/computer_vision_sdk/install_dependencies
 sudo ./install_NEO_OCL_driver.sh
 ```
 
-- Install Intel® RealSense™ SDK 2.0 [(tag v2.14.1)](https://github.com/IntelRealSense/librealsense/tree/v2.14.1)
-	* [Install from source code](https://github.com/IntelRealSense/librealsense/blob/v2.14.1/doc/installation.md)(Recommended)
-	* [Install from package](https://github.com/IntelRealSense/librealsense/blob/v2.14.1/doc/distribution_linux.md)
+- Install Intel® RealSense™ SDK 2.0 [(tag v2.17.1)](https://github.com/IntelRealSense/librealsense/tree/v2.17.1)
+	* [Install from source code](https://github.com/IntelRealSense/librealsense/blob/v2.17.1/doc/installation.md)(Recommended)
+	* [Install from package](https://github.com/IntelRealSense/librealsense/blob/v2.17.1/doc/distribution_linux.md)
 
 - Other Dependencies
 ```bash
@@ -99,43 +99,9 @@ catkin_make
 ```
 
 ## 5. Running the Demo
-1.  Preparation
-	-  copy label files (excute _once_)
-	```bash
-	sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/intel/computer_vision_sdk/deployment_tools/intel_models/emotions-recognition-retail-0003/FP32
-	```
-	- set OpenVINO toolkit ENV
-	```bash
-	source /opt/intel/computer_vision_sdk/bin/setupvars.sh
-	```
-	- set project ENV
-	```bash
-	source ~/catkin_ws/devel/setup.bash
-	```
-- set default yaml
-	```bash
-	ln -snf ~/catkin_ws/src/ros_openvino_toolkit/vino_launch/param/pipeline_people_tarball.yaml ~/catkin_ws/src/ros_openvino_toolkit/vino_launch/param/pipeline_people.yaml
-	```
+* Please go to [README](https://github.com/intel/ros_openvino_toolkit/blob/devel/doc/OPEN_SOURCE_CODE_README.md)
 
-2. run sample code for <b>video stream from camera</b> detection
-
-```bash
-roslaunch vino_launch pipeline_with_param.launch
-```
-![face_attributes_detection](https://github.com/intel/ros_openvino_toolkit/blob/master/data/results/face_attributes_demo.png "face_attributes_detection")
-
-## 6. Interfaces
-### 6.1 Topic
-- Face Detection:
-```/openvino_toolkit/faces```([object_msgs:msg:ObjectsInBoxes](https://github.com/intel/object_msgs/blob/master/msg/ObjectsInBoxes.msg))
-- Emotion Detection:
-```/openvino_toolkit/emotions```([people_msgs:msg:EmotionsStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/EmotionsStamped.msg))
-- Age and Gender Detection:
-```/openvino_toolkit/age_genders```([people_msgs:msg:AgeGenderStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/AgeGenderStamped.msg))
-- Head Pose:
-```/openvino_toolkit/headposes```([people_msgs:msg:HeadPoseStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/HeadPoseStamped.msg))
-
-## 7. Known Issues
+## 6. Known Issues
 - Video and image detection support is going to be verified.
 - Segmentation fault occurs occasionally, which is caused by librealsense library. See [Issue #2645](https://github.com/IntelRealSense/librealsense/issues/2645) for more details.
 

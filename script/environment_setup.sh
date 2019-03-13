@@ -2,20 +2,29 @@
 
 set -euxo pipefail
 
-if [[ -n "$1" && -n "$2" ]]; then
-	HOST_NAME=$1
-	ROOT_PASSWD=$2
-	echo "set sudo password to $ROOT_PASSWD and your username is $HOST_NAME"
-else
-        echo "you have to input your username and sudo password!"
-        echo "    for example:./environment_setup.sh username password"
-	exit
-fi
+echo "Please Enter Your Password:"
+stty -echo
+read ROOT_PASSWD
+stty echo
 
 basedir=$PWD
 echo "Begin Environment Setup"
 
 system_ver=`cat /etc/lsb-release | grep -i "DISTRIB_RELEASE" | cut -d "=" -f2`
+
+#Ubuntu >=18.04 not support ros kinetic
+if [ $system_ver = "16.04" ]; then
+  ros_ver="kinetic"
+  echo "Found Ubuntu $system_ver, install ros-$ros_ver"
+
+elif [ $system_ver = "18.04" ]; then 
+  ros_ver="melodic"
+  echo "Found Ubuntu $system_ver, install ros-$ros_ver"
+else 
+  ros_ver="melodic"
+  echo "Found not official support Ubuntu $system_ver, currently support 16.04 and 18.04"
+fi
+
 
 #Get Config Parameters
 CLEAN=`cat modules.conf | grep 'clean'`
@@ -55,7 +64,7 @@ echo "Set OTHER_DEPENDENCY to $OTHER_DEPENDENCY"
 if [ "$CLEAN" == "1" ]; then
   echo "===================Cleaning...===================================="
   rm -rf ~/code
-  #echo $ROOT_PASSWD | sudo -S apt-get purge -y ros-kinetic-*
+  #echo $ROOT_PASSWD | sudo -S apt-get purge -y ros-melodic-*
   echo $ROOT_PASSWD | sudo -S rm -rf /opt/openvino_toolkit
   if [[ $system_ver = "16.04" && -L "/usr/lib/x86_64-linux-gnu/libboost_python3.so" ]]; then
     echo $ROOT_PASSWD | sudo -S rm /usr/lib/x86_64-linux-gnu/libboost_python3.so
@@ -67,9 +76,10 @@ if [ "$ROS_DEBIAN" == "1" ]; then
   echo "===================Installing ROS from Debian Package...======================="
   echo $ROOT_PASSWD | sudo -S sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
   echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
-
+  #For those who cannot access hkp protocal 
+  #echo $ROOT_PASSWD | curl http://repo.ros2.org/repos.key | sudo apt-key add -
   echo $ROOT_PASSWD | sudo -S apt-get update
-  echo $ROOT_PASSWD | sudo -S apt-get install -y ros-kinetic-desktop-full
+  echo $ROOT_PASSWD | sudo -S apt-get install -y ros-$ros_ver-desktop-full #For ubuntu16.04 Ros-melodic
 
   if [ ! -f "/etc/ros/rosdep/sources.list.d/20-default.list" ]; then
     echo $ROOT_PASSWD | sudo -S rosdep init
@@ -83,13 +93,13 @@ if [ "$ROS_DEBIAN" == "1" ]; then
   do
     rosdep update
   done
-  tail ~/.bashrc | grep "/opt/ros/kinetic/setup.bash"
+  tail ~/.bashrc | grep "/opt/ros/$ros_ver/setup.bash"
   set -o errexit
 
   if [ "$?" == "1" ]; then
-    echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+    echo "source /opt/ros/$ros_ver/setup.bash" >> ~/.bashrc
   else
-    echo "ros kinetic already set, skip..."
+    echo "ros melodic already set, skip..."
   fi
   source ~/.bashrc
   echo $ROOT_PASSWD | sudo -S apt-get install -y python-rosinstall python-rosinstall-generator python-wstool build-essential
@@ -100,7 +110,7 @@ if [ "$OPENCV" == "1" ]; then
   echo "===================Installing OpenCV3 from Source...======================="
   echo $ROOT_PASSWD | sudo -S apt-get install -y build-essential
   echo $ROOT_PASSWD | sudo -S apt-get install -y cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
-  echo $ROOT_PASSWD | sudo -S apt-get install -y python-dev python-numpy libtbb2 libtbb-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
+  echo $ROOT_PASSWD | sudo -S apt-get install -y python-dev python-numpy libtbb2 libtbb-dev libpng-dev libtiff-dev libdc1394-22-dev
 
   if [ $system_ver = "18.04" ]; then
     echo $ROOT_PASSWD | sudo -S add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security main"
@@ -123,7 +133,7 @@ if [ "$OPENCV" == "1" ]; then
 
   cd ~/code/opencv
   mkdir build && cd build
-  cmake -DOPENCV_EXTRA_MODULES_PATH=/home/$HOST_NAME/code/opencv_contrib/modules -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_opencv_cnn_3dobj=OFF ..
+  cmake -DOPENCV_EXTRA_MODULES_PATH=$HOME/code/opencv_contrib/modules -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_opencv_cnn_3dobj=OFF ..
   make -j4
   echo $ROOT_PASSWD | sudo -S make install
   echo $ROOT_PASSWD | sudo -S ldconfig
@@ -225,7 +235,7 @@ if [ "$LIBREALSENSE" == "1" ]; then
   mkdir -p ~/code && cd ~/code
   git clone https://github.com/IntelRealSense/librealsense
   cd ~/code/librealsense
-  git checkout v2.14.1
+  git checkout v2.17.1
   mkdir build && cd build
   cmake ../ -DBUILD_EXAMPLES=true
   echo $ROOT_PASSWD | sudo -S make uninstall

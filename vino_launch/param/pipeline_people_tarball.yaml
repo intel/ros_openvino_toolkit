@@ -1,6 +1,6 @@
 Pipelines:
 - name: people
-  inputs: [RealSenseCamera]
+  inputs: [StandardCamera]
   infers:
     - name: face_detection
       model: /opt/intel/computer_vision_sdk/deployment_tools/intel_models/face-detection-adas-0001/FP32/face-detection-adas-0001.xml
@@ -25,7 +25,7 @@ Pipelines:
   outputs: [ImageWindow, RosTopic, RViz]
   confidence_threshold: 0.2
   connects:
-    - left: RealSenseCamera
+    - left: StandardCamera
       right: [face_detection]
     - left: face_detection
       right: [age_gender_detection, emotion_detection, head_pose_detection, ImageWindow, RosTopic, RViz]
