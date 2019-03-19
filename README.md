@@ -155,12 +155,12 @@ One-step installation scripts are provided for the dependencies' installation. P
 		```
 * run face detection sample code input from StandardCamera.
 	```bash
-	roslaunch vino_launch pipeline_people_oss.launch
+	roslaunch vino_launch pipeline_people.launch
 	```
 	
 * run object detection sample code input from RealsensCamera.
 	```bash
-	roslaunch vino_launch pipeline_object_oss.launch
+	roslaunch vino_launch pipeline_object.launch
 	```
 
 # TODO Features
