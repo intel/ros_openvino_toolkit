@@ -72,6 +72,12 @@ class PipelineManager {
     std::shared_ptr<std::thread> thread;
     PipelineState state;
   };
+  
+  std::map<std::string, PipelineData> getPipelines()
+  {
+    return pipelines_;
+  }
+
 
  private:
   PipelineManager(){};

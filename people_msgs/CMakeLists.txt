@@ -30,12 +30,20 @@ add_message_files(DIRECTORY msg FILES
   EmotionsStamped.msg
   HeadPose.msg
   HeadPoseStamped.msg
+  PersonsStamped.msg
 )
 
+add_service_files(FILES
+  AgeGenderSrv.srv
+  EmotionSrv.srv
+  HeadPoseSrv.srv
+  PeopleSrv.srv
+)
 generate_messages(DEPENDENCIES
   std_msgs
   sensor_msgs
   geometry_msgs
+  object_msgs
 )
 
 catkin_package(

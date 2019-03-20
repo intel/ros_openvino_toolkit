@@ -154,6 +154,84 @@ target_link_libraries(pipeline_with_params
   ${OpenCV_LIBRARIES}
 )
 
+add_executable(image_people_server
+  src/image_people_server.cpp
+)
+
+add_dependencies(image_people_server
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${dynamic_vino_lib_TARGETS}
+)
+
+target_link_libraries(image_people_server
+  ${catkin_LIBRARIES}
+  cpu_extension
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
+
+
+add_executable(image_people_client
+  src/image_people_client.cpp
+)
+
+add_dependencies(image_people_client
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${dynamic_vino_lib_TARGETS}
+)
+
+target_link_libraries(image_people_client
+  ${catkin_LIBRARIES}
+  cpu_extension
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
+
+add_executable(image_object_server
+  src/image_object_server.cpp
+)
+
+add_dependencies(image_object_server
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${dynamic_vino_lib_TARGETS}
+)
+
+target_link_libraries(image_object_server
+  ${catkin_LIBRARIES}
+  cpu_extension
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
+
+
+add_executable(image_object_client
+  src/image_object_client.cpp
+)
+
+add_dependencies(image_object_client
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${dynamic_vino_lib_TARGETS}
+)
+
+target_link_libraries(image_object_client
+  ${catkin_LIBRARIES}
+  cpu_extension
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
+
 if(UNIX OR APPLE)
   # Linker flags.
   if( ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Intel")

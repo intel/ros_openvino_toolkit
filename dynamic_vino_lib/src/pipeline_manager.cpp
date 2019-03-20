@@ -41,6 +41,7 @@
 #include "dynamic_vino_lib/outputs/image_window_output.h"
 #include "dynamic_vino_lib/outputs/ros_topic_output.h"
 #include "dynamic_vino_lib/outputs/rviz_output.h"
+#include "dynamic_vino_lib/outputs/ros_service_output.h"
 #include "dynamic_vino_lib/pipeline.h"
 #include "dynamic_vino_lib/pipeline_manager.h"
 #include "dynamic_vino_lib/pipeline_params.h"
@@ -142,7 +143,9 @@ PipelineManager::parseOutput(
       object = std::make_shared<Outputs::ImageWindowOutput>("Results");
     } else if (name == kOutputTpye_RViz) {
       object = std::make_shared<Outputs::RvizOutput>();
-    } 
+    } else if (name == kOutputTpye_RosService) {
+      object = std::make_shared<Outputs::RosServiceOutput>();
+    }
     if (object != nullptr) {
       outputs.insert({name, object});
       slog::info << " ... Adding one Output: " << name << slog::endl;

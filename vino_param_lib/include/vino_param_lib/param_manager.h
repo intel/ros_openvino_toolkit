@@ -51,9 +51,7 @@ class ParamManager  // singleton
    */
   static ParamManager& getInstance()
   {
-    std::cout << "getting instance" << std::endl;
     static ParamManager manager_;
-    std::cout << "return instance" << std::endl;
     return manager_;
   }
 

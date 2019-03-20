@@ -79,8 +79,8 @@ class RosTopicOutput : public BaseOutput
    * the age gender detection result.
    * @param[in] An age gender detection result objetc.
    */
-  void accept(const std::vector<dynamic_vino_lib::AgeGenderResult>&) override;
-  /**
+  void accept(const std::vector<dynamic_vino_lib::AgeGenderResult> &) override;
+  /**detected_objects_topic_
    * @brief Generate ros topic infomation according to
    * the headpose detection result.
    * @param[in] An head pose detection result objetc.
@@ -99,7 +99,7 @@ class RosTopicOutput : public BaseOutput
   const std::string topic_name_;
   cv::Mat frame_;
   ros::NodeHandle nh_;
-
+ protected:
   ros::Publisher pub_face_;
   std::shared_ptr<object_msgs::ObjectsInBoxes> faces_msg_ptr_;
   ros::Publisher pub_emotion_;
