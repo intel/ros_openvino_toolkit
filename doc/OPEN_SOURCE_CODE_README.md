@@ -43,7 +43,7 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 - For Ubuntu16.04, install ROS Kinetic Desktop-Full [(guide)](http://wiki.ros.org/kinetic/Installation/Ubuntu)
 - For Ubuntu18.04, install ROS Melodic Desktop-Full [(guide)](http://wiki.ros.org/melodic/Installation/Ubuntu)
 - Install OpenVINO™ Toolkit Open Source
-	* Install [OpenCV 3.x: 3.3 or later](https://docs.opencv.org/master/d9/df8/tutorial_root.html)([guide](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html))
+	* Install [OpenCV 3.x: 3.4 or later](https://docs.opencv.org/master/d9/df8/tutorial_root.html)([guide](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html))
 	```
 	[compiler] sudo apt-get install build-essential
 	[required] sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
@@ -51,8 +51,8 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	cd ~/code
 	git clone https://github.com/opencv/opencv.git
 	git clone https://github.com/opencv/opencv_contrib.git
-	cd opencv && git checkout 3.3.1 && cd ..
-	cd opencv_contrib && git checkout 3.3.1 && cd ..
+	cd opencv && git checkout 3.4.2 && cd ..
+	cd opencv_contrib && git checkout 3.4.2 && cd ..
 	cd opencv
 	mkdir build && cd build
 	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -D OPENCV_EXTRA_MODULES_PATH=$HOME/code/opencv_contrib/modules/ ..
@@ -106,8 +106,9 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 
 - Other Dependencies
 	```bash
-	# numpy
+	# numpy and networkx
 	pip3 install numpy
+	pip3 install networkx
 	# libboost
 	sudo apt-get install -y --no-install-recommends libboost-all-dev
 	cd /usr/lib/x86_64-linux-gnu
@@ -141,8 +142,3 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	sudo mkdir -p /opt/openvino_toolkit
 	sudo ln -s ~/catkin_ws/src/ros_openvino_toolkit /opt/openvino_toolkit/ros_openvino_toolkit
 	```
-## 5. Launching demos
-* Please go to [README](https://github.com/intel/ros_openvino_toolkit/blob/devel/doc/OPEN_SOURCE_CODE_README.md)
-## 6. Known Issues
-
-###### *Any security issue should be reported using process at https://01.org/security*
