@@ -66,7 +66,6 @@ if [ "$CLEAN" == "1" ]; then
   
   echo $ROOT_PASSWD | sudo -S rm -rf ~/code
   #echo $ROOT_PASSWD | sudo -S apt-get purge -y ros-kinetic-*
-  rm -rf ~/catkin_ws
   echo $ROOT_PASSWD | sudo -S rm -rf /opt/intel
   rm -rf ~/Downloads/l_openvino_toolkit*
   echo $ROOT_PASSWD | sudo -S rm -rf /opt/openvino_toolkit
@@ -131,9 +130,9 @@ if [ "$OPENCV" == "1" ]; then
   echo "finish clone opencv"
 
   cd ~/code/opencv
-  git checkout 3.4.0
+  git checkout 3.4.2
   cd ~/code/opencv_contrib
-  git checkout 3.4.0
+  git checkout 3.4.2
 
   cd ~/code/opencv
   mkdir build && cd build
@@ -258,6 +257,7 @@ fi
 if [ "$OTHER_DEPENDENCY" == "1" ]; then
   echo "===================Setting UP OTHER_DEPENDENCY DEPENDENCY...======================="
   pip3 install numpy
+  pip3 install networkx
   echo $ROOT_PASSWD | sudo -S apt-get install python3-yaml
   if [ $system_ver = "16.04" ]; then
      echo $ROOT_PASSWD | sudo -S apt-get install -y --no-install-recommends libboost-all-dev
