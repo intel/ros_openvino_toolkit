@@ -1,6 +1,6 @@
-#!/bin/bash -x
+#!/bin/bash
 
-set -euxo pipefail
+set -euo pipefail
 
 echo "Please Enter Your Password:"
 stty -echo
@@ -63,8 +63,12 @@ echo "Set OTHER_DEPENDENCY to $OTHER_DEPENDENCY"
 # Clean Existing Directories
 if [ "$CLEAN" == "1" ]; then
   echo "===================Cleaning...===================================="
-  rm -rf ~/code
-  #echo $ROOT_PASSWD | sudo -S apt-get purge -y ros-melodic-*
+  
+  echo $ROOT_PASSWD | sudo -S rm -rf ~/code
+  #echo $ROOT_PASSWD | sudo -S apt-get purge -y ros-kinetic-*
+  rm -rf ~/catkin_ws
+  echo $ROOT_PASSWD | sudo -S rm -rf /opt/intel
+  rm -rf ~/Downloads/l_openvino_toolkit*
   echo $ROOT_PASSWD | sudo -S rm -rf /opt/openvino_toolkit
   if [[ $system_ver = "16.04" && -L "/usr/lib/x86_64-linux-gnu/libboost_python3.so" ]]; then
     echo $ROOT_PASSWD | sudo -S rm /usr/lib/x86_64-linux-gnu/libboost_python3.so
