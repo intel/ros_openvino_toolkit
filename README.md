@@ -30,7 +30,7 @@ Once a corresponding program is launched with a specified .yaml config file pass
 
 The contents in **.yaml config file** should be well structured and follow the supported rules and entity names. Please see [the configuration guidance](https://github.com/intel/ros_openvino_toolkit/blob/devel/doc/YAML_CONFIGURATION_GUIDE.md) for how to create or edit the config files.
 
-**Pipeline** fulfills the whole data handling process: initiliazing Input Component for image data gathering and formating; building up the structured inference network and passing the formatted data through the inference network; transfering the inference results and handling output, etc.
+**Pipeline** fulfills the whole data handling process: initiliazing Input Component for image data gathering and formating; building up the structured inference network and passing the formattehttps://github.com/RachelRen05/ros_openvino_toolkit/tree/develd data through the inference network; transfering the inference results and handling output, etc.
 
 **Pipeline manager** manages all the created pipelines according to the inference requests or external demands (say, system exception, resource limitation, or end user's operation). Because of co-working with resource management and being aware of the whole framework, it covers the ability of performance optimization by sharing system resource between pipelines and reducing the burden of data copy.
 
@@ -155,12 +155,12 @@ One-step installation scripts are provided for the dependencies' installation. P
 		```
 * run face detection sample code input from StandardCamera.
 	```bash
-	roslaunch vino_launch pipeline_people.launch
+	roslaunch vino_launch pipeline_people_oss.launch
 	```
 	
 * run object detection sample code input from RealsensCamera.
 	```bash
-	roslaunch vino_launch pipeline_object.launch
+	roslaunch vino_launch pipeline_object_oss.launch
 	```
 
 # TODO Features
