@@ -1,5 +1,5 @@
 <launch>
-  <arg name="param_file" value="$(find vino_launch)/param/pipeline_object.yaml" />
+  <arg name="param_file" value="$(find vino_launch)/param/pipeline_people_oss.yaml" />
   <arg name="default_rviz" value="$(find vino_launch)/param/rviz/default.rviz" />
 
   <node pkg="dynamic_vino_sample" type="pipeline_with_params"

@@ -1,6 +1,6 @@
-#!/bin/bash -x
+#!/bin/bash
 
-set -euxo pipefail
+set -euo pipefail
 
 echo "Please Enter Your Password:"
 stty -echo
@@ -33,6 +33,10 @@ ROS_DEBIAN=`cat modules.conf | grep 'ros_debian'`
 ROS_DEBIAN=${ROS_DEBIAN##*=}
 echo "Set ROS_DEBIAN to $ROS_DEBIAN"
 
+OPENCV=`cat modules.conf | grep 'opencv'`
+OPENCV=${OPENCV##*=}
+echo "Set OPENCV to $OPENCV"
+
 OPENVINO=`cat modules.conf | grep 'openvino'`
 OPENVINO=${OPENVINO##*=}
 echo "Set OPENVINO to $OPENVINO"
@@ -53,10 +57,12 @@ echo "Set OTHER_DEPENDENCY to $OTHER_DEPENDENCY"
 # Clean Existing Directories
 if [ "$CLEAN" == "1" ]; then
   echo "===================Cleaning...===================================="
-  rm -rf ~/code
+
+  echo $ROOT_PASSWD | sudo -S rm -rf ~/code
   #echo $ROOT_PASSWD | sudo -S apt-get purge -y ros-kinetic-*
   echo $ROOT_PASSWD | sudo -S rm -rf /opt/intel
   rm -rf ~/Downloads/l_openvino_toolkit*
+  echo $ROOT_PASSWD | sudo -S rm -rf /opt/openvino_toolkit
   if [[ $system_ver = "16.04" && -L "/usr/lib/x86_64-linux-gnu/libboost_python3.so" ]]; then
     echo $ROOT_PASSWD | sudo -S rm /usr/lib/x86_64-linux-gnu/libboost_python3.so
   fi
@@ -94,6 +100,41 @@ if [ "$ROS_DEBIAN" == "1" ]; then
   fi
   source ~/.bashrc
   echo $ROOT_PASSWD | sudo -S apt-get install -y python-rosinstall python-rosinstall-generator python-wstool build-essential
+fi
+
+# Setup OpenCV
+if [ "$OPENCV" == "1" ]; then
+  echo "===================Installing OpenCV3 from Source...======================="
+  echo $ROOT_PASSWD | sudo -S apt-get install -y build-essential
+  echo $ROOT_PASSWD | sudo -S apt-get install -y cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+  echo $ROOT_PASSWD | sudo -S apt-get install -y python-dev python-numpy libtbb2 libtbb-dev libpng-dev libtiff-dev libdc1394-22-dev
+
+  if [ $system_ver = "18.04" ]; then
+    echo $ROOT_PASSWD | sudo -S add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security main"
+    echo $ROOT_PASSWD | sudo apt update
+    echo $ROOT_PASSWD | sudo apt install libjasper1 libjasper-dev
+  else
+    echo $ROOT_PASSWD | sudo -S apt-get install libjasper-dev
+  fi
+
+  mkdir -p ~/code && cd ~/code
+  echo "begin clone opencv"
+  git clone https://github.com/opencv/opencv.git
+  git clone https://github.com/opencv/opencv_contrib.git
+  echo "finish clone opencv"
+
+  cd ~/code/opencv
+  git checkout 3.4.2
+  cd ~/code/opencv_contrib
+  git checkout 3.4.2
+
+  cd ~/code/opencv
+  mkdir build && cd build
+  cmake -DOPENCV_EXTRA_MODULES_PATH=$HOME/code/opencv_contrib/modules -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_opencv_cnn_3dobj=OFF ..
+  make -j4
+  echo $ROOT_PASSWD | sudo -S make install
+  echo $ROOT_PASSWD | sudo -S ldconfig
+  echo "==== END install OpenCV ===="
 fi
 
 #setup OPENVINO
@@ -152,6 +193,7 @@ if [ "$OTHER_DEPENDENCY" == "1" ]; then
   echo "===================Setting UP OTHER_DEPENDENCY DEPENDENCY...======================="
   echo $ROOT_PASSWD | sudo -S apt-get install python3-pip
   pip3 install numpy
+  pip3 install networkx
   if [ $system_ver = "16.04" ]; then
      echo $ROOT_PASSWD | sudo -S apt-get install -y --no-install-recommends libboost-all-dev
      cd /usr/lib/x86_64-linux-gnu
