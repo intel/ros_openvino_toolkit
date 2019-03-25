@@ -188,6 +188,7 @@ PipelineManager::parseInference(
 
     } else if (infer.name == kInferTpye_ObjectDetection) {
       object = createObjectDetection(infer);
+
     }
 
     if (object != nullptr) {
@@ -263,10 +264,19 @@ PipelineManager::createHeadPoseEstimation(
 
 std::shared_ptr<dynamic_vino_lib::BaseInference>
 PipelineManager::createObjectDetection(
-    const Params::ParamManager::InferenceParams& infer) {
-  // TODO: not implemented yet
+const Params::ParamManager::InferenceParams & infer)
+{
+  auto object_detection_model =
+    std::make_shared<Models::ObjectDetectionModel>(infer.model, 1, 1, 1);
+  object_detection_model->modelInit();
+  auto object_detection_engine = std::make_shared<Engines::Engine>(
+    plugins_for_devices_[infer.engine], object_detection_model);
+  auto object_inference_ptr = std::make_shared<dynamic_vino_lib::ObjectDetection>(
+    0.5); // To-do theshold configuration
+  object_inference_ptr->loadNetwork(object_detection_model);
+  object_inference_ptr->loadEngine(object_detection_engine);
 
-  return createFaceDetection(infer);
+  return object_inference_ptr;
 }
 
 void PipelineManager::threadPipeline(const char* name) {

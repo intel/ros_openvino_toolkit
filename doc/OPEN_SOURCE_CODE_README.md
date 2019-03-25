@@ -17,7 +17,7 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	* 6th-8th Generation Intel® Core™
 	* Intel® Xeon® v5 family
 	* Intel®  Xeon® v6 family
-- ROS Kinetic
+- ROS Kinetic(For Ubuntu16.04) or ROS Melodic(For Ubuntu18.04)
 
 - OpenVINO™ Toolkit Open Source
   	* The [Deep Learning Deployment Toolkit](https://github.com/opencv/dldt) that helps to enable fast, heterogeneous deep learning inferencing for Intel® processors (CPU and GPU/Intel® Processor Graphics), and supports more than 100 public and custom models.
@@ -40,10 +40,10 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 ./environment_setup.sh username password
 ```
 **Note**:You can also choose to follow the steps below to build the environment step by step.
-- Install ROS Kinetic Desktop-Full [(guide)](http://wiki.ros.org/kinetic/Installation/Ubuntu)
-
+- For Ubuntu16.04, install ROS Kinetic Desktop-Full [(guide)](http://wiki.ros.org/kinetic/Installation/Ubuntu)
+- For Ubuntu18.04, install ROS Melodic Desktop-Full [(guide)](http://wiki.ros.org/melodic/Installation/Ubuntu)
 - Install OpenVINO™ Toolkit Open Source
-	* Install [OpenCV 3.x: 3.3 or later](https://docs.opencv.org/master/d9/df8/tutorial_root.html)([guide](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html))
+	* Install [OpenCV 3.x: 3.4 or later](https://docs.opencv.org/master/d9/df8/tutorial_root.html)([guide](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html))
 	```
 	[compiler] sudo apt-get install build-essential
 	[required] sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
@@ -51,8 +51,8 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	cd ~/code
 	git clone https://github.com/opencv/opencv.git
 	git clone https://github.com/opencv/opencv_contrib.git
-	cd opencv && git checkout 3.3.1 && cd ..
-	cd opencv_contrib && git checkout 3.3.1 && cd ..
+	cd opencv && git checkout 3.4.2 && cd ..
+	cd opencv_contrib && git checkout 3.4.2 && cd ..
 	cd opencv
 	mkdir build && cd build
 	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -D OPENCV_EXTRA_MODULES_PATH=$HOME/code/opencv_contrib/modules/ ..
@@ -100,14 +100,15 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	sudo ln -s ~/code/open_model_zoo /opt/openvino_toolkit/open_model_zoo
 	```
 
-- Install Intel® RealSense™ SDK 2.0 [(tag v2.14.1)](https://github.com/IntelRealSense/librealsense/tree/v2.14.1)<br>
-	* [Install from source code](https://github.com/IntelRealSense/librealsense/blob/v2.14.1/doc/installation.md)(Recommended)<br>
-	* [Install from package](https://github.com/IntelRealSense/librealsense/blob/v2.14.1/doc/distribution_linux.md)<br>
+- Install Intel® RealSense™ SDK 2.0 [(tag v2.17.1)](https://github.com/IntelRealSense/librealsense/tree/v2.17.1)<br>
+	* [Install from source code](https://github.com/IntelRealSense/librealsense/blob/v2.17.1/doc/installation.md)(Recommended)<br>
+	* [Install from package](https://github.com/IntelRealSense/librealsense/blob/v2.17.1/doc/distribution_linux.md)<br>
 
 - Other Dependencies
 	```bash
-	# numpy
+	# numpy and networkx
 	pip3 install numpy
+	pip3 install networkx
 	# libboost
 	sudo apt-get install -y --no-install-recommends libboost-all-dev
 	cd /usr/lib/x86_64-linux-gnu
@@ -132,6 +133,7 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	```
 
 * Build package
+	**Note**:Please modify kinetic to melodic if you are Ubuntu 18.04 user 
 	```
 	source /opt/ros/kinetic/setup.bash
 	cd ~/catkin_ws
@@ -140,55 +142,3 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	sudo mkdir -p /opt/openvino_toolkit
 	sudo ln -s ~/catkin_ws/src/ros_openvino_toolkit /opt/openvino_toolkit/ros_openvino_toolkit
 	```
-
-## 5. Running the Demo
-* Preparation
-	* download model file (excute _once_)<br>
-		```bash
-		cd /opt/openvino_toolkit/open_model_zoo/model_downloader
-		python3 downloader.py --name face-detection-adas-0001
-		python3 downloader.py --name age-gender-recognition-retail-0013
-		python3 downloader.py --name emotions-recognition-retail-0003
-		python3 downloader.py --name head-pose-estimation-adas-0001
-		python3 downloader.py --name person-vehicle-bike-detection-crossroad-0078
-		```
-	* copy label files (excute _once_)<br>
-		```bash
-		sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/openvino_toolkit/open_model_zoo/model_downloader/Retail/object_attributes/emotions_recognition/0003/dldt
-		```
-	* set OpenVINO toolkit ENV<br>
-		```bash
-		source ~/catkin_ws/devel/setup.bash
-		```
-	* set ENV LD_LIBRARY_PATH<br>
-		```bash
-		export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/openvino_toolkit/dldt/inference-engine/bin/intel64/Release/lib
-		```
-	* set default yaml<br>
-		```bash
-		ln -snf ~/catkin_ws/src/ros_openvino_toolkit/vino_launch/param/pipeline_people_open_source.yaml ~/catkin_ws/src/ros_openvino_toolkit/vino_launch/param/pipeline_people.yaml
-		```
-
-**Note**:In [pipeline_people_oss.yaml](https://github.com/intel/ros_openvino_toolkit/blob/master/sample/param/pipeline_people_oss.yaml) and [pipeline_object_oss.yaml](https://github.com/intel/ros_openvino_toolkit/blob/master/sample/param/pipeline_object.yaml),options for inputsparameter: StandardCamera or RealSenseCamera. Default is StandardCamera.
-
-* run sample code for <b>video stream from camera</b> detection
-
-```bash
-roslaunch vino_launch pipeline_with_param.launch
-```
-![face_attributes_detection](https://github.com/intel/ros_openvino_toolkit/blob/master/data/results/face_attributes_demo.png "face_attributes_detection")
-
-## 6. Interfaces
-### 6.1 Topic
-- Face Detection:
-```/openvino_toolkit/faces```([object_msgs:msg:ObjectsInBoxes](https://github.com/intel/object_msgs/blob/master/msg/ObjectsInBoxes.msg))
-- Emotion Detection:
-```/openvino_toolkit/emotions```([people_msgs:msg:EmotionsStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/EmotionsStamped.msg))
-- Age and Gender Detection:
-```/openvino_toolkit/age_genders```([people_msgs:msg:AgeGenderStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/AgeGenderStamped.msg))
-- Head Pose:
-```/openvino_toolkit/headposes```([people_msgs:msg:HeadPoseStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/HeadPoseStamped.msg))
-
-## 7. Known Issues
-
-###### *Any security issue should be reported using process at https://01.org/security*

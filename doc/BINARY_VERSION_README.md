@@ -34,13 +34,13 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 ## 3. Environment Setup
 **Note**:You can choose to build the environment using *./environment_setup_binary.sh* script in the script subfolder.
 ```bash
-./environment_setup_binary.sh username password
+./environment_setup_binary.sh
 ```
 **Note**:You can also choose to follow the steps below to build the environment step by step.
 
 - Install ROS Kinetic Desktop-Full ([guide](http://wiki.ros.org/kinetic/Installation/Ubuntu))
 
-- Install [OpenVINO™ Toolkit](https://software.intel.com/en-us/openvino-toolkit) ([guide](https://software.intel.com/en-us/articles/OpenVINO-Install-Linux)). Choose "2018 R3" when download tarball.
+- Install [OpenVINO™ Toolkit](https://software.intel.com/en-us/openvino-toolkit) ([guide](https://software.intel.com/en-us/articles/OpenVINO-Install-Linux)). Choose "2018 R4" when download tarball.
 
 	**Note**: Please use  *root privileges* to run the installer when installing the core components.
 - Install OpenCL Driver for GPU
@@ -48,19 +48,41 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 cd /opt/intel/computer_vision_sdk/install_dependencies
 sudo ./install_NEO_OCL_driver.sh
 ```
-
-- Install Intel® RealSense™ SDK 2.0 [(tag v2.14.1)](https://github.com/IntelRealSense/librealsense/tree/v2.14.1)
-	* [Install from source code](https://github.com/IntelRealSense/librealsense/blob/v2.14.1/doc/installation.md)(Recommended)
-	* [Install from package](https://github.com/IntelRealSense/librealsense/blob/v2.14.1/doc/distribution_linux.md)
+* Install [OpenCV 3.4 or later](https://docs.opencv.org/master/d9/df8/tutorial_root.html)([guide](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html))
+	```bash
+	[compiler] sudo apt-get install build-essential
+	[required] sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+	[optional] sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev 
+	mkdir -p ~/code && cd ~/code
+	git clone https://github.com/opencv/opencv.git
+	git clone https://github.com/opencv/opencv_contrib.git
+	cd opencv && git checkout 3.4.2 && cd ..
+	cd opencv_contrib && git checkout 3.4.2 && cd ..
+	cd opencv
+	mkdir build && cd build
+	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -D OPENCV_EXTRA_MODULES_PATH=/home/<hostname>/code/opencv_contrib/modules/ ..
+	make -j8
+	sudo make install
+	```
+	* Additional steps are required on ubuntu 18.04
+		```bash
+		sudo add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security main"
+		sudo apt update
+		sudo apt install libjasper1 libjasper-dev
+		```
+- Install Intel® RealSense™ SDK 2.0 [(tag v2.17.1)](https://github.com/IntelRealSense/librealsense/tree/v2.17.1)
+	* [Install from source code](https://github.com/IntelRealSense/librealsense/blob/v2.17.1/doc/installation.md)(Recommended)
+	* [Install from package](https://github.com/IntelRealSense/librealsense/blob/v2.17.1/doc/distribution_linux.md)
 
 - Other Dependencies
 ```bash
-# numpy
+# numpy and networkx
 pip3 install numpy
+pip3 install networkx
 # libboost
 sudo apt-get install -y --no-install-recommends libboost-all-dev
 cd /usr/lib/x86_64-linux-gnu
-sudo ln -s libboost_python-py35.so libboost_python3.so
+sudo ln -sf libboost_python-py35.so libboost_python3.so
 ```
 
 ## 4. Building and Installation
@@ -94,48 +116,44 @@ git clone https://github.com/ros-perception/vision_opencv
 ```
 source /opt/ros/kinetic/setup.bash
 source /opt/intel/computer_vision_sdk/bin/setupvars.sh
+export OpenCV_DIR=$HOME/code/opencv/build
 cd ~/catkin_ws
 catkin_make
+source ./devel/setup.bash
+sudo mkdir -p /opt/openvino_toolkit
+sudo ln -s ~/catkin_ws/src/ros_openvino_toolkit /opt/openvino_toolkit/ros_openvino_toolkit
 ```
 
 ## 5. Running the Demo
-1.  Preparation
-	-  copy label files (excute _once_)
+* Preparation
+	* download and convert a trained model to produce an optimized Intermediate Representation (IR) of the model 
+		```bash
+		cd /opt/intel/computer_vision_sdk/deployment_tools/model_optimizer/install_prerequisites
+		sudo ./install_prerequisites.sh
+		#object detection model
+		cd /opt/intel/computer_vision_sdk/deployment_tools/model_downloader
+		sudo python3 downloader.py --name ssd300
+		sudo python3 /opt/intel/computer_vision_sdk/deployment_tools/model_optimizer/mo.py --input_model /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/ssd/300/caffe/ssd300.caffemodel --output_dir /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/ssd/300/caffe/output/
+		```
+	* copy label files (excute _once_)<br>
+		```bash
+		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/intel/computer_vision_sdk/deployment_tools/intel_models/emotions-recognition-retail-0003/FP32
+		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/intel/computer_vision_sdk/deployment_tools/intel_models/face-detection-adas-0001/FP32
+		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_detection/ssd300.labels /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/ssd/300/caffe/output
+		```
+	* set ENV LD_LIBRARY_PATH
+		```bash
+		export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/computer_vision_sdk/deployment_tools/inference_engine/samples/build/intel64/Release/lib
+		```
+* run face detection sample code input from StandardCamera.
 	```bash
-	sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/intel/computer_vision_sdk/deployment_tools/intel_models/emotions-recognition-retail-0003/FP32
+	roslaunch vino_launch pipeline_people.launch
 	```
-	- set OpenVINO toolkit ENV
+* run object detection sample code input from RealsensCamera.
 	```bash
-	source /opt/intel/computer_vision_sdk/bin/setupvars.sh
+	roslaunch vino_launch pipeline_object.launch
 	```
-	- set project ENV
-	```bash
-	source ~/catkin_ws/devel/setup.bash
-	```
-- set default yaml
-	```bash
-	ln -snf ~/catkin_ws/src/ros_openvino_toolkit/vino_launch/param/pipeline_people_tarball.yaml ~/catkin_ws/src/ros_openvino_toolkit/vino_launch/param/pipeline_people.yaml
-	```
-
-2. run sample code for <b>video stream from camera</b> detection
-
-```bash
-roslaunch vino_launch pipeline_with_param.launch
-```
-![face_attributes_detection](https://github.com/intel/ros_openvino_toolkit/blob/master/data/results/face_attributes_demo.png "face_attributes_detection")
-
-## 6. Interfaces
-### 6.1 Topic
-- Face Detection:
-```/openvino_toolkit/faces```([object_msgs:msg:ObjectsInBoxes](https://github.com/intel/object_msgs/blob/master/msg/ObjectsInBoxes.msg))
-- Emotion Detection:
-```/openvino_toolkit/emotions```([people_msgs:msg:EmotionsStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/EmotionsStamped.msg))
-- Age and Gender Detection:
-```/openvino_toolkit/age_genders```([people_msgs:msg:AgeGenderStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/AgeGenderStamped.msg))
-- Head Pose:
-```/openvino_toolkit/headposes```([people_msgs:msg:HeadPoseStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/HeadPoseStamped.msg))
-
-## 7. Known Issues
+## 6. Known Issues
 - Video and image detection support is going to be verified.
 - Segmentation fault occurs occasionally, which is caused by librealsense library. See [Issue #2645](https://github.com/IntelRealSense/librealsense/issues/2645) for more details.
 
