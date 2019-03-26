@@ -1,5 +1,5 @@
 <launch>
-  <arg name="param_file" value="$(find vino_launch)/param/pipeline_people_oss.yaml" />
+  <arg name="param_file" value="$(find vino_launch)/param/pipeline_image.yaml" />
 
   <node pkg="dynamic_vino_sample" type="pipeline_with_params"
         name="pipeline_with_params" output="screen">

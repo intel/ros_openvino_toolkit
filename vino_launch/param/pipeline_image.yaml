@@ -1,6 +1,7 @@
 Pipelines:
 - name: people
-  inputs: [StandardCamera]
+  inputs: [Image]
+  input_path: /opt/openvino_toolkit/ros_openvino_toolkit/data/images/team.jpg
   infers:
     - name: face_detection
       model: /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/Transportation/object_detection/face/pruned_mobilenet_reduced_ssd_shared_weights/dldt/face-detection-adas-0001.xml
@@ -22,18 +23,18 @@ Pipelines:
       engine: CPU
       label: to/be/set/xxx.labels
       batch: 16
-  outputs: [RosService]
+  outputs: [ImageWindow]
   confidence_threshold: 0.2
   connects:
-    - left: StandardCamera
+    - left: Image
       right: [face_detection]
     - left: face_detection
-      right: [age_gender_detection, emotion_detection, head_pose_detection,  RosService]
+      right: [age_gender_detection, emotion_detection, head_pose_detection, ImageWindow]
     - left: age_gender_detection
-      right: [RosService]
+      right: [ImageWindow]
     - left: emotion_detection
-      right: [RosService]
+      right: [ImageWindow]
     - left: head_pose_detection
-      right: [RosService]
+      right: [ImageWindow]
 
 OpenvinoCommon:

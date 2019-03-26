@@ -89,11 +89,11 @@ Currently, the inference feature list is supported:
 - Face Detection Service:
 ```/detect_face``` ([object_msgs::DetectObject](https://github.com/intel/object_msgs/blob/master/srv/DetectObject.srv))
 - Age & Gender Detection Service:
-```/detect_age_gender``` ([people_msgs::AgeGender](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/srv/AgeGender.srv))
+```/detect_age_gender``` ([people_msgs::AgeGender](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/srv/AgeGenderSrv.srv))
 - Headpose Detection Service:
-```/detect_head_pose``` ([people_msgs::HeadPose](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/srv/HeadPose.srv))
+```/detect_head_pose``` ([people_msgs::HeadPose](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/srv/HeadPoseSrv.srv))
 - Emotion Detection Service:
-```/detect_emotion``` ([people_msgs::Emotion](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/srv/Emotion.srv))
+```/detect_emotion``` ([people_msgs::Emotion](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/srv/EmotionSrv.srv))
 
 ### RViz
 RViz dispaly is also supported by the composited topic of original image frame with inference result.
@@ -167,11 +167,41 @@ One-step installation scripts are provided for the dependencies' installation. P
 	roslaunch vino_launch pipeline_people_oss.launch
 	```
 	
-* run object detection sample code input from RealsensCamera.
+* run object detection sample code input from RealsensCamera.(connect Intel® Neural Compute Stick 2) 
 	```bash
-	roslaunch vino_launch pipeline_object_oss.launch
+	roslaunch vino_launch pipeline_object_myriad.launch
 	```
 
+* run object segmentation sample code input from RealSenseCameraTopic.
+	```bash
+	roslaunch vino_launch pipeline_segmentation.launch
+	```
+* run object segmentation sample code input from Video.
+	```bash
+	roslaunch vino_launch pipeline_video.launch
+	```
+* run person reidentification sample code input from StandardCamera.
+	```bash
+	roslaunch vino_launch pipeline_reidentification_oss.launch
+	```
+* run object detection service sample code input from Image  
+  Run image processing service:
+	```bash
+	roslaunch vino_launch image_object_server_oss.launch
+	```
+  Run example application with an absolute path of an image on another console:
+	```bash
+	rosrun dynamic_vino_sample image_object_client ~/catkin_ws/src/ros_openvino_toolkit/data/images/car.png
+	```
+* run face detection service sample code input from Image  
+  Run image processing service:
+	```bash
+	roslaunch vino_launch image_people_server_oss.launch
+	```
+  Run example application with an absolute path of an image on another console:
+	```bash
+	rosrun dynamic_vino_sample image_people_client 
+	```
 # TODO Features
 * Support **result filtering** for inference process, so that the inference results can be filtered to different subsidiary inference. For example, given an image, firstly we do Object Detection on it, secondly we pass cars to vehicle brand recognition and pass license plate to license number recognition.
 * Design **resource manager** to better use such resources as models, engines, and other external plugins.

@@ -80,13 +80,7 @@ int main(int argc, char** argv)
   if (!parseAndCheckCommandLine(argc, argv))  return 0;
 
 
-  std::string param_path = "";
-  ros::param::param<std::string>("~param_file", param_path, "/param/pipeline_people.yaml");
-
-  std::string prefix_path;
-  prefix_path = ros::package::getPath("vino_launch");
-  
-  FLAGS_config = prefix_path + param_path;
+  ros::param::param<std::string>("~param_file", FLAGS_config, "/param/pipeline_people.yaml");
 
   slog::info << "FLAGS_config=" << FLAGS_config << slog::endl;
 

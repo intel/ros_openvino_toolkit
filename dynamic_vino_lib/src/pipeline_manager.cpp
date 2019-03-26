@@ -285,7 +285,7 @@ const Params::ParamManager::InferenceParams & infer)
   auto object_detection_engine = std::make_shared<Engines::Engine>(
     plugins_for_devices_[infer.engine], object_detection_model);
   auto object_inference_ptr = std::make_shared<dynamic_vino_lib::ObjectDetection>(
-    0.5); // To-do theshold configuration
+    infer.enable_roi_constraint, infer.confidence_threshold); // To-do theshold configuration
   object_inference_ptr->loadNetwork(object_detection_model);
   object_inference_ptr->loadEngine(object_detection_engine);
 
