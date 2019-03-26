@@ -26,7 +26,7 @@ From the view of logic implementation, the package introduces the definitions of
 
 ![Logic_Flow](https://github.com/intel/ros_openvino_toolkit/blob/devel/data/images/impletation_logic.PNG "OpenVINO RunTime Logic Flow")
 
-Once a corresponding program is launched with a specified .yaml config file passed in the .launch.py file or via commandline, _**parameter manager**_ analyzes the configurations about pipeline and the whole framework, then shares the parsed configuration information with pipeline procedure. A _**pipeline instance**_ is created by following the configuration info and is added into _**pipeline manager**_ for lifecycle control and inference action triggering.
+Once a corresponding program is launched with a specified .yaml config file passed in the .launch file or via commandline, _**parameter manager**_ analyzes the configurations about pipeline and the whole framework, then shares the parsed configuration information with pipeline procedure. A _**pipeline instance**_ is created by following the configuration info and is added into _**pipeline manager**_ for lifecycle control and inference action triggering.
 
 The contents in **.yaml config file** should be well structured and follow the supported rules and entity names. Please see [the configuration guidance](https://github.com/intel/ros_openvino_toolkit/blob/devel/doc/YAML_CONFIGURATION_GUIDE.md) for how to create or edit the config files.
 
@@ -58,6 +58,7 @@ Currently, the inference feature list is supported:
 |Object Detection| object detection based on SSD-based trained models.|
 |Vehicle Detection| Vehicle and passenger detection based on Intel models.|
 |Object Segmentation| object detection and segmentation.|
+|Person Reidentification| Person Reidentification based on object detection.|
 
 ## ROS interfaces and outputs
 ### Topic
@@ -77,6 +78,8 @@ Currently, the inference feature list is supported:
 ```/ros_openvino_toolkit/detected_objects```([object_msgs::ObjectsInBoxes](https://github.com/intel/object_msgs/blob/master/msg/ObjectsInBoxes.msg))
 - Object Segmentation:
 ```/ros_openvino_toolkit/segmented_obejcts```([people_msgs::ObjectsInMasks](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/msg/ObjectsInMasks.msg))
+- Person Reidentification:
+```/ros_openvino_toolkit/reidentified_persons```([people_msgs::ReidentificationStamped](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/msg/ReidentificationStamped.msg))
 - Rviz Output:
 ```/ros_openvino_toolkit/image_rviz```([sensor_msgs::Image](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Image.html))
 
@@ -108,6 +111,12 @@ See below pictures for the demo result snapshots.
 
 * object detection input from realsense camera
 ![object_detection_demo_realsense](https://github.com/intel/ros_openvino_toolkit/blob/devel/data/images/object_detection.gif "object detection demo realsense")
+
+* object segmentation input from video
+![object_segmentation_demo_video](https://github.com/intel/ros_openvino_toolkit/blob/devel/data/images/object_segmentation.gif "object segmentation demo video")
+
+* Person Reidentification input from standard camera
+![person_reidentification_demo_video](https://github.com/intel/ros2_openvino_toolkit/blob/devel/data/images/person-reidentification.gif "person reidentification demo video")
 
 # Installation & Launching
 **NOTE:** Intel releases 2 different series of OpenVINO Toolkit, we call them as [OpenSource Version](https://github.com/opencv/dldt/) and [Tarball Version](https://software.intel.com/en-us/openvino-toolkit). This guidelie uses OpenSource Version as the installation and launching example. **If you want to use Tarball version, please follow [the guide for Tarball Version](https://github.com/intel/ros_openvino_toolkit/blob/devel/doc/BINARY_VERSION_README.md).**

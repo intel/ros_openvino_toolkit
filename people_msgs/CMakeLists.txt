@@ -31,6 +31,10 @@ add_message_files(DIRECTORY msg FILES
   HeadPose.msg
   HeadPoseStamped.msg
   PersonsStamped.msg
+  ObjectInMask.msg
+  ObjectsInMasks.msg
+  Reidentification.msg
+  ReidentificationStamped.msg
 )
 
 add_service_files(FILES

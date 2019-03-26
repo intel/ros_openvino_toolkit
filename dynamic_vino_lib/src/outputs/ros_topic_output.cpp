@@ -37,15 +37,64 @@ Outputs::RosTopicOutput::RosTopicOutput()
       "/openvino_toolkit/headposes", 16);
   pub_object_ = nh_.advertise<object_msgs::ObjectsInBoxes>(
       "/openvino_toolkit/objects", 16);
+  pub_person_reid_ = nh_.advertise<people_msgs::ReidentificationStamped>(
+      "/openvino_toolkit/reidentified_persons", 16);
+  pub_segmented_object_ = nh_.advertise<people_msgs::ObjectsInMasks>(
+      "/openvino_toolkit/segmented_obejcts", 16);
 
   emotions_msg_ptr_ = NULL;
   faces_msg_ptr_ = NULL;
   age_gender_msg_ptr_ = NULL;
   headpose_msg_ptr_ = NULL;
   object_msg_ptr_ = NULL;
+  person_reid_msg_ptr_ = NULL;
+  segmented_object_msg_ptr_ = NULL;
 }
 
 void Outputs::RosTopicOutput::feedFrame(const cv::Mat& frame) {}
+
+
+void Outputs::RosTopicOutput::accept(
+  const std::vector<dynamic_vino_lib::PersonReidentificationResult> & results)
+{
+  person_reid_msg_ptr_ = std::make_shared<people_msgs::ReidentificationStamped>();
+  people_msgs::Reidentification person;
+  for (auto & r : results) {
+    // slog::info << ">";
+    auto loc = r.getLocation();
+    person.roi.x_offset = loc.x;
+    person.roi.y_offset = loc.y;
+    person.roi.width = loc.width;
+    person.roi.height = loc.height;
+    person.identity = r.getPersonID();
+    person_reid_msg_ptr_->reidentified_vector.push_back(person);
+  }
+}
+
+void Outputs::RosTopicOutput::accept(
+  const std::vector<dynamic_vino_lib::ObjectSegmentationResult> & results)
+{
+  segmented_object_msg_ptr_ = std::make_shared<people_msgs::ObjectsInMasks>();
+  people_msgs::ObjectInMask object;
+  for (auto & r : results) {
+    // slog::info << ">";
+    auto loc = r.getLocation();
+    object.roi.x_offset = loc.x;
+    object.roi.y_offset = loc.y;
+    object.roi.width = loc.width;
+    object.roi.height = loc.height;
+    object.object_name = r.getLabel();
+    object.probability = r.getConfidence();
+    cv::Mat mask = r.getMask();
+    for (int h = 0; h < mask.size().height; ++h) {
+      for (int w = 0; w < mask.size().width; ++w) {
+        object.mask_array.push_back(mask.at<float>(h, w));
+      }
+    }
+      segmented_object_msg_ptr_->objects_vector.push_back(object);
+  }
+}
+
 
 void Outputs::RosTopicOutput::accept(
     const std::vector<dynamic_vino_lib::FaceDetectionResult>& results)
@@ -155,6 +204,21 @@ void Outputs::RosTopicOutput::accept(
 void Outputs::RosTopicOutput::handleOutput()
 {
   std_msgs::Header header = getHeader();
+  if (person_reid_msg_ptr_ != nullptr) {
+    people_msgs::ReidentificationStamped person_reid_msg;
+    person_reid_msg.header = header;
+    person_reid_msg.reidentified_vector.swap(person_reid_msg_ptr_->reidentified_vector);
+    pub_person_reid_.publish(person_reid_msg);
+    person_reid_msg_ptr_ = nullptr;
+  }
+  if (segmented_object_msg_ptr_ != nullptr) {
+    // slog::info << "publishing faces outputs." << slog::endl;
+    people_msgs::ObjectsInMasks segmented_msg;
+    segmented_msg.header = header;
+    segmented_msg.objects_vector.swap(segmented_object_msg_ptr_->objects_vector);
+    pub_segmented_object_.publish(segmented_msg);
+    segmented_object_msg_ptr_ = nullptr;
+  }
   if (faces_msg_ptr_ != NULL)
   {
     object_msgs::ObjectsInBoxes faces_msg;
