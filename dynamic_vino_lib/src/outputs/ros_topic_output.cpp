@@ -35,11 +35,14 @@ Outputs::RosTopicOutput::RosTopicOutput()
       "/openvino_toolkit/age_genders", 16);
   pub_headpose_ = nh_.advertise<people_msgs::HeadPoseStamped>(
       "/openvino_toolkit/headposes", 16);
+  pub_object_ = nh_.advertise<object_msgs::ObjectsInBoxes>(
+      "/openvino_toolkit/objects", 16);
 
   emotions_msg_ptr_ = NULL;
   faces_msg_ptr_ = NULL;
   age_gender_msg_ptr_ = NULL;
   headpose_msg_ptr_ = NULL;
+  object_msg_ptr_ = NULL;
 }
 
 void Outputs::RosTopicOutput::feedFrame(const cv::Mat& frame) {}
@@ -130,6 +133,25 @@ void Outputs::RosTopicOutput::accept(
   }
 }
 
+void Outputs::RosTopicOutput::accept(
+    const std::vector<dynamic_vino_lib::ObjectDetectionResult>& results)
+{
+  object_msg_ptr_ = std::make_shared<object_msgs::ObjectsInBoxes>();
+
+  object_msgs::ObjectInBox hp;
+  for (auto r : results)
+  {
+    auto loc = r.getLocation();
+    hp.roi.x_offset = loc.x;
+    hp.roi.y_offset = loc.y;
+    hp.roi.width = loc.width;
+    hp.roi.height = loc.height;
+    hp.object.object_name = r.getLabel();
+    hp.object.probability = r.getConfidence();
+    object_msg_ptr_->objects_vector.push_back(hp);
+  }
+}
+
 void Outputs::RosTopicOutput::handleOutput()
 {
   std_msgs::Header header = getHeader();
@@ -168,6 +190,15 @@ void Outputs::RosTopicOutput::handleOutput()
 
     pub_headpose_.publish(headpose_msg);
     headpose_msg_ptr_ = nullptr;
+  }
+  if (object_msg_ptr_ != nullptr)
+  {
+    object_msgs::ObjectsInBoxes object_msg;
+    object_msg.header = header;
+    object_msg.objects_vector.swap(object_msg_ptr_->objects_vector);
+
+    pub_object_.publish(object_msg);
+    object_msg_ptr_ = nullptr;
   }
 }
 

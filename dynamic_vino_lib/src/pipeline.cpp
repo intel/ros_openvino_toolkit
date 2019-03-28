@@ -66,30 +66,37 @@ bool Pipeline::add(const std::string& parent, const std::string& name,
   next_.insert({parent, name});
 
   /**< Add pipeline instance to Output instance >**/
-  this->printPipeline();
   output->setPipeline(this);
   return true;
 }
 
 bool Pipeline::add(const std::string& parent, const std::string& name)
 {
-  if (parent.empty())
-  {
-    slog::err << "output device should have no parent!" << slog::endl;
+  if (isLegalConnect(parent, name)) {
+    addConnect(parent, name);
+    return true;
+  }
+
+  return false;
+}
+
+bool Pipeline::add(const std::string& name,
+                   std::shared_ptr<Outputs::BaseOutput> output) {
+    if (name.empty()) {
+    slog::err << "Item name can't be empty!" << slog::endl;
     return false;
   }
-  if (name_to_detection_map_.find(parent) == name_to_detection_map_.end())
-  {
-    slog::err << "parent detection does not exists!" << slog::endl;
-    return false;
+  
+  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>>::iterator it = name_to_output_map_.find(name);
+  if (it != name_to_output_map_.end()) {
+    slog::warn << "inferance instance for [" << name << 
+                  "] already exists, update it with new instance." << slog::endl;
   }
-  if (std::find(output_names_.begin(), output_names_.end(), name) ==
-      output_names_.end())
-  {
-    slog::err << "output does not exists!" << slog::endl;
-    return false;
-  }
-  next_.insert({parent, name});
+  name_to_output_map_[name] = output;
+  output_names_.insert(name);
+  /**< Add pipeline instance to Output instance >**/
+  output->setPipeline(this);
+  
   return true;
 }
 
@@ -108,7 +115,73 @@ bool Pipeline::add(const std::string& parent, const std::string& name,
   return true;
 }
 
-void Pipeline::runOnce(const std::string& input_type)
+bool Pipeline::add(const std::string& name,
+                   std::shared_ptr<dynamic_vino_lib::BaseInference> inference) {
+  if (name.empty()) {
+    slog::err << "Item name can't be empty!" << slog::endl;
+    return false;
+  }
+  
+  std::map<std::string, std::shared_ptr<dynamic_vino_lib::BaseInference>>::iterator it = name_to_detection_map_.find(name);
+  if (it != name_to_detection_map_.end()) {
+    slog::warn << "inferance instance for [" << name << 
+                  "] already exists, update it with new instance." << slog::endl;
+  } else {
+    ++total_inference_;
+  }
+  name_to_detection_map_[name] = inference;
+
+  return true;
+}
+
+int Pipeline::getCatagoryOrder(const std::string name)
+{
+  int order = kCatagoryOrder_Unknown;
+  if (name == input_device_name_) {
+    order = kCatagoryOrder_Input;
+  } else if (name_to_detection_map_.find(name) != name_to_detection_map_.end()) {
+    order = kCatagoryOrder_Inference;
+  } else if (name_to_output_map_.find(name) != name_to_output_map_.end()) {
+    order = kCatagoryOrder_Output;
+  }
+
+  return order;
+}
+
+
+bool Pipeline::isLegalConnect(const std::string parent, const std::string child)
+{
+  int parent_order = getCatagoryOrder(parent);
+  int child_order = getCatagoryOrder(child);
+  slog::info << "Checking connection into pipeline:[" << parent << "(" << parent_order << ")" <<
+    "<-->" << child << "(" << child_order << ")" <<
+    "]" << slog::endl;
+
+  return (parent_order != kCatagoryOrder_Unknown) && (child_order != kCatagoryOrder_Unknown) &&
+         (parent_order <= child_order);
+}
+
+void Pipeline::addConnect(const std::string & parent, const std::string & name)
+{
+  std::pair<std::multimap<std::string, std::string>::iterator,
+    std::multimap<std::string, std::string>::iterator>
+  ret;
+  ret = next_.equal_range(parent);
+
+  for (std::multimap<std::string, std::string>::iterator it = ret.first; it != ret.second; ++it) {
+    if (it->second == name) {
+      slog::warn << "The connect [" << parent << "<-->" << name << "] already exists." <<
+        slog::endl;
+      return;
+    }
+  }
+  slog::info << "Adding connection into pipeline:[" << parent << "<-->" << name << "]" <<
+    slog::endl;
+  next_.insert({parent, name});
+}
+
+
+void Pipeline::runOnce()
 {
   initInferenceCounter();
 
