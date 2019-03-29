@@ -29,13 +29,18 @@
 #include <people_msgs/AgeGenderStamped.h>
 #include <people_msgs/HeadPose.h>
 #include <people_msgs/HeadPoseStamped.h>
+#include <people_msgs/ObjectInMask.h>
+#include <people_msgs/ObjectsInMasks.h>
+#include <people_msgs/Reidentification.h>
+#include <people_msgs/ReidentificationStamped.h>
 
 #include <people_msgs/AgeGenderSrv.h>
 #include <people_msgs/EmotionSrv.h>
 #include <people_msgs/HeadPoseSrv.h>
 #include <people_msgs/PeopleSrv.h>
 #include <object_msgs/DetectObject.h>
-
+#include <people_msgs/ObjectsInMasksSrv.h>
+#include <people_msgs/ReidentificationSrv.h>
 
 
 #include <std_msgs/Header.h>
@@ -71,6 +76,8 @@ public:
   void setServiceResponse(boost::shared_ptr<people_msgs::EmotionSrv::Response> response);
   void setServiceResponse(boost::shared_ptr<people_msgs::HeadPoseSrv::Response> response);
   void setServiceResponse(boost::shared_ptr<people_msgs::PeopleSrv::Response> response);
+  void setServiceResponse(boost::shared_ptr<people_msgs::ObjectsInMasksSrv::Response> response);
+  void setServiceResponse(boost::shared_ptr<people_msgs::ReidentificationSrv::Response> response);
 
 private:
   const std::string service_name_;

@@ -69,6 +69,23 @@ void Outputs::RosServiceOutput::setServiceResponse(
 }
 
 void Outputs::RosServiceOutput::setServiceResponse(
+  boost::shared_ptr<people_msgs::ObjectsInMasksSrv::Response> response)
+  {
+    slog::info << "in ObjectsInMasks service::Response ...";
+    if (segmented_object_msg_ptr_ != nullptr) {
+      response->segmentation.objects_vector = segmented_object_msg_ptr_->objects_vector;
+    }
+  }
+void Outputs::RosServiceOutput::setServiceResponse(
+  boost::shared_ptr<people_msgs::ReidentificationSrv::Response> response)
+  {
+    slog::info << "in Reidentification service::Response ...";
+    if (person_reid_msg_ptr_ != nullptr) {
+      response->reidentification.reidentified_vector = person_reid_msg_ptr_->reidentified_vector;
+    }
+  }
+
+void Outputs::RosServiceOutput::setServiceResponse(
   boost::shared_ptr<people_msgs::PeopleSrv::Response> response)
 {
   slog::info << "in People::Response ...";
@@ -101,4 +118,6 @@ void Outputs::RosServiceOutput::clearData()
   age_gender_msg_ptr_ = nullptr;
   emotions_msg_ptr_ = nullptr;
   headpose_msg_ptr_ = nullptr;
+  segmented_object_msg_ptr_ = nullptr;
+  person_reid_msg_ptr_ = nullptr;
 }

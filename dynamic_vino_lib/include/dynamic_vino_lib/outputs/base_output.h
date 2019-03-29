@@ -126,6 +126,10 @@ class BaseOutput
     boost::shared_ptr<people_msgs::HeadPoseSrvResponse> response) {}
   virtual void setServiceResponse(
     boost::shared_ptr<people_msgs::PeopleSrvResponse> response) {}
+  virtual void setServiceResponse(
+    boost::shared_ptr<people_msgs::ReidentificationSrvResponse> response) {}
+  virtual void setServiceResponse(
+    boost::shared_ptr<people_msgs::ObjectsInMasksSrvResponse> response) {}
   Pipeline* getPipeline() const;
   cv::Mat getFrame() const;
   virtual void clearData() {}

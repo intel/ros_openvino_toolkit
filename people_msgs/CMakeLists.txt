@@ -42,6 +42,8 @@ add_service_files(FILES
   EmotionSrv.srv
   HeadPoseSrv.srv
   PeopleSrv.srv
+  ReidentificationSrv.srv
+  ObjectsInMasksSrv.srv
 )
 generate_messages(DEPENDENCIES
   std_msgs

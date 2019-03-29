@@ -264,6 +264,15 @@ void Outputs::RosTopicOutput::handleOutput()
     pub_object_.publish(object_msg);
     object_msg_ptr_ = nullptr;
   }
+  if (object_msg_ptr_ != nullptr)
+  {
+    object_msgs::ObjectsInBoxes object_msg;
+    object_msg.header = header;
+    object_msg.objects_vector.swap(object_msg_ptr_->objects_vector);
+
+    pub_object_.publish(object_msg);
+    object_msg_ptr_ = nullptr;
+  }
 }
 
 std_msgs::Header Outputs::RosTopicOutput::getHeader()

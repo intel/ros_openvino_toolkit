@@ -14,6 +14,8 @@
 
 #include "dynamic_vino_lib/services/frame_processing_server.h"
 #include <people_msgs/PeopleSrv.h>
+#include <people_msgs/ObjectsInMasksSrv.h>
+#include <people_msgs/ReidentificationSrv.h>
 #include <object_msgs/DetectObject.h>
 #include <vino_param_lib/param_manager.h>
 #include <ros/ros.h>
@@ -48,6 +50,7 @@ void FrameProcessingServer<T>::initService(
 {
   Params::ParamManager::getInstance().parse(config_path);
   Params::ParamManager::getInstance().print();
+  
   auto pcommon = Params::ParamManager::getInstance().getCommon();
   auto pipelines = Params::ParamManager::getInstance().getPipelines();
 
@@ -75,14 +78,13 @@ bool FrameProcessingServer<T>::cbService(
   for (auto it = pipelines_.begin(); it != pipelines_.end(); ++it) {
     PipelineManager::PipelineData & p = pipelines_[it->second.params.name.c_str()];
     auto input = p.pipeline->getInputDevice();
-  
+
     p.pipeline->runOnce();
     auto output_handle = p.pipeline->getOutputHandle();
 
     for (auto & pair : output_handle) {
       if (!pair.first.compare(kOutputTpye_RosService)) {
         pair.second->setServiceResponse(res);
-        //Ugly implement because of type difine 
         event.getResponse() = *res;
         pair.second->clearData();
         return true;  // TODO(weizhi) , return directly, suppose only 1 pipeline dealing with 1 request.
@@ -90,11 +92,11 @@ bool FrameProcessingServer<T>::cbService(
     }
   }
   slog::info << "[FrameProcessingServer] Callback finished!" << slog::endl;
-  
+  return false;
 }
-
-
 
 template class FrameProcessingServer<object_msgs::DetectObject>;
 template class FrameProcessingServer<people_msgs::PeopleSrv>;
+template class FrameProcessingServer<people_msgs::ReidentificationSrv>;
+template class FrameProcessingServer<people_msgs::ObjectsInMasksSrv>;
 }  // namespace vino_service

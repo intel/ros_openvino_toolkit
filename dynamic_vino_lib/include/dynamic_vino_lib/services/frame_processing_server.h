@@ -29,6 +29,8 @@
 #include <people_msgs/HeadPoseSrv.h>
 #include <people_msgs/PeopleSrv.h>
 #include <object_msgs/DetectObject.h>
+#include <people_msgs/ObjectsInMasksSrv.h>
+#include <people_msgs/ReidentificationSrv.h>
 
 #include <ros/ros.h>
 #include <memory>

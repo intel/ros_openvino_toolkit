@@ -194,6 +194,85 @@ target_link_libraries(image_object_client
   ${OpenCV_LIBRARIES}
 )
 
+
+add_executable(image_segmentation_client
+  src/image_segmentation_client.cpp
+)
+
+add_dependencies(image_segmentation_client
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${dynamic_vino_lib_TARGETS}
+)
+
+target_link_libraries(image_segmentation_client
+  ${catkin_LIBRARIES}
+  cpu_extension
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
+
+add_executable(image_segmentation_server
+  src/image_segmentation_server.cpp
+)
+
+add_dependencies(image_segmentation_server
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${dynamic_vino_lib_TARGETS}
+)
+
+target_link_libraries(image_segmentation_server
+  ${catkin_LIBRARIES}
+  cpu_extension
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
+
+
+add_executable(image_reidentification_client
+  src/image_reidentification_client.cpp
+)
+
+add_dependencies(image_reidentification_client
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${dynamic_vino_lib_TARGETS}
+)
+
+target_link_libraries(image_reidentification_client
+  ${catkin_LIBRARIES}
+  cpu_extension
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
+
+add_executable(image_reidentification_server
+  src/image_reidentification_server.cpp
+)
+
+add_dependencies(image_reidentification_server
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${dynamic_vino_lib_TARGETS}
+)
+
+target_link_libraries(image_reidentification_server
+  ${catkin_LIBRARIES}
+  cpu_extension
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
+
+
 if(UNIX OR APPLE)
   # Linker flags.
   if( ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Intel")
