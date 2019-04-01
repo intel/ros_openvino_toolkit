@@ -37,7 +37,7 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 ## 3. Environment Setup
 **Note**:You can choose to build the environment using *./environment_setup.sh* script in the script subfolder.
 ```bash
-./environment_setup.sh username password
+./environment_setup.sh
 ```
 **Note**:You can also choose to follow the steps below to build the environment step by step.
 - For Ubuntu16.04, install ROS Kinetic Desktop-Full [(guide)](http://wiki.ros.org/kinetic/Installation/Ubuntu)
@@ -136,7 +136,6 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	```
 
 * Build package
-	**Note**:Please modify kinetic to melodic if you are Ubuntu 18.04 user 
 	```
 	# Ubuntu 16.04
 	source /opt/ros/kinetic/setup.bash
@@ -149,3 +148,4 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	sudo ln -s ~/catkin_ws/src/ros_openvino_toolkit /opt/openvino_toolkit/ros_openvino_toolkit
 	```
 
+###### *Any security issue should be reported using process at https://01.org/security*
