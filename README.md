@@ -64,7 +64,7 @@ Currently, the inference feature list is supported:
 ### Topic
 #### Subscribed Topic
 - Image topic:
-```/openvino_toolkit/image_raw```([sensor_msgs::Image](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Image.html))
+```/camera/color/image_raw```([sensor_msgs::Image](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Image.html))
 #### Published Topic
 - Face Detection:
 ```/ros_openvino_toolkit/face_detection```([object_msgs::ObjectsInBoxes](https://github.com/intel/object_msgs/blob/master/msg/ObjectsInBoxes.msg))
@@ -121,6 +121,51 @@ See below pictures for the demo result snapshots.
 # Installation & Launching
 **NOTE:** Intel releases 2 different series of OpenVINO Toolkit, we call them as [OpenSource Version](https://github.com/opencv/dldt/) and [Tarball Version](https://software.intel.com/en-us/openvino-toolkit). This guidelie uses OpenSource Version as the installation and launching example. **If you want to use Tarball version, please follow [the guide for Tarball Version](https://github.com/intel/ros_openvino_toolkit/blob/devel/doc/BINARY_VERSION_README.md).**
 
+## Enable Intel® Neural Compute Stick 2 (Intel® NCS 2) under the OpenVINO Open Source version (Optional) </br>
+1. Intel Distribution of OpenVINO toolkit </br>
+	* Download OpenVINO toolkit by following the [guide](https://software.intel.com/en-us/openvino-toolkit/choose-download)</br>
+	```bash
+	cd ~/Downloads
+	wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15078/l_openvino_toolkit_p_2018.5.455.tgz
+	```
+	* Install OpenVINO toolkit by following the [guide](https://software.intel.com/en-us/articles/OpenVINO-Install-Linux) </br>
+	```bash
+	cd ~/Downloads
+	tar -xvf l_openvino_toolkit_p_2018.5.455.tgz
+	cd l_openvino_toolkit_p_2018.5.455
+	# root is required instead of sudo
+	sudo -E ./install_cv_sdk_dependencies.sh
+	sudo ./install_GUI.sh
+	# build sample code under OpenVINO toolkit
+	source /opt/intel/computer_vision_sdk/bin/setupvars.sh
+ 	cd /opt/intel/computer_vision_sdk/deployment_tools/inference_engine/samples/
+ 	mkdir build
+	cd build
+ 	cmake ..
+ 	make
+	```
+	* Configure the Neural Compute Stick USB Driver
+	```bash
+	cd ~/Downloads
+	cat <<EOF > 97-usbboot.rules
+	SUBSYSTEM=="usb", ATTRS{idProduct}=="2150", ATTRS{idVendor}=="03e7", GROUP="users", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1"
+	SUBSYSTEM=="usb", ATTRS{idProduct}=="2485", ATTRS{idVendor}=="03e7", GROUP="users", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1"
+	SUBSYSTEM=="usb", ATTRS{idProduct}=="f63b", ATTRS{idVendor}=="03e7", GROUP="users", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1"
+	EOF
+	sudo cp 97-usbboot.rules /etc/udev/rules.d/
+	sudo udevadm control --reload-rules
+	sudo udevadm trigger
+	sudo ldconfig
+	rm 97-usbboot.rules
+	```
+	
+2. Configure the environment (you can write the configuration to your ~/.basrch file)</br>
+	**Note**: If you used root privileges to install the OpenVINO binary package, it installs the Intel Distribution of OpenVINO toolkit in this directory: */opt/intel/openvino_<version>/*
+	```bash
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/computer_vision_sdk/deployment_tools/inference_engine/samples/build/intel64/Release/lib
+	source /opt/intel/computer_vision_sdk/bin/setupvars.sh
+	```
+
 ## Dependencies Installation
 One-step installation scripts are provided for the dependencies' installation. Please see [the guide](https://github.com/intel/ros_openvino_toolkit/blob/devel/doc/OPEN_SOURCE_CODE_README.md) for details.
 
@@ -141,8 +186,11 @@ One-step installation scripts are provided for the dependencies' installation. P
 		sudo ln -s ~/Downloads/models/mask_rcnn_inception_v2_coco_2018_01_28 /opt/models/
 		#object detection model
 		cd /opt/openvino_toolkit/open_model_zoo/model_downloader
-		python3 downloader.py --name ssd300
-		sudo python3 /opt/openvino_toolkit/dldt/model-optimizer/mo.py --input_model /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/ssd/300/caffe/ssd300.caffemodel --output_dir /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/ssd/300/caffe/output/
+		python3 ./downloader.py --name mobilenet-ssd
+ 		#FP32 precision model
+ 		sudo python3 /opt/openvino_toolkit/dldt/model-optimizer/mo.py --input_model /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel --output_dir /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP32 --mean_values [127.5,127.5,127.5] --scale_values [127.5]
+ 		#FP16 precision model
+ 		sudo python3 /opt/openvino_toolkit/dldt/model-optimizer/mo.py --input_model /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel --output_dir /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP16 --data_type=FP16 --mean_values [127.5,127.5,127.5] --scale_values [127.5]
 	* download the optimized Intermediate Representation (IR) of model (excute _once_)<br>
 		```bash
 		cd /opt/openvino_toolkit/open_model_zoo/model_downloader
@@ -150,13 +198,16 @@ One-step installation scripts are provided for the dependencies' installation. P
 		python3 downloader.py --name age-gender-recognition-retail-0013
 		python3 downloader.py --name emotions-recognition-retail-0003
 		python3 downloader.py --name head-pose-estimation-adas-0001
+		python3 downloader.py --name person-detection-retail-0013
+ 		python3 downloader.py --name person-reidentification-retail-0076
 		```
 	* copy label files (excute _once_)<br>
 		```bash
 		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/openvino_toolkit/open_model_zoo/model_downloader/Retail/object_attributes/emotions_recognition/0003/dldt
 		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/open_model_zoo/model_downloader/Transportation/object_detection/face/pruned_mobilenet_reduced_ssd_shared_weights/dldt
 		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_segmentation/frozen_inference_graph.labels /opt/models/mask_rcnn_inception_v2_coco_2018_01_28/output
-		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_detection/ssd300.labels /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/ssd/300/caffe/output
+		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP32
+		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP16
 		```
 	* set ENV LD_LIBRARY_PATH<br>
 		```bash
@@ -166,12 +217,19 @@ One-step installation scripts are provided for the dependencies' installation. P
 	```bash
 	roslaunch vino_launch pipeline_people_oss.launch
 	```
-	
-* run object detection sample code input from RealsensCamera.(connect Intel® Neural Compute Stick 2) 
-	```bash
-	roslaunch vino_launch pipeline_object_myriad.launch
-	```
 
+* run face detection sample code input from Image.
+	```bash
+	roslaunch vino_launch pipeline_image_oss.launch
+	```
+* run object detection sample code input from RealsensCamera.
+	```bash
+	roslaunch vino_launch pipeline_object_oss.launch
+	```
+* run object detection sample code input from RealsensCameraTopic.
+	```bash
+	roslaunch vino_launch pipeline_object_oss_topic.launch
+	```
 * run object segmentation sample code input from RealSenseCameraTopic.
 	```bash
 	roslaunch vino_launch pipeline_segmentation.launch
@@ -200,7 +258,7 @@ One-step installation scripts are provided for the dependencies' installation. P
 	```
   Run example application with an absolute path of an image on another console:
 	```bash
-	rosrun dynamic_vino_sample image_people_client 
+	rosrun dynamic_vino_sample image_people_client ~/catkin_ws/src/ros_openvino_toolkit/data/images/team.jpg
 	```
 # TODO Features
 * Support **result filtering** for inference process, so that the inference results can be filtered to different subsidiary inference. For example, given an image, firstly we do Object Detection on it, secondly we pass cars to vehicle brand recognition and pass license plate to license number recognition.
@@ -210,3 +268,5 @@ One-step installation scripts are provided for the dependencies' installation. P
 # More Information
 * ros OpenVINO discription writen in Chinese: https://mp.weixin.qq.com/s/BgG3RGauv5pmHzV_hkVAdw 
 
+
+###### *Any security issue should be reported using process at https://01.org/security*

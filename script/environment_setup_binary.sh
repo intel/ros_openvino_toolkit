@@ -72,9 +72,9 @@ fi
 if [ "$ROS_DEBIAN" == "1" ]; then
   echo "===================Installing ROS from Debian Package...======================="
   echo $ROOT_PASSWD | sudo -S sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-  echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
+  #echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
   #For those who cannot access hkp protocal 
-  #echo $ROOT_PASSWD | curl http://repo.ros2.org/repos.key | sudo apt-key add -
+  echo $ROOT_PASSWD | curl http://repo.ros2.org/repos.key | sudo apt-key add -
   echo $ROOT_PASSWD | sudo -S apt-get update
   echo $ROOT_PASSWD | sudo -S apt-get install -y ros-$ros_ver-desktop-full
 
@@ -140,9 +140,9 @@ fi
 #setup OPENVINO
 if [ "$OPENVINO" == "1" ]; then
   cd ~/Downloads
-  wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/14920/l_openvino_toolkit_p_2018.4.420.tgz
-  tar -xvf l_openvino_toolkit_p_2018.4.420.tgz
-  cd l_openvino_toolkit_p_2018.4.420
+  wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15078/l_openvino_toolkit_p_2018.5.455.tgz
+  tar -xvf l_openvino_toolkit_p_2018.5.455.tgz
+  cd l_openvino_toolkit_p_2018.5.455
   echo $ROOT_PASSWD | sudo -S ./install_cv_sdk_dependencies.sh
   cp $basedir/openvino_silent.cfg .
   echo $ROOT_PASSWD | sudo -S ./install.sh --silent openvino_silent.cfg

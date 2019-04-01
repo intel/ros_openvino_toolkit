@@ -110,6 +110,7 @@ PipelineManager::parseInputDevice(
       device = std::make_shared<Input::StandardCamera>();
     } else if (name == kInputType_CameraTopic) {
       device = std::make_shared<Input::RealSenseCameraTopic>();
+      std::cout <<"register yaml"<<std::endl;
     } else if (name == kInputType_Video) {
       if (params.input_meta != "") {
         device = std::make_shared<Input::Video>(params.input_meta);

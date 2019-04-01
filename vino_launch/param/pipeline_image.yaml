@@ -3,38 +3,38 @@ Pipelines:
   inputs: [Image]
   input_path: /opt/openvino_toolkit/ros_openvino_toolkit/data/images/team.jpg
   infers:
-    - name: face_detection
-      model: /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/Transportation/object_detection/face/pruned_mobilenet_reduced_ssd_shared_weights/dldt/face-detection-adas-0001.xml
+    - name: FaceDetection
+      model: /opt/intel/computer_vision_sdk/deployment_tools/intel_models/face-detection-adas-0001/FP32/face-detection-adas-0001.xml
       engine: CPU
       label: to/be/set/xxx.labels
       batch: 1
-    - name: age_gender_detection
-      model: /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/Retail/object_attributes/age_gender/dldt/age-gender-recognition-retail-0013.xml 
+    - name: AgeGenderRecognition
+      model: /opt/intel/computer_vision_sdk/deployment_tools/intel_models/age-gender-recognition-retail-0013/FP32/age-gender-recognition-retail-0013.xml 
       engine: CPU
       label: to/be/set/xxx.labels
       batch: 16
-    - name: emotion_detection
-      model: /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/Retail/object_attributes/emotions_recognition/0003/dldt/emotions-recognition-retail-0003.xml
+    - name: EmotionRecognition
+      model: /opt/intel/computer_vision_sdk/deployment_tools/intel_models/emotions-recognition-retail-0003/FP32/emotions-recognition-retail-0003.xml
       engine: CPU
       label: to/be/set/xxx.labels
       batch: 16
-    - name: head_pose_detection
-      model: /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/Transportation/object_attributes/headpose/vanilla_cnn/dldt/head-pose-estimation-adas-0001.xml
+    - name: HeadPoseEstimation
+      model: /opt/intel/computer_vision_sdk/deployment_tools/intel_models/head-pose-estimation-adas-0001/FP32/head-pose-estimation-adas-0001.xml
       engine: CPU
       label: to/be/set/xxx.labels
       batch: 16
-  outputs: [ImageWindow]
+  outputs: [ImageWindow, RosTopic, RViz]
   confidence_threshold: 0.2
   connects:
     - left: Image
-      right: [face_detection]
-    - left: face_detection
-      right: [age_gender_detection, emotion_detection, head_pose_detection, ImageWindow]
-    - left: age_gender_detection
-      right: [ImageWindow]
-    - left: emotion_detection
-      right: [ImageWindow]
-    - left: head_pose_detection
-      right: [ImageWindow]
+      right: [FaceDetection]
+    - left: FaceDetection
+      right: [AgeGenderRecognition, EmotionRecognition, HeadPoseEstimation, ImageWindow, RosTopic RViz]
+    - left: AgeGenderRecognition
+      right: [ImageWindow, RosTopic, RViz]
+    - left: EmotionRecognition
+      right: [ImageWindow, RosTopic, RViz]
+    - left: HeadPoseEstimation
+      right: [ImageWindow, RosTopic, RViz]
 
 OpenvinoCommon:
