@@ -36,7 +36,7 @@ Outputs::RosTopicOutput::RosTopicOutput()
   pub_headpose_ = nh_.advertise<people_msgs::HeadPoseStamped>(
       "/openvino_toolkit/headposes", 16);
   pub_object_ = nh_.advertise<object_msgs::ObjectsInBoxes>(
-      "/openvino_toolkit/objects", 16);
+      "/openvino_toolkit/detected_objects", 16);
   pub_person_reid_ = nh_.advertise<people_msgs::ReidentificationStamped>(
       "/openvino_toolkit/reidentified_persons", 16);
   pub_segmented_object_ = nh_.advertise<people_msgs::ObjectsInMasks>(

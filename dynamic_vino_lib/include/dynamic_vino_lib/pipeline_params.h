@@ -48,10 +48,10 @@ const char kOutputTpye_ImageWindow[] = "ImageWindow";
 const char kOutputTpye_RosTopic[] = "RosTopic";
 const char kOutputTpye_RosService[] = "RosService";
 
-const char kInferTpye_FaceDetection[] = "face_detection";
-const char kInferTpye_AgeGenderRecognition[] = "age_gender_detection";
-const char kInferTpye_EmotionRecognition[] = "emotion_detection";
-const char kInferTpye_HeadPoseEstimation[] = "head_pose_detection";
+const char kInferTpye_FaceDetection[] = "FaceDetection";
+const char kInferTpye_AgeGenderRecognition[] = "AgeGenderRecognition";
+const char kInferTpye_EmotionRecognition[] = "EmotionRecognition";
+const char kInferTpye_HeadPoseEstimation[] = "HeadPoseEstimation";
 const char kInferTpye_ObjectDetection[] = "ObjectDetection";
 const char kInferTpye_ObjectSegmentation[] = "ObjectSegmentation";
 const char kInferTpye_PersonReidentification[] = "PersonReidentification";

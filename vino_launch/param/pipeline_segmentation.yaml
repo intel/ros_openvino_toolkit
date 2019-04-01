@@ -7,13 +7,17 @@ Pipelines:
       engine: CPU
       label: to/be/set/xxx.labels
       batch: 1
-  outputs: [ImageWindow, RosTopic]
+  outputs: [ImageWindow, RosTopic, RViz]
   confidence_threshold: 0.2
   connects:
     - left: RealSenseCameraTopic
       right: [ObjectSegmentation]
     - left: ObjectSegmentation
-      right: [ImageWindow, RosTopic]
+      right: [ImageWindow]
+    - left: ObjectSegmentation
+      right: [RosTopic]
+    - left: ObjectSegmentation
+      right: [RViz]
 
 OpenvinoCommon:
 

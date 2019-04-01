@@ -59,6 +59,13 @@
 #include "opencv2/opencv.hpp"
 #include "sample/utility.hpp"
 
+void signalHandler(int signum)
+{
+  slog::warn << "!!!!!!!!!!!Interrupt signal (" << signum << ") received!!!!!!!!!!!!" << slog::endl;
+
+  PipelineManager::getInstance().stopAll();
+}
+
 bool parseAndCheckCommandLine(int argc, char** argv)
 {
   // -----Parsing and validation of input args---------------------------
@@ -77,6 +84,9 @@ int main(int argc, char** argv)
 
   ros::init(argc, argv, "sample_with_params"); 
   
+  // register signal SIGINT and signal handler
+  signal(SIGINT, signalHandler);
+
   std::string FLAGS_config;
   ros::param::param<std::string>("~param_file", FLAGS_config, "/param/pipeline_people.yaml");
   slog::info << "FLAGS_config=" << FLAGS_config << slog::endl;

@@ -32,6 +32,13 @@ int main(int argc, char ** argv)
   ros::init(argc, argv, "image_people_client"); 
   ros::NodeHandle n;
 
+  if (argc != 2) {
+    ROS_INFO( "Usage: rosrun dynamic_vino_sample image_people_client"
+      "<image_path>");
+    return -1;
+  }
+
+
   ros::ServiceClient client = n.serviceClient<people_msgs::PeopleSrv>("/openvino_toolkit/service");
 
   people_msgs::PeopleSrv srv;
