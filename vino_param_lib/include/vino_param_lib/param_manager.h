@@ -51,9 +51,7 @@ class ParamManager  // singleton
    */
   static ParamManager& getInstance()
   {
-    std::cout << "getting instance" << std::endl;
     static ParamManager manager_;
-    std::cout << "return instance" << std::endl;
     return manager_;
   }
 
@@ -68,6 +66,7 @@ class ParamManager  // singleton
     std::string name;
     std::string engine;
     std::string model;
+    std::string model_type;
     std::string label;
   };
   struct PipelineParams

@@ -54,6 +54,8 @@ const char kInferTpye_EmotionRecognition[] = "emotion_detection";
 const char kInferTpye_HeadPoseEstimation[] = "head_pose_detection";
 const char kInferTpye_ObjectDetection[] = "ObjectDetection";
 const char kInferTpye_ObjectSegmentation[] = "ObjectSegmentation";
+const char kInferTpye_ObjectDetectionTypeSSD[] = "SSD";
+const char kInferTpye_ObjectDetectionTypeYolov2voc[] = "yolov2-voc";
 
 /**
  * @class PipelineParams

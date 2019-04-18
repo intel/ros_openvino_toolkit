@@ -155,7 +155,7 @@ int main(int argc, char* argv[])
     // Instance-----------------------------------
     // generate face detection inference
     auto model =
-        std::make_shared<Models::ObjectDetectionModel>(FLAGS_m, 1, 1, 1);
+        std::make_shared<Models::ObjectDetectionSSDModel>(FLAGS_m, 1, 1, 1);
     model->modelInit();
     auto engine = std::make_shared<Engines::Engine>(plugins_for_devices[FLAGS_d], model);
     auto object_detection_ptr =

@@ -197,21 +197,21 @@ void Pipeline::runOnce()
   {
     pair.second->feedFrame(frame_);
   }
-  // auto t0 = std::chrono::high_resolution_clock::now();
+
   for (auto pos = next_.equal_range(input_device_name_);
        pos.first != pos.second; ++pos.first)
   {
     std::string detection_name = pos.first->second;
     auto detection_ptr = name_to_detection_map_[detection_name];
+
     detection_ptr->enqueue(frame_,
                            cv::Rect(width_ / 2, height_ / 2, width_, height_));
     increaseInferenceCounter();
     detection_ptr->submitRequest();
   }
+
   std::unique_lock<std::mutex> lock(counter_mutex_);
   cv_.wait(lock, [this]() { return this->counter_ == 0; });
-  // auto t1 = std::chrono::high_resolution_clock::now();
-  // typedef std::chrono::duration<double, std::ratio<1, 1000>> ms;
 
   for (auto& pair : name_to_output_map_)
   {
@@ -233,6 +233,7 @@ void Pipeline::setCallback()
   for (auto& pair : name_to_detection_map_)
   {
     std::string detection_name = pair.first;
+
     std::function<void(void)> callb;
     callb = [detection_name, this]()
     {
@@ -242,10 +243,12 @@ void Pipeline::setCallback()
     pair.second->getEngine()->getRequest()->SetCompletionCallback(callb);
   }
 }
+
 void Pipeline::callback(const std::string& detection_name)
 {
   auto detection_ptr = name_to_detection_map_[detection_name];
   detection_ptr->fetchResults();
+
   // set output
   for (auto pos = next_.equal_range(detection_name); pos.first != pos.second;
        ++pos.first)
@@ -291,11 +294,13 @@ void Pipeline::initInferenceCounter()
   counter_ = 0;
   cv_.notify_all();
 }
+
 void Pipeline::increaseInferenceCounter()
 {
   std::lock_guard<std::mutex> lk(counter_mutex_);
   ++counter_;
 }
+
 void Pipeline::decreaseInferenceCounter()
 {
   std::lock_guard<std::mutex> lk(counter_mutex_);

@@ -23,6 +23,10 @@
 
 #include "dynamic_vino_lib/inferences/base_inference.h"
 
+dynamic_vino_lib::ObjectDetectionResult::ObjectDetectionResult(
+    const cv::Rect& location)
+    : Result(location){}
+
 // Result
 dynamic_vino_lib::Result::Result(const cv::Rect& location)
 {
@@ -43,8 +47,8 @@ void dynamic_vino_lib::BaseInference::loadEngine(
 bool dynamic_vino_lib::BaseInference::submitRequest()
 {
   if (engine_->getRequest() == nullptr) return false;
-  if (!enqueued_frames) return false;
-  enqueued_frames = 0;
+  if (!enqueued_frames_) return false;
+  enqueued_frames_ = 0;
   results_fetched_ = false;
   engine_->getRequest()->StartAsync();
   return true;

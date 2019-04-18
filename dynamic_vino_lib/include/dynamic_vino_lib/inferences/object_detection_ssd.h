@@ -17,15 +17,16 @@
  * @brief A header file with declaration for ObjectDetection Class
  * @file object_detection.hpp
  */
-#ifndef DYNAMIC_VINO_LIB_INFERENCES_OBJECT_DETECTION_H
-#define DYNAMIC_VINO_LIB_INFERENCES_OBJECT_DETECTION_H
+#ifndef DYNAMIC_VINO_LIB_INFERENCES_OBJECT_DETECTION_SSD_H
+#define DYNAMIC_VINO_LIB_INFERENCES_OBJECT_DETECTION_SSD_H
 #include <object_msgs/Object.h>
 #include <object_msgs/ObjectInBox.h>
 #include <object_msgs/ObjectsInBoxes.h>
 #include <memory>
 #include <vector>
 #include <string>
-#include "dynamic_vino_lib/models/object_detection_model.h"
+#include "dynamic_vino_lib/models/object_detection_ssd_model.h"
+#include "dynamic_vino_lib/models/object_detection_yolov2voc_model.h"
 #include "dynamic_vino_lib/engines/engine.h"
 #include "dynamic_vino_lib/inferences/base_inference.h"
 #include "inference_engine.hpp"
@@ -33,36 +34,18 @@
 // namespace
 namespace dynamic_vino_lib {
 /**
- * @class ObjectDetectionResult
- * @brief Class for storing and processing face detection result.
- */
-class ObjectDetectionResult : public Result {
- public:
-  friend class ObjectDetection;
-  explicit ObjectDetectionResult(const cv::Rect& location);
-  std::string getLabel() const { return label_; }
-  /**
-   * @brief Get the confidence that the detected area is a face.
-   * @return The confidence value. 
-   */
-  float getConfidence() const { return confidence_; }
- private:
-  std::string label_ = "";
-  float confidence_ = -1;
-};
-/**
  * @class ObjectDetection
  * @brief Class to load face detection model and perform face detection.
  */
-class ObjectDetection : public BaseInference {
+class ObjectDetectionSSD : public ObjectDetection {
  public:
   using Result = dynamic_vino_lib::ObjectDetectionResult;
-  explicit ObjectDetection(double);
-  ~ObjectDetection() override;
+  explicit ObjectDetectionSSD(double);
+  ~ObjectDetectionSSD() override;
   /**
    * @brief Load the face detection model.
    */
-  void loadNetwork(std::shared_ptr<Models::ObjectDetectionModel>);
+  void loadNetwork(std::shared_ptr<Models::ObjectDetectionModel>) override;
   /**
    * @brief Enqueue a frame to this class.
    * The frame will be buffered but not infered yet.
@@ -106,13 +89,18 @@ class ObjectDetection : public BaseInference {
    */
   const std::string getName() const override;
  private:
-  std::shared_ptr<Models::ObjectDetectionModel> valid_model_;
+  std::shared_ptr<Models::ObjectDetectionSSDModel> valid_model_;
   std::vector<Result> results_;
   int width_ = 0;
   int height_ = 0;
   int max_proposal_count_;
   int object_size_;
   double show_output_thresh_ = 0;
+  //int enqueued_frames_ = 0;
+  int max_batch_size_ = 1;
+
+  bool matToBlob(const cv::Mat& frame, const cv::Rect&, float scale_factor,
+                 int batch_index, const std::string& input_name);
 };
 }  // namespace dynamic_vino_lib
-#endif  // DYNAMIC_VINO_LIB_INFERENCES_OBJECT_DETECTION_H
+#endif  // DYNAMIC_VINO_LIB_INFERENCES_OBJECT_DETECTION_SSD_H
