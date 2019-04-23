@@ -4,7 +4,7 @@ Pipelines:
   infers:
     - name: ObjectDetection
       model: /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/ssd/300/caffe/output/ssd300.xml
-      engine: CPU
+      engine: GPU
       label: to/be/set/xxx.labels
       batch: 16
   outputs: [ImageWindow, RosTopic, RViz]
