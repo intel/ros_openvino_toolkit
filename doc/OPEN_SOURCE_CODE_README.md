@@ -35,9 +35,9 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	* Openvino: Download the install package, install_GUI.sh inside will check the GPU information before installation.
 
 ## 3. Environment Setup
-**Note**:You can choose to build the environment using *./environment_setup.sh* script in the script subfolder.
+**Note**:You can choose to build the environment using *./environment_setup.sh* script in the script subfolder. The *modules.conf* file in the same directory as the .sh file is the configuration file that controls the installation process.You can modify the *modules.conf* to customize your installation process.
 ```bash
-./environment_setup.sh username password
+./environment_setup.sh
 ```
 **Note**:You can also choose to follow the steps below to build the environment step by step.
 - For Ubuntu16.04, install ROS Kinetic Desktop-Full [(guide)](http://wiki.ros.org/kinetic/Installation/Ubuntu)
