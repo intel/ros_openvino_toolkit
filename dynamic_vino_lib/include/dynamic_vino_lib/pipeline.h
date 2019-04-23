@@ -127,12 +127,25 @@ class Pipeline
     return input_device_;
   }
   
+  /**
+  * @brief Get real time FPS (frames per second).
+  */
+  int getFPS() const
+  {
+    return fps_;
+  }
+
  private:
   void initInferenceCounter();
   void increaseInferenceCounter();
   void decreaseInferenceCounter();
   bool isLegalConnect(const std::string parent, const std::string child);
   int getCatagoryOrder(const std::string name);
+  void countFPS();
+  void setFPS(int fps)
+  {
+    fps_ = fps;
+  }
 
   const int kCatagoryOrder_Unknown = -1;
   const int kCatagoryOrder_Input = 1;
@@ -158,6 +171,7 @@ class Pipeline
   std::atomic<int> counter_;
   std::mutex counter_mutex_;
   std::condition_variable cv_;
+  int fps_ = 0;
 };
 
 #endif  // DYNAMIC_VINO_LIB_PIPELINE_H_
