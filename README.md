@@ -75,7 +75,7 @@ Currently, the inference feature list is supported:
 - Object Detection:
 ```/ros_openvino_toolkit/detected_objects```([object_msgs::ObjectsInBoxes](https://github.com/intel/object_msgs/blob/master/msg/ObjectsInBoxes.msg))
 - Object Segmentation:
-```/ros_openvino_toolkit/segmented_obejcts```([people_msgs::ObjectsInMasks](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/msg/ObjectsInMasks.msg))
+```/ros_openvino_toolkit/segmented_obejcts```([people_msgs::ObjectsInMasks](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/ObjectsInMasks.msg))
 - Rviz Output:
 ```/ros_openvino_toolkit/image_rviz```([sensor_msgs::Image](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Image.html))
 
@@ -85,11 +85,11 @@ Currently, the inference feature list is supported:
 - Face Detection Service:
 ```/detect_face``` ([object_msgs::DetectObject](https://github.com/intel/object_msgs/blob/master/srv/DetectObject.srv))
 - Age & Gender Detection Service:
-```/detect_age_gender``` ([people_msgs::AgeGender](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/srv/AgeGender.srv))
+```/detect_age_gender``` ([people_msgs::AgeGender](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/srv/AgeGender.srv))
 - Headpose Detection Service:
-```/detect_head_pose``` ([people_msgs::HeadPose](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/srv/HeadPose.srv))
+```/detect_head_pose``` ([people_msgs::HeadPose](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/srv/HeadPose.srv))
 - Emotion Detection Service:
-```/detect_emotion``` ([people_msgs::Emotion](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/srv/Emotion.srv))
+```/detect_emotion``` ([people_msgs::Emotion](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/srv/Emotion.srv))
 
 ### RViz
 RViz dispaly is also supported by the composited topic of original image frame with inference result.
@@ -98,21 +98,21 @@ To show in RViz tool, add an image marker with the composited topic:
 
 ### Image Window
 OpenCV based image window is natively supported by the package.
-To enable window, Image Window output should be added into the output choices in .yaml config file. see [the config file guidance](https://github.com/intel/ros_openvino_toolkit/blob/devel/doc/YAML_CONFIGURATION_GUIDE.md) for checking/adding this feature in your launching.
+To enable window, Image Window output should be added into the output choices in .yaml config file. see [the config file guidance](https://github.com/intel/ros_openvino_toolkit/blob/master/doc/YAML_CONFIGURATION_GUIDE.md) for checking/adding this feature in your launching.
 
 ## Demo Result Snapshots
 See below pictures for the demo result snapshots.
 * face detection input from standard camera
-![face_detection_demo_image](https://github.com/intel/ros_openvino_toolkit/blob/devel/data/images/face_detection.png "face detection demo image")
+![face_detection_demo_image](https://github.com/intel/ros_openvino_toolkit/blob/master/data/images/face_detection.png "face detection demo image")
 
 * object detection input from realsense camera
-![object_detection_demo_realsense](https://github.com/intel/ros_openvino_toolkit/blob/devel/data/images/object_detection.gif "object detection demo realsense")
+![object_detection_demo_realsense](https://github.com/intel/ros_openvino_toolkit/blob/master/data/images/object_detection.gif "object detection demo realsense")
 
 # Installation & Launching
-**NOTE:** Intel releases 2 different series of OpenVINO Toolkit, we call them as [OpenSource Version](https://github.com/opencv/dldt/) and [Tarball Version](https://software.intel.com/en-us/openvino-toolkit). This guidelie uses OpenSource Version as the installation and launching example. **If you want to use Tarball version, please follow [the guide for Tarball Version](https://github.com/intel/ros_openvino_toolkit/blob/devel/doc/BINARY_VERSION_README.md).**
+**NOTE:** Intel releases 2 different series of OpenVINO Toolkit, we call them as [OpenSource Version](https://github.com/opencv/dldt/) and [Tarball Version](https://software.intel.com/en-us/openvino-toolkit). This guidelie uses OpenSource Version as the installation and launching example. **If you want to use Tarball version, please follow [the guide for Tarball Version](https://github.com/intel/ros_openvino_toolkit/blob/master/doc/BINARY_VERSION_README.md).**
 
 ## Dependencies Installation
-One-step installation scripts are provided for the dependencies' installation. Please see [the guide](https://github.com/intel/ros_openvino_toolkit/blob/devel/doc/OPEN_SOURCE_CODE_README.md) for details.
+One-step installation scripts are provided for the dependencies' installation. Please see [the guide](https://github.com/intel/ros_openvino_toolkit/blob/master/doc/OPEN_SOURCE_CODE_README.md) for details.
 
 ## Launching
 * Preparation
