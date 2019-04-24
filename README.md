@@ -1,4 +1,5 @@
 # Introduction
+
 The OpenVINO™ (Open visual inference and neural network optimization) toolkit provides a ROS-adaptered runtime framework of neural network which quickly deploys applications and solutions for vision inference. By leveraging Intel® OpenVINO™ toolkit and corresponding libraries, this runtime framework extends  workloads across Intel® hardware (including accelerators) and maximizes performance.
 * Enables CNN-based deep learning inference at the edge
 * Supports heterogeneous execution across computer vision accelerators—CPU, GPU, Intel® Movidius™ Neural Compute Stick, and FPGA—using a common API
@@ -170,4 +171,3 @@ One-step installation scripts are provided for the dependencies' installation. P
 # More Information
 * ros OpenVINO discription writen in Chinese: https://mp.weixin.qq.com/s/BgG3RGauv5pmHzV_hkVAdw 
 
-###### *Any security issue should be reported using process at https://01.org/security*

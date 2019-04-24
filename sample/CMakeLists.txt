@@ -66,7 +66,7 @@ include_directories (
   ${InferenceEngine_INCLUDE_DIRS}/../build/samples/thirdparty/gflags/include
   ${InferenceEngine_INCLUDE_DIRS}/../samples
   ${InferenceEngine_DIR}/../src
-  ${dynamic_vino_lib_INCLUDE_DIRS}
+  #${dynamic_vino_lib_INCLUDE_DIRS}
   ${vino_param_lib_INCLUDE_DIRS}
 )
 
@@ -96,44 +96,6 @@ set_target_properties(gflags PROPERTIES
   IMPORTED_LOCATION $ENV{GFLAGS_LIB})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-
-add_executable(sample_pipeline_people
-  src/sample_pipeline_people.cpp
-)
-
-add_dependencies(sample_pipeline_people
-  ${${PROJECT_NAME}_EXPORTED_TARGETS}
-  ${catkin_EXPORTED_TARGETS}
-  ${dynamic_vino_lib_TARGETS}
-)
-
-target_link_libraries(sample_pipeline_people
-  ${catkin_LIBRARIES}
-  cpu_extension
-  gflags
-  ${vino_param_lib_LIBRARIES}
-  ${InferenceEngine_LIBRARIES}
-  ${OpenCV_LIBRARIES}
-)
-
-add_executable(sample_pipeline_object
-  src/sample_pipeline_object.cpp
-)
-
-add_dependencies(sample_pipeline_object
-  ${${PROJECT_NAME}_EXPORTED_TARGETS}
-  ${catkin_EXPORTED_TARGETS}
-  ${dynamic_vino_lib_TARGETS}
-)
-
-target_link_libraries(sample_pipeline_object
-  ${catkin_LIBRARIES}
-  cpu_extension
-  gflags
-  ${vino_param_lib_LIBRARIES}
-  ${InferenceEngine_LIBRARIES}
-  ${OpenCV_LIBRARIES}
-)
 
 add_executable(pipeline_with_params
   src/pipeline_with_params.cpp

@@ -51,7 +51,6 @@ void Outputs::ImageWindowOutput::feedFrame(const cv::Mat& frame)
 void Outputs::ImageWindowOutput::accept(
     const std::vector<dynamic_vino_lib::FaceDetectionResult>& results)
 {
-  // std::cout<<"call face"<<std::endl;
   if (outputs_.size() == 0)
   {
     initOutputs(results.size());
@@ -205,7 +204,6 @@ void Outputs::ImageWindowOutput::accept(
 void Outputs::ImageWindowOutput::accept(
     const std::vector<dynamic_vino_lib::ObjectDetectionResult>& results)
 {
-  // std::cout<<"call"<<std::endl;
   if (outputs_.size() == 0)
   {
     initOutputs(results.size());
@@ -230,7 +228,6 @@ void Outputs::ImageWindowOutput::accept(
     }
     auto label = results[i].getLabel();
     outputs_[i].desc += "[" + label + "]";
-    // std::cout<<"out:" << label <<std::endl;
   }
 }
 

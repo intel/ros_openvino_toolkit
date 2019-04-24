@@ -4,6 +4,9 @@ Pipelines:
   infers:
     - name: ObjectDetection
       model: /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/ssd/300/caffe/output/ssd300.xml
+      #model: <path-to-yolov2-voc.xml>
+      model_type: SSD
+      #model_type: yolov2-voc
       engine: GPU
       label: to/be/set/xxx.labels
       batch: 16

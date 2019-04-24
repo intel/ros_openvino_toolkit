@@ -21,52 +21,109 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "dynamic_vino_lib/inferences/object_detection.h"
+#include "dynamic_vino_lib/inferences/object_detection_ssd.h"
 #include "dynamic_vino_lib/outputs/base_output.h"
 #include "dynamic_vino_lib/slog.h"
 // ObjectDetectionResult
+/*
 dynamic_vino_lib::ObjectDetectionResult::ObjectDetectionResult(
     const cv::Rect& location)
     : Result(location){}
-// ObjectDetection
-dynamic_vino_lib::ObjectDetection::ObjectDetection(double show_output_thresh)
-    : dynamic_vino_lib::BaseInference(),
+*/
+
+dynamic_vino_lib::ObjectDetectionSSD::ObjectDetectionSSD(double show_output_thresh)
+    : dynamic_vino_lib::ObjectDetection(),
       show_output_thresh_(show_output_thresh){}
-dynamic_vino_lib::ObjectDetection::~ObjectDetection() = default;
-void dynamic_vino_lib::ObjectDetection::loadNetwork(
-    const std::shared_ptr<Models::ObjectDetectionModel> network) {
-  valid_model_ = network;
+
+dynamic_vino_lib::ObjectDetectionSSD::~ObjectDetectionSSD() = default;
+
+void dynamic_vino_lib::ObjectDetectionSSD::loadNetwork(
+        std::shared_ptr<Models::ObjectDetectionModel> network) {
+  valid_model_ = std::dynamic_pointer_cast<Models::ObjectDetectionSSDModel>(network);
+
   max_proposal_count_ = network->getMaxProposalCount();
   object_size_ = network->getObjectSize();
   setMaxBatchSize(network->getMaxBatchSize());
 }
-bool dynamic_vino_lib::ObjectDetection::enqueue(const cv::Mat& frame,
+
+bool dynamic_vino_lib::ObjectDetectionSSD::enqueue(const cv::Mat& frame,
                                               const cv::Rect& input_frame_loc) {
   if (width_ == 0 && height_ == 0) {
     width_ = frame.cols;
     height_ = frame.rows;
   }
-  if (!dynamic_vino_lib::BaseInference::enqueue<u_int8_t>(
-          frame, input_frame_loc, 1, 0, valid_model_->getInputName())) {
+
+  if (!matToBlob(frame, input_frame_loc, 1, 0, valid_model_->getInputName()))
+  {
     return false;
   }
+
   Result r(input_frame_loc);
   results_.clear();
   results_.emplace_back(r);
   return true;
 }
-bool dynamic_vino_lib::ObjectDetection::submitRequest() {
+
+bool dynamic_vino_lib::ObjectDetectionSSD::matToBlob(
+    const cv::Mat& orig_image, const cv::Rect&, float scale_factor, 
+    int batch_index, const std::string& input_name)
+{
+  if (enqueued_frames_ == max_batch_size_)
+  {
+    slog::warn << "Number of " << getName() << "input more than maximum("
+               << max_batch_size_ << ") processed by inference" << slog::endl;
+    return false;
+  }
+ 
+  InferenceEngine::Blob::Ptr input_blob =
+      engine_->getRequest()->GetBlob(input_name);
+
+  InferenceEngine::SizeVector blob_size = input_blob->getTensorDesc().getDims();
+  const int width = blob_size[3];
+  const int height = blob_size[2];
+  const int channels = blob_size[1];
+  u_int8_t * blob_data = input_blob->buffer().as<u_int8_t*>();
+
+  cv::Mat resized_image(orig_image);
+  if (width != orig_image.size().width || height != orig_image.size().height)
+  { 
+    cv::resize(orig_image, resized_image, cv::Size(width, height));
+  }
+  int batchOffset = batch_index * width * height * channels;
+
+  for (int c = 0; c < channels; c++)
+  { 
+    for (int h = 0; h < height; h++)
+    {
+      for (int w = 0; w < width; w++)
+      { 
+        blob_data[batchOffset + c * width * height + h * width + w] =
+            resized_image.at<cv::Vec3b>(h, w)[c] * scale_factor;
+      }
+    }
+  }
+
+  enqueued_frames_ += 1;
+  return true;
+}
+
+bool dynamic_vino_lib::ObjectDetectionSSD::submitRequest() {
   return dynamic_vino_lib::BaseInference::submitRequest();
 }
-bool dynamic_vino_lib::ObjectDetection::fetchResults() {
+
+bool dynamic_vino_lib::ObjectDetectionSSD::fetchResults() {
   bool can_fetch = dynamic_vino_lib::BaseInference::fetchResults();
+
   if (!can_fetch) return false;
   bool found_result = false;
   results_.clear();
   InferenceEngine::InferRequest::Ptr request = getEngine()->getRequest();
+
   std::string output = valid_model_->getOutputName();
   const float* detections = request->GetBlob(output)->buffer().as<float*>();
+
   for (int i = 0; i < max_proposal_count_; i++) {
+
     float image_id = detections[i * object_size_ + 0];
     cv::Rect r;
     auto label_num = static_cast<unsigned int>(detections[i * object_size_ + 1]);
@@ -90,20 +147,25 @@ bool dynamic_vino_lib::ObjectDetection::fetchResults() {
     found_result = true;
     results_.emplace_back(result);
   }
+
   if (!found_result) results_.clear();
   return true;
 }
-const int dynamic_vino_lib::ObjectDetection::getResultsLength() const {
+
+const int dynamic_vino_lib::ObjectDetectionSSD::getResultsLength() const {
   return static_cast<int>(results_.size());
 }
+
 const dynamic_vino_lib::Result*
-dynamic_vino_lib::ObjectDetection::getLocationResult(int idx) const {
+dynamic_vino_lib::ObjectDetectionSSD::getLocationResult(int idx) const {
   return &(results_[idx]);
 }
-const std::string dynamic_vino_lib::ObjectDetection::getName() const {
+
+const std::string dynamic_vino_lib::ObjectDetectionSSD::getName() const {
   return valid_model_->getModelName();
 }
-const void dynamic_vino_lib::ObjectDetection::observeOutput(
+
+const void dynamic_vino_lib::ObjectDetectionSSD::observeOutput(
     const std::shared_ptr<Outputs::BaseOutput>& output) {
   if (output != nullptr) {
     output->accept(results_);

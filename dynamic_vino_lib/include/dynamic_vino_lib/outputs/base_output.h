@@ -30,7 +30,8 @@
 #include "dynamic_vino_lib/inferences/emotions_detection.h"
 #include "dynamic_vino_lib/inferences/face_detection.h"
 #include "dynamic_vino_lib/inferences/head_pose_detection.h"
-#include "dynamic_vino_lib/inferences/object_detection.h"
+#include "dynamic_vino_lib/inferences/object_detection_ssd.h"
+#include "dynamic_vino_lib/inferences/object_detection_yolov2_voc.h"
 #include "opencv2/opencv.hpp"
 
 class Pipeline;

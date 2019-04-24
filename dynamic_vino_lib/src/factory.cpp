@@ -32,7 +32,6 @@
 std::shared_ptr<Input::BaseInputDevice> Factory::makeInputDeviceByName(
     const std::string& input_device_name, const std::string& input_file_path)
 {
-  std::cout << "InputDvice: " << input_device_name << std::endl;
   if (input_device_name == "RealSenseCamera")
   {
     return std::make_shared<Input::RealSenseCamera>();
@@ -43,8 +42,6 @@ std::shared_ptr<Input::BaseInputDevice> Factory::makeInputDeviceByName(
   }
   else if (input_device_name == "RealSenseCameraTopic")
   {
-    std::cout << "tring to create instance for " << input_device_name
-              << std::endl;
     return std::make_shared<Input::RealSenseCameraTopic>();
   }
   else if (input_device_name == "Video")
@@ -65,16 +62,17 @@ std::shared_ptr<InferenceEngine::InferencePlugin> Factory::makePluginByName(
     const std::string& device_name,
     const std::string& custom_cpu_library_message,  // FLAGS_l
     const std::string& custom_cldnn_message,        // FLAGS_c
-    bool performance_message)
-{                     // FLAGS_pc
-  InferenceEngine::InferencePlugin plugin = InferenceEngine::PluginDispatcher({"../../../lib/intel64", ""})
-                               .getPluginByDevice(device_name);
-  /** Printing plugin version **/
-  printPluginVersion(plugin, std::cout);
+    bool performance_message)                       // FLAGS_pc
+{                     
+
+    InferenceEngine::InferencePlugin plugin = InferenceEngine::PluginDispatcher({"../../../lib/intel64", ""}).getPluginByDevice(device_name);
+    printPluginVersion(plugin, std::cout);
+
   /** Load extensions for the CPU plugin **/
   if ((device_name.find("CPU") != std::string::npos))
   {
     plugin.AddExtension(std::make_shared<InferenceEngine::Extensions::Cpu::CpuExtensions>());
+
     if (!custom_cpu_library_message.empty())
     {
       // CPU(MKLDNN) extensions are loaded as a shared library and passed as a
@@ -84,18 +82,21 @@ std::shared_ptr<InferenceEngine::InferencePlugin> Factory::makePluginByName(
           custom_cpu_library_message);
       plugin.AddExtension(extension_ptr);
     }
+
   }
   else if (!custom_cldnn_message.empty())
   {
-    // Load Extensions for other plugins not CPU
     plugin.SetConfig(
         {{InferenceEngine::PluginConfigParams::KEY_CONFIG_FILE, custom_cldnn_message}});
   }
+
   if (performance_message)
   {
     plugin.SetConfig(
         {{InferenceEngine::PluginConfigParams::KEY_PERF_COUNT, InferenceEngine::PluginConfigParams::YES}});
   }
+
   return std::make_shared<InferenceEngine::InferencePlugin>(
       InferenceEngine::InferenceEnginePluginPtr(plugin));
+
 }

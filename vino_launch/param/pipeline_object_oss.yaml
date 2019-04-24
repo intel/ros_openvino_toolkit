@@ -3,8 +3,11 @@ Pipelines:
   inputs: [RealSenseCamera]
   infers:
     - name: ObjectDetection
-      model: /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/ssd/300/caffe/output/ssd300.xml
-      engine: CPU
+      #model: /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/ssd/300/caffe/output/ssd300.xml
+      model: /home/intel/Downloads/yolov2-voc.xml
+      #model_type: SSD
+      model_type: yolov2-voc
+      engine: GPU
       label: to/be/set/xxx.labels
       batch: 16
   outputs: [ImageWindow, RosTopic, RViz]
@@ -16,7 +19,7 @@ Pipelines:
       right: [ImageWindow]
     - left: ObjectDetection
       right: [RosTopic]
-    - left: ObjectDetection
-      right: [RViz]
+   # - left: ObjectDetection
+   #   right: [RViz]
 
 OpenvinoCommon:

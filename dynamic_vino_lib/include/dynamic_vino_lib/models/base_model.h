@@ -83,6 +83,7 @@ class BaseModel
    * @return The name of the model.
    */
   virtual const std::string getModelName() const = 0;
+  //InferenceEngine::CNNNetReader::Ptr net_reader_;
 
  protected:
   /**
@@ -92,24 +93,38 @@ class BaseModel
    */
   virtual void checkLayerProperty(
       const InferenceEngine::CNNNetReader::Ptr& network_reader) = 0;
+
+  /**
+   * @brief Set the layer property (layer layout, layer precision, etc.).
+   * @param[in] network_reader The reader of the network to be set.
+   */
   virtual void
-      /**
-       * @brief Set the layer property (layer layout, layer precision, etc.).
-       * @param[in] network_reader The reader of the network to be set.
-       */
       setLayerProperty(InferenceEngine::CNNNetReader::Ptr network_reader) = 0;
+
+  InferenceEngine::CNNNetReader::Ptr net_reader_;
 
  private:
   friend class Engines::Engine;
-
   void checkNetworkSize(unsigned int, unsigned int,
                         InferenceEngine::CNNNetReader::Ptr);
-  InferenceEngine::CNNNetReader::Ptr net_reader_;
   std::vector<std::string> labels_;
   int input_num_;
   int output_num_;
   std::string model_loc_;
   int max_batch_size_;
+};
+
+class ObjectDetectionModel : public BaseModel
+{
+ public:
+  ObjectDetectionModel(const std::string& a, int b, int c, int d);
+  virtual inline const int getMaxProposalCount() { return max_proposal_count_; }
+  virtual inline const int getObjectSize() { return object_size_; }
+
+ protected:
+  int max_proposal_count_;
+  int object_size_;
+  //virtual void setLayerProperty(InferenceEngine::CNNNetReader::Ptr network_reader) = 0;
 };
 }  // namespace Models
 
