@@ -134,6 +134,10 @@ class Pipeline
   {
     return fps_;
   }
+  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> getOutputHandle()
+  {
+    return name_to_output_map_;
+  }
 
  private:
   void initInferenceCounter();

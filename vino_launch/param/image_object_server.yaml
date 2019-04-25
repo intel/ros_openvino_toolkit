@@ -1,0 +1,18 @@
+Pipelines:
+- name: object
+  inputs: [Image]
+  infers:
+    - name: ObjectDetection
+      model: /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP32/mobilenet-ssd.xml
+      engine: CPU
+      label: to/be/set/xxx.labels
+      batch: 16
+  outputs: [RosService]
+  confidence_threshold: 0.2
+  connects:
+    - left: Image
+      right: [ObjectDetection]
+    - left: ObjectDetection
+      right: [RosService]
+  input_path: "/opt/openvino_toolkit/ros_openvino_toolkit/data/images/car.png"
+OpenvinoCommon:

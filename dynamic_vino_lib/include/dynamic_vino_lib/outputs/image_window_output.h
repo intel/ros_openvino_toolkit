@@ -83,9 +83,27 @@ class ImageWindowOutput : public BaseOutput
    * @param[in] An object detection result objetc.
    */
   void accept(const std::vector<dynamic_vino_lib::ObjectDetectionResult>&) override;
-
-
+  /**
+   * @brief Generate image window output content according to
+   * the object segmentation result.
+   * @param[in] An object segmentation result objetc.
+   */
+  void accept(const std::vector<dynamic_vino_lib::ObjectSegmentationResult>&) override;
+   /**
+   * @brief Generate image window output content according to
+   * the person re-ID result.
+   * @param[in] An object segmentation result objetc.
+   */
+  void accept(const std::vector<dynamic_vino_lib::PersonReidentificationResult> &) override;
+ /**
+   * @brief Merge mask for image window ouput
+   * the object segmentation result.
+   * @param[in] An object segmentation result objetc.
+   */
+  void mergeMask(const std::vector<dynamic_vino_lib::ObjectSegmentationResult> &);
  private:
+
+  unsigned findOutput(const cv::Rect &);
   void initOutputs(unsigned size);
   /**
    * @brief Calculate the axises of the coordinates for showing
@@ -116,6 +134,13 @@ class ImageWindowOutput : public BaseOutput
   const std::string window_name_;
   float focal_length_;
   cv::Mat camera_matrix_;
+  std::vector<std::vector<int>> colors_ = {
+    {128, 64, 128}, {232, 35, 244}, {70, 70, 70}, {156, 102, 102}, {153, 153, 190},
+    {153, 153, 153}, {30, 170, 250}, {0, 220, 220}, {35, 142, 107}, {152, 251, 152},
+    {180, 130, 70}, {60, 20, 220}, {0, 0, 255}, {142, 0, 0}, {70, 0, 0},
+    {100, 60, 0}, {90, 0, 0}, {230, 0, 0}, {32, 11, 119}, {0, 74, 111},
+    {81, 0, 81}
+  };
 };
 }  // namespace Outputs
 #endif  // DYNAMIC_VINO_LIB_OUTPUTS_IMAGE_WINDOW_OUTPUT_H

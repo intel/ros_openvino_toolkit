@@ -1,0 +1,17 @@
+<launch>
+  <arg name="param_file" value="$(find vino_launch)/param/pipeline_people_myriad.yaml" />
+  <arg name="default_rviz" value="$(find vino_launch)/param/rviz/default.rviz" />
+
+  <node pkg="dynamic_vino_sample" type="pipeline_with_params"
+        name="pipeline_with_params" output="screen">
+        <param name="param_file" value="$(arg param_file)" />   
+        <remap from ="/openvino_toolkit/faces" to = "/ros_openvino_toolkit/face_detection" />
+        <remap from ="/openvino_toolkit/emotions" to = "/ros_openvino_toolkit/emotions_recognition" />
+        <remap from ="/openvino_toolkit/headposes" to = "/ros_openvino_toolkit/headposes_estimation" />
+        <remap from ="/openvino_toolkit/age_genders" to = "/ros_openvino_toolkit/age_genders_Recognition" />
+        <remap from ="/openvino_toolkit/images" to = "/ros_openvino_toolkit/image_rviz" />
+  </node>
+  <node name="rviz" pkg="rviz" type="rviz" required="true" output="screen">
+        <param name="default_rviz" value="$(arg default_rviz)" />
+  </node>
+</launch>

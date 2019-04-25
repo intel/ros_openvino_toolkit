@@ -29,7 +29,8 @@ dynamic_vino_lib::ObjectDetectionResult::ObjectDetectionResult(
     const cv::Rect& location)
     : Result(location){}
 // ObjectDetection
-dynamic_vino_lib::ObjectDetection::ObjectDetection(double show_output_thresh)
+dynamic_vino_lib::ObjectDetection::ObjectDetection(bool enable_roi_constraint, 
+                                                  double show_output_thresh)
     : dynamic_vino_lib::BaseInference(),
       show_output_thresh_(show_output_thresh){}
 dynamic_vino_lib::ObjectDetection::~ObjectDetection() = default;

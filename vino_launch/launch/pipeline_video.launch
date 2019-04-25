@@ -1,0 +1,14 @@
+<launch>
+  <arg name="param_file" value="$(find vino_launch)/param/pipeline_video.yaml" />
+  <arg name="default_rviz" value="$(find vino_launch)/param/rviz/default.rviz" />
+
+  <node pkg="dynamic_vino_sample" type="pipeline_with_params"
+        name="pipeline_with_params" output="screen">
+        <param name="param_file" value="$(arg param_file)" />
+        <remap from ="/openvino_toolkit/segmented_obejcts" to = "/ros_openvino_toolkit/segmented_obejcts" />
+        <remap from ="/openvino_toolkit/images" to = "/ros_openvino_toolkit/image_rviz" />
+  </node>
+  <node name="rviz" pkg="rviz" type="rviz" required="true" output="screen">
+        <param name="default_rviz" value="$(arg default_rviz)" />
+  </node>
+</launch>
