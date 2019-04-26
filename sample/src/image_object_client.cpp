@@ -55,23 +55,23 @@ int main(int argc, char ** argv)
     int width = image.cols;
     int height = image.rows;
 
-    for (unsigned int i = 0; i < srv.response.objects.objects_vector.size(); i++) {
+    for (unsigned int i = 0; i < srv.response.objects[0].objects_vector.size(); i++) {
       std::stringstream ss;
-      ss << srv.response.objects.objects_vector[i].object.object_name << ": " <<
-        srv.response.objects.objects_vector[i].object.probability * 100 << "%";
+      ss << srv.response.objects[0].objects_vector[i].object.object_name << ": " <<
+        srv.response.objects[0].objects_vector[i].object.probability * 100 << "%";
       ROS_INFO("%d: object: %s", i,
-        srv.response.objects.objects_vector[i].object.object_name.c_str());
+        srv.response.objects[0].objects_vector[i].object.object_name.c_str());
       ROS_INFO( "prob: %f",
-        srv.response.objects.objects_vector[i].object.probability);
+        srv.response.objects[0].objects_vector[i].object.probability);
       ROS_INFO(
         "location: (%d, %d, %d, %d)",
-        srv.response.objects.objects_vector[i].roi.x_offset, srv.response.objects.objects_vector[i].roi.y_offset,
-        srv.response.objects.objects_vector[i].roi.width, srv.response.objects.objects_vector[i].roi.height);
+        srv.response.objects[0].objects_vector[i].roi.x_offset, srv.response.objects[0].objects_vector[i].roi.y_offset,
+        srv.response.objects[0].objects_vector[i].roi.width, srv.response.objects[0].objects_vector[i].roi.height);
 
-      int xmin = srv.response.objects.objects_vector[i].roi.x_offset;
-      int ymin = srv.response.objects.objects_vector[i].roi.y_offset;
-      int w = srv.response.objects.objects_vector[i].roi.width;
-      int h = srv.response.objects.objects_vector[i].roi.height;
+      int xmin = srv.response.objects[0].objects_vector[i].roi.x_offset;
+      int ymin = srv.response.objects[0].objects_vector[i].roi.y_offset;
+      int w = srv.response.objects[0].objects_vector[i].roi.width;
+      int h = srv.response.objects[0].objects_vector[i].roi.height;
 
       int xmax = ((xmin + w) < width) ? (xmin + w) : width;
       int ymax = ((ymin + h) < height) ? (ymin + h) : height;

@@ -22,7 +22,7 @@
 #include <memory>
 #include "dynamic_vino_lib/outputs/ros_service_output.h"
 #include "cv_bridge/cv_bridge.h"
-
+#include <object_msgs/ObjectsInBoxes.h>
 // Outputs::RosServiceOutput::RosServiceOutput()
 
 
@@ -30,9 +30,13 @@ void Outputs::RosServiceOutput::setServiceResponse(
   boost::shared_ptr<object_msgs::DetectObject::Response> response)
 {
   if (object_msg_ptr_ != nullptr && object_msg_ptr_->objects_vector.size() > 0) {
-    response->objects.objects_vector = object_msg_ptr_->objects_vector;
+    object_msgs::ObjectsInBoxes objs;
+    objs.objects_vector = object_msg_ptr_->objects_vector;
+    response->objects.push_back(objs);
   } else if (faces_msg_ptr_ != nullptr && faces_msg_ptr_ ->objects_vector.size() > 0) {
-    response->objects.objects_vector = faces_msg_ptr_->objects_vector;
+    object_msgs::ObjectsInBoxes objs; 
+    objs.objects_vector = faces_msg_ptr_->objects_vector;
+    response->objects.push_back(objs);
   }
 }
 
@@ -40,7 +44,9 @@ void Outputs::RosServiceOutput::setResponseForFace(
   boost::shared_ptr<object_msgs::DetectObject::Response> response)
 {
   if (faces_msg_ptr_ != nullptr && faces_msg_ptr_->objects_vector.size() > 0) {
-    response->objects.objects_vector = faces_msg_ptr_->objects_vector;
+    object_msgs::ObjectsInBoxes objs; 
+    objs.objects_vector = faces_msg_ptr_->objects_vector; 
+    response->objects.push_back(objs);
   }
 }
 
