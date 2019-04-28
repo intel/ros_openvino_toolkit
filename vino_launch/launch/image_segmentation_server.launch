@@ -1,0 +1,9 @@
+<launch>
+
+  <arg name="param_file" value="$(find vino_launch)/param/image_segmentation_server.yaml" />
+
+    <node pkg="dynamic_vino_sample" type="image_segmentation_server"
+        name="image_people_server" output="screen">
+    <param name="param_file" value="$(arg param_file)" />
+  </node>
+</launch>

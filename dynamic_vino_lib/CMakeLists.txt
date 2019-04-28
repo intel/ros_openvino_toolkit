@@ -133,6 +133,7 @@ endif()
 set(DEPENDENCIES realsense2 ${OpenCV_LIBS} cpu_extension)
 
 add_library(${PROJECT_NAME} SHARED
+  src/services/frame_processing_server.cpp
   src/factory.cpp
   src/pipeline.cpp
   src/pipeline_params.cpp
@@ -144,6 +145,8 @@ add_library(${PROJECT_NAME} SHARED
   src/inferences/face_detection.cpp
   src/inferences/head_pose_detection.cpp
   src/inferences/object_detection.cpp
+  src/inferences/object_segmentation.cpp
+  src/inferences/person_reidentification.cpp
   src/inputs/realsense_camera.cpp
   src/inputs/realsense_camera_topic.cpp
   src/inputs/standard_camera.cpp
@@ -155,15 +158,19 @@ add_library(${PROJECT_NAME} SHARED
   src/models/face_detection_model.cpp
   src/models/head_pose_detection_model.cpp
   src/models/object_detection_model.cpp
+  src/models/object_segmentation_model.cpp
+  src/models/person_reidentification_model.cpp
   src/outputs/image_window_output.cpp
   src/outputs/ros_topic_output.cpp
   src/outputs/rviz_output.cpp
   src/outputs/base_output.cpp
+  src/outputs/ros_service_output.cpp
 )
 
 add_dependencies(${PROJECT_NAME}
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
+  "object_msgs"
 )
 
 target_link_libraries(${PROJECT_NAME}

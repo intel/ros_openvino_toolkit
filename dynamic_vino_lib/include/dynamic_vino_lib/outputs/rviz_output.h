@@ -80,6 +80,24 @@ public:
    */
   void accept(const std::vector<dynamic_vino_lib::AgeGenderResult> &) override;
 
+  /**
+   * @brief Generate  rviz output content according to
+   * the object segmentation result.
+   * @param[in] An object segmentation result objetc.
+   */
+  void accept(const std::vector<dynamic_vino_lib::ObjectSegmentationResult>&) override;
+   /**
+   * @brief Generate  rviz output content according to
+   * the person re-ID result.
+   * @param[in] An object segmentation result objetc.
+   */
+  void accept(const std::vector<dynamic_vino_lib::PersonReidentificationResult> &) override;
+ /**
+   * @brief Merge mask for image window ouput
+   * the object segmentation result.
+   * @param[in] An object segmentation result objetc.
+   */
+
 private:
   std_msgs::Header getHeader();
   ros::NodeHandle nh_;

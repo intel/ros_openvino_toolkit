@@ -1,0 +1,8 @@
+<launch>
+  <arg name="param_file" value="$(find vino_launch)/param/pipeline_people_oss.yaml" />
+
+  <node pkg="dynamic_vino_sample" type="pipeline_with_params"
+        name="pipeline_with_params" output="screen">
+    <param name="param_file" value="$(arg param_file)" />
+  </node>
+</launch>
