@@ -121,6 +121,7 @@ git checkout 2.1.3
 source /opt/ros/kinetic/setup.bash
 # Ubuntu 18.04
 source /opt/ros/melodic/setup.bash
+
 source /opt/intel/computer_vision_sdk/bin/setupvars.sh
 export OpenCV_DIR=$HOME/code/opencv/build
 cd ~/catkin_ws
