@@ -141,6 +141,7 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	source /opt/ros/kinetic/setup.bash
 	# Ubuntu 18.04
 	source /opt/ros/melodic/setup.bash
+	
 	cd ~/catkin_ws
 	catkin_make
 	source devel/setup.bash
