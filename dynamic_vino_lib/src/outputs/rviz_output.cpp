@@ -63,6 +63,16 @@ void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::HeadPoseRes
   image_window_output_->accept(results);
 }
 
+void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::ObjectSegmentationResult>& results)
+{
+  image_window_output_->accept(results);
+}
+void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::PersonReidentificationResult> & results)
+{
+  image_window_output_->accept(results);
+}
+ 
+
 void Outputs::RvizOutput::handleOutput()
 {
   image_window_output_->setPipeline(getPipeline());

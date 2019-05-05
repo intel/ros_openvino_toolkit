@@ -51,9 +51,7 @@ class ParamManager  // singleton
    */
   static ParamManager& getInstance()
   {
-    std::cout << "getting instance" << std::endl;
     static ParamManager manager_;
-    std::cout << "return instance" << std::endl;
     return manager_;
   }
 
@@ -69,6 +67,9 @@ class ParamManager  // singleton
     std::string engine;
     std::string model;
     std::string label;
+    int batch;
+    float confidence_threshold = 0.5;
+    bool enable_roi_constraint = false;
   };
   struct PipelineParams
   {

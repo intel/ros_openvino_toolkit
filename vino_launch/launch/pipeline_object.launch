@@ -5,7 +5,8 @@
   <node pkg="dynamic_vino_sample" type="pipeline_with_params"
         name="pipeline_with_params" output="screen">
         <param name="param_file" value="$(arg param_file)" />   
-        <remap from ="/openvino_toolkit/images" to = "/openvino_toolkit/image_rviz" />
+        <remap from ="/openvino_toolkit/detected_objects" to = "/ros_openvino_toolkit/detected_objects" />
+        <remap from ="/openvino_toolkit/images" to = "/ros_openvino_toolkit/image_rviz" />
   </node>
   <node name="rviz" pkg="rviz" type="rviz" required="true" output="screen">
         <param name="default_rviz" value="$(arg default_rviz)" />

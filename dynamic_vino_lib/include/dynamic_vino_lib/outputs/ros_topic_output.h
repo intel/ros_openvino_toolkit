@@ -32,6 +32,10 @@
 #include <people_msgs/EmotionsStamped.h>
 #include <people_msgs/HeadPose.h>
 #include <people_msgs/HeadPoseStamped.h>
+#include <people_msgs/ObjectInMask.h>
+#include <people_msgs/ObjectsInMasks.h>
+#include <people_msgs/Reidentification.h>
+#include <people_msgs/ReidentificationStamped.h>
 #include <ros/ros.h>
 
 #include <memory>
@@ -63,6 +67,18 @@ class RosTopicOutput : public BaseOutput
   void handleOutput() override;
   /**
    * @brief Generate ros topic infomation according to
+   * the person reidentification result.
+   * @param[in] results a bundle of person reidentification results.
+   */
+  void accept(const std::vector<dynamic_vino_lib::PersonReidentificationResult> &) override;
+  /**
+   * @brief Generate ros topic infomation according to
+   * the object segmentation result.
+   * @param[in] results a bundle of object segmentation results.
+   */
+  void accept(const std::vector<dynamic_vino_lib::ObjectSegmentationResult> &) override;
+  /**
+   * @brief Generate ros topic infomation according to
    * the face detection result.
    * @param[in] An face detection result objetc.
    */
@@ -79,8 +95,8 @@ class RosTopicOutput : public BaseOutput
    * the age gender detection result.
    * @param[in] An age gender detection result objetc.
    */
-  void accept(const std::vector<dynamic_vino_lib::AgeGenderResult>&) override;
-  /**
+  void accept(const std::vector<dynamic_vino_lib::AgeGenderResult> &) override;
+  /**detected_objects_topic_
    * @brief Generate ros topic infomation according to
    * the headpose detection result.
    * @param[in] An head pose detection result objetc.
@@ -99,7 +115,7 @@ class RosTopicOutput : public BaseOutput
   const std::string topic_name_;
   cv::Mat frame_;
   ros::NodeHandle nh_;
-
+ protected:
   ros::Publisher pub_face_;
   std::shared_ptr<object_msgs::ObjectsInBoxes> faces_msg_ptr_;
   ros::Publisher pub_emotion_;
@@ -110,6 +126,10 @@ class RosTopicOutput : public BaseOutput
   std::shared_ptr<people_msgs::HeadPoseStamped> headpose_msg_ptr_;
   ros::Publisher pub_object_;
   std::shared_ptr<object_msgs::ObjectsInBoxes> object_msg_ptr_;
+  ros::Publisher pub_person_reid_;
+  std::shared_ptr<people_msgs::ReidentificationStamped> person_reid_msg_ptr_;
+  ros::Publisher pub_segmented_object_;
+  std::shared_ptr<people_msgs::ObjectsInMasks> segmented_object_msg_ptr_;
 
 };
 }  // namespace Outputs

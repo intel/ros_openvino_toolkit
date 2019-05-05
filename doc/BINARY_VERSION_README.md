@@ -110,11 +110,18 @@ cd ~/catkin_ws/src
 git clone https://github.com/intel/ros_openvino_toolkit
 git clone https://github.com/intel/object_msgs
 git clone https://github.com/ros-perception/vision_opencv
+git clone https://github.com/intel-ros/realsense
+cd realsense
+git checkout 2.1.3
 ```
 
 - Build package
 ```
+# Ubuntu 16.04
 source /opt/ros/kinetic/setup.bash
+# Ubuntu 18.04
+source /opt/ros/melodic/setup.bash
+
 source /opt/intel/computer_vision_sdk/bin/setupvars.sh
 export OpenCV_DIR=$HOME/code/opencv/build
 cd ~/catkin_ws
@@ -128,33 +135,96 @@ sudo ln -s ~/catkin_ws/src/ros_openvino_toolkit /opt/openvino_toolkit/ros_openvi
 * Preparation
 	* download and convert a trained model to produce an optimized Intermediate Representation (IR) of the model 
 		```bash
-		cd /opt/intel/computer_vision_sdk/deployment_tools/model_optimizer/install_prerequisites
-		sudo ./install_prerequisites.sh
-		#object detection model
-		cd /opt/intel/computer_vision_sdk/deployment_tools/model_downloader
-		sudo python3 downloader.py --name ssd300
-		sudo python3 /opt/intel/computer_vision_sdk/deployment_tools/model_optimizer/mo.py --input_model /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/ssd/300/caffe/ssd300.caffemodel --output_dir /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/ssd/300/caffe/output/
-		```
+		#object segmentation model
+		 cd /opt/intel/computer_vision_sdk/deployment_tools/model_optimizer/install_prerequisites
+		 sudo ./install_prerequisites.sh
+		 mkdir -p ~/Downloads/models
+		 cd ~/Downloads/models
+		 wget http://download.tensorflow.org/models/object_detection/mask_rcnn_inception_v2_coco_2018_01_28.tar.gz
+		 tar -zxvf mask_rcnn_inception_v2_coco_2018_01_28.tar.gz
+		 cd mask_rcnn_inception_v2_coco_2018_01_28
+		 python3 /opt/intel/computer_vision_sdk/deployment_tools/model_optimizer/mo_tf.py --input_model frozen_inference_graph.pb --tensorflow_use_custom_operations_config /opt/intel/computer_vision_sdk/deployment_tools/model_optimizer/extensions/front/tf/mask_rcnn_support.json --tensorflow_object_detection_api_pipeline_config pipeline.config --reverse_input_channels --output_dir ./output/
+		 sudo mkdir -p /opt/models
+		 sudo ln -sf ~/Downloads/models/mask_rcnn_inception_v2_coco_2018_01_28 /opt/models/
+		 #object detection model
+		 cd /opt/intel/computer_vision_sdk/deployment_tools/model_downloader
+		 sudo python3 ./downloader.py --name mobilenet-ssd
+		 #FP32 precision model
+		 sudo python3 /opt/intel/computer_vision_sdk/deployment_tools/model_optimizer/mo.py --input_model /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel --output_dir /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP32 --mean_values [127.5,127.5,127.5] --scale_values [127.5]
+		 #FP16 precision model
+		 sudo python3 /opt/intel/computer_vision_sdk/deployment_tools/model_optimizer/mo.py --input_model /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel --output_dir /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP16 --data_type=FP16 --mean_values [127.5,127.5,127.5] --scale_values [127.5]
+      ```
 	* copy label files (excute _once_)<br>
 		```bash
 		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/intel/computer_vision_sdk/deployment_tools/intel_models/emotions-recognition-retail-0003/FP32
+		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/intel/computer_vision_sdk/deployment_tools/intel_models/emotions-recognition-retail-0003/FP16
 		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/intel/computer_vision_sdk/deployment_tools/intel_models/face-detection-adas-0001/FP32
-		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_detection/ssd300.labels /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/ssd/300/caffe/output
+		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/intel/computer_vision_sdk/deployment_tools/intel_models/face-detection-adas-0001/FP16
+		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_segmentation/frozen_inference_graph.labels ~/Downloads/models/mask_rcnn_inception_v2_coco_2018_01_28/output
+		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP32
+		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP16
 		```
-	* set ENV LD_LIBRARY_PATH
+	* set ENV LD_LIBRARY_PATH and environment
 		```bash
+		source /opt/intel/computer_vision_sdk/bin/setupvars.sh
 		export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/computer_vision_sdk/deployment_tools/inference_engine/samples/build/intel64/Release/lib
 		```
-* run face detection sample code input from StandardCamera.
+* run face detection sample code input from StandardCamera.(connect Intel® Neural Compute Stick 2)
 	```bash
-	roslaunch vino_launch pipeline_people.launch
+	roslaunch vino_launch pipeline_people_myriad.launch
 	```
-* run object detection sample code input from RealsensCamera.
+* run face detection sample code input from Image.
+	```bash
+	roslaunch vino_launch pipeline_image.launch
+	```
+* run object detection sample code input from RealSenseCamera.(connect Intel® Neural Compute Stick 2)
 	```bash
 	roslaunch vino_launch pipeline_object.launch
 	```
+* run object detection sample code input from RealSenseCameraTopic.(connect Intel® Neural Compute Stick 2)
+	```bash
+	roslaunch vino_launch pipeline_object_topic.launch
+	```
+* run object segmentation sample code input from RealSenseCameraTopic.(connect Intel® Neural Compute Stick 2)
+	```bash
+	roslaunch vino_launch pipeline_segmentation.launch
+	```
+* run object segmentation sample code input from Video.
+	```bash
+	roslaunch vino_launch pipeline_video.launch
+	```
+* run person reidentification sample code input from StandardCamera.
+	```bash
+	roslaunch vino_launch pipeline_reidentification.launch
+	```
+* run object detection service sample code input from Image  
+  Run image processing service:
+	```bash
+	roslaunch vino_launch image_object_server.launch
+	```
+  Run example application with an absolute path of an image on another console:
+	```bash
+	rosrun dynamic_vino_sample image_object_client ~/catkin_ws/src/ros_openvino_toolkit/data/images/car.png
+	```
+* run people detection service sample code input from Image  
+  Run image processing service:
+	```bash
+	roslaunch vino_launch image_people_server.launch
+	```
+  Run example application with an absolute path of an image on another console:
+	```bash
+	rosrun dynamic_vino_sample image_people_client ~/catkin_ws/src/ros_openvino_toolkit/data/images/team.jpg
+	```
 ## 6. Known Issues
-- Video and image detection support is going to be verified.
-- Segmentation fault occurs occasionally, which is caused by librealsense library. See [Issue #2645](https://github.com/IntelRealSense/librealsense/issues/2645) for more details.
+* Possible problems
+	* When running sample with Intel® Neural Compute Stick 2 occurred error:
+		```bash
+		E: [ncAPI] [         0] ncDeviceOpen:668	failed to find device
+		# or
+		E: [ncAPI] [         0] ncDeviceCreate:324      global mutex initialization failed
+		```
+	> solution - Please refer to the [guide](https://software.intel.com/en-us/neural-compute-stick/get-started) to set up the environment.
+	* Segmentation fault occurs occasionally, which is caused by librealsense library. See [Issue #2645](https://github.com/IntelRealSense/librealsense/issues/2645) for more details.
 
 ###### *Any security issue should be reported using process at https://01.org/security*
+

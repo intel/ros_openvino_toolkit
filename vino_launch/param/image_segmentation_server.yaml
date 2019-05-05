@@ -1,0 +1,19 @@
+Pipelines:
+- name: segmentation
+  inputs: [Image]
+  infers:
+    - name: ObjectSegmentation
+      model: /opt/models/mask_rcnn_inception_v2_coco_2018_01_28/output/frozen_inference_graph.xml
+      engine: CPU
+      label: to/be/set/xxx.labels
+      batch: 1
+  outputs: [RosService]
+  confidence_threshold: 0.2
+  connects:
+    - left: Image
+      right: [ObjectSegmentation]
+    - left: ObjectSegmentation
+      right: [RosService]
+  input_path: "/opt/openvino_toolkit/ros_openvino_toolkit/data/images/car.png"
+OpenvinoCommon:
+

@@ -130,15 +130,23 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	git clone https://github.com/intel/ros_openvino_toolkit
 	git clone https://github.com/intel/object_msgs
 	git clone https://github.com/ros-perception/vision_opencv
+	git clone https://github.com/intel-ros/realsense
+	cd realsense
+	git checkout 2.1.3
 	```
 
 * Build package
-	**Note**:Please modify kinetic to melodic if you are Ubuntu 18.04 user 
 	```
+	# Ubuntu 16.04
 	source /opt/ros/kinetic/setup.bash
+	# Ubuntu 18.04
+	source /opt/ros/melodic/setup.bash
+	
 	cd ~/catkin_ws
 	catkin_make
 	source devel/setup.bash
 	sudo mkdir -p /opt/openvino_toolkit
 	sudo ln -s ~/catkin_ws/src/ros_openvino_toolkit /opt/openvino_toolkit/ros_openvino_toolkit
 	```
+
+###### *Any security issue should be reported using process at https://01.org/security*

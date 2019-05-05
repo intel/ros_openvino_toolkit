@@ -58,7 +58,7 @@ class RealSenseCameraTopic : public BaseInputDevice
   ros::NodeHandle nh_;
   image_transport::Subscriber sub_;
   cv::Mat image;
-  int image_count;
+  cv::Mat last_image;
 
   void cb(const sensor_msgs::ImageConstPtr& image_msg);
 };

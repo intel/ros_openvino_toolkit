@@ -31,6 +31,9 @@
 #include "dynamic_vino_lib/inferences/face_detection.h"
 #include "dynamic_vino_lib/inferences/head_pose_detection.h"
 #include "dynamic_vino_lib/inferences/object_detection.h"
+#include "dynamic_vino_lib/inferences/object_segmentation.h"
+#include "dynamic_vino_lib/inferences/person_reidentification.h"
+#include "dynamic_vino_lib/services/frame_processing_server.h"
 #include "opencv2/opencv.hpp"
 
 class Pipeline;
@@ -83,6 +86,18 @@ class BaseOutput
   {
   }
   /**
+   * @brief Generate output content according to the object segmentation result.
+   */
+  virtual void accept(const std::vector<dynamic_vino_lib::ObjectSegmentationResult>&)
+  {
+  }
+  /**
+  * @brief Generate output content according to the person reidentification result.
+  */
+  virtual void accept(const std::vector<dynamic_vino_lib::PersonReidentificationResult> &)
+  {
+  }
+  /**
    * @brief Calculate the camera matrix of a frame for image window output, no
          implementation for ros topic output.
    */
@@ -95,8 +110,25 @@ class BaseOutput
   virtual void handleOutput() = 0;
 
   void setPipeline(Pipeline* const pipeline);
+  virtual void setServiceResponse(
+    boost::shared_ptr<object_msgs::DetectObjectResponse> response) {}
+  virtual void setServiceResponseForFace(
+    boost::shared_ptr<object_msgs::DetectObjectResponse> response) {}
+  virtual void setServiceResponse(
+    boost::shared_ptr<people_msgs::AgeGenderSrvResponse> response) {}
+  virtual void setServiceResponse(
+    boost::shared_ptr<people_msgs::EmotionSrvResponse> response) {}
+  virtual void setServiceResponse(
+    boost::shared_ptr<people_msgs::HeadPoseSrvResponse> response) {}
+  virtual void setServiceResponse(
+    boost::shared_ptr<people_msgs::PeopleSrvResponse> response) {}
+  virtual void setServiceResponse(
+    boost::shared_ptr<people_msgs::ReidentificationSrvResponse> response) {}
+  virtual void setServiceResponse(
+    boost::shared_ptr<people_msgs::ObjectsInMasksSrvResponse> response) {}
   Pipeline* getPipeline() const;
   cv::Mat getFrame() const;
+  virtual void clearData() {}
 
  protected:
   cv::Mat frame_;

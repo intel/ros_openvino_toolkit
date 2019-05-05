@@ -1,0 +1,22 @@
+Pipelines:
+- name: object
+  inputs: [RealSenseCameraTopic]
+  infers:
+    - name: ObjectDetection
+      model: /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP16/mobilenet-ssd.xml
+      engine: MYRIAD
+      label: to/be/set/xxx.labels
+      batch: 16
+  outputs: [ImageWindow, RosTopic, RViz]
+  confidence_threshold: 0.5
+  connects:
+    - left: RealSenseCameraTopic
+      right: [ObjectDetection]
+    - left: ObjectDetection
+      right: [ImageWindow]
+    - left: ObjectDetection
+      right: [RosTopic]
+    - left: ObjectDetection
+      right: [RViz]
+
+OpenvinoCommon:

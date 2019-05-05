@@ -72,6 +72,12 @@ class PipelineManager {
     std::shared_ptr<std::thread> thread;
     PipelineState state;
   };
+  
+  std::map<std::string, PipelineData> getPipelines()
+  {
+    return pipelines_;
+  }
+
 
  private:
   PipelineManager(){};
@@ -94,7 +100,10 @@ class PipelineManager {
       const Params::ParamManager::InferenceParams& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference> createObjectDetection(
       const Params::ParamManager::InferenceParams& infer);
-
+  std::shared_ptr<dynamic_vino_lib::BaseInference> createObjectSegmentation(
+      const Params::ParamManager::InferenceParams& infer);
+  std::shared_ptr<dynamic_vino_lib::BaseInference> createPersonReidentification(
+      const Params::ParamManager::InferenceParams& infer);
   std::map<std::string, PipelineData> pipelines_;
   std::map<std::string, InferenceEngine::InferencePlugin> plugins_for_devices_;
 };

@@ -34,35 +34,36 @@ Input::RealSenseCameraTopic::RealSenseCameraTopic()
 bool Input::RealSenseCameraTopic::initialize()
 {
   slog::info << "before cameraTOpic init" << slog::endl;
-
+  
   std::shared_ptr<image_transport::ImageTransport> it =
-      std::make_shared<image_transport::ImageTransport>(nh_);
+	        std::make_shared<image_transport::ImageTransport>(nh_);
   sub_ = it->subscribe("/camera/color/image_raw", 1, &RealSenseCameraTopic::cb,
-                       this);
-
-  image_count = 0;
+		                           this); 
   return true;
 }
 
 void Input::RealSenseCameraTopic::cb(
     const sensor_msgs::ImageConstPtr& image_msg)
 {
-  slog::info << "Receiving a new image from Camera topic." << slog::endl;
   image = cv_bridge::toCvCopy(image_msg, "bgr8")->image;
-  ++image_count;
 }
 
 bool Input::RealSenseCameraTopic::read(cv::Mat* frame)
 {
-  if (image.empty() || image_count <= 0)
+  ros::spinOnce();
+  //nothing in topics from begining
+  if (image.empty() && last_image.empty())
   {
     slog::warn << "No data received in CameraTopic instance" << slog::endl;
     return false;
   }
-
-  *frame = image;
-  --image_count;
-
+  if(image.empty()) {
+	  *frame = last_image;
+  }
+  else
+  {
+	  *frame = image;
+  }
   return true;
 }
 

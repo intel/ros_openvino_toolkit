@@ -41,6 +41,7 @@
 #include "dynamic_vino_lib/outputs/image_window_output.h"
 #include "dynamic_vino_lib/outputs/ros_topic_output.h"
 #include "dynamic_vino_lib/outputs/rviz_output.h"
+#include "dynamic_vino_lib/outputs/ros_service_output.h"
 #include "dynamic_vino_lib/pipeline.h"
 #include "dynamic_vino_lib/pipeline_manager.h"
 #include "dynamic_vino_lib/pipeline_params.h"
@@ -109,6 +110,7 @@ PipelineManager::parseInputDevice(
       device = std::make_shared<Input::StandardCamera>();
     } else if (name == kInputType_CameraTopic) {
       device = std::make_shared<Input::RealSenseCameraTopic>();
+      std::cout <<"register yaml"<<std::endl;
     } else if (name == kInputType_Video) {
       if (params.input_meta != "") {
         device = std::make_shared<Input::Video>(params.input_meta);
@@ -142,7 +144,9 @@ PipelineManager::parseOutput(
       object = std::make_shared<Outputs::ImageWindowOutput>("Results");
     } else if (name == kOutputTpye_RViz) {
       object = std::make_shared<Outputs::RvizOutput>();
-    } 
+    } else if (name == kOutputTpye_RosService) {
+      object = std::make_shared<Outputs::RosServiceOutput>();
+    }
     if (object != nullptr) {
       outputs.insert({name, object});
       slog::info << " ... Adding one Output: " << name << slog::endl;
@@ -190,6 +194,16 @@ PipelineManager::parseInference(
       object = createObjectDetection(infer);
 
     }
+    else if (infer.name == kInferTpye_ObjectSegmentation) {
+      object = createObjectSegmentation(infer);
+    }
+    else if (infer.name == kInferTpye_PersonReidentification) {
+      object = createPersonReidentification(infer);
+    } 
+    else {
+      slog::err << "Invalid inference name: " << infer.name << slog::endl;
+    }
+
 
     if (object != nullptr) {
       inferences.insert({infer.name, object});
@@ -272,11 +286,43 @@ const Params::ParamManager::InferenceParams & infer)
   auto object_detection_engine = std::make_shared<Engines::Engine>(
     plugins_for_devices_[infer.engine], object_detection_model);
   auto object_inference_ptr = std::make_shared<dynamic_vino_lib::ObjectDetection>(
-    0.5); // To-do theshold configuration
+    infer.enable_roi_constraint, infer.confidence_threshold); // To-do theshold configuration
   object_inference_ptr->loadNetwork(object_detection_model);
   object_inference_ptr->loadEngine(object_detection_engine);
 
   return object_inference_ptr;
+}
+
+std::shared_ptr<dynamic_vino_lib::BaseInference>
+PipelineManager::createObjectSegmentation(const Params::ParamManager::InferenceParams & infer)
+{
+  auto obejct_segmentation_model =
+    std::make_shared<Models::ObjectSegmentationModel>(infer.model, 1, 2, 1);
+  obejct_segmentation_model->modelInit();
+  auto obejct_segmentation_engine = std::make_shared<Engines::Engine>(
+    plugins_for_devices_[infer.engine], obejct_segmentation_model);
+  auto segmentation_inference_ptr = std::make_shared<dynamic_vino_lib::ObjectSegmentation>(0.5);
+  segmentation_inference_ptr->loadNetwork(obejct_segmentation_model);
+  segmentation_inference_ptr->loadEngine(obejct_segmentation_engine);
+
+  return segmentation_inference_ptr;
+}
+
+std::shared_ptr<dynamic_vino_lib::BaseInference>
+PipelineManager::createPersonReidentification(
+  const Params::ParamManager::InferenceParams & infer)
+{
+  auto person_reidentification_model =
+    std::make_shared<Models::PersonReidentificationModel>(infer.model, 1, 1, infer.batch);
+  person_reidentification_model->modelInit();
+  auto person_reidentification_engine = std::make_shared<Engines::Engine>(
+    plugins_for_devices_[infer.engine], person_reidentification_model);
+  auto reidentification_inference_ptr =
+    std::make_shared<dynamic_vino_lib::PersonReidentification>(infer.confidence_threshold);
+  reidentification_inference_ptr->loadNetwork(person_reidentification_model);
+  reidentification_inference_ptr->loadEngine(person_reidentification_engine);
+
+  return reidentification_inference_ptr;
 }
 
 void PipelineManager::threadPipeline(const char* name) {
