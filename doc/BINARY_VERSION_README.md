@@ -177,7 +177,7 @@ sudo ln -s ~/catkin_ws/src/ros_openvino_toolkit /opt/openvino_toolkit/ros_openvi
 	```bash
 	roslaunch vino_launch pipeline_image.launch
 	```
-* run object detection sample code input from RealSenseCamera.(connect Intel® Neural Compute Stick 2)
+* run object detection sample code input from RealSenseCamera.
 	```bash
 	roslaunch vino_launch pipeline_object.launch
 	```
@@ -185,7 +185,7 @@ sudo ln -s ~/catkin_ws/src/ros_openvino_toolkit /opt/openvino_toolkit/ros_openvi
 	```bash
 	roslaunch vino_launch pipeline_object_topic.launch
 	```
-* run object segmentation sample code input from RealSenseCameraTopic.(connect Intel® Neural Compute Stick 2)
+* run object segmentation sample code input from RealSenseCameraTopic.
 	```bash
 	roslaunch vino_launch pipeline_segmentation.launch
 	```
