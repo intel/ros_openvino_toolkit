@@ -38,7 +38,7 @@ namespace Outputs
 class RvizOutput : public BaseOutput
 {
 public:
-  RvizOutput();
+  RvizOutput(std::string);
   /**
    * @brief Construct frame for rviz
    * @param[in] A frame.

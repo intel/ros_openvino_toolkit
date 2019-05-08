@@ -272,6 +272,24 @@ target_link_libraries(image_reidentification_server
   ${OpenCV_LIBRARIES}
 )
 
+add_executable(pipeline_service_client
+  src/pipeline_service_client.cpp
+)
+
+add_dependencies(pipeline_service_client
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${dynamic_vino_lib_TARGETS}
+)
+
+target_link_libraries(pipeline_service_client
+  ${catkin_LIBRARIES}
+  cpu_extension
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
 
 if(UNIX OR APPLE)
   # Linker flags.

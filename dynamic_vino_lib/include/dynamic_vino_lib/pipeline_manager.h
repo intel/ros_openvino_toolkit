@@ -58,13 +58,15 @@ class PipelineManager {
   void runAll();
   void stopAll();
   void joinAll();
-
+ 
   enum PipelineState {
-    PipelineState_ThreadNotCreated,
-    PipelineState_ThreadStopped,
-    PipelineState_ThreadRunning,
-    PipelineState_Error
+    PipelineState_ThreadNotCreated = 0,
+    PipelineState_ThreadStopped = 1,
+    PipelineState_ThreadRunning = 2,
+    PipelineState_ThreadPasued = 3,
+    PipelineState_Error = 4
   };
+
   struct PipelineData {
     Params::ParamManager::PipelineParams params;
     std::shared_ptr<Pipeline> pipeline;
@@ -72,12 +74,15 @@ class PipelineManager {
     std::shared_ptr<std::thread> thread;
     PipelineState state;
   };
-  
+   void runService();
   std::map<std::string, PipelineData> getPipelines()
   {
     return pipelines_;
   }
-
+  std::map<std::string, PipelineData>* getPipelinesPtr()
+  {
+    return &pipelines_;
+  }
 
  private:
   PipelineManager(){};

@@ -25,11 +25,11 @@
 #include "dynamic_vino_lib/pipeline.h"
 #include "dynamic_vino_lib/outputs/rviz_output.h"
 
-Outputs::RvizOutput::RvizOutput()
+Outputs::RvizOutput::RvizOutput(std::string pipeline_name)
 {
   image_topic_ = nullptr;
-  pub_image_ = nh_.advertise<sensor_msgs::Image>("/openvino_toolkit/images", 16);
-  image_window_output_ = std::make_shared<Outputs::ImageWindowOutput>("WindowForRviz", 950);
+  pub_image_ = nh_.advertise<sensor_msgs::Image>("/openvino_toolkit/"+pipeline_name+"/images", 16);
+  image_window_output_ = std::make_shared<Outputs::ImageWindowOutput>(pipeline_name, 950);
 }
 
 void Outputs::RvizOutput::feedFrame(const cv::Mat & frame)
@@ -83,7 +83,6 @@ void Outputs::RvizOutput::handleOutput()
     std::make_shared<cv_bridge::CvImage>(header, "bgr8", frame);
    sensor_msgs::Image image_msg;
   image_topic_ = cv_ptr->toImageMsg();
-//    image_topic_ = std::make_shared<sensor_msgs::Image>(image_msg);
   pub_image_.publish(image_topic_);
 }
   std::shared_ptr<sensor_msgs::Image> image_topic_;

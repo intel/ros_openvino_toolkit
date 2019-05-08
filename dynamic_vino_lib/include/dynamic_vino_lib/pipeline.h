@@ -126,7 +126,10 @@ class Pipeline
   {
     return input_device_;
   }
-  
+  const std::multimap<std::string, std::string> getPipelineDetail()
+  {
+    return next_;
+  }
   /**
   * @brief Get real time FPS (frames per second).
   */

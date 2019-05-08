@@ -25,22 +25,24 @@
 #include <string>
 #include <vector>
 
-Outputs::RosTopicOutput::RosTopicOutput()
+Outputs::RosTopicOutput::RosTopicOutput(std::string pipeline_name):
+  pipeline_name_(pipeline_name)
 {
   pub_face_ =
-      nh_.advertise<object_msgs::ObjectsInBoxes>("/openvino_toolkit/faces", 16);
+      nh_.advertise<object_msgs::ObjectsInBoxes>(
+        "/openvino_toolkit/" + pipeline_name_ + "/faces", 16);
   pub_emotion_ = nh_.advertise<people_msgs::EmotionsStamped>(
-      "/openvino_toolkit/emotions", 16);
+      "/openvino_toolkit/" + pipeline_name_ + "/emotions", 16);
   pub_age_gender_ = nh_.advertise<people_msgs::AgeGenderStamped>(
-      "/openvino_toolkit/age_genders", 16);
+      "/openvino_toolkit/" + pipeline_name_ + "/age_genders", 16);
   pub_headpose_ = nh_.advertise<people_msgs::HeadPoseStamped>(
-      "/openvino_toolkit/headposes", 16);
+      "/openvino_toolkit/" + pipeline_name_ + "/headposes", 16);
   pub_object_ = nh_.advertise<object_msgs::ObjectsInBoxes>(
-      "/openvino_toolkit/detected_objects", 16);
+      "/openvino_toolkit/" + pipeline_name_ + "/detected_objects", 16);
   pub_person_reid_ = nh_.advertise<people_msgs::ReidentificationStamped>(
-      "/openvino_toolkit/reidentified_persons", 16);
+      "/openvino_toolkit/" + pipeline_name_ + "/reidentified_persons", 16);
   pub_segmented_object_ = nh_.advertise<people_msgs::ObjectsInMasks>(
-      "/openvino_toolkit/segmented_obejcts", 16);
+      "/openvino_toolkit/" + pipeline_name_ + "/segmented_obejcts", 16);
 
   emotions_msg_ptr_ = NULL;
   faces_msg_ptr_ = NULL;

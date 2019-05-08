@@ -23,8 +23,6 @@
 #include "dynamic_vino_lib/outputs/ros_service_output.h"
 #include "cv_bridge/cv_bridge.h"
 #include <object_msgs/ObjectsInBoxes.h>
-// Outputs::RosServiceOutput::RosServiceOutput()
-
 
 void Outputs::RosServiceOutput::setServiceResponse(
   boost::shared_ptr<object_msgs::DetectObject::Response> response)

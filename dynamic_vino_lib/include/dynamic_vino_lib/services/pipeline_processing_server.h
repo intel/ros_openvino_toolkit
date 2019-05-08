@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef DYNAMIC_VINO_LIB__SERVICES__FRAME_PROCESSING_SERVER_HPP_
-#define DYNAMIC_VINO_LIB__SERVICES__FRAME_PROCESSING_SERVER_HPP_
+#ifndef DYNAMIC_VINO_LIB__SERVICES__PIPELINE_PROCESSING_SERVER_HPP_
+#define DYNAMIC_VINO_LIB__SERVICES__PIPELINE_PROCESSING_SERVER_HPP_
 
 #include <object_msgs/Object.h>
 #include <object_msgs/ObjectInBox.h>
@@ -32,6 +32,7 @@
 #include <people_msgs/ObjectsInMasksSrv.h>
 #include <people_msgs/ReidentificationSrv.h>
 #include <pipeline_srv_msgs/PipelineSrv.h>
+#include "dynamic_vino_lib/pipeline_manager.h"
 
 #include <ros/ros.h>
 #include <memory>
@@ -41,22 +42,33 @@
 namespace vino_service
 {
 template<typename T>
-class FrameProcessingServer 
+class PipelineProcessingServer 
 {
 public:
-  explicit FrameProcessingServer(
-    const std::string & service_name,
-    const std::string & config_path);
-  void initService();
+  explicit PipelineProcessingServer(
+    const std::string & service_name); 
+
 private:
-  std::string service_name_;
-  std::string config_path_;
+
+  void initPipelineService(); 
+
   std::shared_ptr<ros::NodeHandle> nh_;
-  std::shared_ptr<ros::ServiceServer> service_; 
 
   bool cbService(ros::ServiceEvent<typename T::Request,typename T::Response>& event);
 
-   
+  void setResponse(
+    ros::ServiceEvent<typename T::Request,typename T::Response>& event);
+  
+  void setPipelineByRequest(std::string pipeline_name, PipelineManager::PipelineState state);
+
+  std::shared_ptr<ros::ServiceServer> service_;
+
+  std::map<std::string, PipelineManager::PipelineData> *  pipelines_;
+
+  std::string service_name_;
+
+
+    
 };
 }  // namespace vino_service
 #endif // DYNAMIC_VINO_LIB__SERVICES__FRAME_PROCESSING_SERVER_HPP_
