@@ -28,6 +28,9 @@
 #include "dynamic_vino_lib/slog.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
+#include "dynamic_vino_lib/models/object_detection_ssd_model.h"
+#include "dynamic_vino_lib/models/object_detection_yolov2voc_model.h"
+
 
 namespace Outputs
 {
@@ -45,11 +48,8 @@ void matU8ToBlob(const cv::Mat& orig_image, InferenceEngine::Blob::Ptr& blob,
                  float scale_factor = 1.0, int batch_index = 0)
 {
   InferenceEngine::SizeVector blob_size = blob->getTensorDesc().getDims();
-  // const size_t width = blob_size[3];
   const int width = blob_size[3];
-  // const size_t height = blob_size[2];
   const int height = blob_size[2];
-  // const size_t channels = blob_size[1];
   const int channels = blob_size[1];
   T* blob_data = blob->buffer().as<T*>();
 
@@ -118,7 +118,7 @@ class BaseInference
    */
   inline const int getEnqueuedNum() const
   {
-    return enqueued_frames;
+    return enqueued_frames_;
   }
   /**
    * @brief Enqueue a frame to this class.
@@ -172,18 +172,20 @@ class BaseInference
   bool enqueue(const cv::Mat& frame, const cv::Rect&, float scale_factor,
                int batch_index, const std::string& input_name)
   {
-    if (enqueued_frames == max_batch_size_)
+    if (enqueued_frames_ == max_batch_size_)
     {
       slog::warn << "Number of " << getName() << "input more than maximum("
                  << max_batch_size_ << ") processed by inference" << slog::endl;
       return false;
     }
+
     InferenceEngine::Blob::Ptr input_blob =
         engine_->getRequest()->GetBlob(input_name);
     matU8ToBlob<T>(frame, input_blob, scale_factor, batch_index);
-    enqueued_frames += 1;
+    enqueued_frames_ += 1;
     return true;
   }
+
   /**
    * @brief Set the max batch size for one inference.
    */
@@ -191,13 +193,40 @@ class BaseInference
   {
     max_batch_size_ = max_batch_size;
   }
+  std::shared_ptr<Engines::Engine> engine_;
+  int enqueued_frames_ = 0;
 
  private:
-  std::shared_ptr<Engines::Engine> engine_;
   int max_batch_size_ = 1;
-  int enqueued_frames = 0;
   bool results_fetched_ = false;
 };
+
+class ObjectDetectionResult : public Result {
+ public:
+  friend class ObjectDetection;
+  explicit ObjectDetectionResult(const cv::Rect& location);
+  std::string getLabel() const { return label_; }
+  /**
+   * @brief Get the confidence that the detected area is a face.
+   * @return The confidence value. 
+   */
+  float getConfidence() const { return confidence_; }
+  bool operator<(const ObjectDetectionResult &s2) const
+  {
+    return this->confidence_ > s2.confidence_;
+  }
+
+  std::string label_ = "";
+  float confidence_ = -1;
+};
+
+class ObjectDetection : public BaseInference
+{
+ public:
+  ObjectDetection() {};
+  virtual void loadNetwork(std::shared_ptr<Models::ObjectDetectionModel>) = 0;
+};
+
 }  // namespace dynamic_vino_lib
 
 #endif  // DYNAMIC_VINO_LIB_INFERENCES_BASE_INFERENCE_H
