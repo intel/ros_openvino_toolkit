@@ -29,6 +29,7 @@
 #include "dynamic_vino_lib/models/object_detection_yolov2voc_model.h"
 #include "dynamic_vino_lib/engines/engine.h"
 #include "dynamic_vino_lib/inferences/base_inference.h"
+#include "dynamic_vino_lib/inferences/object_detection.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
 // namespace
@@ -40,6 +41,7 @@ namespace dynamic_vino_lib {
 class ObjectDetectionYolov2voc : public ObjectDetection {
  public:
   using Result = dynamic_vino_lib::ObjectDetectionResult;
+  using Filter = dynamic_vino_lib::ObjectDetectionResultFilter;
   explicit ObjectDetectionYolov2voc(double);
   ~ObjectDetectionYolov2voc() override;
   /**
@@ -82,17 +84,22 @@ class ObjectDetectionYolov2voc : public ObjectDetection {
    * @brief Show the observed detection result either through image window
      or ROS topic.
    */
-  const void observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output);
+  const void observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output,
+    const std::string filter_conditions);
   /**
    * @brief Get the name of the Inference instance.
    * @return The name of the Inference instance.
    */
   const std::string getName() const override;
 
+  const std::vector<cv::Rect> getFilteredROIs(
+    const std::string filter_conditions) const override;
+
  private:
   std::shared_ptr<Models::ObjectDetectionYolov2vocModel> valid_model_;
   std::vector<Result> raw_results_;
   std::vector<Result> results_;
+  std::shared_ptr<Filter> result_filter_;
   int width_ = 0;
   int height_ = 0;
   int max_proposal_count_;

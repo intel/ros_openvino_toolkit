@@ -137,7 +137,8 @@ class BaseInference
   virtual bool submitRequest();
 
   virtual const void observeOutput(
-      const std::shared_ptr<Outputs::BaseOutput>& output) = 0;
+      const std::shared_ptr<Outputs::BaseOutput>& output,
+      const std::string filter_conditions) = 0;
 
   /**
    * @brief This function will fetch the results of the previous inference and
@@ -161,6 +162,16 @@ class BaseInference
    * @return The name of the Inference instance.
    */
   virtual const std::string getName() const = 0;
+  /**
+   * @brief Get the max batch size for one inference.
+   */
+  inline int getMaxBatchSize()
+  {
+    return max_batch_size_;
+  }
+
+  virtual const std::vector<cv::Rect> getFilteredROIs(
+    const std::string filter_conditions) const = 0;
 
  protected:
   /**
@@ -200,33 +211,6 @@ class BaseInference
   int max_batch_size_ = 1;
   bool results_fetched_ = false;
 };
-
-class ObjectDetectionResult : public Result {
- public:
-  friend class ObjectDetection;
-  explicit ObjectDetectionResult(const cv::Rect& location);
-  std::string getLabel() const { return label_; }
-  /**
-   * @brief Get the confidence that the detected area is a face.
-   * @return The confidence value. 
-   */
-  float getConfidence() const { return confidence_; }
-  bool operator<(const ObjectDetectionResult &s2) const
-  {
-    return this->confidence_ > s2.confidence_;
-  }
-
-  std::string label_ = "";
-  float confidence_ = -1;
-};
-
-class ObjectDetection : public BaseInference
-{
- public:
-  ObjectDetection() {};
-  virtual void loadNetwork(std::shared_ptr<Models::ObjectDetectionModel>) = 0;
-};
-
 }  // namespace dynamic_vino_lib
 
 #endif  // DYNAMIC_VINO_LIB_INFERENCES_BASE_INFERENCE_H

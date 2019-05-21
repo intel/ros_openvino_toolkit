@@ -1,18 +1,17 @@
-/*
- * Copyright (c) 2018 Intel Corporation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright (c) 2018 Intel Corporation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 /**
  * @brief A header file with declaration for parameter management
  * @file param_manager.hpp
@@ -61,7 +60,7 @@ class ParamManager  // singleton
    */
   void print() const;
 
-  struct InferenceParams
+  struct InferenceRawData
   {
     std::string name;
     std::string engine;
@@ -72,16 +71,25 @@ class ParamManager  // singleton
     float confidence_threshold = 0.5;
     bool enable_roi_constraint = false;
   };
-  struct PipelineParams
+
+  struct FilterRawData {
+    std::string input;
+    std::string output;
+    std::string filter_conditions;
+  };
+
+  struct PipelineRawData
   {
     std::string name;
-    std::vector<InferenceParams> infers;
+    std::vector<InferenceRawData> infers;
     std::vector<std::string> inputs;
     std::vector<std::string> outputs;
     std::multimap<std::string, std::string> connects;
     std::string input_meta;
+    std::vector<FilterRawData> filters;
   };
-  struct CommonParams
+  
+  struct CommonRawData
   {
     std::string custom_cpu_library;
     std::string custom_cldnn_library;
@@ -105,9 +113,9 @@ class ParamManager  // singleton
 
   /**
    * @brief Retrieve pipeline parameters.
-   * @return A list of struct PipelineParams storing all pipeline parameters.
+   * @return A list of struct PipelineRawData storing all pipeline parameters.
    */
-  std::vector<PipelineParams> getPipelines() const
+  std::vector<PipelineRawData> getPipelines() const
   {
     return pipelines_;
   }
@@ -118,13 +126,13 @@ class ParamManager  // singleton
    * @param[in] name: the name of the pipeline to be retrieved.
    * @return The pipeline paratmeters, or throw a loginc error.
    */
-  PipelineParams getPipeline(const std::string& name) const;
+  PipelineRawData getPipeline(const std::string& name) const;
 
   /**
    * @brief Retrieve common parameters.
-   * @return struct CommonParams storing all common parameters.
+   * @return struct CommonRawData storing all common parameters.
    */
-  CommonParams getCommon() const
+  CommonRawData getCommon() const
   {
     return common_;
   }
@@ -136,9 +144,9 @@ class ParamManager  // singleton
   ParamManager(ParamManager const&);
   void operator=(ParamManager const&);
 
-  std::vector<PipelineParams> pipelines_;
-  CommonParams common_;
+  std::vector<PipelineRawData> pipelines_;
+  CommonRawData common_;
 };
 
 }  // namespace Params
-#endif  // VINO_PARAM_LIB_PARAM_MANAGER_H
+#endif // VINO_PARAM_LIB_PARAM_MANAGER_H

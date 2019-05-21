@@ -16,7 +16,7 @@ Pipelines:
     - left: RealSenseCamera
       right: [ObjectDetection]
     - left: ObjectDetection
-      right: [ImageWindow]
+      right: [{ImageWindow: label == Person && confidence >= 0.8}]
     - left: ObjectDetection
       right: [RosTopic]
    # - left: ObjectDetection
