@@ -66,7 +66,7 @@ include_directories (
   ${InferenceEngine_INCLUDE_DIRS}/../build/samples/thirdparty/gflags/include
   ${InferenceEngine_INCLUDE_DIRS}/../samples
   ${InferenceEngine_DIR}/../src
-  ${dynamic_vino_lib_INCLUDE_DIRS}
+  #${dynamic_vino_lib_INCLUDE_DIRS}
   ${vino_param_lib_INCLUDE_DIRS}
 )
 

@@ -146,7 +146,8 @@ add_library(${PROJECT_NAME} SHARED
   src/inferences/age_gender_detection.cpp
   src/inferences/face_detection.cpp
   src/inferences/head_pose_detection.cpp
-  src/inferences/object_detection.cpp
+  src/inferences/object_detection_ssd.cpp
+  src/inferences/object_detection_yolov2_voc.cpp
   src/inferences/object_segmentation.cpp
   src/inferences/person_reidentification.cpp
   src/inputs/realsense_camera.cpp
@@ -159,7 +160,8 @@ add_library(${PROJECT_NAME} SHARED
   src/models/age_gender_detection_model.cpp
   src/models/face_detection_model.cpp
   src/models/head_pose_detection_model.cpp
-  src/models/object_detection_model.cpp
+  src/models/object_detection_ssd_model.cpp
+  src/models/object_detection_yolov2voc_model.cpp
   src/models/object_segmentation_model.cpp
   src/models/person_reidentification_model.cpp
   src/outputs/image_window_output.cpp

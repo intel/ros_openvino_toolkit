@@ -38,6 +38,8 @@
 #include "dynamic_vino_lib/models/emotion_detection_model.h"
 #include "dynamic_vino_lib/models/face_detection_model.h"
 #include "dynamic_vino_lib/models/head_pose_detection_model.h"
+#include "dynamic_vino_lib/models/object_detection_ssd_model.h"
+#include "dynamic_vino_lib/models/object_detection_yolov2voc_model.h"
 #include "dynamic_vino_lib/outputs/image_window_output.h"
 #include "dynamic_vino_lib/outputs/ros_topic_output.h"
 #include "dynamic_vino_lib/outputs/rviz_output.h"
@@ -94,7 +96,6 @@ std::shared_ptr<Pipeline> PipelineManager::createPipeline(
   slog::info << "One Pipeline Created!" << slog::endl;
   pipeline->printPipeline();
   return pipeline;
-
 }
 
 std::map<std::string, std::shared_ptr<Input::BaseInputDevice>>
@@ -163,6 +164,8 @@ PipelineManager::parseInference(
   auto pcommon = Params::ParamManager::getInstance().getCommon();
   std::string FLAGS_l = pcommon.custom_cpu_library;
   std::string FLAGS_c = pcommon.custom_cldnn_library;
+  //std::string FLAGS_c = "/opt/intel/computer_vision_sdk/deployment_tools/inference_engine/lib/ubuntu_16.04/intel64/cldnn_global_custom_kernels/cldnn_global_custom_kernels.xml";
+
   bool FLAGS_pc = pcommon.enable_performance_count;
 
   std::map<std::string, std::shared_ptr<dynamic_vino_lib::BaseInference>>
@@ -280,13 +283,30 @@ std::shared_ptr<dynamic_vino_lib::BaseInference>
 PipelineManager::createObjectDetection(
 const Params::ParamManager::InferenceParams & infer)
 {
-  auto object_detection_model =
-    std::make_shared<Models::ObjectDetectionModel>(infer.model, 1, 1, 1);
+  std::shared_ptr<Models::ObjectDetectionModel> object_detection_model;
+  std::shared_ptr<dynamic_vino_lib::ObjectDetection> object_inference_ptr;
+
+  if (infer.model_type == kInferTpye_ObjectDetectionTypeSSD)
+  {
+    object_detection_model = 
+      std::make_shared<Models::ObjectDetectionSSDModel>(infer.model, 1, 1, 1);
+
+    object_inference_ptr = std::make_shared<dynamic_vino_lib::ObjectDetectionSSD>(
+    0.5); // To-do theshold configuration
+  }
+
+  if (infer.model_type == kInferTpye_ObjectDetectionTypeYolov2voc)
+  {
+    object_detection_model = 
+      std::make_shared<Models::ObjectDetectionYolov2vocModel>(infer.model, 1, 1, 1);
+
+    object_inference_ptr = std::make_shared<dynamic_vino_lib::ObjectDetectionYolov2voc>(
+    0.5); // To-do theshold configuration
+  }
+
   object_detection_model->modelInit();
   auto object_detection_engine = std::make_shared<Engines::Engine>(
     plugins_for_devices_[infer.engine], object_detection_model);
-  auto object_inference_ptr = std::make_shared<dynamic_vino_lib::ObjectDetection>(
-    infer.enable_roi_constraint, infer.confidence_threshold); // To-do theshold configuration
   object_inference_ptr->loadNetwork(object_detection_model);
   object_inference_ptr->loadEngine(object_detection_engine);
 
