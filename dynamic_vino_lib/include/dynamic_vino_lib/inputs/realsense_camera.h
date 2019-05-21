@@ -66,6 +66,7 @@ class RealSenseCamera : public BaseInputDevice
   rs2::config cfg_;
   rs2::pipeline pipe_;
   bool first_read_ = true;
+  static int rscamera_count;
 };
 }  // namespace Input
 

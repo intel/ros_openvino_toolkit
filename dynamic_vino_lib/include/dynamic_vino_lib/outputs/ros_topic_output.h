@@ -54,7 +54,8 @@ namespace Outputs
 class RosTopicOutput : public BaseOutput
 {
  public:
-  RosTopicOutput();
+  RosTopicOutput(){};
+  RosTopicOutput(std::string pipeline_name);
   /**
    * @brief Calculate the camera matrix of a frame.
    * @param[in] A frame.
@@ -112,6 +113,7 @@ class RosTopicOutput : public BaseOutput
 
  private:
   std_msgs::Header getHeader();
+  const std::string pipeline_name_;
   const std::string topic_name_;
   cv::Mat frame_;
   ros::NodeHandle nh_;

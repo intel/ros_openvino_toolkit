@@ -61,6 +61,7 @@ class StandardCamera : public BaseInputDevice
 
  private:
   cv::VideoCapture cap;
+  static int camera_count_;
 };
 }  // namespace Input
 #endif  // DYNAMIC_VINO_LIB_INPUTS_STANDARD_CAMERA_H

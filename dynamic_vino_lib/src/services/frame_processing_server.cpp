@@ -17,6 +17,7 @@
 #include <people_msgs/ObjectsInMasksSrv.h>
 #include <people_msgs/ReidentificationSrv.h>
 #include <object_msgs/DetectObject.h>
+#include <pipeline_srv_msgs/PipelineSrv.h>
 #include <vino_param_lib/param_manager.h>
 #include <ros/ros.h>
 #include <memory>
@@ -40,15 +41,14 @@ FrameProcessingServer<T>::FrameProcessingServer(
   service_name_(service_name),
   config_path_(config_path)
 {
-  nh_=std::make_shared<ros::NodeHandle>();
-  initService(config_path);
+  nh_=std::make_shared<ros::NodeHandle>(service_name_);
+  
 }
 
 template<typename T>
-void FrameProcessingServer<T>::initService(
-  const std::string & config_path)
+void FrameProcessingServer<T>::initService()
 {
-  Params::ParamManager::getInstance().parse(config_path);
+  Params::ParamManager::getInstance().parse(config_path_);
   Params::ParamManager::getInstance().print();
   
   auto pcommon = Params::ParamManager::getInstance().getCommon();
@@ -64,8 +64,9 @@ void FrameProcessingServer<T>::initService(
   
     ros::ServiceServer srv = nh_->advertiseService<ros::ServiceEvent<typename T::Request, typename T::Response> >("/openvino_toolkit/service",std::bind(&FrameProcessingServer::cbService,this,std::placeholders::_1));
     service_ = std::make_shared<ros::ServiceServer>(srv);   
-}
 
+
+}
 
 
 template<typename T>
@@ -94,6 +95,8 @@ bool FrameProcessingServer<T>::cbService(
   slog::info << "[FrameProcessingServer] Callback finished!" << slog::endl;
   return false;
 }
+
+
 
 template class FrameProcessingServer<object_msgs::DetectObject>;
 template class FrameProcessingServer<people_msgs::PeopleSrv>;
