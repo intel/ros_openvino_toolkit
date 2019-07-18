@@ -113,12 +113,16 @@ public:
    * @brief Show the observed detection result either through image window
      or ROS topic.
    */
-  const void observeOutput(const std::shared_ptr<Outputs::BaseOutput> & output);
+  const void observeOutput(const std::shared_ptr<Outputs::BaseOutput> & output,
+    const std::string filter_conditions);
   /**
    * @brief Get the name of the Inference instance.
    * @return The name of the Inference instance.
    */
   const std::string getName() const override;
+
+  const std::vector<cv::Rect> getFilteredROIs(
+    const std::string filter_conditions) const override;
 
 private:
   std::shared_ptr<Models::ObjectSegmentationModel> valid_model_;

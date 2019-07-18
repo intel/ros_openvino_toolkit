@@ -34,7 +34,10 @@ dynamic_vino_lib::ObjectDetectionResult::ObjectDetectionResult(
 // ObjectDetection
 dynamic_vino_lib::ObjectDetectionYolov2voc::ObjectDetectionYolov2voc(double show_output_thresh)
     : dynamic_vino_lib::ObjectDetection(),
-      show_output_thresh_(show_output_thresh){}
+      show_output_thresh_(show_output_thresh) {
+  result_filter_ = std::make_shared<Filter>();
+  result_filter_->init();
+}
 
 dynamic_vino_lib::ObjectDetectionYolov2voc::~ObjectDetectionYolov2voc() = default;
 
@@ -319,8 +322,24 @@ const std::string dynamic_vino_lib::ObjectDetectionYolov2voc::getName() const {
 }
 
 const void dynamic_vino_lib::ObjectDetectionYolov2voc::observeOutput(
-    const std::shared_ptr<Outputs::BaseOutput>& output) {
+    const std::shared_ptr<Outputs::BaseOutput>& output,
+    const std::string filter_conditions) {
   if (output != nullptr) {
-    output->accept(results_);
+    result_filter_->acceptResults(results_);
+    result_filter_->acceptFilterConditions(filter_conditions);
+    output->accept(result_filter_->getFilteredResults());
   }
+}
+
+const std::vector<cv::Rect> dynamic_vino_lib::ObjectDetectionYolov2voc::getFilteredROIs(
+  const std::string filter_conditions) const
+{
+  result_filter_->acceptResults(results_);
+  result_filter_->acceptFilterConditions(filter_conditions);
+  std::vector<Result> results = result_filter_->getFilteredResults();
+  std::vector<cv::Rect> locations;
+  for (auto result : results) {
+    locations.push_back(result.getLocation());
+  }
+  return locations;
 }

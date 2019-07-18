@@ -22,6 +22,7 @@
 #include <memory>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include <vino_param_lib/param_manager.h>
 #include "dynamic_vino_lib/pipeline.h"
@@ -246,41 +247,36 @@ void Pipeline::setCallback()
   }
 }
 
-void Pipeline::callback(const std::string& detection_name)
+void Pipeline::callback(const std::string & detection_name)
 {
+  // slog::info<<"Hello callback ----> " << detection_name <<slog::endl;
   auto detection_ptr = name_to_detection_map_[detection_name];
   detection_ptr->fetchResults();
-
   // set output
-  for (auto pos = next_.equal_range(detection_name); pos.first != pos.second;
-       ++pos.first)
-  {
+  for (auto pos = next_.equal_range(detection_name); pos.first != pos.second; ++pos.first) {
     std::string next_name = pos.first->second;
+
+    std::string filter_conditions = findFilterConditions(detection_name, next_name);
     // if next is output, then print
-    if (output_names_.find(next_name) != output_names_.end())
-    {
-      // name_to_output_map_[next_name]->accept(*detection_ptr->getResult());
-      detection_ptr->observeOutput(name_to_output_map_[next_name]);
-    }
-    else
-    {
+    if (output_names_.find(next_name) != output_names_.end()) {
+      detection_ptr->observeOutput(name_to_output_map_[next_name], filter_conditions);
+    } else {
       auto detection_ptr_iter = name_to_detection_map_.find(next_name);
-      if (detection_ptr_iter != name_to_detection_map_.end())
-      {
+      if (detection_ptr_iter != name_to_detection_map_.end()) {
         auto next_detection_ptr = detection_ptr_iter->second;
-        for (int i = 0; i < detection_ptr->getResultsLength(); ++i)
-        {
-          const dynamic_vino_lib::Result* prev_result =
-              detection_ptr->getLocationResult(i);
-          auto clippedRect =
-              prev_result->getLocation() & cv::Rect(0, 0, width_, height_);
+        size_t batch_size = next_detection_ptr->getMaxBatchSize();
+        std::vector<cv::Rect> next_rois = detection_ptr->getFilteredROIs(filter_conditions);
+        for (size_t i = 0; i < next_rois.size(); i++) {
+          auto roi = next_rois[i];
+          auto clippedRect = roi & cv::Rect(0, 0, width_, height_);
           cv::Mat next_input = frame_(clippedRect);
-          next_detection_ptr->enqueue(next_input, prev_result->getLocation());
-        }
-        if (detection_ptr->getResultsLength() > 0)
-        {
-          increaseInferenceCounter();
-          next_detection_ptr->submitRequest();
+          next_detection_ptr->enqueue(next_input, roi);
+          if ((i + 1) == next_rois.size() || (i + 1) % batch_size == 0) {
+            increaseInferenceCounter();
+            next_detection_ptr->submitRequest();
+            auto request = next_detection_ptr->getEngine()->getRequest();
+            request->Wait(InferenceEngine::IInferRequest::WaitMode::RESULT_READY);
+          }
         }
       }
     }

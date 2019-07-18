@@ -141,11 +141,13 @@ add_library(${PROJECT_NAME} SHARED
   src/pipeline_params.cpp
   src/pipeline_manager.cpp
   src/engines/engine.cpp
+  src/inferences/base_filter.cpp
   src/inferences/base_inference.cpp
   src/inferences/emotions_detection.cpp
   src/inferences/age_gender_detection.cpp
   src/inferences/face_detection.cpp
   src/inferences/head_pose_detection.cpp
+  src/inferences/object_detection.cpp
   src/inferences/object_detection_ssd.cpp
   src/inferences/object_detection_yolov2_voc.cpp
   src/inferences/object_segmentation.cpp

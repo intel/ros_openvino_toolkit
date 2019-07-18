@@ -139,10 +139,25 @@ const std::string dynamic_vino_lib::FaceDetection::getName() const
 }
 
 const void dynamic_vino_lib::FaceDetection::observeOutput(
-    const std::shared_ptr<Outputs::BaseOutput>& output)
+    const std::shared_ptr<Outputs::BaseOutput>& output,
+    const std::string filter_conditions)
 {
   if (output != nullptr)
   {
     output->accept(results_);
   }
+}
+
+const std::vector<cv::Rect> dynamic_vino_lib::FaceDetection::getFilteredROIs(
+  const std::string filter_conditions) const
+{
+  if (!filter_conditions.empty()) {
+    slog::err << "Face detection does not support filtering now! " <<
+      "Filter conditions: " << filter_conditions << slog::endl;
+  }
+  std::vector<cv::Rect> filtered_rois;
+  for (auto res : results_) {
+    filtered_rois.push_back(res.getLocation());
+  }
+  return filtered_rois;
 }

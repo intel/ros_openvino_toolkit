@@ -142,6 +142,11 @@ class Pipeline
     return name_to_output_map_;
   }
 
+  std::string findFilterConditions(const std::string & input, const std::string & output)
+  {
+    return params_->findFilterConditions(input, output);
+  }
+
  private:
   void initInferenceCounter();
   void increaseInferenceCounter();

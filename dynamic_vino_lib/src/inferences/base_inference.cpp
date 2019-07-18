@@ -23,10 +23,6 @@
 
 #include "dynamic_vino_lib/inferences/base_inference.h"
 
-dynamic_vino_lib::ObjectDetectionResult::ObjectDetectionResult(
-    const cv::Rect& location)
-    : Result(location){}
-
 // Result
 dynamic_vino_lib::Result::Result(const cv::Rect& location)
 {

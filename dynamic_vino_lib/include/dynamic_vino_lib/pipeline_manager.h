@@ -49,11 +49,11 @@ class PipelineManager {
   };
 
   std::shared_ptr<Pipeline> createPipeline(
-      const Params::ParamManager::PipelineParams& params);
+    const Params::ParamManager::PipelineRawData & params);
   void removePipeline(const std::string& name);
   PipelineManager& updatePipeline(
       const std::string& name,
-      const Params::ParamManager::PipelineParams& params);
+      const Params::ParamManager::PipelineRawData & params);
   
   void runAll();
   void stopAll();
@@ -68,7 +68,7 @@ class PipelineManager {
   };
 
   struct PipelineData {
-    Params::ParamManager::PipelineParams params;
+    Params::ParamManager::PipelineRawData params;
     std::shared_ptr<Pipeline> pipeline;
     std::vector<std::shared_ptr<ros::NodeHandle>> spin_nodes;
     std::shared_ptr<std::thread> thread;
@@ -90,25 +90,25 @@ class PipelineManager {
   void operator=(PipelineManager const&);
   void threadPipeline(const char* name);
   std::map<std::string, std::shared_ptr<Input::BaseInputDevice>>
-  parseInputDevice(const Params::ParamManager::PipelineParams& params);
+  parseInputDevice(const Params::ParamManager::PipelineRawData& params);
   std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> parseOutput(
-      const Params::ParamManager::PipelineParams& params);
+      const Params::ParamManager::PipelineRawData& params);
   std::map<std::string, std::shared_ptr<dynamic_vino_lib::BaseInference>>
-  parseInference(const Params::ParamManager::PipelineParams& params);
+  parseInference(const Params::ParamManager::PipelineRawData& params);
   std::shared_ptr<dynamic_vino_lib::BaseInference> createFaceDetection(
-      const Params::ParamManager::InferenceParams& infer);
+      const Params::ParamManager::InferenceRawData& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference> createAgeGenderRecognition(
-      const Params::ParamManager::InferenceParams& infer);
+      const Params::ParamManager::InferenceRawData& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference> createEmotionRecognition(
-      const Params::ParamManager::InferenceParams& infer);
+      const Params::ParamManager::InferenceRawData& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference> createHeadPoseEstimation(
-      const Params::ParamManager::InferenceParams& infer);
+      const Params::ParamManager::InferenceRawData& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference> createObjectDetection(
-      const Params::ParamManager::InferenceParams& infer);
+      const Params::ParamManager::InferenceRawData& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference> createObjectSegmentation(
-      const Params::ParamManager::InferenceParams& infer);
+      const Params::ParamManager::InferenceRawData& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference> createPersonReidentification(
-      const Params::ParamManager::InferenceParams& infer);
+      const Params::ParamManager::InferenceRawData& infer);
   std::map<std::string, PipelineData> pipelines_;
   std::map<std::string, InferenceEngine::InferencePlugin> plugins_for_devices_;
 };
