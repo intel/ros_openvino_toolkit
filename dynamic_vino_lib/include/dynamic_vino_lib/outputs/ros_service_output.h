@@ -78,7 +78,7 @@ public:
   void setServiceResponse(boost::shared_ptr<people_msgs::PeopleSrv::Response> response);
   void setServiceResponse(boost::shared_ptr<people_msgs::ObjectsInMasksSrv::Response> response);
   void setServiceResponse(boost::shared_ptr<people_msgs::ReidentificationSrv::Response> response);
-
+  
 private:
   const std::string service_name_;
   const std::string pipeline_name_;

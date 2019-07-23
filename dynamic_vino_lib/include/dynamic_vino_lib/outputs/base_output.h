@@ -34,6 +34,7 @@
 #include "dynamic_vino_lib/inferences/object_detection_yolov2_voc.h"
 #include "dynamic_vino_lib/inferences/object_segmentation.h"
 #include "dynamic_vino_lib/inferences/person_reidentification.h"
+#include "dynamic_vino_lib/inferences/face_reidentification.h"
 #include "dynamic_vino_lib/services/frame_processing_server.h"
 #include "opencv2/opencv.hpp"
 
@@ -53,6 +54,12 @@ class BaseOutput
   BaseOutput()
   {
   };
+    /**
+   * @brief Generate output content according to the face reidentification result.
+   */
+  virtual void accept(const std::vector<dynamic_vino_lib::FaceReidentificationResult> &)
+  {
+  }
   /**
   * @brief Generate output content according to the face detection result.
   */

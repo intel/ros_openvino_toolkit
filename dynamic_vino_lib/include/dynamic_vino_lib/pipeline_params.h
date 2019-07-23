@@ -57,7 +57,7 @@ const char kInferTpye_ObjectSegmentation[] = "ObjectSegmentation";
 const char kInferTpye_PersonReidentification[] = "PersonReidentification";
 const char kInferTpye_ObjectDetectionTypeSSD[] = "SSD";
 const char kInferTpye_ObjectDetectionTypeYolov2voc[] = "yolov2-voc";
-
+const char kInferTpye_FaceReidentification[] = "FaceReidentification";
 /**
  * @class PipelineParams
  * @brief This class is a pipeline parameter management that stores parameters

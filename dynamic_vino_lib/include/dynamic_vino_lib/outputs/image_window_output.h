@@ -52,11 +52,20 @@ class ImageWindowOutput : public BaseOutput
    * functions with image window.
    */
   void handleOutput() override;
+   /**
+   * @brief Generate image window output content according to
+   * the landmarks detetection result.
+   * the face reidentification result.
+   * @param[in] A face reidentification result objetc.
+   */
+  void accept(
+    const std::vector<dynamic_vino_lib::FaceReidentificationResult> &) override;
   /**
    * @brief Generate image window output content according to
    * the face detection result.
    * @param[in] A face detection result objetc.
    */
+  
   void accept(
       const std::vector<dynamic_vino_lib::FaceDetectionResult>&) override;
   /**

@@ -68,6 +68,12 @@ class RosTopicOutput : public BaseOutput
   void handleOutput() override;
   /**
    * @brief Generate ros topic infomation according to
+   * the face reidentification result.
+   * @param[in] results a bundle of face reidentification results.
+   */
+  void accept(const std::vector<dynamic_vino_lib::FaceReidentificationResult> &) override;
+  /**
+   * @brief Generate ros topic infomation according to
    * the person reidentification result.
    * @param[in] results a bundle of person reidentification results.
    */
@@ -132,6 +138,8 @@ class RosTopicOutput : public BaseOutput
   std::shared_ptr<people_msgs::ReidentificationStamped> person_reid_msg_ptr_;
   ros::Publisher pub_segmented_object_;
   std::shared_ptr<people_msgs::ObjectsInMasks> segmented_object_msg_ptr_;
+  ros::Publisher pub_face_reid_;
+  std::shared_ptr<people_msgs::ReidentificationStamped> face_reid_msg_ptr_;
 
 };
 }  // namespace Outputs

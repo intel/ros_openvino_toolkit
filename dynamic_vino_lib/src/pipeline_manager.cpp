@@ -29,6 +29,7 @@
 #include "dynamic_vino_lib/inferences/emotions_detection.h"
 #include "dynamic_vino_lib/inferences/face_detection.h"
 #include "dynamic_vino_lib/inferences/head_pose_detection.h"
+#include "dynamic_vino_lib/inferences/face_reidentification.h"
 #include "dynamic_vino_lib/inputs/image_input.h"
 #include "dynamic_vino_lib/inputs/realsense_camera.h"
 #include "dynamic_vino_lib/inputs/realsense_camera_topic.h"
@@ -40,6 +41,7 @@
 #include "dynamic_vino_lib/models/head_pose_detection_model.h"
 #include "dynamic_vino_lib/models/object_detection_ssd_model.h"
 #include "dynamic_vino_lib/models/object_detection_yolov2voc_model.h"
+#include "dynamic_vino_lib/models/face_reidentification_model.h"
 #include "dynamic_vino_lib/outputs/image_window_output.h"
 #include "dynamic_vino_lib/outputs/ros_topic_output.h"
 #include "dynamic_vino_lib/outputs/rviz_output.h"
@@ -203,6 +205,9 @@ PipelineManager::parseInference(
     else if (infer.name == kInferTpye_PersonReidentification) {
       object = createPersonReidentification(infer);
     } 
+    else if (infer.name == kInferTpye_FaceReidentification) {
+      object = createFaceReidentification(infer);
+    }
     else {
       slog::err << "Invalid inference name: " << infer.name << slog::endl;
     }
@@ -343,6 +348,23 @@ PipelineManager::createPersonReidentification(
   reidentification_inference_ptr->loadEngine(person_reidentification_engine);
 
   return reidentification_inference_ptr;
+}
+
+std::shared_ptr<dynamic_vino_lib::BaseInference>
+PipelineManager::createFaceReidentification(
+  const Params::ParamManager::InferenceRawData & infer)
+{
+  auto face_reidentification_model =
+    std::make_shared<Models::FaceReidentificationModel>(infer.model, 1, 1, infer.batch);
+  face_reidentification_model->modelInit();
+  auto face_reidentification_engine = std::make_shared<Engines::Engine>(
+    plugins_for_devices_[infer.engine], face_reidentification_model);
+  auto face_reid_ptr =
+    std::make_shared<dynamic_vino_lib::FaceReidentification>(infer.confidence_threshold);
+  face_reid_ptr->loadNetwork(face_reidentification_model);
+  face_reid_ptr->loadEngine(face_reidentification_engine);
+
+  return face_reid_ptr;
 }
 
 void PipelineManager::threadPipeline(const char* name) {

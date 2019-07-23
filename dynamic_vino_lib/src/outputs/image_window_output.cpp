@@ -312,6 +312,17 @@ void Outputs::ImageWindowOutput::accept(
   }
 }
 
+void Outputs::ImageWindowOutput::accept(
+  const std::vector<dynamic_vino_lib::FaceReidentificationResult> & results)
+{
+  for (unsigned i = 0; i < results.size(); i++) {
+    cv::Rect result_rect = results[i].getLocation();
+    unsigned target_index = findOutput(result_rect);
+    outputs_[target_index].rect = result_rect;
+    outputs_[target_index].desc += "[" + results[i].getFaceID() + "]";
+  }
+}
+
 void Outputs::ImageWindowOutput::decorateFrame()
 {
   if (getPipeline()->getParameters()->isGetFps())
