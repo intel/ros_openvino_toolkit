@@ -111,6 +111,8 @@ class PipelineManager {
       const Params::ParamManager::InferenceRawData& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference> createFaceReidentification(
       const Params::ParamManager::InferenceRawData & infer);
+  std::shared_ptr<dynamic_vino_lib::BaseInference> createPersonAttribsDetection(
+      const Params::ParamManager::InferenceRawData & infer);
   std::map<std::string, PipelineData> pipelines_;
   std::map<std::string, InferenceEngine::InferencePlugin> plugins_for_devices_;
 };

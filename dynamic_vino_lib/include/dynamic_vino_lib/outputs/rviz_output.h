@@ -51,6 +51,12 @@ public:
   void handleOutput() override;
   /**
    * @brief Generate rviz output content according to
+   * the person attributes detection result.
+   * @param[in] A person attributes detection result objetc.
+   */
+  void accept(const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult> &) override;
+  /**
+   * @brief Generate rviz output content according to
    * the face reidentification result.
    * @param[in] A face reidentification result objetc.
    */

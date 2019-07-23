@@ -36,6 +36,8 @@
 #include <people_msgs/ObjectsInMasks.h>
 #include <people_msgs/Reidentification.h>
 #include <people_msgs/ReidentificationStamped.h>
+#include <people_msgs/PersonAttribute.h>
+#include <people_msgs/PersonAttributeStamped.h>
 #include <ros/ros.h>
 
 #include <memory>
@@ -66,6 +68,12 @@ class RosTopicOutput : public BaseOutput
    * functions with ros topic.
    */
   void handleOutput() override;
+  /**
+   * @brief Generate ros topic infomation according to
+   * the person attributes detection result.
+   * @param[in] results a bundle of person attributes detection results.
+   */
+  void accept(const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult> &) override;
   /**
    * @brief Generate ros topic infomation according to
    * the face reidentification result.
@@ -140,6 +148,8 @@ class RosTopicOutput : public BaseOutput
   std::shared_ptr<people_msgs::ObjectsInMasks> segmented_object_msg_ptr_;
   ros::Publisher pub_face_reid_;
   std::shared_ptr<people_msgs::ReidentificationStamped> face_reid_msg_ptr_;
+  ros::Publisher pub_person_attribs_;
+  std::shared_ptr<people_msgs::PersonAttributeStamped> person_attribs_msg_ptr_;
 
 };
 }  // namespace Outputs

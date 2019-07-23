@@ -52,6 +52,13 @@ class ImageWindowOutput : public BaseOutput
    * functions with image window.
    */
   void handleOutput() override;
+  /**
+   * @brief Generate image window output content according to
+   * the person attributes detection result.
+   * @param[in] A person attributes detection result objetc.
+   */
+  void accept(
+    const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult> &) override;
    /**
    * @brief Generate image window output content according to
    * the landmarks detetection result.

@@ -45,6 +45,8 @@ Outputs::RosTopicOutput::RosTopicOutput(std::string pipeline_name):
       "/openvino_toolkit/" + pipeline_name_ + "/segmented_obejcts", 16);
   pub_face_reid_ = nh_.advertise<people_msgs::ReidentificationStamped>(
       "/openvino_toolkit/" + pipeline_name_ + "/reidentified_faces", 16);
+  pub_person_attribs_ = nh_.advertise<people_msgs::PersonAttributeStamped>(
+      "/openvino_toolkit/" + pipeline_name_ + "person_attributes", 16);
 
   emotions_msg_ptr_ = NULL;
   faces_msg_ptr_ = NULL;
@@ -54,10 +56,27 @@ Outputs::RosTopicOutput::RosTopicOutput(std::string pipeline_name):
   person_reid_msg_ptr_ = NULL;
   segmented_object_msg_ptr_ = NULL;
   face_reid_msg_ptr_ = NULL;
+  person_attribs_msg_ptr_ = NULL;
 }
 
 void Outputs::RosTopicOutput::feedFrame(const cv::Mat& frame) {}
 
+void Outputs::RosTopicOutput::accept(
+  const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult> & results)
+{
+  person_attribs_msg_ptr_ = std::make_shared<people_msgs::PersonAttributeStamped>();
+  people_msgs::PersonAttribute person_attrib;
+  for (auto & r : results) {
+    // slog::info << ">";
+    auto loc = r.getLocation();
+    person_attrib.roi.x_offset = loc.x;
+    person_attrib.roi.y_offset = loc.y;
+    person_attrib.roi.width = loc.width;
+    person_attrib.roi.height = loc.height;
+    person_attrib.attribute = r.getAttributes();
+    person_attribs_msg_ptr_->attributes.push_back(person_attrib);
+  }
+}
 
 void Outputs::RosTopicOutput::accept(
   const std::vector<dynamic_vino_lib::FaceReidentificationResult> & results)
@@ -226,6 +245,14 @@ void Outputs::RosTopicOutput::accept(
 void Outputs::RosTopicOutput::handleOutput()
 {
   std_msgs::Header header = getHeader();
+  
+  if (person_attribs_msg_ptr_ != nullptr) {
+    people_msgs::PersonAttributeStamped person_attribute_msg;
+    person_attribute_msg.header = header;
+    person_attribute_msg.attributes.swap(person_attribs_msg_ptr_->attributes);
+    pub_person_attribs_.publish(person_attribute_msg);
+    person_attribs_msg_ptr_ = nullptr;
+  }
   if (person_reid_msg_ptr_ != nullptr) {
     people_msgs::ReidentificationStamped person_reid_msg;
     person_reid_msg.header = header;

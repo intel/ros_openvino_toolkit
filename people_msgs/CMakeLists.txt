@@ -35,6 +35,9 @@ add_message_files(DIRECTORY msg FILES
   ObjectsInMasks.msg
   Reidentification.msg
   ReidentificationStamped.msg
+  PersonAttribute.msg
+  PersonAttributeStamped.msg
+
 )
 
 add_service_files(FILES

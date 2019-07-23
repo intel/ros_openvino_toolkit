@@ -35,6 +35,7 @@
 #include "dynamic_vino_lib/inferences/object_segmentation.h"
 #include "dynamic_vino_lib/inferences/person_reidentification.h"
 #include "dynamic_vino_lib/inferences/face_reidentification.h"
+#include "dynamic_vino_lib/inferences/person_attribs_detection.h"
 #include "dynamic_vino_lib/services/frame_processing_server.h"
 #include "opencv2/opencv.hpp"
 
@@ -54,9 +55,15 @@ class BaseOutput
   BaseOutput()
   {
   };
-    /**
-   * @brief Generate output content according to the face reidentification result.
-   */
+  /**
+  * @brief Generate output content according to the person atrribute detection result.
+  */
+  virtual void accept(const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult> &)
+  {
+  }
+  /**
+  * @brief Generate output content according to the face reidentification result.
+  */
   virtual void accept(const std::vector<dynamic_vino_lib::FaceReidentificationResult> &)
   {
   }

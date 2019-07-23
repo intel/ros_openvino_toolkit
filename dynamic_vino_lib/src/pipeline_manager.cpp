@@ -30,6 +30,7 @@
 #include "dynamic_vino_lib/inferences/face_detection.h"
 #include "dynamic_vino_lib/inferences/head_pose_detection.h"
 #include "dynamic_vino_lib/inferences/face_reidentification.h"
+#include "dynamic_vino_lib/inferences/person_attribs_detection.h"
 #include "dynamic_vino_lib/inputs/image_input.h"
 #include "dynamic_vino_lib/inputs/realsense_camera.h"
 #include "dynamic_vino_lib/inputs/realsense_camera_topic.h"
@@ -42,6 +43,7 @@
 #include "dynamic_vino_lib/models/object_detection_ssd_model.h"
 #include "dynamic_vino_lib/models/object_detection_yolov2voc_model.h"
 #include "dynamic_vino_lib/models/face_reidentification_model.h"
+#include "dynamic_vino_lib/models/person_attribs_detection_model.h"
 #include "dynamic_vino_lib/outputs/image_window_output.h"
 #include "dynamic_vino_lib/outputs/ros_topic_output.h"
 #include "dynamic_vino_lib/outputs/rviz_output.h"
@@ -50,6 +52,7 @@
 #include "dynamic_vino_lib/pipeline_manager.h"
 #include "dynamic_vino_lib/pipeline_params.h"
 #include "dynamic_vino_lib/services/pipeline_processing_server.h"
+
 std::shared_ptr<Pipeline> PipelineManager::createPipeline(
     const Params::ParamManager::PipelineRawData& params) {
   if (params.name == "") {
@@ -207,6 +210,8 @@ PipelineManager::parseInference(
     } 
     else if (infer.name == kInferTpye_FaceReidentification) {
       object = createFaceReidentification(infer);
+    } else if (infer.name == kInferTpye_PersonAttribsDetection) {
+      object = createPersonAttribsDetection(infer);
     }
     else {
       slog::err << "Invalid inference name: " << infer.name << slog::endl;
@@ -365,6 +370,23 @@ PipelineManager::createFaceReidentification(
   face_reid_ptr->loadEngine(face_reidentification_engine);
 
   return face_reid_ptr;
+}
+
+std::shared_ptr<dynamic_vino_lib::BaseInference>
+PipelineManager::createPersonAttribsDetection(
+  const Params::ParamManager::InferenceRawData & infer)
+{
+  auto person_attribs_detection_model =
+    std::make_shared<Models::PersonAttribsDetectionModel>(infer.model, 1, 1, infer.batch);
+  person_attribs_detection_model->modelInit();
+  auto person_attribs_detection_engine = std::make_shared<Engines::Engine>(
+    plugins_for_devices_[infer.engine], person_attribs_detection_model);
+  auto attribs_inference_ptr =
+    std::make_shared<dynamic_vino_lib::PersonAttribsDetection>(infer.confidence_threshold);
+  attribs_inference_ptr->loadNetwork(person_attribs_detection_model);
+  attribs_inference_ptr->loadEngine(person_attribs_detection_engine);
+
+  return attribs_inference_ptr;
 }
 
 void PipelineManager::threadPipeline(const char* name) {
