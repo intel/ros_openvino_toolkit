@@ -50,6 +50,20 @@ public:
    */
   void handleOutput() override;
   /**
+   * @brief Generate image window output content according to
+   * the license plate detection result.
+   * @param[in] A license plate detection result objetc.
+   */
+  void accept(
+    const std::vector<dynamic_vino_lib::LicensePlateDetectionResult> &) override;
+  /**
+   * @brief Generate image window output content according to
+   * the vehicle attributes detection result.
+   * @param[in] A vehicle attributes detection result objetc.
+   */
+  void accept(
+    const std::vector<dynamic_vino_lib::VehicleAttribsDetectionResult> &) override;
+  /**
    * @brief Generate rviz output content according to
    * the person attributes detection result.
    * @param[in] A person attributes detection result objetc.

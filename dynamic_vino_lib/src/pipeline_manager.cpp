@@ -31,6 +31,8 @@
 #include "dynamic_vino_lib/inferences/head_pose_detection.h"
 #include "dynamic_vino_lib/inferences/face_reidentification.h"
 #include "dynamic_vino_lib/inferences/person_attribs_detection.h"
+#include "dynamic_vino_lib/inferences/vehicle_attribs_detection.h"
+#include "dynamic_vino_lib/inferences/license_plate_detection.h"
 #include "dynamic_vino_lib/inputs/image_input.h"
 #include "dynamic_vino_lib/inputs/realsense_camera.h"
 #include "dynamic_vino_lib/inputs/realsense_camera_topic.h"
@@ -44,6 +46,8 @@
 #include "dynamic_vino_lib/models/object_detection_yolov2voc_model.h"
 #include "dynamic_vino_lib/models/face_reidentification_model.h"
 #include "dynamic_vino_lib/models/person_attribs_detection_model.h"
+#include "dynamic_vino_lib/models/vehicle_attribs_detection_model.h"
+#include "dynamic_vino_lib/models/license_plate_detection_model.h"
 #include "dynamic_vino_lib/outputs/image_window_output.h"
 #include "dynamic_vino_lib/outputs/ros_topic_output.h"
 #include "dynamic_vino_lib/outputs/rviz_output.h"
@@ -210,9 +214,16 @@ PipelineManager::parseInference(
     } 
     else if (infer.name == kInferTpye_FaceReidentification) {
       object = createFaceReidentification(infer);
-    } else if (infer.name == kInferTpye_PersonAttribsDetection) {
+    } 
+    else if (infer.name == kInferTpye_PersonAttribsDetection) {
       object = createPersonAttribsDetection(infer);
     }
+    else if (infer.name == kInferTpye_VehicleAttribsDetection) {
+      object = createVehicleAttribsDetection(infer);
+    }
+    else if (infer.name == kInferTpye_LicensePlateDetection) {
+      object = createLicensePlateDetection(infer);
+    } 
     else {
       slog::err << "Invalid inference name: " << infer.name << slog::endl;
     }
@@ -387,6 +398,40 @@ PipelineManager::createPersonAttribsDetection(
   attribs_inference_ptr->loadEngine(person_attribs_detection_engine);
 
   return attribs_inference_ptr;
+}
+
+std::shared_ptr<dynamic_vino_lib::BaseInference>
+PipelineManager::createVehicleAttribsDetection(
+  const Params::ParamManager::InferenceRawData & infer)
+{
+  auto vehicle_attribs_model =
+    std::make_shared<Models::VehicleAttribsDetectionModel>(infer.model, 1, 2, infer.batch);
+  vehicle_attribs_model->modelInit();
+  auto vehicle_attribs_engine = std::make_shared<Engines::Engine>(
+    plugins_for_devices_[infer.engine], vehicle_attribs_model);
+  auto vehicle_attribs_ptr =
+    std::make_shared<dynamic_vino_lib::VehicleAttribsDetection>();
+  vehicle_attribs_ptr->loadNetwork(vehicle_attribs_model);
+  vehicle_attribs_ptr->loadEngine(vehicle_attribs_engine);
+
+  return vehicle_attribs_ptr;
+}
+
+std::shared_ptr<dynamic_vino_lib::BaseInference>
+PipelineManager::createLicensePlateDetection(
+  const Params::ParamManager::InferenceRawData & infer)
+{
+  auto license_plate_model =
+    std::make_shared<Models::LicensePlateDetectionModel>(infer.model, 2, 1, infer.batch);
+  license_plate_model->modelInit();
+  auto license_plate_engine = std::make_shared<Engines::Engine>(
+    plugins_for_devices_[infer.engine], license_plate_model);
+  auto license_plate_ptr =
+    std::make_shared<dynamic_vino_lib::LicensePlateDetection>();
+  license_plate_ptr->loadNetwork(license_plate_model);
+  license_plate_ptr->loadEngine(license_plate_engine);
+
+  return license_plate_ptr;
 }
 
 void PipelineManager::threadPipeline(const char* name) {

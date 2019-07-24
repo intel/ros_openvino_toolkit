@@ -36,6 +36,8 @@
 #include "dynamic_vino_lib/inferences/person_reidentification.h"
 #include "dynamic_vino_lib/inferences/face_reidentification.h"
 #include "dynamic_vino_lib/inferences/person_attribs_detection.h"
+#include "dynamic_vino_lib/inferences/vehicle_attribs_detection.h"
+#include "dynamic_vino_lib/inferences/license_plate_detection.h"
 #include "dynamic_vino_lib/services/frame_processing_server.h"
 #include "opencv2/opencv.hpp"
 
@@ -55,6 +57,18 @@ class BaseOutput
   BaseOutput()
   {
   };
+  /**
+   * @brief Generate output content according to the license plate detection result.
+   */
+  virtual void accept(const std::vector<dynamic_vino_lib::LicensePlateDetectionResult> &)
+  {
+  }
+  /**
+   * @brief Generate output content according to the vehicle attributes detection result.
+   */
+  virtual void accept(const std::vector<dynamic_vino_lib::VehicleAttribsDetectionResult> &)
+  {
+  }
   /**
   * @brief Generate output content according to the person atrribute detection result.
   */

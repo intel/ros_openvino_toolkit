@@ -47,6 +47,10 @@ Outputs::RosTopicOutput::RosTopicOutput(std::string pipeline_name):
       "/openvino_toolkit/" + pipeline_name_ + "/reidentified_faces", 16);
   pub_person_attribs_ = nh_.advertise<people_msgs::PersonAttributeStamped>(
       "/openvino_toolkit/" + pipeline_name_ + "person_attributes", 16);
+  pub_license_plate_ = nh_.advertise<people_msgs::LicensePlateStamped>(
+    "/openvino_toolkit/" + pipeline_name_ + "/detected_license_plates", 16);
+  pub_vehicle_attribs_ = nh_.advertise<people_msgs::VehicleAttribsStamped>(
+    "/openvino_toolkit/" + pipeline_name_ + "/detected_vehicles_attribs", 16);
 
   emotions_msg_ptr_ = NULL;
   faces_msg_ptr_ = NULL;
@@ -57,9 +61,46 @@ Outputs::RosTopicOutput::RosTopicOutput(std::string pipeline_name):
   segmented_object_msg_ptr_ = NULL;
   face_reid_msg_ptr_ = NULL;
   person_attribs_msg_ptr_ = NULL;
+  license_plate_msg_ptr_  = NULL;
+  vehicle_attribs_msg_ptr_ = NULL;
 }
 
 void Outputs::RosTopicOutput::feedFrame(const cv::Mat& frame) {}
+
+void Outputs::RosTopicOutput::accept(
+  const std::vector<dynamic_vino_lib::VehicleAttribsDetectionResult> & results)
+{
+  vehicle_attribs_msg_ptr_ = std::make_shared<people_msgs::VehicleAttribsStamped>();
+  people_msgs::VehicleAttribs attribs;
+  for (auto & r : results) {
+    // slog::info << ">";
+    auto loc = r.getLocation();
+    attribs.roi.x_offset = loc.x;
+    attribs.roi.y_offset = loc.y;
+    attribs.roi.width = loc.width;
+    attribs.roi.height = loc.height;
+    attribs.type = r.getType();
+    attribs.color = r.getColor();
+    vehicle_attribs_msg_ptr_->vehicles.push_back(attribs);
+  }
+}
+
+void Outputs::RosTopicOutput::accept(
+  const std::vector<dynamic_vino_lib::LicensePlateDetectionResult> & results)
+{
+  license_plate_msg_ptr_ = std::make_shared<people_msgs::LicensePlateStamped>();
+  people_msgs::LicensePlate plate;
+  for (auto & r : results) {
+    // slog::info << ">";
+    auto loc = r.getLocation();
+    plate.roi.x_offset = loc.x;
+    plate.roi.y_offset = loc.y;
+    plate.roi.width = loc.width;
+    plate.roi.height = loc.height;
+    plate.license = r.getLicense();
+    license_plate_msg_ptr_->licenses.push_back(plate);
+  }
+}
 
 void Outputs::RosTopicOutput::accept(
   const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult> & results)
@@ -245,7 +286,20 @@ void Outputs::RosTopicOutput::accept(
 void Outputs::RosTopicOutput::handleOutput()
 {
   std_msgs::Header header = getHeader();
-  
+  if (vehicle_attribs_msg_ptr_ != nullptr) {
+    people_msgs::VehicleAttribsStamped vehicle_attribs_msg;
+    vehicle_attribs_msg.header = header;
+    vehicle_attribs_msg.vehicles.swap(vehicle_attribs_msg_ptr_->vehicles);
+    pub_vehicle_attribs_.publish(vehicle_attribs_msg);
+    vehicle_attribs_msg_ptr_ = nullptr;
+  }
+  if (license_plate_msg_ptr_ != nullptr) {
+    people_msgs::LicensePlateStamped license_plate_msg;
+    license_plate_msg.header = header;
+    license_plate_msg.licenses.swap(license_plate_msg_ptr_->licenses);
+    pub_license_plate_.publish(license_plate_msg);
+    license_plate_msg_ptr_ = nullptr;
+  }
   if (person_attribs_msg_ptr_ != nullptr) {
     people_msgs::PersonAttributeStamped person_attribute_msg;
     person_attribute_msg.header = header;

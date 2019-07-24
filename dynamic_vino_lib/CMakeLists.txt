@@ -155,6 +155,8 @@ add_library(${PROJECT_NAME} SHARED
   src/inferences/face_reidentification.cpp
   src/inferences/base_reidentification.cpp
   src/inferences/person_attribs_detection.cpp
+  src/inferences/vehicle_attribs_detection.cpp
+  src/inferences/license_plate_detection.cpp
   src/inputs/realsense_camera.cpp
   src/inputs/realsense_camera_topic.cpp
   src/inputs/standard_camera.cpp
@@ -171,6 +173,8 @@ add_library(${PROJECT_NAME} SHARED
   src/models/person_reidentification_model.cpp
   src/models/face_reidentification_model.cpp
   src/models/person_attribs_detection_model.cpp
+  src/models/vehicle_attribs_detection_model.cpp
+  src/models/license_plate_detection_model.cpp
   src/outputs/image_window_output.cpp
   src/outputs/ros_topic_output.cpp
   src/outputs/rviz_output.cpp
