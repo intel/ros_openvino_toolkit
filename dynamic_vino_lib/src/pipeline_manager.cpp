@@ -33,6 +33,7 @@
 #include "dynamic_vino_lib/inferences/person_attribs_detection.h"
 #include "dynamic_vino_lib/inferences/vehicle_attribs_detection.h"
 #include "dynamic_vino_lib/inferences/license_plate_detection.h"
+#include "dynamic_vino_lib/inferences/landmarks_detection.h"
 #include "dynamic_vino_lib/inputs/image_input.h"
 #include "dynamic_vino_lib/inputs/realsense_camera.h"
 #include "dynamic_vino_lib/inputs/realsense_camera_topic.h"
@@ -48,6 +49,7 @@
 #include "dynamic_vino_lib/models/person_attribs_detection_model.h"
 #include "dynamic_vino_lib/models/vehicle_attribs_detection_model.h"
 #include "dynamic_vino_lib/models/license_plate_detection_model.h"
+#include "dynamic_vino_lib/models/landmarks_detection_model.h"
 #include "dynamic_vino_lib/outputs/image_window_output.h"
 #include "dynamic_vino_lib/outputs/ros_topic_output.h"
 #include "dynamic_vino_lib/outputs/rviz_output.h"
@@ -217,6 +219,9 @@ PipelineManager::parseInference(
     } 
     else if (infer.name == kInferTpye_PersonAttribsDetection) {
       object = createPersonAttribsDetection(infer);
+    }
+    else if (infer.name == kInferTpye_LandmarksDetection) {
+      object = createLandmarksDetection(infer);
     }
     else if (infer.name == kInferTpye_VehicleAttribsDetection) {
       object = createVehicleAttribsDetection(infer);
@@ -399,6 +404,26 @@ PipelineManager::createPersonAttribsDetection(
 
   return attribs_inference_ptr;
 }
+
+std::shared_ptr<dynamic_vino_lib::BaseInference>
+PipelineManager::createLandmarksDetection(
+  const Params::ParamManager::InferenceRawData & infer)
+{
+  auto landmarks_detection_model =
+    std::make_shared<Models::LandmarksDetectionModel>(infer.model, 1, 1, infer.batch);
+  landmarks_detection_model->modelInit();
+  auto landmarks_detection_engine = std::make_shared<Engines::Engine>(
+    plugins_for_devices_[infer.engine], landmarks_detection_model);
+  auto landmarks_inference_ptr =
+    std::make_shared<dynamic_vino_lib::LandmarksDetection>();
+  landmarks_inference_ptr->loadNetwork(landmarks_detection_model);
+  landmarks_inference_ptr->loadEngine(landmarks_detection_engine);
+
+  return landmarks_inference_ptr;
+}
+
+
+
 
 std::shared_ptr<dynamic_vino_lib::BaseInference>
 PipelineManager::createVehicleAttribsDetection(

@@ -360,6 +360,19 @@ void Outputs::ImageWindowOutput::accept(
   }
 }
 
+void Outputs::ImageWindowOutput::accept(
+  const std::vector<dynamic_vino_lib::LandmarksDetectionResult> & results)
+{
+  for (unsigned i = 0; i < results.size(); i++) {
+    cv::Rect result_rect = results[i].getLocation();
+    unsigned target_index = findOutput(result_rect);
+    std::vector<cv::Point> landmark_points = results[i].getLandmarks();
+    for (int j = 0; j < landmark_points.size(); j++) {
+      outputs_[target_index].landmarks.push_back(landmark_points[j]);
+    }
+  }
+}
+
 void Outputs::ImageWindowOutput::decorateFrame()
 {
   if (getPipeline()->getParameters()->isGetFps())

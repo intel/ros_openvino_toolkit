@@ -46,7 +46,7 @@ Outputs::RosTopicOutput::RosTopicOutput(std::string pipeline_name):
   pub_face_reid_ = nh_.advertise<people_msgs::ReidentificationStamped>(
       "/openvino_toolkit/" + pipeline_name_ + "/reidentified_faces", 16);
   pub_person_attribs_ = nh_.advertise<people_msgs::PersonAttributeStamped>(
-      "/openvino_toolkit/" + pipeline_name_ + "person_attributes", 16);
+      "/openvino_toolkit/" + pipeline_name_ + "/person_attributes", 16);
   pub_license_plate_ = nh_.advertise<people_msgs::LicensePlateStamped>(
     "/openvino_toolkit/" + pipeline_name_ + "/detected_license_plates", 16);
   pub_vehicle_attribs_ = nh_.advertise<people_msgs::VehicleAttribsStamped>(
