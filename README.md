@@ -273,7 +273,7 @@ One-step installation scripts are provided for the dependencies' installation. P
 	rosrun dynamic_vino_sample image_people_client ~/catkin_ws/src/ros_openvino_toolkit/data/images/team.jpg
 	```
 * run face re-identification with facial landmarks from realsense camera
-	``bash
+    ``bash
 	roslaunch vino_launch pipeline_face_reidentification.launch
 	```
 * run vehicle detection sample code input from StandardCamera.
