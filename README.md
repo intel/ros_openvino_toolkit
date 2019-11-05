@@ -273,12 +273,12 @@ One-step installation scripts are provided for the dependencies' installation. P
 	rosrun dynamic_vino_sample image_people_client ~/catkin_ws/src/ros_openvino_toolkit/data/images/team.jpg
 	```
 * run face re-identification with facial landmarks from realsense camera
-    ``bash
+	```bash
 	roslaunch vino_launch pipeline_face_reidentification.launch
 	```
 * run vehicle detection sample code input from StandardCamera.
 	```bash
-	roslaunch vino_launch pipeline_vehicle_detection.launch
+	roslaunch vino_launch pipeline_vehicle_detection.launch  
 	```
 # TODO Features
 * Support **result filtering** for inference process, so that the inference results can be filtered to different subsidiary inference. For example, given an image, firstly we do Object Detection on it, secondly we pass cars to vehicle brand recognition and pass license plate to license number recognition.
