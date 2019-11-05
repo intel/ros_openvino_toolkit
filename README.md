@@ -80,6 +80,10 @@ Currently, the inference feature list is supported:
 ```/ros_openvino_toolkit/segmented_obejcts```([people_msgs::ObjectsInMasks](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/msg/ObjectsInMasks.msg))
 - Person Reidentification:
 ```/ros_openvino_toolkit/reidentified_persons```([people_msgs::ReidentificationStamped](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/msg/ReidentificationStamped.msg))
+- Vehicle Detection:
+```/ros2_openvino_toolkit/detected_license_plates```([people_msgs::msg::VehicleAttribsStamped]https://github.com/intel/ros2_openvino_toolkit/blob/devel/people_msgs/msg/VehicleAttribsStamped.msg)
+- Vehicle License Detection:
+```/ros2_openvino_toolkit/detected_license_plates```([people_msgs::msg::LicensePlateStamped]https://github.com/intel/ros2_openvino_toolkit/blob/devel/people_msgs/msg/LicensePlateStamped.msg)
 - Rviz Output:
 ```/ros_openvino_toolkit/image_rviz```([sensor_msgs::Image](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Image.html))
 
@@ -201,6 +205,11 @@ One-step installation scripts are provided for the dependencies' installation. P
 		python3 downloader.py --name head-pose-estimation-adas-0001
 		python3 downloader.py --name person-detection-retail-0013
  		python3 downloader.py --name person-reidentification-retail-0076
+		sudo python3 downloader.py --name vehicle-license-plate-detection-barrier-0106 --output_dir /opt/openvino_toolkit/models/vehicle-license-plate-detection/output
+		sudo python3 downloader.py --name vehicle-attributes-recognition-barrier-0039 --output_dir /opt/openvino_toolkit/models/vehicle-attributes-recongnition/output
+		sudo python3 downloader.py --name license-plate-recognition-barrier-0001 --output_dir /opt/openvino_toolkit/models/license-plate-recognition/output
+		sudo python3 downloader.py --name landmarks-regression-retail-0009 --output_dir /opt/openvino_toolkit/models/landmarks-regression/output
+		sudo python3 downloader.py --name face-reidentification-retail-0095 --output_dir /opt/openvino_toolkit/models/face-reidentification/output
 		```
 	* copy label files (excute _once_)<br>
 		```bash
@@ -209,6 +218,8 @@ One-step installation scripts are provided for the dependencies' installation. P
 		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_segmentation/frozen_inference_graph.labels /opt/models/mask_rcnn_inception_v2_coco_2018_01_28/output
 		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP32
 		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP16
+		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_detection/vehicle-license-plate-detection-barrier-0106.labels /opt/openvino_toolkit/models/vehicle-license-plate-detection/output/Security/object_detection/barrier/0106/dldt/vehicle-license-plate-detection-barrier-0106.labels
+		
 		```
 	* set ENV LD_LIBRARY_PATH<br>
 		```bash
@@ -260,6 +271,14 @@ One-step installation scripts are provided for the dependencies' installation. P
   Run example application with an absolute path of an image on another console:
 	```bash
 	rosrun dynamic_vino_sample image_people_client ~/catkin_ws/src/ros_openvino_toolkit/data/images/team.jpg
+	```
+* run face re-identification with facial landmarks from realsense camera
+	``bash
+	roslaunch vino_launch pipeline_face_reidentification.launch
+	```
+* run vehicle detection sample code input from StandardCamera.
+	```bash
+	roslaunch vino_launch pipeline_vehicle_detection.launch
 	```
 # TODO Features
 * Support **result filtering** for inference process, so that the inference results can be filtered to different subsidiary inference. For example, given an image, firstly we do Object Detection on it, secondly we pass cars to vehicle brand recognition and pass license plate to license number recognition.

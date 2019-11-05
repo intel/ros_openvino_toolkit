@@ -58,8 +58,8 @@ void Outputs::ImageWindowOutput::accept(
   if (outputs_.size() != results.size())
   {
     // throw std::logic_error("size is not equal!");
-    slog::err << "the size of Face Detection and Output Vector is not equal!"
-              << slog::endl;
+    // slog::err << "the size of Face Detection and Output Vector is not equal!"
+    //           << slog::endl;
     return;
   }
 
