@@ -394,6 +394,10 @@ void Outputs::ImageWindowOutput::decorateFrame()
     cv::line(frame_, o.hp_cp, o.hp_y, cv::Scalar(0, 255, 0), 2);
     cv::line(frame_, o.hp_zs, o.hp_ze, cv::Scalar(255, 0, 0), 2);
     cv::circle(frame_, o.hp_ze, 3, cv::Scalar(255, 0, 0), 2);
+    for (int i = 0; i < o.landmarks.size(); i++)
+    {
+      cv::circle(frame_, o.landmarks[i], 3, cv::Scalar(255, 0, 0), 2);
+    }
   }
 
   outputs_.clear();
