@@ -54,9 +54,46 @@ class ImageWindowOutput : public BaseOutput
   void handleOutput() override;
   /**
    * @brief Generate image window output content according to
+   * the license plate detection result.
+   * @param[in] A license plate detection result objetc.
+   */
+  void accept(
+    const std::vector<dynamic_vino_lib::LicensePlateDetectionResult> &) override;
+  /**
+   * @brief Generate image window output content according to
+   * the vehicle attributes detection result.
+   * @param[in] A vehicle attributes detection result objetc.
+   */
+  void accept(
+    const std::vector<dynamic_vino_lib::VehicleAttribsDetectionResult> &) override;
+      /**
+   * @brief Generate image window output content according to
+   * the landmarks detection result.
+   * @param[in] A landmarks detection result objetc.
+   */
+  void accept(
+    const std::vector<dynamic_vino_lib::LandmarksDetectionResult> &) override;
+  /**
+   * @brief Generate image window output content according to
+   * the person attributes detection result.
+   * @param[in] A person attributes detection result objetc.
+   */
+  void accept(
+    const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult> &) override;
+   /**
+   * @brief Generate image window output content according to
+   * the landmarks detetection result.
+   * the face reidentification result.
+   * @param[in] A face reidentification result objetc.
+   */
+  void accept(
+    const std::vector<dynamic_vino_lib::FaceReidentificationResult> &) override;
+  /**
+   * @brief Generate image window output content according to
    * the face detection result.
    * @param[in] A face detection result objetc.
    */
+  
   void accept(
       const std::vector<dynamic_vino_lib::FaceDetectionResult>&) override;
   /**
@@ -128,6 +165,7 @@ class ImageWindowOutput : public BaseOutput
     cv::Point hp_y;   // for headpose, end point of yAxis
     cv::Point hp_zs;  // for headpose, start point of zAxis
     cv::Point hp_ze;  // for headpose, end point of zAxis
+    std::vector<cv::Point> landmarks;
   };
 
   std::vector<OutputData> outputs_;

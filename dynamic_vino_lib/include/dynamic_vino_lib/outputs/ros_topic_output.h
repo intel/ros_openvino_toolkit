@@ -36,6 +36,12 @@
 #include <people_msgs/ObjectsInMasks.h>
 #include <people_msgs/Reidentification.h>
 #include <people_msgs/ReidentificationStamped.h>
+#include <people_msgs/PersonAttribute.h>
+#include <people_msgs/PersonAttributeStamped.h>
+#include <people_msgs/VehicleAttribsStamped.h>
+#include <people_msgs/VehicleAttribs.h>
+#include <people_msgs/LicensePlateStamped.h>
+#include <people_msgs/LicensePlate.h>
 #include <ros/ros.h>
 
 #include <memory>
@@ -66,6 +72,32 @@ class RosTopicOutput : public BaseOutput
    * functions with ros topic.
    */
   void handleOutput() override;
+  /**
+   * @brief Generate image window output content according to
+   * the license plate detection result.
+   * @param[in] A license plate detection result objetc.
+   */
+  void accept(
+    const std::vector<dynamic_vino_lib::LicensePlateDetectionResult> &) override;
+  /**
+   * @brief Generate image window output content according to
+   * the vehicle attributes detection result.
+   * @param[in] A vehicle attributes detection result objetc.
+   */
+  void accept(
+    const std::vector<dynamic_vino_lib::VehicleAttribsDetectionResult> &) override;
+  /**
+   * @brief Generate ros topic infomation according to
+   * the person attributes detection result.
+   * @param[in] results a bundle of person attributes detection results.
+   */
+  void accept(const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult> &) override;
+  /**
+   * @brief Generate ros topic infomation according to
+   * the face reidentification result.
+   * @param[in] results a bundle of face reidentification results.
+   */
+  void accept(const std::vector<dynamic_vino_lib::FaceReidentificationResult> &) override;
   /**
    * @brief Generate ros topic infomation according to
    * the person reidentification result.
@@ -132,6 +164,14 @@ class RosTopicOutput : public BaseOutput
   std::shared_ptr<people_msgs::ReidentificationStamped> person_reid_msg_ptr_;
   ros::Publisher pub_segmented_object_;
   std::shared_ptr<people_msgs::ObjectsInMasks> segmented_object_msg_ptr_;
+  ros::Publisher pub_face_reid_;
+  std::shared_ptr<people_msgs::ReidentificationStamped> face_reid_msg_ptr_;
+  ros::Publisher pub_person_attribs_;
+  std::shared_ptr<people_msgs::PersonAttributeStamped> person_attribs_msg_ptr_;
+  ros::Publisher pub_license_plate_;
+  std::shared_ptr<people_msgs::LicensePlateStamped> license_plate_msg_ptr_;
+  ros::Publisher pub_vehicle_attribs_;
+  std::shared_ptr<people_msgs::VehicleAttribsStamped> vehicle_attribs_msg_ptr_;
 
 };
 }  // namespace Outputs

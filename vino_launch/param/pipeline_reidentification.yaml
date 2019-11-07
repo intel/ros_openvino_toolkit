@@ -1,9 +1,10 @@
 Pipelines:
 - name: object
-  inputs: [StandardCamera]
+  inputs: [RealSenseCamera]
   infers:
     - name: ObjectDetection
       model: /opt/intel/computer_vision_sdk/deployment_tools/intel_models/person-detection-retail-0013/FP32/person-detection-retail-0013.xml
+      model_type: SSD
       engine: CPU
       label: to/be/set/xxx.labels
       batch: 1
@@ -15,13 +16,22 @@ Pipelines:
       label: to/be/set/xxx.labels
       batch: 1
       confidence_threshold: 0.7
+    - name: PersonAttribsDetection
+      model: /opt/intel/computer_vision_sdk_2018.5.455/deployment_tools/model_downloader/Security/object_attributes/pedestrian/person-attributes-recognition-crossroad-0031/dldt/person-attributes-recognition-crossroad-0031.xml 
+      #model: /opt/intel/computer_vision_sdk/deployment_tools/intel_models/person-attributes-recognition-crossroad-0031/FP32/person-attributes-recognition-crossroad-0031.xml
+      engine: CPU
+      label: to/be/set/xxx.labels
+      batch: 1
+      confidence_threshold: 0.5
   outputs: [ImageWindow, RosTopic, RViz]
   connects:
-    - left: StandardCamera
+    - left: RealSenseCamera
       right: [ObjectDetection]
     - left: ObjectDetection
-      right: [PersonReidentification]
+      right: [PersonReidentification, PersonAttribsDetection]
     - left: PersonReidentification
+      right: [ImageWindow, RosTopic, RViz]
+    - left: PersonAttribsDetection
       right: [ImageWindow, RosTopic, RViz]
 
 OpenvinoCommon:

@@ -37,6 +37,29 @@ void Outputs::RvizOutput::feedFrame(const cv::Mat & frame)
   image_window_output_->feedFrame(frame);
 }
 
+void Outputs::RvizOutput::accept(
+  const std::vector<dynamic_vino_lib::LicensePlateDetectionResult> & results) 
+{
+  image_window_output_->accept(results);
+}
+void Outputs::RvizOutput::accept(
+  const std::vector<dynamic_vino_lib::VehicleAttribsDetectionResult> & results) 
+{
+  image_window_output_->accept(results);
+}
+
+void Outputs::RvizOutput::accept(
+  const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult> & results)
+{
+  image_window_output_->accept(results);
+}
+
+void Outputs::RvizOutput::accept(
+  const std::vector<dynamic_vino_lib::FaceReidentificationResult> & results)
+{
+  image_window_output_->accept(results);
+}
+
 void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::FaceDetectionResult> & results)
 {
   image_window_output_->accept(results);
