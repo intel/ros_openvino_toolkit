@@ -107,7 +107,7 @@ if(UNIX OR APPLE)
 
   # Generic flags.
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fno-operator-names -Wformat -Wformat-security -Wall")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
  # Add OpenMP support
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
@@ -141,6 +141,7 @@ add_library(${PROJECT_NAME} SHARED
   src/pipeline_params.cpp
   src/pipeline_manager.cpp
   src/engines/engine.cpp
+  src/engines/engine_manager.cpp
   src/inferences/base_filter.cpp
   src/inferences/base_inference.cpp
   src/inferences/emotions_detection.cpp

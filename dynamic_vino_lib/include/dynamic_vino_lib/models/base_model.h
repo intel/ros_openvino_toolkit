@@ -83,7 +83,10 @@ class BaseModel
    * @return The name of the model.
    */
   virtual const std::string getModelName() const = 0;
-  //InferenceEngine::CNNNetReader::Ptr net_reader_;
+  inline InferenceEngine::CNNNetReader::Ptr getNetReader() const
+  {
+    return net_reader_;
+  }
 
  protected:
   /**

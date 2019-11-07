@@ -42,6 +42,10 @@ class Engine
    */
   Engine(InferenceEngine::InferencePlugin, Models::BaseModel::Ptr);
   /**
+   * @brief Using an Inference Request to initialize the inference Engine.
+   */
+  Engine(InferenceEngine::InferRequest::Ptr &);
+  /**
    * @brief Get the inference request this instance holds.
    * @return The inference request this instance holds.
    */
