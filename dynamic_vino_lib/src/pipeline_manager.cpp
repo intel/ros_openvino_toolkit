@@ -159,6 +159,8 @@ PipelineManager::parseOutput(
       object = std::make_shared<Outputs::RvizOutput>(params.name);
     } else if (name == kOutputTpye_RosService) {
       object = std::make_shared<Outputs::RosServiceOutput>(params.name);
+    } else {
+      slog::err << "Invalid output name: " << name << slog::endl;
     }
     if (object != nullptr) {
       outputs.insert({name, object});
@@ -191,19 +193,18 @@ PipelineManager::parseInference(
 
     if (infer.name == kInferTpye_FaceDetection) {
       object = createFaceDetection(infer);
-
-    } else if (infer.name == kInferTpye_AgeGenderRecognition) {
+    } 
+    else if (infer.name == kInferTpye_AgeGenderRecognition) {
       object = createAgeGenderRecognition(infer);
-
-    } else if (infer.name == kInferTpye_EmotionRecognition) {
+    } 
+    else if (infer.name == kInferTpye_EmotionRecognition) {
       object = createEmotionRecognition(infer);
-
-    } else if (infer.name == kInferTpye_HeadPoseEstimation) {
+    } 
+    else if (infer.name == kInferTpye_HeadPoseEstimation) {
       object = createHeadPoseEstimation(infer);
-
-    } else if (infer.name == kInferTpye_ObjectDetection) {
+    } 
+    else if (infer.name == kInferTpye_ObjectDetection) {
       object = createObjectDetection(infer);
-
     }
     else if (infer.name == kInferTpye_ObjectSegmentation) {
       object = createObjectSegmentation(infer);
@@ -230,7 +231,6 @@ PipelineManager::parseInference(
       slog::err << "Invalid inference name: " << infer.name << slog::endl;
     }
 
-
     if (object != nullptr) {
       inferences.insert({infer.name, object});
       slog::info << " ... Adding one Inference: " << infer.name << slog::endl;
@@ -245,7 +245,7 @@ PipelineManager::createFaceDetection(
     const Params::ParamManager::InferenceRawData& infer) {
   // TODO: add batch size in param_manager
   auto face_detection_model =
-      std::make_shared<Models::FaceDetectionModel>(infer.model, 1, 1, 1);
+      std::make_shared<Models::FaceDetectionModel>(infer.model, 1, 1, infer.batch);
   face_detection_model->modelInit();
   auto face_detection_engine = engine_manager_.createEngine(
     infer.engine, face_detection_model);
@@ -261,7 +261,7 @@ std::shared_ptr<dynamic_vino_lib::BaseInference>
 PipelineManager::createAgeGenderRecognition(
     const Params::ParamManager::InferenceRawData& param) {
   auto model =
-      std::make_shared<Models::AgeGenderDetectionModel>(param.model, 1, 2, 16);
+      std::make_shared<Models::AgeGenderDetectionModel>(param.model, 1, 2, param.batch);
   model->modelInit();
   auto engine = engine_manager_.createEngine(param.engine, model);
   auto infer = std::make_shared<dynamic_vino_lib::AgeGenderDetection>();
@@ -275,7 +275,7 @@ std::shared_ptr<dynamic_vino_lib::BaseInference>
 PipelineManager::createEmotionRecognition(
     const Params::ParamManager::InferenceRawData& param) {
   auto model =
-      std::make_shared<Models::EmotionDetectionModel>(param.model, 1, 1, 16);
+      std::make_shared<Models::EmotionDetectionModel>(param.model, 1, 1, param.batch);
   model->modelInit();
   auto engine = engine_manager_.createEngine(param.engine, model);
   auto infer = std::make_shared<dynamic_vino_lib::EmotionsDetection>();
@@ -289,7 +289,7 @@ std::shared_ptr<dynamic_vino_lib::BaseInference>
 PipelineManager::createHeadPoseEstimation(
     const Params::ParamManager::InferenceRawData& param) {
   auto model =
-      std::make_shared<Models::HeadPoseDetectionModel>(param.model, 1, 3, 16);
+      std::make_shared<Models::HeadPoseDetectionModel>(param.model, 1, 3, param.batch);
   model->modelInit();
   auto engine = engine_manager_.createEngine(param.engine, model);
   auto infer = std::make_shared<dynamic_vino_lib::HeadPoseDetection>();
@@ -309,7 +309,7 @@ const Params::ParamManager::InferenceRawData & infer)
   if (infer.model_type == kInferTpye_ObjectDetectionTypeSSD)
   {
     object_detection_model = 
-      std::make_shared<Models::ObjectDetectionSSDModel>(infer.model, 1, 1, 1);
+      std::make_shared<Models::ObjectDetectionSSDModel>(infer.model, 1, 1, infer.batch);
 
     object_inference_ptr = std::make_shared<dynamic_vino_lib::ObjectDetectionSSD>(
     0.5); // To-do theshold configuration
@@ -318,7 +318,7 @@ const Params::ParamManager::InferenceRawData & infer)
   if (infer.model_type == kInferTpye_ObjectDetectionTypeYolov2voc)
   {
     object_detection_model = 
-      std::make_shared<Models::ObjectDetectionYolov2vocModel>(infer.model, 1, 1, 1);
+      std::make_shared<Models::ObjectDetectionYolov2vocModel>(infer.model, 1, 1, infer.batch);
 
     object_inference_ptr = std::make_shared<dynamic_vino_lib::ObjectDetectionYolov2voc>(
     0.5); // To-do theshold configuration
@@ -337,7 +337,7 @@ std::shared_ptr<dynamic_vino_lib::BaseInference>
 PipelineManager::createObjectSegmentation(const Params::ParamManager::InferenceRawData & infer)
 {
   auto obejct_segmentation_model =
-    std::make_shared<Models::ObjectSegmentationModel>(infer.model, 1, 2, 1);
+    std::make_shared<Models::ObjectSegmentationModel>(infer.model, 1, 2, infer.batch);
   obejct_segmentation_model->modelInit();
   auto obejct_segmentation_engine = engine_manager_.createEngine(
     infer.engine, obejct_segmentation_model);

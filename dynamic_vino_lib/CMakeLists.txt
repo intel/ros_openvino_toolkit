@@ -16,6 +16,12 @@ cmake_minimum_required (VERSION 2.8.3)
 
 project(dynamic_vino_lib)
 
+####################################
+## to use new InferenceEngine API (InferenceEngine::Core),
+## then, uncomment below line
+#add_definitions(-DUSE_IE_CORE)
+####################################
+
 message(STATUS "Looking for inference engine configuration file at: ${CMAKE_PREFIX_PATH}")
 find_package(InferenceEngine 1.1)
 if (NOT InferenceEngine_FOUND)
