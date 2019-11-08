@@ -22,9 +22,7 @@
 #include <memory>
 #include <string>
 #include <utility>
-
 #include <vino_param_lib/param_manager.h>
-#include "dynamic_vino_lib/factory.h"
 #include "dynamic_vino_lib/inferences/age_gender_detection.h"
 #include "dynamic_vino_lib/inferences/emotions_detection.h"
 #include "dynamic_vino_lib/inferences/face_detection.h"

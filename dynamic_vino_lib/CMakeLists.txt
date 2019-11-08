@@ -142,7 +142,6 @@ add_library(${PROJECT_NAME} SHARED
   src/services/frame_processing_server.cpp
   src/services/pipeline_processing_server.cpp
   src/services/test.cpp
-  src/factory.cpp
   src/pipeline.cpp
   src/pipeline_params.cpp
   src/pipeline_manager.cpp
