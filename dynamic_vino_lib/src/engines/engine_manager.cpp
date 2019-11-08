@@ -103,6 +103,5 @@ Engines::EngineManager::makePluginByName(
         InferenceEngine::PluginConfigParams::YES}});
   }
 
-  return std::make_unique<InferenceEngine::InferencePlugin>(
-    InferenceEngine::InferenceEnginePluginPtr(plugin));
+  return  std::unique_ptr<InferenceEngine::InferencePlugin> (new InferenceEngine::InferencePlugin(plugin));
 }
