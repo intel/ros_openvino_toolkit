@@ -24,7 +24,7 @@
 #include "dynamic_vino_lib/inferences/base_inference.h"
 
 // Result
-dynamic_vino_lib::Result::Result(const cv::Rect& location)
+dynamic_vino_lib::Result::Result(const cv::Rect & location)
 {
   location_ = location;
 }
@@ -34,25 +34,44 @@ dynamic_vino_lib::BaseInference::BaseInference() = default;
 
 dynamic_vino_lib::BaseInference::~BaseInference() = default;
 
-void dynamic_vino_lib::BaseInference::loadEngine(
-    const std::shared_ptr<Engines::Engine> engine)
+void dynamic_vino_lib::BaseInference::loadEngine(const std::shared_ptr<Engines::Engine> engine)
 {
   engine_ = engine;
 }
 
 bool dynamic_vino_lib::BaseInference::submitRequest()
 {
-  if (engine_->getRequest() == nullptr) return false;
-  if (!enqueued_frames_) return false;
+  if (engine_->getRequest() == nullptr) {
+    return false;
+  }
+  if (!enqueued_frames_) {
+    return false;
+  }
   enqueued_frames_ = 0;
   results_fetched_ = false;
   engine_->getRequest()->StartAsync();
   return true;
 }
 
+bool dynamic_vino_lib::BaseInference::SynchronousRequest()
+{
+  if (engine_->getRequest() == nullptr) {
+    return false;
+  }
+  if (!enqueued_frames_) {
+    return false;
+  }
+  enqueued_frames_ = 0;
+  results_fetched_ = false;
+  engine_->getRequest()->Infer();
+  return true;
+}
+
 bool dynamic_vino_lib::BaseInference::fetchResults()
 {
-  if (results_fetched_) return false;
+  if (results_fetched_) {
+    return false;
+  }
   results_fetched_ = true;
   return true;
 }

@@ -258,7 +258,7 @@ void Pipeline::callback(const std::string & detection_name)
     std::string filter_conditions = findFilterConditions(detection_name, next_name);
     // if next is output, then print
     if (output_names_.find(next_name) != output_names_.end()) {
-      detection_ptr->observeOutput(name_to_output_map_[next_name], filter_conditions);
+      detection_ptr->observeOutput(name_to_output_map_[next_name]);
     } else {
       auto detection_ptr_iter = name_to_detection_map_.find(next_name);
       if (detection_ptr_iter != name_to_detection_map_.end()) {
