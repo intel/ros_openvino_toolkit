@@ -215,7 +215,6 @@ void Pipeline::runOnce()
 
   std::unique_lock<std::mutex> lock(counter_mutex_);
   cv_.wait(lock, [this]() { return this->counter_ == 0; });
-
   for (auto& pair : name_to_output_map_)
   {
     pair.second->handleOutput();
@@ -249,7 +248,7 @@ void Pipeline::setCallback()
 
 void Pipeline::callback(const std::string & detection_name)
 {
-  // slog::info<<"Hello callback ----> " << detection_name <<slog::endl;
+  slog::info<<"Hello callback ----> " << detection_name <<slog::endl;
   auto detection_ptr = name_to_detection_map_[detection_name];
   detection_ptr->fetchResults();
   // set output

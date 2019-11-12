@@ -22,6 +22,8 @@
 #ifndef DYNAMIC_VINO_LIB_MODELS_BASE_MODEL_H
 #define DYNAMIC_VINO_LIB_MODELS_BASE_MODEL_H
 
+#include <opencv2/opencv.hpp>
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -33,6 +35,11 @@ namespace Engines
 class Engine;
 }
 
+namespace dynamic_vino_lib
+{
+class ObjectDetectionResult;
+}
+
 namespace Models
 {
 /**
@@ -41,9 +48,8 @@ namespace Models
  */
 class BaseModel
 {
+public:
   using Ptr = std::shared_ptr<BaseModel>;
-
- public:
   /**
    * @brief Initialize the class with given .xml, .bin and .labels file. It will
    * also check whether the number of input and output are fit.
@@ -54,13 +60,12 @@ class BaseModel
    * @param[in] batch_size The number of batch size the network should have.
    * @return Whether the input device is successfully turned on.
    */
-  BaseModel(const std::string& model_loc, int input_num, int output_num,
-            int batch_size);
+  BaseModel(const std::string & model_loc, int input_num, int output_num, int batch_size);
   /**
    * @brief Get the label vector.
    * @return The label vector.
    */
-  inline std::vector<std::string>& getLabels()
+  inline std::vector<std::string> & getLabels()
   {
     return labels_;
   }
@@ -68,10 +73,19 @@ class BaseModel
    * @brief Get the maximum batch size of the model.
    * @return The maximum batch size of the model.
    */
-  inline const int getMaxBatchSize() const
+  inline int getMaxBatchSize() const
   {
     return max_batch_size_;
   }
+  inline void setMaxBatchSize(int max_batch_size)
+  {
+    max_batch_size_ = max_batch_size;
+  }
+
+  virtual bool enqueue(
+    const std::shared_ptr<Engines::Engine> & engine,
+    const cv::Mat & frame,
+    const cv::Rect & input_frame_loc) {return true;}
   /**
    * @brief Initialize the model. During the process the class will check
    * the network input, output size, check layer property and
@@ -83,38 +97,48 @@ class BaseModel
    * @return The name of the model.
    */
   virtual const std::string getModelName() const = 0;
+
+  virtual inline int getMaxProposalCount() const {return max_proposal_count_;}
+  inline int getObjectSize() const {return object_size_;}
+  inline void setObjectSize(int os) {object_size_ = os;}
   inline InferenceEngine::CNNNetReader::Ptr getNetReader() const
   {
     return net_reader_;
   }
 
- protected:
+protected:
   /**
    * @brief Check whether the layer property
    * (output layer name, output layer type, etc.) is right
    * @param[in] network_reader The reader of the network to be checked.
    */
-  virtual void checkLayerProperty(
-      const InferenceEngine::CNNNetReader::Ptr& network_reader) = 0;
-
+  virtual void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr & network_reader) = 0;
   /**
    * @brief Set the layer property (layer layout, layer precision, etc.).
    * @param[in] network_reader The reader of the network to be set.
    */
-  virtual void
-      setLayerProperty(InferenceEngine::CNNNetReader::Ptr network_reader) = 0;
-
+  virtual void setLayerProperty(InferenceEngine::CNNNetReader::Ptr network_reader) = 0;
+  virtual void checkNetworkSize(int, int, InferenceEngine::CNNNetReader::Ptr);
   InferenceEngine::CNNNetReader::Ptr net_reader_;
+  void setFrameSize(const int & w, const int & h)
+  {
+    frame_size_.width = w;
+    frame_size_.height = h;
+  }
+  cv::Size getFrameSize()
+  {return frame_size_;}
 
- private:
-  friend class Engines::Engine;
-  void checkNetworkSize(unsigned int, unsigned int,
-                        InferenceEngine::CNNNetReader::Ptr);
+protected:
+  int max_proposal_count_;
+  int object_size_;
+
+private:
   std::vector<std::string> labels_;
   int input_num_;
   int output_num_;
-  std::string model_loc_;
   int max_batch_size_;
+  std::string model_loc_;
+  cv::Size frame_size_;
 };
 
 class ObjectDetectionModel : public BaseModel
@@ -129,6 +153,7 @@ class ObjectDetectionModel : public BaseModel
   int object_size_;
   //virtual void setLayerProperty(InferenceEngine::CNNNetReader::Ptr network_reader) = 0;
 };
+
 }  // namespace Models
 
-#endif  // DYNAMIC_VINO_LIB_MODELS_BASE_MODEL_H
+#endif  // DYNAMIC_VINO_LIB__MODELS__BASE_MODEL_HPP_

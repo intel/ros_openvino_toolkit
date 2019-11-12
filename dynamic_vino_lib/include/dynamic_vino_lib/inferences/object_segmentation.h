@@ -86,6 +86,10 @@ public:
    * @return Whether this operation is successful.
    */
   bool enqueue(const cv::Mat &, const cv::Rect &) override;
+
+  //Deprecated!!
+  bool enqueue_for_one_input(const cv::Mat &, const cv::Rect &);
+
   /**
    * @brief Start inference for all buffered frames.
    * @return Whether this operation is successful.
@@ -114,13 +118,12 @@ public:
      or ROS topic.
    */
   const void observeOutput(const std::shared_ptr<Outputs::BaseOutput> & output,
-    const std::string filter_conditions);
+    const std::string filter_conditions) override;
   /**
    * @brief Get the name of the Inference instance.
    * @return The name of the Inference instance.
    */
   const std::string getName() const override;
-
   const std::vector<cv::Rect> getFilteredROIs(
     const std::string filter_conditions) const override;
 

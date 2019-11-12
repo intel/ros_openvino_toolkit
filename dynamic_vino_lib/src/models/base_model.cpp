@@ -73,26 +73,25 @@ void Models::BaseModel::modelInit()
 }
 
 void Models::BaseModel::checkNetworkSize(
-    unsigned int input_size, unsigned int output_size,
-    InferenceEngine::CNNNetReader::Ptr net_reader)
+  int input_size, int output_size,
+  InferenceEngine::CNNNetReader::Ptr net_reader)
 {
+  // TODO(Houk): Repeat, better removed!
   // check input size
   slog::info << "Checking input size" << slog::endl;
-  InferenceEngine::InputsDataMap input_info(
-      net_reader->getNetwork().getInputsInfo());
-  if (input_info.size() != input_size)
-  {
-    throw std::logic_error(getModelName() + " should have only one input");
+  InferenceEngine::InputsDataMap input_info(net_reader->getNetwork().getInputsInfo());
+  if (input_info.size() != input_size) {
+    throw std::logic_error(getModelName() + " should have " + std::to_string(input_size) + " inpu"
+            "t");
   }
   // check output size
   slog::info << "Checking output size" << slog::endl;
-  InferenceEngine::OutputsDataMap output_info(
-      net_reader->getNetwork().getOutputsInfo());
-  if (output_info.size() != output_size)
-  {
-    throw std::logic_error(getModelName() +
-                           "network should have only one output");
+  InferenceEngine::OutputsDataMap output_info(net_reader->getNetwork().getOutputsInfo());
+  if (output_info.size() != output_size) {
+    throw std::logic_error(getModelName() + " should have " + std::to_string(output_size) + " outpu"
+            "t");
   }
+  // InferenceEngine::DataPtr& output_data_ptr = output_info.begin()->second;
 }
 
 Models::ObjectDetectionModel::ObjectDetectionModel(const std::string& model_loc,

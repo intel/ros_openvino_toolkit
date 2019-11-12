@@ -334,14 +334,17 @@ const Params::ParamManager::InferenceRawData & infer)
 std::shared_ptr<dynamic_vino_lib::BaseInference>
 PipelineManager::createObjectSegmentation(const Params::ParamManager::InferenceRawData & infer)
 {
-  auto obejct_segmentation_model =
-    std::make_shared<Models::ObjectSegmentationModel>(infer.model, 1, 2, infer.batch);
-  obejct_segmentation_model->modelInit();
-  auto obejct_segmentation_engine = engine_manager_.createEngine(
-    infer.engine, obejct_segmentation_model);
-  auto segmentation_inference_ptr = std::make_shared<dynamic_vino_lib::ObjectSegmentation>(0.5);
-  segmentation_inference_ptr->loadNetwork(obejct_segmentation_model);
-  segmentation_inference_ptr->loadEngine(obejct_segmentation_engine);
+  auto model =
+    std::make_shared<Models::ObjectSegmentationModel>(infer.model, 2, 2, infer.batch);
+  model->modelInit();
+  slog::info << "Segmentation model initialized." << slog::endl;
+  auto engine = engine_manager_.createEngine(infer.engine, model);
+  slog::info << "Segmentation Engine initialized." << slog::endl;
+  auto segmentation_inference_ptr = std::make_shared<dynamic_vino_lib::ObjectSegmentation>(
+    infer.confidence_threshold);
+    slog::info << "Segmentation Inference instanced." << slog::endl;
+  segmentation_inference_ptr->loadNetwork(model);
+  segmentation_inference_ptr->loadEngine(engine);
 
   return segmentation_inference_ptr;
 }
