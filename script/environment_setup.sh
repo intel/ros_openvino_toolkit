@@ -68,8 +68,8 @@ if [ "$CLEAN" == "1" ]; then
   case $answer in
         Y|y) echo
                 echo "===================Cleaning...===================================="
-  		echo $ROOT_PASSWD | sudo -S rm -rf ~/code
-  		echo $ROOT_PASSWD | sudo -S rm -rf /opt/intel
+  		#echo $ROOT_PASSWD | sudo -S rm -rf ~/code
+  		#echo $ROOT_PASSWD | sudo -S rm -rf /opt/intel
   		echo $ROOT_PASSWD | sudo -S rm -rf /opt/openvino_toolkit
   		if [[ $system_ver = "16.04" && -L "/usr/lib/x86_64-linux-gnu/libboost_python3.so" ]]; then
     			echo $ROOT_PASSWD | sudo -S rm /usr/lib/x86_64-linux-gnu/libboost_python3.so
@@ -83,12 +83,14 @@ fi
 # Setup ROS from Debian
 if [ "$ROS_DEBIAN" == "1" ]; then
   echo "===================Installing ROS from Debian Package...======================="
+  echo $ROOT_PASSWD | sudo -S apt-get install -y curl
+  curl http://repo.ros2.org/repos.key | sudo apt-key add -
   echo $ROOT_PASSWD | sudo -S sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-  #echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
-  #For those who cannot access hkp protocal 
-  echo $ROOT_PASSWD | curl http://repo.ros2.org/repos.key | sudo apt-key add -
+  echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="$http_proxy" --recv-key F42ED6FBAB17C654
+  #echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver 'hkp://pgp.mit.edu:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+  #For those who cannot access hkp protocal
   echo $ROOT_PASSWD | sudo -S apt-get update
-  echo $ROOT_PASSWD | sudo -S apt-get install -y ros-$ros_ver-desktop-full #For ubuntu16.04 Ros-melodic
+  echo $ROOT_PASSWD | sudo -S apt-get install -y ros-$ros_ver-desktop-full
 
   if [ ! -f "/etc/ros/rosdep/sources.list.d/20-default.list" ]; then
     echo $ROOT_PASSWD | sudo -S rosdep init
@@ -96,19 +98,19 @@ if [ "$ROS_DEBIAN" == "1" ]; then
     echo "file already exists, skip..."
   fi
 
-  set +o errexit
+  set +o errexit 
   rosdep update
   until [ $? == 0 ]
   do
     rosdep update
   done
   tail ~/.bashrc | grep "/opt/ros/$ros_ver/setup.bash"
-  set -o errexit
+  set -o errexit 
 
   if [ "$?" == "1" ]; then
     echo "source /opt/ros/$ros_ver/setup.bash" >> ~/.bashrc
   else
-    echo "ros melodic already set, skip..."
+    echo "ros $ros_ver already set, skip..."
   fi
   source ~/.bashrc
   echo $ROOT_PASSWD | sudo -S apt-get install -y python-rosinstall python-rosinstall-generator python-wstool build-essential
@@ -210,7 +212,7 @@ if [ "$DLDT" == "1" ]; then
   mkdir -p  ~/code && cd ~/code
   git clone https://github.com/opencv/dldt.git
   cd dldt/inference-engine/
-  git checkout 2018_R5 
+  git checkout 2019_R3.1 
   git submodule init
   git submodule update --recursive
   mkdir build && cd build
@@ -227,7 +229,7 @@ if [ "$MODEL_ZOO" == "1" ]; then
   mkdir -p ~/code && cd ~/code
   git clone https://github.com/opencv/open_model_zoo.git
   cd open_model_zoo/demos/
-  git checkout 2018_R5  
+  git checkout 2019_R3.1 
   mkdir build && cd build
   cmake -DCMAKE_BUILD_TYPE=Release /opt/openvino_toolkit/dldt/inference-engine
   make -j8
@@ -239,39 +241,35 @@ fi
 # Setup LIBREALSENSE
 if [ "$LIBREALSENSE" == "1" ]; then
   echo "===================Setting Up LibRealSense...======================="
-  echo $ROOT_PASSWD | sudo -S apt-get install -y libssl-dev libusb-1.0-0-dev pkg-config libgtk-3-dev
-  echo $ROOT_PASSWD | sudo -S apt-get install -y libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev
-  mkdir -p ~/code && cd ~/code
-  git clone https://github.com/IntelRealSense/librealsense
-  cd ~/code/librealsense
-  git checkout v2.17.1
-  mkdir build && cd build
-  cmake ../ -DBUILD_EXAMPLES=true
-  echo $ROOT_PASSWD | sudo -S make uninstall
-  make clean
-  make
-  echo $ROOT_PASSWD | sudo -S make install
 
-  cd ..
-  echo $ROOT_PASSWD | sudo -S cp config/99-realsense-libusb.rules /etc/udev/rules.d/
-  echo $ROOT_PASSWD | sudo -S udevadm control --reload-rules
-  udevadm trigger
+  echo "Install server public key for librealsense"
+  if [ -n "$http_proxy" ]; then
+    echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy=$http_proxy --recv-key C8B3A55A6F3EFCDE
+  else
+    echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key C8B3A55A6F3EFCDE
+  fi
+  if ! test "$(grep "http://realsense-hw-public.s3.amazonaws.com/Debian/apt-repo" /etc/apt/sources.list)"
+  then
+    echo $ROOT_PASSWD | sudo -S add-apt-repository "deb http://realsense-hw-public.s3.amazonaws.com/Debian/apt-repo bionic main" -u
+  fi
+
+  echo $ROOT_PASSWD | sudo -S apt update && sudo -S apt-get install -y librealsense2-dkms librealsense2-utils librealsense2-dev
   echo "==== END install librealsense ===="
 fi
 
 # Setup other dependencies
 if [ "$OTHER_DEPENDENCY" == "1" ]; then
   echo "===================Setting UP OTHER_DEPENDENCY DEPENDENCY...======================="
-  pip3 install numpy
-  pip3 install networkx
-  echo $ROOT_PASSWD | sudo -S apt-get install python3-yaml
+  echo $ROOT_PASSWD | sudo -S apt-get install -y python3-pip
+  sudo pip3 install numpy
+  sudo pip3 install networkx
   if [ $system_ver = "16.04" ]; then
      echo $ROOT_PASSWD | sudo -S apt-get install -y --no-install-recommends libboost-all-dev
      cd /usr/lib/x86_64-linux-gnu
-     sudo ln -s libboost_python-py35.so libboost_python3.so
+     echo $ROOT_PASSWD | sudo -S ln -sf libboost_python-py35.so libboost_python3.so
   elif [ $system_ver = "18.04" ]; then
      echo $ROOT_PASSWD | sudo -S apt-get install -y --no-install-recommends libboost-all-dev
-     sudo apt install libboost-python1.62.0
+     echo $ROOT_PASSWD | sudo -S apt install -y --no-install-recommends libboost-python1.62.0
    fi
    echo "==== END install other dependencies ===="
 fi
