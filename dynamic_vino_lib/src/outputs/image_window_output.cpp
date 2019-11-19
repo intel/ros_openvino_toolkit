@@ -390,10 +390,17 @@ void Outputs::ImageWindowOutput::decorateFrame()
     cv::putText(frame_, o.desc, cv::Point2f(o.rect.x, new_y),
                 cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, o.scalar);
     cv::rectangle(frame_, o.rect, o.scalar, 1);
-    cv::line(frame_, o.hp_cp, o.hp_x, cv::Scalar(0, 0, 255), 2);
-    cv::line(frame_, o.hp_cp, o.hp_y, cv::Scalar(0, 255, 0), 2);
-    cv::line(frame_, o.hp_zs, o.hp_ze, cv::Scalar(255, 0, 0), 2);
-    cv::circle(frame_, o.hp_ze, 3, cv::Scalar(255, 0, 0), 2);
+    if (o.hp_cp != o.hp_x){
+      cv::line(frame_, o.hp_cp, o.hp_x, cv::Scalar(0, 0, 255), 2);
+    }
+    if (o.hp_cp != o.hp_y) {
+      cv::line(frame_, o.hp_cp, o.hp_y, cv::Scalar(0, 255, 0), 2);
+    }
+    if (o.hp_zs != o.hp_ze) {
+      cv::line(frame_, o.hp_zs, o.hp_ze, cv::Scalar(255, 0, 0), 2);
+      cv::circle(frame_, o.hp_ze, 3, cv::Scalar(255, 0, 0), 2);
+    }
+   
     for (int i = 0; i < o.landmarks.size(); i++)
     {
       cv::circle(frame_, o.landmarks[i], 3, cv::Scalar(255, 0, 0), 2);
