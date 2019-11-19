@@ -79,7 +79,7 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	mkdir ~/code && cd ~/code
 	git clone https://github.com/opencv/dldt.git
 	cd dldt/inference-engine/
-	git checkout 2018_R4
+	git checkout 2019_R3
 	./install_dependencies.sh
 	mkdir build && cd build
 	cmake -DCMAKE_BUILD_TYPE=Release ..
@@ -92,7 +92,7 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	cd ~/code
 	git clone https://github.com/opencv/open_model_zoo.git
 	cd open_model_zoo/demos/
-	git checkout 2018_R4
+	git checkout 2019_R3
 	mkdir build && cd build
 	cmake -DCMAKE_BUILD_TYPE=Release /opt/openvino_toolkit/dldt/inference-engine
 	make -j8
@@ -100,9 +100,8 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	sudo ln -s ~/code/open_model_zoo /opt/openvino_toolkit/open_model_zoo
 	```
 
-- Install Intel® RealSense™ SDK 2.0 [(tag v2.17.1)](https://github.com/IntelRealSense/librealsense/tree/v2.17.1)<br>
-	* [Install from source code](https://github.com/IntelRealSense/librealsense/blob/v2.17.1/doc/installation.md)(Recommended)<br>
-	* [Install from package](https://github.com/IntelRealSense/librealsense/blob/v2.17.1/doc/distribution_linux.md)<br>
+- Install Intel® RealSense™ SDK 2.0 [(tag v2.30.0)](https://github.com/IntelRealSense/librealsense/tree/v2.30.0)
+	* [Install from package](https://github.com/IntelRealSense/librealsense/blob/v2.30.0/doc/distribution_linux.md)
 
 - Other Dependencies
 	```bash
@@ -150,3 +149,4 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	```
 
 ###### *Any security issue should be reported using process at https://01.org/security*
+

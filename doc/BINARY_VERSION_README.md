@@ -13,11 +13,11 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 * Demo application to show above detection and recognitions
 
 ## 2. Prerequisite
-- An x86_64 computer running Ubuntu 16.04. Below processors are supported:
+- An x86_64 computer running Ubuntu 18.04. Below processors are supported:
 	* 6th-8th Generation Intel® Core™
 	* Intel® Xeon® v5 family
 	* Intel®  Xeon® v6 family
-- ROS Kinetic
+- ROS [Dashing](https://github.com/ros2/ros2)
 
 - [OpenVINO™ Toolkit](https://software.intel.com/en-us/openvino-toolkit)
 - RGB Camera, e.g. RealSense D400 Series or standard USB camera or Video/Image File
@@ -38,9 +38,9 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 ```
 **Note**:You can also choose to follow the steps below to build the environment step by step.
 
-- Install ROS Kinetic Desktop-Full ([guide](http://wiki.ros.org/kinetic/Installation/Ubuntu))
+- Install ROS Dashing Desktop-Full ([guide](https://index.ros.org/doc/ros2/Installation/Dashing/))
 
-- Install [OpenVINO™ Toolkit](https://software.intel.com/en-us/openvino-toolkit) ([guide](https://software.intel.com/en-us/articles/OpenVINO-Install-Linux)). Choose "2018 R4" when download tarball.
+- Install [OpenVINO™ Toolkit](https://software.intel.com/en-us/openvino-toolkit) ([guide](https://software.intel.com/en-us/articles/OpenVINO-Install-Linux)). 
 
 	**Note**: Please use  *root privileges* to run the installer when installing the core components.
 - Install OpenCL Driver for GPU
@@ -70,9 +70,8 @@ sudo ./install_NEO_OCL_driver.sh
 		sudo apt update
 		sudo apt install libjasper1 libjasper-dev
 		```
-- Install Intel® RealSense™ SDK 2.0 [(tag v2.17.1)](https://github.com/IntelRealSense/librealsense/tree/v2.17.1)
-	* [Install from source code](https://github.com/IntelRealSense/librealsense/blob/v2.17.1/doc/installation.md)(Recommended)
-	* [Install from package](https://github.com/IntelRealSense/librealsense/blob/v2.17.1/doc/distribution_linux.md)
+- Install Intel® RealSense™ SDK 2.0 [(tag v2.30.0)](https://github.com/IntelRealSense/librealsense/tree/v2.30.0)
+	* [Install from package](https://github.com/IntelRealSense/librealsense/blob/v2.30.0/doc/distribution_linux.md)
 
 - Other Dependencies
 ```bash
@@ -89,8 +88,8 @@ sudo ln -sf libboost_python-py35.so libboost_python3.so
 - Build sample code under openvino toolkit
 ```bash
 # root is required instead of sudo
-source /opt/intel/computer_vision_sdk/bin/setupvars.sh
-cd /opt/intel/computer_vision_sdk/deployment_tools/inference_engine/samples/
+source /opt/intel/openvino/bin/setupvars.sh
+cd /opt/intel/openvino/deployment_tools/inference_engine/samples/
 mkdir build
 cd build
 cmake ..
@@ -99,8 +98,8 @@ make
 
 - Set Environment CPU_EXTENSION_LIB and GFLAGS_LIB
 ```bash
-export CPU_EXTENSION_LIB=/opt/intel/computer_vision_sdk/deployment_tools/inference_engine/samples/build/intel64/Release/lib/libcpu_extension.so
-export GFLAGS_LIB=/opt/intel/computer_vision_sdk/deployment_tools/inference_engine/samples/build/intel64/Release/lib/libgflags_nothreads.a
+export CPU_EXTENSION_LIB=/opt/intel/openvino/deployment_tools/inference_engine/samples/build/intel64/Release/lib/libcpu_extension.so
+export GFLAGS_LIB=/opt/intel/openvino/deployment_tools/inference_engine/samples/build/intel64/Release/lib/libgflags_nothreads.a
 ```
 
 - Install ROS_OpenVINO packages
@@ -122,7 +121,7 @@ source /opt/ros/kinetic/setup.bash
 # Ubuntu 18.04
 source /opt/ros/melodic/setup.bash
 
-source /opt/intel/computer_vision_sdk/bin/setupvars.sh
+source /opt/intel/openvino/bin/setupvars.sh
 export OpenCV_DIR=$HOME/code/opencv/build
 cd ~/catkin_ws
 catkin_make
@@ -133,57 +132,74 @@ sudo ln -s ~/catkin_ws/src/ros_openvino_toolkit /opt/openvino_toolkit/ros_openvi
 
 ## 5. Running the Demo
 * Preparation
+	* Configure the Neural Compute Stick USB Driver
+	```bash
+	cd ~/Downloads
+	cat <<EOF > 97-usbboot.rules
+	SUBSYSTEM=="usb", ATTRS{idProduct}=="2150", ATTRS{idVendor}=="03e7", GROUP="users", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1"
+	SUBSYSTEM=="usb", ATTRS{idProduct}=="2485", ATTRS{idVendor}=="03e7", GROUP="users", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1"
+	SUBSYSTEM=="usb", ATTRS{idProduct}=="f63b", ATTRS{idVendor}=="03e7", GROUP="users", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1"
+	EOF
+	sudo cp 97-usbboot.rules /etc/udev/rules.d/
+	sudo udevadm control --reload-rules
+	sudo udevadm trigger
+	sudo ldconfig
+	rm 97-usbboot.rules
+	```
+	* download [Object Detection model](https://github.com/intel/ros_openvino_toolkit/tree/devel/doc/OBJECT_DETECTION.md)
 	* download and convert a trained model to produce an optimized Intermediate Representation (IR) of the model 
-		```bash
-		#object segmentation model
-		 cd /opt/intel/computer_vision_sdk/deployment_tools/model_optimizer/install_prerequisites
-		 sudo ./install_prerequisites.sh
-		 mkdir -p ~/Downloads/models
-		 cd ~/Downloads/models
-		 wget http://download.tensorflow.org/models/object_detection/mask_rcnn_inception_v2_coco_2018_01_28.tar.gz
-		 tar -zxvf mask_rcnn_inception_v2_coco_2018_01_28.tar.gz
-		 cd mask_rcnn_inception_v2_coco_2018_01_28
-		 python3 /opt/intel/computer_vision_sdk/deployment_tools/model_optimizer/mo_tf.py --input_model frozen_inference_graph.pb --tensorflow_use_custom_operations_config /opt/intel/computer_vision_sdk/deployment_tools/model_optimizer/extensions/front/tf/mask_rcnn_support.json --tensorflow_object_detection_api_pipeline_config pipeline.config --reverse_input_channels --output_dir ./output/
-		 sudo mkdir -p /opt/models
-		 sudo ln -sf ~/Downloads/models/mask_rcnn_inception_v2_coco_2018_01_28 /opt/models/
-		 #object detection model
-		 cd /opt/intel/computer_vision_sdk/deployment_tools/model_downloader
-		 sudo python3 ./downloader.py --name mobilenet-ssd
-		 #FP32 precision model
-		 sudo python3 /opt/intel/computer_vision_sdk/deployment_tools/model_optimizer/mo.py --input_model /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel --output_dir /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP32 --mean_values [127.5,127.5,127.5] --scale_values [127.5]
-		 #FP16 precision model
-		 sudo python3 /opt/intel/computer_vision_sdk/deployment_tools/model_optimizer/mo.py --input_model /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel --output_dir /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP16 --data_type=FP16 --mean_values [127.5,127.5,127.5] --scale_values [127.5]
-      ```
+	```bash
+	#object segmentation model
+	cd /opt/intel/openvino/deployment_tools/model_optimizer/install_prerequisites
+	sudo ./install_prerequisites.sh
+	mkdir -p ~/Downloads/models
+	cd ~/Downloads/models
+	wget http://download.tensorflow.org/models/object_detection/mask_rcnn_inception_v2_coco_2018_01_28.tar.gz
+	tar -zxvf mask_rcnn_inception_v2_coco_2018_01_28.tar.gz
+	cd mask_rcnn_inception_v2_coco_2018_01_28
+	#FP32
+	sudo python3 /opt/intel/openvino/deployment_tools/model_optimizer/mo_tf.py --input_model frozen_inference_graph.pb --tensorflow_use_custom_operations_config /opt/intel/openvino/deployment_tools/model_optimizer/extensions/front/tf/mask_rcnn_support.json --tensorflow_object_detection_api_pipeline_config pipeline.config --reverse_input_channels --output_dir /opt/openvino_toolkit/models/segmentation/output/FP32
+	#FP16
+	sudo python3 /opt/intel/openvino/deployment_tools/model_optimizer/mo_tf.py --input_model frozen_inference_graph.pb --tensorflow_use_custom_operations_config /opt/intel/openvino/deployment_tools/model_optimizer/extensions/front/tf/mask_rcnn_support.json --tensorflow_object_detection_api_pipeline_config pipeline.config --reverse_input_channels --data_type=FP16 --output_dir /opt/openvino_toolkit/models/segmentation/output/FP16
+	```
+	* download the optimized Intermediate Representation (IR) of model (excute once)
+	```bash
+	cd /opt/intel/openvino/deployment_tools/tools/model_downloader
+	sudo python3 downloader.py --name face-detection-adas-0001 --output_dir /opt/openvino_toolkit/models/face_detection/output
+	sudo python3 downloader.py --name age-gender-recognition-retail-0013 --output_dir /opt/openvino_toolkit/models/age-gender-recognition/output
+	sudo python3 downloader.py --name emotions-recognition-retail-0003 --output_dir /opt/openvino_toolkit/models/emotions-recognition/output
+	sudo python3 downloader.py --name head-pose-estimation-adas-0001 --output_dir /opt/openvino_toolkit/models/head-pose-estimation/output
+	sudo python3 downloader.py --name person-detection-retail-0013 --output_dir /opt/openvino_toolkit/models/person-detection/output
+	sudo python3 downloader.py --name person-reidentification-retail-0076 --output_dir /opt/openvino_toolkit/models/person-reidentification/output
+	sudo python3 downloader.py --name vehicle-license-plate-detection-barrier-0106 --output_dir /opt/openvino_toolkit/models/vehicle-license-plate-detection/output
+	sudo python3 downloader.py --name vehicle-attributes-recognition-barrier-0039 --output_dir /opt/openvino_toolkit/models/vehicle-attributes-recongnition/output
+	sudo python3 downloader.py --name license-plate-recognition-barrier-0001 --output_dir /opt/openvino_toolkit/models/license-plate-recognition/output
+	sudo python3 downloader.py --name landmarks-regression-retail-0009 --output_dir /opt/openvino_toolkit/models/landmarks-regression/output
+	sudo python3 downloader.py --name face-reidentification-retail-0095 --output_dir /opt/openvino_toolkit/models/face-reidentification/output
+	```	
 	* copy label files (excute _once_)<br>
-		```bash
-		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/intel/computer_vision_sdk/deployment_tools/intel_models/emotions-recognition-retail-0003/FP32
-		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/intel/computer_vision_sdk/deployment_tools/intel_models/emotions-recognition-retail-0003/FP16
-		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/intel/computer_vision_sdk/deployment_tools/intel_models/face-detection-adas-0001/FP32
-		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/intel/computer_vision_sdk/deployment_tools/intel_models/face-detection-adas-0001/FP16
-		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_segmentation/frozen_inference_graph.labels ~/Downloads/models/mask_rcnn_inception_v2_coco_2018_01_28/output
-		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP32
-		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels /opt/intel/computer_vision_sdk/deployment_tools/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP16
-		```
+	```bash
+	sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/openvino_toolkit/models/emotions-recognition/output/intel/emotions-recognition-retail-0003/FP32/
+	sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/models/face_detection/output/intel/face-detection-adas-0001/FP32/
+	sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/models/face_detection/output/intel/face-detection-adas-0001/FP16/
+	sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_segmentation/frozen_inference_graph.labels /opt/openvino_toolkit/models/segmentation/output/FP32/
+	sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_segmentation/frozen_inference_graph.labels /opt/openvino_toolkit/models/segmentation/output/FP16/
+	sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_detection/vehicle-license-plate-detection-barrier-0106.labels /opt/openvino_toolkit/models/vehicle-license-plate-detection/output/intel/vehicle-license-plate-detection-barrier-0106/FP32
+	sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/models/face_detection/output/intel/face-detection-adas-0001/FP32/
+	sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/models/face_detection/output/intel/face-detection-adas-0001/FP16/
+	```
 	* set ENV LD_LIBRARY_PATH and environment
-		```bash
-		source /opt/intel/computer_vision_sdk/bin/setupvars.sh
-		export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/computer_vision_sdk/deployment_tools/inference_engine/samples/build/intel64/Release/lib
-		```
+	```bash
+	source /opt/intel/openvino/bin/setupvars.sh
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/openvino/deployment_tools/inference_engine/samples/build/intel64/Release/lib
+	```
 * run face detection sample code input from StandardCamera.(connect Intel® Neural Compute Stick 2)
 	```bash
-	roslaunch vino_launch pipeline_people_myriad.launch
+	roslaunch vino_launch pipeline_people.launch
 	```
 * run face detection sample code input from Image.
 	```bash
 	roslaunch vino_launch pipeline_image.launch
-	```
-* run object detection sample code input from RealSenseCamera.
-	```bash
-	roslaunch vino_launch pipeline_object.launch
-	```
-* run object detection sample code input from RealSenseCameraTopic.(connect Intel® Neural Compute Stick 2)
-	```bash
-	roslaunch vino_launch pipeline_object_topic.launch
 	```
 * run object segmentation sample code input from RealSenseCameraTopic.
 	```bash
@@ -196,6 +212,14 @@ sudo ln -s ~/catkin_ws/src/ros_openvino_toolkit /opt/openvino_toolkit/ros_openvi
 * run person reidentification sample code input from StandardCamera.
 	```bash
 	roslaunch vino_launch pipeline_reidentification.launch
+	```
+* run face re-identification with facial landmarks from realsense camera
+	```bash
+	roslaunch vino_launch pipeline_face_reidentification.launch
+	```
+* run vehicle detection sample code input from StandardCamera.
+	```bash
+	roslaunch vino_launch pipeline_vehicle_detection.launch  
 	```
 * run object detection service sample code input from Image  
   Run image processing service:
@@ -227,4 +251,5 @@ sudo ln -s ~/catkin_ws/src/ros_openvino_toolkit /opt/openvino_toolkit/ros_openvi
 	* Segmentation fault occurs occasionally, which is caused by librealsense library. See [Issue #2645](https://github.com/IntelRealSense/librealsense/issues/2645) for more details.
 
 ###### *Any security issue should be reported using process at https://01.org/security*
+
 

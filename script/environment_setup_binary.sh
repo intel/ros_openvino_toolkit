@@ -79,10 +79,12 @@ fi
 # Setup ROS from debian
 if [ "$ROS_DEBIAN" == "1" ]; then
   echo "===================Installing ROS from Debian Package...======================="
+  echo $ROOT_PASSWD | sudo -S apt-get install -y curl
+  curl http://repo.ros2.org/repos.key | sudo apt-key add -
   echo $ROOT_PASSWD | sudo -S sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-  #echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
-  #For those who cannot access hkp protocal 
-  echo $ROOT_PASSWD | curl http://repo.ros2.org/repos.key | sudo apt-key add -
+  echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy="$http_proxy" --recv-key F42ED6FBAB17C654
+  #echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver 'hkp://pgp.mit.edu:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+  #For those who cannot access hkp protocal
   echo $ROOT_PASSWD | sudo -S apt-get update
   echo $ROOT_PASSWD | sudo -S apt-get install -y ros-$ros_ver-desktop-full
 
@@ -148,19 +150,19 @@ fi
 #setup OPENVINO
 if [ "$OPENVINO" == "1" ]; then
   cd ~/Downloads
-  wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15078/l_openvino_toolkit_p_2018.5.455.tgz
-  tar -xvf l_openvino_toolkit_p_2018.5.455.tgz
-  cd l_openvino_toolkit_p_2018.5.455
-  echo $ROOT_PASSWD | sudo -S ./install_cv_sdk_dependencies.sh
+  wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/16057/l_openvino_toolkit_p_2019.3.376.tgz
+  tar -xvf l_openvino_toolkit_p_2019.3.376.tgz
+  cd l_openvino_toolkit_p_2019.3.376
+  echo $ROOT_PASSWD | sudo -S ./install_openvino_dependencies.sh
   cp $basedir/openvino_silent.cfg .
   echo $ROOT_PASSWD | sudo -S ./install.sh --silent openvino_silent.cfg
 
   set +o errexit 
-  tail ~/.bashrc | grep "computer_vision_sdk/bin/setupvars.sh"
+  tail ~/.bashrc | grep "openvino/bin/setupvars.sh"
   set -o errexit
  
   if [ "$?" == "1" ]; then
-    echo "source /opt/intel/computer_vision_sdk/bin/setupvars.sh" >> ~/.bashrc
+    echo "source /opt/intel/openvino/bin/setupvars.sh" >> ~/.bashrc
   else
     echo "openvino already set, skip..."
   fi
@@ -168,7 +170,7 @@ fi
 
 #install OPENCL Driver for GPU
 if [ "$OPENCL" == "1" ]; then
-   cd /opt/intel/computer_vision_sdk/install_dependencies
+   cd /opt/intel/openvino/install_dependencies
    echo $ROOT_PASSWD | sudo -S ./install_NEO_OCL_driver.sh
    echo "install OPENCL Driver for GPU"
 fi
@@ -176,39 +178,35 @@ fi
 # Setup LIBREALSENSE
 if [ "$LIBREALSENSE" == "1" ]; then
   echo "===================Setting Up LibRealSense...======================="
-  echo $ROOT_PASSWD | sudo -S apt-get install -y libssl-dev libusb-1.0-0-dev pkg-config libgtk-3-dev
-  echo $ROOT_PASSWD | sudo -S apt-get install -y libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev
-  mkdir -p ~/code && cd ~/code
-  git clone https://github.com/IntelRealSense/librealsense
-  cd ~/code/librealsense
-  git checkout v2.17.1
-  mkdir build && cd build
-  cmake ../ -DBUILD_EXAMPLES=true
-  echo $ROOT_PASSWD | sudo -S make uninstall
-  make clean
-  make
-  echo $ROOT_PASSWD | sudo -S make install
 
-  cd ..
-  echo $ROOT_PASSWD | sudo -S cp config/99-realsense-libusb.rules /etc/udev/rules.d/
-  echo $ROOT_PASSWD | sudo -S udevadm control --reload-rules
-  udevadm trigger
+  echo "Install server public key for librealsense"
+  if [ -n "$http_proxy" ]; then
+    echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy=$http_proxy --recv-key C8B3A55A6F3EFCDE
+  else
+    echo $ROOT_PASSWD | sudo -S apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key C8B3A55A6F3EFCDE
+  fi
+  if ! test "$(grep "http://realsense-hw-public.s3.amazonaws.com/Debian/apt-repo" /etc/apt/sources.list)"
+  then
+    echo $ROOT_PASSWD | sudo -S add-apt-repository "deb http://realsense-hw-public.s3.amazonaws.com/Debian/apt-repo bionic main" -u
+  fi
+
+  echo $ROOT_PASSWD | sudo -S apt update && sudo -S apt-get install -y librealsense2-dkms librealsense2-utils librealsense2-dev
   echo "==== END install librealsense ===="
 fi
 
 # Setup other dependencies
 if [ "$OTHER_DEPENDENCY" == "1" ]; then
   echo "===================Setting UP OTHER_DEPENDENCY DEPENDENCY...======================="
-  echo $ROOT_PASSWD | sudo -S apt-get install python3-pip
-  pip3 install numpy
-  pip3 install networkx
+  echo $ROOT_PASSWD | sudo -S apt-get install -y python3-pip
+  sudo pip3 install numpy
+  sudo pip3 install networkx
   if [ $system_ver = "16.04" ]; then
      echo $ROOT_PASSWD | sudo -S apt-get install -y --no-install-recommends libboost-all-dev
      cd /usr/lib/x86_64-linux-gnu
-     sudo ln -s libboost_python-py35.so libboost_python3.so
+     echo $ROOT_PASSWD | sudo -S ln -sf libboost_python-py35.so libboost_python3.so
   elif [ $system_ver = "18.04" ]; then
      echo $ROOT_PASSWD | sudo -S apt-get install -y --no-install-recommends libboost-all-dev
-     sudo apt install libboost-python1.62.0
+     echo $ROOT_PASSWD | sudo -S apt install -y --no-install-recommends libboost-python1.62.0
    fi
    echo "==== END install other dependencies ===="
 fi
