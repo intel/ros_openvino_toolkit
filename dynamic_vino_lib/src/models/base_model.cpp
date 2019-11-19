@@ -80,14 +80,14 @@ void Models::BaseModel::checkNetworkSize(
   // check input size
   slog::info << "Checking input size" << slog::endl;
   InferenceEngine::InputsDataMap input_info(net_reader->getNetwork().getInputsInfo());
-  if (input_info.size() != input_size) {
+  if (input_info.size() != (size_t)input_size) {
     throw std::logic_error(getModelName() + " should have " + std::to_string(input_size) + " inpu"
             "t");
   }
   // check output size
   slog::info << "Checking output size" << slog::endl;
   InferenceEngine::OutputsDataMap output_info(net_reader->getNetwork().getOutputsInfo());
-  if (output_info.size() != output_size) {
+  if (output_info.size() != (size_t)output_size) {
     throw std::logic_error(getModelName() + " should have " + std::to_string(output_size) + " outpu"
             "t");
   }

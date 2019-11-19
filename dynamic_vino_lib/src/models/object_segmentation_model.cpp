@@ -34,7 +34,7 @@ void Models::ObjectSegmentationModel::checkNetworkSize(
 {
   slog::info << "Checking input size" << slog::endl;
   InferenceEngine::InputsDataMap input_info(net_reader->getNetwork().getInputsInfo());
-  if (input_info.size() != input_size) {
+  if (input_info.size() != (size_t)input_size) {
     throw std::logic_error(getModelName() + " should have " + std::to_string(input_size) + " inpu"
             "t, but got " + std::to_string(input_info.size()));
   }
@@ -42,7 +42,7 @@ void Models::ObjectSegmentationModel::checkNetworkSize(
   // check output size
   slog::info << "Checking output size" << slog::endl;
   InferenceEngine::OutputsDataMap output_info(net_reader->getNetwork().getOutputsInfo());
-  if (output_info.size() != output_size && output_info.size() != (output_size - 1)) {
+  if (output_info.size() != (size_t)output_size && output_info.size() != (size_t)(output_size - 1)) {
     throw std::logic_error(getModelName() + " should have " + std::to_string(output_size) + " outpu"
             "t, but got " + std::to_string(output_info.size()));
   }
@@ -133,6 +133,7 @@ bool Models::ObjectSegmentationModel::enqueue(
       data[2] = 1;
     }
   }
+  return true;
 }
 
 bool Models::ObjectSegmentationModel::matToBlob(
@@ -150,14 +151,14 @@ bool Models::ObjectSegmentationModel::matToBlob(
   auto blob_data = input_blob->buffer().as<InferenceEngine::PrecisionTrait<InferenceEngine::Precision::U8>::value_type *>();
 
   cv::Mat resized_image(orig_image);
-  if(orig_image.size().height != input_height_ || orig_image.size().width != input_width_){
+  if((size_t)orig_image.size().height != input_height_ || (size_t)orig_image.size().width != input_width_){
     cv::resize(orig_image, resized_image, cv::Size(input_width_, input_height_));
   }
   int batchOffset = batch_index * input_width_ * input_height_ * input_channels_;
 
-  for (int c = 0; c < input_channels_; c++) {
-    for (int h = 0; h < input_height_; h++) {
-      for (int w = 0; w < input_width_; w++) {
+  for (unsigned int c = 0; c < input_channels_; c++) {
+    for (unsigned int h = 0; h < input_height_; h++) {
+      for (unsigned int w = 0; w < input_width_; w++) {
         blob_data[batchOffset + c * input_width_ * input_height_ + h * input_width_ + w] =
           resized_image.at<cv::Vec3b>(h, w)[c] * scale_factor;
       }

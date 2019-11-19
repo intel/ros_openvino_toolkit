@@ -55,7 +55,7 @@ void matU8ToBlob(
   T * blob_data = blob->buffer().as<T *>();
 
   cv::Mat resized_image(orig_image);
-  if (width != orig_image.size().width || height != orig_image.size().height) {
+  if (width != (size_t)orig_image.size().width || height != (size_t)orig_image.size().height) {
     cv::resize(orig_image, resized_image, cv::Size(width, height));
   }
   int batchOffset = batch_index * width * height * channels;
