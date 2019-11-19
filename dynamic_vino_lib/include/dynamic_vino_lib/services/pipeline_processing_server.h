@@ -28,7 +28,7 @@
 #include <people_msgs/EmotionSrv.h>
 #include <people_msgs/HeadPoseSrv.h>
 #include <people_msgs/PeopleSrv.h>
-#include <object_msgs/DetectObject.h>
+#include <object_msgs/DetectObjectSrv.h>
 #include <people_msgs/ObjectsInMasksSrv.h>
 #include <people_msgs/ReidentificationSrv.h>
 #include <pipeline_srv_msgs/PipelineSrv.h>

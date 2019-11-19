@@ -22,6 +22,7 @@
 #include <string>
 
 #include "dynamic_vino_lib/inputs/video_input.h"
+#include "dynamic_vino_lib/slog.h"
 
 // Video
 Input::Video::Video(const std::string& video)
@@ -60,7 +61,12 @@ bool Input::Video::read(cv::Mat* frame)
   return cap.retrieve(*frame);
 }
 
-void Input::Video::config()
+void Input::Video::config(const Input::Config & config)
 {
-  // TODO(weizhi): config
+  if (config.path != "") {
+    video_.assign(config.path);
+    initialize();
+    slog::info << "Image Input device was reinitialized with new file:" <<
+      config.path.c_str() << slog::endl;
+  }
 }

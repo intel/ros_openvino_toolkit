@@ -52,7 +52,6 @@ class RealSenseCameraTopic : public BaseInputDevice
     return true;
   };
   bool read(cv::Mat* frame) override;
-  void config() override;
 
  private:
   ros::NodeHandle nh_;

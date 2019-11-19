@@ -25,7 +25,7 @@
 #include <object_msgs/ObjectsInBoxes.h>
 
 void Outputs::RosServiceOutput::setServiceResponse(
-  boost::shared_ptr<object_msgs::DetectObject::Response> response)
+  boost::shared_ptr<object_msgs::DetectObjectSrv::Response> response)
 {
   if (object_msg_ptr_ != nullptr && object_msg_ptr_->objects_vector.size() > 0) {
     object_msgs::ObjectsInBoxes objs;
@@ -39,7 +39,7 @@ void Outputs::RosServiceOutput::setServiceResponse(
 }
 
 void Outputs::RosServiceOutput::setResponseForFace(
-  boost::shared_ptr<object_msgs::DetectObject::Response> response)
+  boost::shared_ptr<object_msgs::DetectObjectSrv::Response> response)
 {
   if (faces_msg_ptr_ != nullptr && faces_msg_ptr_->objects_vector.size() > 0) {
     object_msgs::ObjectsInBoxes objs; 

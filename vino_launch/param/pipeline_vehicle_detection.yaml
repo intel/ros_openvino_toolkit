@@ -1,11 +1,12 @@
 Pipelines:
 - name: object
-  inputs: [StandardCamera]
+  inputs: [RealSenseCamera]
   infers:
     - name: ObjectDetection
       model: /opt/openvino_toolkit/models/vehicle-license-plate-detection/output/intel/vehicle-license-plate-detection-barrier-0106/FP32/vehicle-license-plate-detection-barrier-0106.xml
       engine: CPU
-      label: /opt/intel/openvino/deployment_tools/tools/model_downloader/Security/object_detection/barrier/0106/dldt/vehicle-license-plate-detection-barrier-0106.labels
+      model_type: SSD
+      label: /opt/openvino_toolkit/models/vehicle-license-plate-detection/output/Security/object_detection/barrier/0106/dldt/vehicle-license-plate-detection-barrier-0106.labels
       batch: 1
       enable_roi_constraint: true # set enable_roi_constraint to false if you don't want to make the inferred ROI (region of interest) constrained into the camera frame
     - name: VehicleAttribsDetection
@@ -20,7 +21,7 @@ Pipelines:
       batch: 1
   outputs: [ImageWindow, RViz, RosTopic]
   connects:
-    - left: StandardCamera
+    - left: RealSenseCamera
       right: [ObjectDetection]
     - left: ObjectDetection
       right: [{VehicleAttribsDetection: label == vehicle && confidence >= 0.8}, {LicensePlateDetection: label == license && confidence >= 0.8}]

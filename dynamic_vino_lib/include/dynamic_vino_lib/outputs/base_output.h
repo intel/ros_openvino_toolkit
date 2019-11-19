@@ -147,9 +147,9 @@ class BaseOutput
 
   void setPipeline(Pipeline* const pipeline);
   virtual void setServiceResponse(
-    boost::shared_ptr<object_msgs::DetectObjectResponse> response) {}
+    boost::shared_ptr<object_msgs::DetectObjectSrvResponse> response) {}
   virtual void setServiceResponseForFace(
-    boost::shared_ptr<object_msgs::DetectObjectResponse> response) {}
+    boost::shared_ptr<object_msgs::DetectObjectSrvResponse> response) {}
   virtual void setServiceResponse(
     boost::shared_ptr<people_msgs::AgeGenderSrvResponse> response) {}
   virtual void setServiceResponse(

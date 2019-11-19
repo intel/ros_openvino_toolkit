@@ -16,7 +16,7 @@
 #include <people_msgs/PeopleSrv.h>
 #include <people_msgs/ObjectsInMasksSrv.h>
 #include <people_msgs/ReidentificationSrv.h>
-#include <object_msgs/DetectObject.h>
+#include <object_msgs/DetectObjectSrv.h>
 #include <pipeline_srv_msgs/PipelineSrv.h>
 #include <vino_param_lib/param_manager.h>
 #include <ros/ros.h>
@@ -42,12 +42,13 @@ FrameProcessingServer<T>::FrameProcessingServer(
   config_path_(config_path)
 {
   nh_=std::make_shared<ros::NodeHandle>(service_name_);
-  
+  initService();
 }
 
 template<typename T>
 void FrameProcessingServer<T>::initService()
 {
+  std::cout << "!!!!" << config_path_ << std::endl;
   Params::ParamManager::getInstance().parse(config_path_);
   Params::ParamManager::getInstance().print();
   
@@ -79,7 +80,9 @@ bool FrameProcessingServer<T>::cbService(
   for (auto it = pipelines_.begin(); it != pipelines_.end(); ++it) {
     PipelineManager::PipelineData & p = pipelines_[it->second.params.name.c_str()];
     auto input = p.pipeline->getInputDevice();
-
+    Input::Config config;
+    config.path = event.getRequest().image_path;
+    input->config(config);
     p.pipeline->runOnce();
     auto output_handle = p.pipeline->getOutputHandle();
 
@@ -98,7 +101,7 @@ bool FrameProcessingServer<T>::cbService(
 
 
 
-template class FrameProcessingServer<object_msgs::DetectObject>;
+template class FrameProcessingServer<object_msgs::DetectObjectSrv>;
 template class FrameProcessingServer<people_msgs::PeopleSrv>;
 template class FrameProcessingServer<people_msgs::ReidentificationSrv>;
 template class FrameProcessingServer<people_msgs::ObjectsInMasksSrv>;

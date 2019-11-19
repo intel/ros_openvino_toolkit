@@ -41,7 +41,10 @@ int main(int argc, char ** argv)
 
   ros::ServiceClient client = n.serviceClient<people_msgs::PeopleSrv>("/openvino_toolkit/service");
 
+  std::string image_path = argv[1];
+
   people_msgs::PeopleSrv srv;
+  srv.request.image_path = image_path;
 
   if (client.call(srv))
   {

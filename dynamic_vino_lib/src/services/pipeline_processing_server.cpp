@@ -16,7 +16,7 @@
 #include <people_msgs/PeopleSrv.h>
 #include <people_msgs/ObjectsInMasksSrv.h>
 #include <people_msgs/ReidentificationSrv.h>
-#include <object_msgs/DetectObject.h>
+#include <object_msgs/DetectObjectSrv.h>
 #include <pipeline_srv_msgs/PipelineSrv.h>
 #include <pipeline_srv_msgs/Pipeline.h>
 #include <pipeline_srv_msgs/Pipelines.h>
