@@ -3,12 +3,12 @@ Pipelines:
   inputs: [RealSenseCameraTopic]
   infers:
     - name: ObjectSegmentation
-      model: /opt/models/mask_rcnn_inception_v2_coco_2018_01_28/output/frozen_inference_graph.xml
-      engine: CPU
+      model: /opt/openvino_toolkit/models/segmentation/output/FP16/frozen_inference_graph.xml
+      engine: "HETERO:CPU,GPU,MYRIAD"
       label: to/be/set/xxx.labels
       batch: 1
+      confidence_threshold: 0.5
   outputs: [ImageWindow, RosTopic, RViz]
-  confidence_threshold: 0.2
   connects:
     - left: RealSenseCameraTopic
       right: [ObjectSegmentation]
@@ -20,4 +20,3 @@ Pipelines:
       right: [RViz]
 
 OpenvinoCommon:
-
