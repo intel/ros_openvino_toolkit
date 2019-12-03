@@ -79,9 +79,9 @@ void Models::FaceDetectionModel::checkLayerProperty(
   // class number should be equal to size of label vector
   // if network has default "background" class, fake is used
   const size_t num_classes = output_layer->GetParamAsInt("num_classes");
-  if (getLabels().size() != num_classes)
+  if ((size_t)getLabels().size() != num_classes)
   {
-    if (getLabels().size() == (num_classes - 1))
+    if ((size_t)getLabels().size() == (num_classes - 1))
     {
       getLabels().insert(getLabels().begin(), "fake");
     }

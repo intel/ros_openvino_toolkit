@@ -31,6 +31,7 @@
 
 #include <vino_param_lib/param_manager.h>
 #include "dynamic_vino_lib/pipeline.h"
+#include "dynamic_vino_lib/engines/engine_manager.h"
 
 /**
  * @class PipelineManager
@@ -122,7 +123,7 @@ class PipelineManager {
 
 
   std::map<std::string, PipelineData> pipelines_;
-  std::map<std::string, InferenceEngine::InferencePlugin> plugins_for_devices_;
+  Engines::EngineManager engine_manager_;
 };
 
 #endif  // DYNAMIC_VINO_LIB__PIPELINE_MANAGER_HPP_

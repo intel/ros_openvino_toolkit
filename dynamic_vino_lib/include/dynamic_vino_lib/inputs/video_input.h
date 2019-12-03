@@ -61,7 +61,8 @@ class Video : public BaseInputDevice
    * @return Whether the next frame is successfully read.
    */
   bool read(cv::Mat* frame) override;
-  void config() override;
+  
+  void config(const Config &) override;
 
  private:
   cv::VideoCapture cap;

@@ -308,7 +308,7 @@ int dynamic_vino_lib::ObjectDetectionYolov2voc::getEntryIndex(int side, int lcoo
     return n * side * side * (lcoords + lclasses + 1) + entry * side * side + loc;
 }
 
-const int dynamic_vino_lib::ObjectDetectionYolov2voc::getResultsLength() const {
+int dynamic_vino_lib::ObjectDetectionYolov2voc::getResultsLength() const {
   return static_cast<int>(results_.size());
 }
 
@@ -321,12 +321,11 @@ const std::string dynamic_vino_lib::ObjectDetectionYolov2voc::getName() const {
   return valid_model_->getModelName();
 }
 
-const void dynamic_vino_lib::ObjectDetectionYolov2voc::observeOutput(
-    const std::shared_ptr<Outputs::BaseOutput>& output,
-    const std::string filter_conditions) {
+void dynamic_vino_lib::ObjectDetectionYolov2voc::observeOutput(
+    const std::shared_ptr<Outputs::BaseOutput>& output) {
   if (output != nullptr) {
     result_filter_->acceptResults(results_);
-    result_filter_->acceptFilterConditions(filter_conditions);
+    //result_filter_->acceptFilterConditions(filter_conditions);
     output->accept(result_filter_->getFilteredResults());
   }
 }

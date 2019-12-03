@@ -89,9 +89,9 @@ Currently, the inference feature list is supported:
 
 ### Service
 - Object Detection Service:
-```/detect_object``` ([object_msgs::DetectObject](https://github.com/intel/object_msgs/blob/master/srv/DetectObject.srv))
+```/detect_object``` ([object_msgs::DetectObjectSrv](https://github.com/intel/object_msgs/blob/master/srv/DetectObjectSrv.srv))
 - Face Detection Service:
-```/detect_face``` ([object_msgs::DetectObject](https://github.com/intel/object_msgs/blob/master/srv/DetectObject.srv))
+```/detect_face``` ([object_msgs::DetectObjectSrv](https://github.com/intel/object_msgs/blob/master/srv/DetectObjectSrv.srv))
 - Age & Gender Detection Service:
 ```/detect_age_gender``` ([people_msgs::AgeGender](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/srv/AgeGenderSrv.srv))
 - Headpose Detection Service:

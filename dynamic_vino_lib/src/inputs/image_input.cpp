@@ -20,6 +20,7 @@
  */
 
 #include "dynamic_vino_lib/inputs/image_input.h"
+#include "dynamic_vino_lib/slog.h"
 #include <string>
 
 // Image
@@ -55,7 +56,12 @@ bool Input::Image::read(cv::Mat* frame)
   return true;
 }
 
-void Input::Image::config()
+void Input::Image::config(const Input::Config & config)
 {
-  // TODO(weizhi): config
+  if (config.path != "") {
+    file_.assign(config.path);
+    initialize();
+    slog::info << "Image Input device was reinitialized with new file:" <<
+      config.path.c_str() << slog::endl;
+  }
 }

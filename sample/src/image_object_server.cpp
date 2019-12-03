@@ -42,7 +42,6 @@
 #include <vino_param_lib/param_manager.h>
 #include "dynamic_vino_lib/common.h"
 #include "dynamic_vino_lib/engines/engine.h"
-#include "dynamic_vino_lib/factory.h"
 #include "dynamic_vino_lib/inferences/age_gender_detection.h"
 #include "dynamic_vino_lib/inferences/base_inference.h"
 #include "dynamic_vino_lib/inferences/emotions_detection.h"
@@ -88,7 +87,7 @@ int main(int argc, char** argv)
 
 
   auto node = std::make_shared<vino_service::FrameProcessingServer
-    <object_msgs::DetectObject>>(service_name, FLAGS_config);
+    <object_msgs::DetectObjectSrv>>(service_name, FLAGS_config);
   
   slog::info << "Waiting for service request..." << slog::endl;
   ros::spin();

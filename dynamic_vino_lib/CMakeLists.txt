@@ -16,6 +16,12 @@ cmake_minimum_required (VERSION 2.8.3)
 
 project(dynamic_vino_lib)
 
+####################################
+## to use new InferenceEngine API (InferenceEngine::Core),
+## then, uncomment below line
+#add_definitions(-DUSE_IE_CORE)
+####################################
+
 message(STATUS "Looking for inference engine configuration file at: ${CMAKE_PREFIX_PATH}")
 find_package(InferenceEngine 1.1)
 if (NOT InferenceEngine_FOUND)
@@ -107,7 +113,7 @@ if(UNIX OR APPLE)
 
   # Generic flags.
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fno-operator-names -Wformat -Wformat-security -Wall")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
  # Add OpenMP support
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
@@ -136,11 +142,11 @@ add_library(${PROJECT_NAME} SHARED
   src/services/frame_processing_server.cpp
   src/services/pipeline_processing_server.cpp
   src/services/test.cpp
-  src/factory.cpp
   src/pipeline.cpp
   src/pipeline_params.cpp
   src/pipeline_manager.cpp
   src/engines/engine.cpp
+  src/engines/engine_manager.cpp
   src/inferences/base_filter.cpp
   src/inferences/base_inference.cpp
   src/inferences/emotions_detection.cpp

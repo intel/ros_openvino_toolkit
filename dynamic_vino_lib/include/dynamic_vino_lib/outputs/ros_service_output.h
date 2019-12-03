@@ -38,7 +38,7 @@
 #include <people_msgs/EmotionSrv.h>
 #include <people_msgs/HeadPoseSrv.h>
 #include <people_msgs/PeopleSrv.h>
-#include <object_msgs/DetectObject.h>
+#include <object_msgs/DetectObjectSrv.h>
 #include <people_msgs/ObjectsInMasksSrv.h>
 #include <people_msgs/ReidentificationSrv.h>
 
@@ -70,8 +70,8 @@ public:
   void handleOutput() override {}
   void clearData();
 
-  void setServiceResponse(boost::shared_ptr<object_msgs::DetectObject::Response> response);
-  void setResponseForFace(boost::shared_ptr<object_msgs::DetectObject::Response> response);
+  void setServiceResponse(boost::shared_ptr<object_msgs::DetectObjectSrv::Response> response);
+  void setResponseForFace(boost::shared_ptr<object_msgs::DetectObjectSrv::Response> response);
   void setServiceResponse(boost::shared_ptr<people_msgs::AgeGenderSrv::Response> response);
   void setServiceResponse(boost::shared_ptr<people_msgs::EmotionSrv::Response> response);
   void setServiceResponse(boost::shared_ptr<people_msgs::HeadPoseSrv::Response> response);
