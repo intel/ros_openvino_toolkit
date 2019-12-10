@@ -21,6 +21,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   geometry_msgs
   message_generation
+  object_msgs
 )
 
 add_message_files(DIRECTORY msg FILES
