@@ -13,4 +13,4 @@
 # limitations under the License.
 
 std_msgs/Header header
-people_msgs/Emotion[] emotions
+vino_people_msgs/Emotion[] emotions

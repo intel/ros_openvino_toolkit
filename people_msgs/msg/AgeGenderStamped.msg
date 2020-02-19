@@ -13,4 +13,4 @@
 # limitations under the License.
 
 std_msgs/Header header
-people_msgs/AgeGender[] objects
+vino_people_msgs/AgeGender[] objects

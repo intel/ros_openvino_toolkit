@@ -115,17 +115,17 @@ class BaseOutput
   virtual void setServiceResponseForFace(
     boost::shared_ptr<object_msgs::DetectObjectResponse> response) {}
   virtual void setServiceResponse(
-    boost::shared_ptr<people_msgs::AgeGenderSrvResponse> response) {}
+    boost::shared_ptr<vino_people_msgs::AgeGenderSrvResponse> response) {}
   virtual void setServiceResponse(
-    boost::shared_ptr<people_msgs::EmotionSrvResponse> response) {}
+    boost::shared_ptr<vino_people_msgs::EmotionSrvResponse> response) {}
   virtual void setServiceResponse(
-    boost::shared_ptr<people_msgs::HeadPoseSrvResponse> response) {}
+    boost::shared_ptr<vino_people_msgs::HeadPoseSrvResponse> response) {}
   virtual void setServiceResponse(
-    boost::shared_ptr<people_msgs::PeopleSrvResponse> response) {}
+    boost::shared_ptr<vino_people_msgs::PeopleSrvResponse> response) {}
   virtual void setServiceResponse(
-    boost::shared_ptr<people_msgs::ReidentificationSrvResponse> response) {}
+    boost::shared_ptr<vino_people_msgs::ReidentificationSrvResponse> response) {}
   virtual void setServiceResponse(
-    boost::shared_ptr<people_msgs::ObjectsInMasksSrvResponse> response) {}
+    boost::shared_ptr<vino_people_msgs::ObjectsInMasksSrvResponse> response) {}
   Pipeline* getPipeline() const;
   cv::Mat getFrame() const;
   virtual void clearData() {}

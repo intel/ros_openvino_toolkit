@@ -26,16 +26,16 @@
 #include <object_msgs/Object.h>
 #include <object_msgs/ObjectInBox.h>
 #include <object_msgs/ObjectsInBoxes.h>
-#include <people_msgs/AgeGender.h>
-#include <people_msgs/AgeGenderStamped.h>
-#include <people_msgs/Emotion.h>
-#include <people_msgs/EmotionsStamped.h>
-#include <people_msgs/HeadPose.h>
-#include <people_msgs/HeadPoseStamped.h>
-#include <people_msgs/ObjectInMask.h>
-#include <people_msgs/ObjectsInMasks.h>
-#include <people_msgs/Reidentification.h>
-#include <people_msgs/ReidentificationStamped.h>
+#include <vino_people_msgs/AgeGender.h>
+#include <vino_people_msgs/AgeGenderStamped.h>
+#include <vino_people_msgs/Emotion.h>
+#include <vino_people_msgs/EmotionsStamped.h>
+#include <vino_people_msgs/HeadPose.h>
+#include <vino_people_msgs/HeadPoseStamped.h>
+#include <vino_people_msgs/ObjectInMask.h>
+#include <vino_people_msgs/ObjectsInMasks.h>
+#include <vino_people_msgs/Reidentification.h>
+#include <vino_people_msgs/ReidentificationStamped.h>
 #include <ros/ros.h>
 
 #include <memory>
@@ -119,17 +119,17 @@ class RosTopicOutput : public BaseOutput
   ros::Publisher pub_face_;
   std::shared_ptr<object_msgs::ObjectsInBoxes> faces_msg_ptr_;
   ros::Publisher pub_emotion_;
-  std::shared_ptr<people_msgs::EmotionsStamped> emotions_msg_ptr_;
+  std::shared_ptr<vino_people_msgs::EmotionsStamped> emotions_msg_ptr_;
   ros::Publisher pub_age_gender_;
-  std::shared_ptr<people_msgs::AgeGenderStamped> age_gender_msg_ptr_;
+  std::shared_ptr<vino_people_msgs::AgeGenderStamped> age_gender_msg_ptr_;
   ros::Publisher pub_headpose_;
-  std::shared_ptr<people_msgs::HeadPoseStamped> headpose_msg_ptr_;
+  std::shared_ptr<vino_people_msgs::HeadPoseStamped> headpose_msg_ptr_;
   ros::Publisher pub_object_;
   std::shared_ptr<object_msgs::ObjectsInBoxes> object_msg_ptr_;
   ros::Publisher pub_person_reid_;
-  std::shared_ptr<people_msgs::ReidentificationStamped> person_reid_msg_ptr_;
+  std::shared_ptr<vino_people_msgs::ReidentificationStamped> person_reid_msg_ptr_;
   ros::Publisher pub_segmented_object_;
-  std::shared_ptr<people_msgs::ObjectsInMasks> segmented_object_msg_ptr_;
+  std::shared_ptr<vino_people_msgs::ObjectsInMasks> segmented_object_msg_ptr_;
 
 };
 }  // namespace Outputs

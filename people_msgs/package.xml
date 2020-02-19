@@ -14,7 +14,7 @@ limitations under the License.
 -->
 
 <package>
-  <name>people_msgs</name>
+  <name>vino_people_msgs</name>
   <version>0.3.0</version>
   <description>A package containing people message definitions.</description>
   <author email="wei.zhi.liu@intel.com">Weizhi Liu</author>

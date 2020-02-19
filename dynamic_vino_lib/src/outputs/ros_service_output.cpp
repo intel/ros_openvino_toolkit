@@ -51,7 +51,7 @@ void Outputs::RosServiceOutput::setResponseForFace(
 }
 
 void Outputs::RosServiceOutput::setServiceResponse(
-  boost::shared_ptr<people_msgs::AgeGenderSrv::Response> response)
+  boost::shared_ptr<vino_people_msgs::AgeGenderSrv::Response> response)
 {
   if (age_gender_msg_ptr_ != nullptr) {
     response->age_gender.objects = age_gender_msg_ptr_->objects;
@@ -59,7 +59,7 @@ void Outputs::RosServiceOutput::setServiceResponse(
 }
 
 void Outputs::RosServiceOutput::setServiceResponse(
-  boost::shared_ptr<people_msgs::EmotionSrv::Response> response)
+  boost::shared_ptr<vino_people_msgs::EmotionSrv::Response> response)
 {
   if (emotions_msg_ptr_ != nullptr) {
     response->emotion.emotions = emotions_msg_ptr_->emotions;
@@ -67,7 +67,7 @@ void Outputs::RosServiceOutput::setServiceResponse(
 }
 
 void Outputs::RosServiceOutput::setServiceResponse(
-  boost::shared_ptr<people_msgs::HeadPoseSrv::Response> response)
+  boost::shared_ptr<vino_people_msgs::HeadPoseSrv::Response> response)
 {
   if (headpose_msg_ptr_ != nullptr) {
     response->headpose.headposes = headpose_msg_ptr_->headposes;
@@ -75,7 +75,7 @@ void Outputs::RosServiceOutput::setServiceResponse(
 }
 
 void Outputs::RosServiceOutput::setServiceResponse(
-  boost::shared_ptr<people_msgs::ObjectsInMasksSrv::Response> response)
+  boost::shared_ptr<vino_people_msgs::ObjectsInMasksSrv::Response> response)
   {
     slog::info << "in ObjectsInMasks service::Response ...";
     if (segmented_object_msg_ptr_ != nullptr) {
@@ -83,7 +83,7 @@ void Outputs::RosServiceOutput::setServiceResponse(
     }
   }
 void Outputs::RosServiceOutput::setServiceResponse(
-  boost::shared_ptr<people_msgs::ReidentificationSrv::Response> response)
+  boost::shared_ptr<vino_people_msgs::ReidentificationSrv::Response> response)
   {
     slog::info << "in Reidentification service::Response ...";
     if (person_reid_msg_ptr_ != nullptr) {
@@ -92,7 +92,7 @@ void Outputs::RosServiceOutput::setServiceResponse(
   }
 
 void Outputs::RosServiceOutput::setServiceResponse(
-  boost::shared_ptr<people_msgs::PeopleSrv::Response> response)
+  boost::shared_ptr<vino_people_msgs::PeopleSrv::Response> response)
 {
   slog::info << "in People::Response ...";
   if (faces_msg_ptr_ != nullptr) {

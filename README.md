@@ -68,17 +68,17 @@ Currently, the inference feature list is supported:
 - Face Detection:
 ```/ros_openvino_toolkit/face_detection```([object_msgs::ObjectsInBoxes](https://github.com/intel/object_msgs/blob/master/msg/ObjectsInBoxes.msg))
 - Emotion Recognition:
-```/ros_openvino_toolkit/emotions_recognition```([people_msgs::EmotionsStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/EmotionsStamped.msg))
+```/ros_openvino_toolkit/emotions_recognition```([vino_people_msgs::EmotionsStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/vino_people_msgs/msg/EmotionsStamped.msg))
 - Age and Gender Recognition:
-```/ros_openvino_toolkit/age_genders_Recognition```([people_msgs::AgeGenderStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/AgeGenderStamped.msg))
+```/ros_openvino_toolkit/age_genders_Recognition```([vino_people_msgs::AgeGenderStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/vino_people_msgs/msg/AgeGenderStamped.msg))
 - Head Pose Estimation:
-```/ros_openvino_toolkit/headposes_estimation```([people_msgs::HeadPoseStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/HeadPoseStamped.msg))
+```/ros_openvino_toolkit/headposes_estimation```([vino_people_msgs::HeadPoseStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/vino_people_msgs/msg/HeadPoseStamped.msg))
 - Object Detection:
 ```/ros_openvino_toolkit/detected_objects```([object_msgs::ObjectsInBoxes](https://github.com/intel/object_msgs/blob/master/msg/ObjectsInBoxes.msg))
 - Object Segmentation:
-```/ros_openvino_toolkit/segmented_obejcts```([people_msgs::ObjectsInMasks](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/msg/ObjectsInMasks.msg))
+```/ros_openvino_toolkit/segmented_obejcts```([vino_people_msgs::ObjectsInMasks](https://github.com/intel/ros_openvino_toolkit/blob/devel/vino_people_msgs/msg/ObjectsInMasks.msg))
 - Person Reidentification:
-```/ros_openvino_toolkit/reidentified_persons```([people_msgs::ReidentificationStamped](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/msg/ReidentificationStamped.msg))
+```/ros_openvino_toolkit/reidentified_persons```([vino_people_msgs::ReidentificationStamped](https://github.com/intel/ros_openvino_toolkit/blob/devel/vino_people_msgs/msg/ReidentificationStamped.msg))
 - Rviz Output:
 ```/ros_openvino_toolkit/image_rviz```([sensor_msgs::Image](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Image.html))
 
@@ -88,11 +88,11 @@ Currently, the inference feature list is supported:
 - Face Detection Service:
 ```/detect_face``` ([object_msgs::DetectObject](https://github.com/intel/object_msgs/blob/master/srv/DetectObject.srv))
 - Age & Gender Detection Service:
-```/detect_age_gender``` ([people_msgs::AgeGender](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/srv/AgeGenderSrv.srv))
+```/detect_age_gender``` ([vino_people_msgs::AgeGender](https://github.com/intel/ros_openvino_toolkit/blob/master/vino_people_msgs/srv/AgeGenderSrv.srv))
 - Headpose Detection Service:
-```/detect_head_pose``` ([people_msgs::HeadPose](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/srv/HeadPoseSrv.srv))
+```/detect_head_pose``` ([vino_people_msgs::HeadPose](https://github.com/intel/ros_openvino_toolkit/blob/master/vino_people_msgs/srv/HeadPoseSrv.srv))
 - Emotion Detection Service:
-```/detect_emotion``` ([people_msgs::Emotion](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/srv/EmotionSrv.srv))
+```/detect_emotion``` ([vino_people_msgs::Emotion](https://github.com/intel/ros_openvino_toolkit/blob/master/vino_people_msgs/srv/EmotionSrv.srv))
 
 
 ### RViz

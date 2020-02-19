@@ -28,7 +28,7 @@ find_package(
   roslint
   cv_bridge
   object_msgs
-  people_msgs
+  vino_people_msgs
   vino_param_lib
   dynamic_vino_lib
 )

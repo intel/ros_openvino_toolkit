@@ -17,20 +17,20 @@
 #include <object_msgs/Object.h>
 #include <object_msgs/ObjectInBox.h>
 #include <object_msgs/ObjectsInBoxes.h>
-#include <people_msgs/Emotion.h>
-#include <people_msgs/EmotionsStamped.h>
-#include <people_msgs/AgeGender.h>
-#include <people_msgs/AgeGenderStamped.h>
-#include <people_msgs/HeadPose.h>
-#include <people_msgs/HeadPoseStamped.h>
+#include <vino_people_msgs/Emotion.h>
+#include <vino_people_msgs/EmotionsStamped.h>
+#include <vino_people_msgs/AgeGender.h>
+#include <vino_people_msgs/AgeGenderStamped.h>
+#include <vino_people_msgs/HeadPose.h>
+#include <vino_people_msgs/HeadPoseStamped.h>
 
-#include <people_msgs/AgeGenderSrv.h>
-#include <people_msgs/EmotionSrv.h>
-#include <people_msgs/HeadPoseSrv.h>
-#include <people_msgs/PeopleSrv.h>
+#include <vino_people_msgs/AgeGenderSrv.h>
+#include <vino_people_msgs/EmotionSrv.h>
+#include <vino_people_msgs/HeadPoseSrv.h>
+#include <vino_people_msgs/PeopleSrv.h>
 #include <object_msgs/DetectObject.h>
-#include <people_msgs/ObjectsInMasksSrv.h>
-#include <people_msgs/ReidentificationSrv.h>
+#include <vino_people_msgs/ObjectsInMasksSrv.h>
+#include <vino_people_msgs/ReidentificationSrv.h>
 
 #include <ros/ros.h>
 #include <memory>
