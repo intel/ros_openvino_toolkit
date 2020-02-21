@@ -14,6 +14,6 @@
 
 std_msgs/Header header
 object_msgs/ObjectInBox[] faces
-people_msgs/Emotion[] emotions
-people_msgs/AgeGender[] agegenders
-people_msgs/HeadPose[] headposes
+vino_people_msgs/Emotion[] emotions
+vino_people_msgs/AgeGender[] agegenders
+vino_people_msgs/HeadPose[] headposes

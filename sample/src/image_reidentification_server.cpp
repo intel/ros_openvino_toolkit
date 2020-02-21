@@ -58,7 +58,7 @@
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
 #include "sample/utility.hpp"
-#include <people_msgs/ReidentificationSrv.h>
+#include <vino_people_msgs/ReidentificationSrv.h>
 
 
 bool parseAndCheckCommandLine(int argc, char** argv)
@@ -90,7 +90,7 @@ int main(int argc, char** argv)
 
 
   auto node = std::make_shared<vino_service::FrameProcessingServer
-    <people_msgs::ReidentificationSrv>>(service_name, FLAGS_config);
+    <vino_people_msgs::ReidentificationSrv>>(service_name, FLAGS_config);
   
   slog::info << "Waiting for reid service request..." << slog::endl;
   ros::spin();

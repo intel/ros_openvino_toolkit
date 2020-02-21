@@ -23,7 +23,7 @@
 #include <ros/package.h>
 #include <ros/ros.h>
 
-#include <people_msgs/PeopleSrv.h>
+#include <vino_people_msgs/PeopleSrv.h>
 
 
 
@@ -39,9 +39,9 @@ int main(int argc, char ** argv)
   }
 
 
-  ros::ServiceClient client = n.serviceClient<people_msgs::PeopleSrv>("/openvino_toolkit/service");
+  ros::ServiceClient client = n.serviceClient<vino_people_msgs::PeopleSrv>("/openvino_toolkit/service");
 
-  people_msgs::PeopleSrv srv;
+  vino_people_msgs::PeopleSrv srv;
 
   if (client.call(srv))
   {

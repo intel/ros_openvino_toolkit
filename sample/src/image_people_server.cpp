@@ -89,7 +89,7 @@ int main(int argc, char** argv)
   slog::info << "service name=" << service_name << slog::endl;
 
   auto node = std::make_shared<vino_service::FrameProcessingServer
-    <people_msgs::PeopleSrv>>(service_name, FLAGS_config);
+    <vino_people_msgs::PeopleSrv>>(service_name, FLAGS_config);
   
   slog::info << "Waiting for service request..." << slog::endl;
   

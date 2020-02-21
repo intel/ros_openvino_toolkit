@@ -90,7 +90,7 @@ int main(int argc, char** argv)
 
 
   auto node = std::make_shared<vino_service::FrameProcessingServer
-    <people_msgs::ObjectsInMasksSrv>>(service_name, FLAGS_config);
+    <vino_people_msgs::ObjectsInMasksSrv>>(service_name, FLAGS_config);
   
   slog::info << "Waiting for seg service request..." << slog::endl;
   ros::spin();

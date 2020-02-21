@@ -29,7 +29,7 @@ find_package(
   std_msgs
   sensor_msgs
   object_msgs
-  people_msgs
+  vino_people_msgs
   image_transport
   cv_bridge
   InferenceEngine

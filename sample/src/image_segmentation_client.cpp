@@ -24,7 +24,7 @@
 #include <ros/ros.h>
 #include "opencv2/opencv.hpp"
 
-#include <people_msgs/ObjectsInMasksSrv.h>
+#include <vino_people_msgs/ObjectsInMasksSrv.h>
 
 
 
@@ -34,10 +34,10 @@ int main(int argc, char ** argv)
 
   ros::NodeHandle n;
 
-  ros::ServiceClient client = n.serviceClient<people_msgs::ObjectsInMasksSrv>("/openvino_toolkit/service");
+  ros::ServiceClient client = n.serviceClient<vino_people_msgs::ObjectsInMasksSrv>("/openvino_toolkit/service");
 
 
-  people_msgs::ObjectsInMasksSrv srv;
+  vino_people_msgs::ObjectsInMasksSrv srv;
 
   if (client.call(srv))
   {

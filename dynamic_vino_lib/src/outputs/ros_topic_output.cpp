@@ -29,17 +29,17 @@ Outputs::RosTopicOutput::RosTopicOutput()
 {
   pub_face_ =
       nh_.advertise<object_msgs::ObjectsInBoxes>("/openvino_toolkit/faces", 16);
-  pub_emotion_ = nh_.advertise<people_msgs::EmotionsStamped>(
+  pub_emotion_ = nh_.advertise<vino_people_msgs::EmotionsStamped>(
       "/openvino_toolkit/emotions", 16);
-  pub_age_gender_ = nh_.advertise<people_msgs::AgeGenderStamped>(
+  pub_age_gender_ = nh_.advertise<vino_people_msgs::AgeGenderStamped>(
       "/openvino_toolkit/age_genders", 16);
-  pub_headpose_ = nh_.advertise<people_msgs::HeadPoseStamped>(
+  pub_headpose_ = nh_.advertise<vino_people_msgs::HeadPoseStamped>(
       "/openvino_toolkit/headposes", 16);
   pub_object_ = nh_.advertise<object_msgs::ObjectsInBoxes>(
       "/openvino_toolkit/detected_objects", 16);
-  pub_person_reid_ = nh_.advertise<people_msgs::ReidentificationStamped>(
+  pub_person_reid_ = nh_.advertise<vino_people_msgs::ReidentificationStamped>(
       "/openvino_toolkit/reidentified_persons", 16);
-  pub_segmented_object_ = nh_.advertise<people_msgs::ObjectsInMasks>(
+  pub_segmented_object_ = nh_.advertise<vino_people_msgs::ObjectsInMasks>(
       "/openvino_toolkit/segmented_obejcts", 16);
 
   emotions_msg_ptr_ = NULL;
@@ -57,8 +57,8 @@ void Outputs::RosTopicOutput::feedFrame(const cv::Mat& frame) {}
 void Outputs::RosTopicOutput::accept(
   const std::vector<dynamic_vino_lib::PersonReidentificationResult> & results)
 {
-  person_reid_msg_ptr_ = std::make_shared<people_msgs::ReidentificationStamped>();
-  people_msgs::Reidentification person;
+  person_reid_msg_ptr_ = std::make_shared<vino_people_msgs::ReidentificationStamped>();
+  vino_people_msgs::Reidentification person;
   for (auto & r : results) {
     // slog::info << ">";
     auto loc = r.getLocation();
@@ -74,8 +74,8 @@ void Outputs::RosTopicOutput::accept(
 void Outputs::RosTopicOutput::accept(
   const std::vector<dynamic_vino_lib::ObjectSegmentationResult> & results)
 {
-  segmented_object_msg_ptr_ = std::make_shared<people_msgs::ObjectsInMasks>();
-  people_msgs::ObjectInMask object;
+  segmented_object_msg_ptr_ = std::make_shared<vino_people_msgs::ObjectsInMasks>();
+  vino_people_msgs::ObjectInMask object;
   for (auto & r : results) {
     // slog::info << ">";
     auto loc = r.getLocation();
@@ -118,9 +118,9 @@ void Outputs::RosTopicOutput::accept(
 void Outputs::RosTopicOutput::accept(
     const std::vector<dynamic_vino_lib::EmotionsResult>& results)
 {
-  emotions_msg_ptr_ = std::make_shared<people_msgs::EmotionsStamped>();
+  emotions_msg_ptr_ = std::make_shared<vino_people_msgs::EmotionsStamped>();
 
-  people_msgs::Emotion emotion;
+  vino_people_msgs::Emotion emotion;
   for (auto r : results)
   {
     auto loc = r.getLocation();
@@ -136,9 +136,9 @@ void Outputs::RosTopicOutput::accept(
 void Outputs::RosTopicOutput::accept(
     const std::vector<dynamic_vino_lib::AgeGenderResult>& results)
 {
-  age_gender_msg_ptr_ = std::make_shared<people_msgs::AgeGenderStamped>();
+  age_gender_msg_ptr_ = std::make_shared<vino_people_msgs::AgeGenderStamped>();
 
-  people_msgs::AgeGender ag;
+  vino_people_msgs::AgeGender ag;
   for (auto r : results)
   {
     auto loc = r.getLocation();
@@ -165,9 +165,9 @@ void Outputs::RosTopicOutput::accept(
 void Outputs::RosTopicOutput::accept(
     const std::vector<dynamic_vino_lib::HeadPoseResult>& results)
 {
-  headpose_msg_ptr_ = std::make_shared<people_msgs::HeadPoseStamped>();
+  headpose_msg_ptr_ = std::make_shared<vino_people_msgs::HeadPoseStamped>();
 
-  people_msgs::HeadPose hp;
+  vino_people_msgs::HeadPose hp;
   for (auto r : results)
   {
     auto loc = r.getLocation();
@@ -205,7 +205,7 @@ void Outputs::RosTopicOutput::handleOutput()
 {
   std_msgs::Header header = getHeader();
   if (person_reid_msg_ptr_ != nullptr) {
-    people_msgs::ReidentificationStamped person_reid_msg;
+    vino_people_msgs::ReidentificationStamped person_reid_msg;
     person_reid_msg.header = header;
     person_reid_msg.reidentified_vector.swap(person_reid_msg_ptr_->reidentified_vector);
     pub_person_reid_.publish(person_reid_msg);
@@ -213,7 +213,7 @@ void Outputs::RosTopicOutput::handleOutput()
   }
   if (segmented_object_msg_ptr_ != nullptr) {
     // slog::info << "publishing faces outputs." << slog::endl;
-    people_msgs::ObjectsInMasks segmented_msg;
+    vino_people_msgs::ObjectsInMasks segmented_msg;
     segmented_msg.header = header;
     segmented_msg.objects_vector.swap(segmented_object_msg_ptr_->objects_vector);
     pub_segmented_object_.publish(segmented_msg);
@@ -230,7 +230,7 @@ void Outputs::RosTopicOutput::handleOutput()
   }
   if (emotions_msg_ptr_ != nullptr)
   {
-    people_msgs::EmotionsStamped emotions_msg;
+    vino_people_msgs::EmotionsStamped emotions_msg;
     emotions_msg.header = header;
     emotions_msg.emotions.swap(emotions_msg_ptr_->emotions);
 
@@ -239,7 +239,7 @@ void Outputs::RosTopicOutput::handleOutput()
   }
   if (age_gender_msg_ptr_ != nullptr)
   {
-    people_msgs::AgeGenderStamped age_gender_msg;
+    vino_people_msgs::AgeGenderStamped age_gender_msg;
     age_gender_msg.header = header;
     age_gender_msg.objects.swap(age_gender_msg_ptr_->objects);
 
@@ -248,7 +248,7 @@ void Outputs::RosTopicOutput::handleOutput()
   }
   if (headpose_msg_ptr_ != nullptr)
   {
-    people_msgs::HeadPoseStamped headpose_msg;
+    vino_people_msgs::HeadPoseStamped headpose_msg;
     headpose_msg.header = header;
     headpose_msg.headposes.swap(headpose_msg_ptr_->headposes);
 

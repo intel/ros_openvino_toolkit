@@ -13,9 +13,9 @@
 // limitations under the License.
 
 #include "dynamic_vino_lib/services/frame_processing_server.h"
-#include <people_msgs/PeopleSrv.h>
-#include <people_msgs/ObjectsInMasksSrv.h>
-#include <people_msgs/ReidentificationSrv.h>
+#include <vino_people_msgs/PeopleSrv.h>
+#include <vino_people_msgs/ObjectsInMasksSrv.h>
+#include <vino_people_msgs/ReidentificationSrv.h>
 #include <object_msgs/DetectObject.h>
 #include <vino_param_lib/param_manager.h>
 #include <ros/ros.h>
@@ -96,7 +96,7 @@ bool FrameProcessingServer<T>::cbService(
 }
 
 template class FrameProcessingServer<object_msgs::DetectObject>;
-template class FrameProcessingServer<people_msgs::PeopleSrv>;
-template class FrameProcessingServer<people_msgs::ReidentificationSrv>;
-template class FrameProcessingServer<people_msgs::ObjectsInMasksSrv>;
+template class FrameProcessingServer<vino_people_msgs::PeopleSrv>;
+template class FrameProcessingServer<vino_people_msgs::ReidentificationSrv>;
+template class FrameProcessingServer<vino_people_msgs::ObjectsInMasksSrv>;
 }  // namespace vino_service
