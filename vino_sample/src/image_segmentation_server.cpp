@@ -57,8 +57,8 @@
 #include "dynamic_vino_lib/slog.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
-#include "sample/utility.hpp"
-#include <vino_people_msgs/ReidentificationSrv.h>
+#include "vino_sample/utility.hpp"
+
 
 
 bool parseAndCheckCommandLine(int argc, char** argv)
@@ -90,9 +90,9 @@ int main(int argc, char** argv)
 
 
   auto node = std::make_shared<vino_service::FrameProcessingServer
-    <vino_people_msgs::ReidentificationSrv>>(service_name, FLAGS_config);
+    <vino_people_msgs::ObjectsInMasksSrv>>(service_name, FLAGS_config);
   
-  slog::info << "Waiting for reid service request..." << slog::endl;
+  slog::info << "Waiting for seg service request..." << slog::endl;
   ros::spin();
   slog::info << "--------------End of Excution--------------" << FLAGS_config << slog::endl;
 

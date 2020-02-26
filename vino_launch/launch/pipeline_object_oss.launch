@@ -2,7 +2,7 @@
   <arg name="param_file" value="$(find vino_launch)/param/pipeline_object_oss.yaml" />
   <arg name="default_rviz" value="$(find vino_launch)/param/rviz/default.rviz" />
 
-  <node pkg="dynamic_vino_sample" type="pipeline_with_params"
+  <node pkg="vino_sample" type="pipeline_with_params"
         name="pipeline_with_params" output="screen">
         <param name="param_file" value="$(arg param_file)" />   
         <remap from ="/openvino_toolkit/detected_objects" to = "/ros_openvino_toolkit/detected_objects" />

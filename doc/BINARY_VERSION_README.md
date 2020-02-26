@@ -204,7 +204,7 @@ sudo ln -s ~/catkin_ws/src/ros_openvino_toolkit /opt/openvino_toolkit/ros_openvi
 	```
   Run example application with an absolute path of an image on another console:
 	```bash
-	rosrun dynamic_vino_sample image_object_client ~/catkin_ws/src/ros_openvino_toolkit/data/images/car.png
+	rosrun vino_sample image_object_client ~/catkin_ws/src/ros_openvino_toolkit/data/images/car.png
 	```
 * run people detection service sample code input from Image  
   Run image processing service:
@@ -213,7 +213,7 @@ sudo ln -s ~/catkin_ws/src/ros_openvino_toolkit /opt/openvino_toolkit/ros_openvi
 	```
   Run example application with an absolute path of an image on another console:
 	```bash
-	rosrun dynamic_vino_sample image_people_client ~/catkin_ws/src/ros_openvino_toolkit/data/images/team.jpg
+	rosrun vino_sample image_people_client ~/catkin_ws/src/ros_openvino_toolkit/data/images/team.jpg
 	```
 ## 6. Known Issues
 * Possible problems

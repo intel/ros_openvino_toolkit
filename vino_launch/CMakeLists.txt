@@ -24,7 +24,7 @@ catkin_package(
   roslaunch
   dynamic_vino_lib
   vino_param_lib
-  dynamic_vino_sample
+  vino_sample
   nodelet
 )
 

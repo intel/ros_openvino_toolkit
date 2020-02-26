@@ -36,7 +36,7 @@ int main(int argc, char ** argv)
   ros::NodeHandle n;
 
   if (argc != 2) {
-    ROS_INFO("Usage: rosrun dynamic_vino_sample image_object_client <image_path>");
+    ROS_INFO("Usage: rosrun vino_sample image_object_client <image_path>");
     //You can find a sample image in /opt/openvino_toolkit/ros_openvino_toolkit/data/images/car.png
     return -1;
   }

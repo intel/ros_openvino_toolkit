@@ -14,7 +14,7 @@
 
 cmake_minimum_required(VERSION 2.8.3)
 
-project(dynamic_vino_sample)
+project(vino_sample)
 
 message(STATUS "Looking for inference engine configuration file at: ${CMAKE_PREFIX_PATH}")
 find_package(InferenceEngine 1.1)

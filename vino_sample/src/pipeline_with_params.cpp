@@ -57,8 +57,14 @@
 #include "dynamic_vino_lib/slog.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
-#include "sample/utility.hpp"
+#include "vino_sample/utility.hpp"
 
+void signalHandler(int signum)
+{
+  slog::warn << "!!!!!!!!!!!Interrupt signal (" << signum << ") received!!!!!!!!!!!!" << slog::endl;
+
+  PipelineManager::getInstance().stopAll();
+}
 
 bool parseAndCheckCommandLine(int argc, char** argv)
 {
@@ -75,26 +81,55 @@ bool parseAndCheckCommandLine(int argc, char** argv)
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "sample_image_people_client");
+
+  ros::init(argc, argv, "sample_with_params"); 
   
-  if (!parseAndCheckCommandLine(argc, argv))  return 0;
+  // register signal SIGINT and signal handler
+  signal(SIGINT, signalHandler);
 
-
+  std::string FLAGS_config;
   ros::param::param<std::string>("~param_file", FLAGS_config, "/param/pipeline_people.yaml");
-
   slog::info << "FLAGS_config=" << FLAGS_config << slog::endl;
 
-  std::string service_name = "/openvino_toolkit/service";
+  try
+  {
+    std::cout << "InferenceEngine: "
+              << InferenceEngine::GetInferenceEngineVersion() << std::endl;
 
-  slog::info << "service name=" << service_name << slog::endl;
+    // ----- Parsing and validation of input args-----------------------
+    if (!parseAndCheckCommandLine(argc, argv))
+    {
+      return 0;
+    }
 
-  auto node = std::make_shared<vino_service::FrameProcessingServer
-    <vino_people_msgs::PeopleSrv>>(service_name, FLAGS_config);
-  
-  slog::info << "Waiting for service request..." << slog::endl;
-  
-  ros::spin();
-  
-  slog::info << "--------------End of Excution--------------" << FLAGS_config << slog::endl;
+    Params::ParamManager::getInstance().parse(FLAGS_config);
+    Params::ParamManager::getInstance().print();
 
+    auto pcommon = Params::ParamManager::getInstance().getCommon();
+    auto pipelines = Params::ParamManager::getInstance().getPipelines();
+    if (pipelines.size() < 1)
+    {
+      throw std::logic_error("Pipeline parameters should be set!");
+    }
+
+    for (auto & p : pipelines) {
+      PipelineManager::getInstance().createPipeline(p);
+    }
+   
+    PipelineManager::getInstance().runAll();
+    PipelineManager::getInstance().joinAll();
+
+    slog::info << "Execution successful" << slog::endl;
+   
+  }
+  catch (const std::exception& error)
+  {
+    slog::err << error.what() << slog::endl;
+    return 1;
+  }
+  catch (...)
+  {
+    slog::err << "Unknown/internal exception happened." << slog::endl;
+    return 1;
+  }
 }

@@ -33,7 +33,7 @@ int main(int argc, char ** argv)
   ros::NodeHandle n;
 
   if (argc != 2) {
-    ROS_INFO( "Usage: rosrun dynamic_vino_sample image_people_client"
+    ROS_INFO( "Usage: rosrun vino_sample image_people_client"
       "<image_path>");
     return -1;
   }

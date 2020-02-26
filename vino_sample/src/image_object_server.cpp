@@ -57,7 +57,7 @@
 #include "dynamic_vino_lib/slog.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
-#include "sample/utility.hpp"
+#include "vino_sample/utility.hpp"
 
 bool parseAndCheckCommandLine(int argc, char** argv)
 {

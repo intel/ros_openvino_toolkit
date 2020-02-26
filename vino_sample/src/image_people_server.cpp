@@ -57,8 +57,7 @@
 #include "dynamic_vino_lib/slog.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
-#include "sample/utility.hpp"
-
+#include "vino_sample/utility.hpp"
 
 
 bool parseAndCheckCommandLine(int argc, char** argv)
@@ -76,24 +75,26 @@ bool parseAndCheckCommandLine(int argc, char** argv)
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "image_segmentation_servier");
+  ros::init(argc, argv, "sample_image_people_client");
   
   if (!parseAndCheckCommandLine(argc, argv))  return 0;
 
-  ros::param::param<std::string>("~param_file", FLAGS_config, "/param/image_segmentation_server.yaml");
+
+  ros::param::param<std::string>("~param_file", FLAGS_config, "/param/pipeline_people.yaml");
 
   slog::info << "FLAGS_config=" << FLAGS_config << slog::endl;
 
   std::string service_name = "/openvino_toolkit/service";
-  slog::info << "service name=" << service_name << slog::endl;
-    // ----- Parsing and validation of input args-----------------------
 
+  slog::info << "service name=" << service_name << slog::endl;
 
   auto node = std::make_shared<vino_service::FrameProcessingServer
-    <vino_people_msgs::ObjectsInMasksSrv>>(service_name, FLAGS_config);
+    <vino_people_msgs::PeopleSrv>>(service_name, FLAGS_config);
   
-  slog::info << "Waiting for seg service request..." << slog::endl;
+  slog::info << "Waiting for service request..." << slog::endl;
+  
   ros::spin();
+  
   slog::info << "--------------End of Excution--------------" << FLAGS_config << slog::endl;
 
 }
