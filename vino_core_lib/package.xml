@@ -14,12 +14,11 @@ limitations under the License.
 -->
 
 <package>
-  <name>vino_sample</name>
+  <name>vino_core_lib</name>
   <version>0.3.0</version>
-  <description>a ROS2 wrapper package for Intel OpenVINO</description>
+  <description>a ROS wrapper package for Intel OpenVINO</description>
   <author email="wei.zhi.liu@intel.com">Weizhi Liu</author>
   <author email="chao1.li@intel.com">Chao Li</author>
-  <author email="hongkun.chen@intel.com">Hongkun Chen</author>
   <maintainer email="wei.zhi.liu@intel.com">Weizhi Liu</maintainer>
   <maintainer email="chao1.li@intel.com">Chao Li</maintainer>
   <license>Apache License 2.0</license>
@@ -29,19 +28,20 @@ limitations under the License.
   <build_depend>roscpp</build_depend>
   <build_depend>roslint</build_depend>
   <build_depend>std_msgs</build_depend>
-  <build_depend>vino_core_lib</build_depend>
-  <build_depend>vino_param_lib</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>image_transport</build_depend>
   <build_depend>cv_bridge</build_depend>
   <build_depend>object_msgs</build_depend>
   <build_depend>vino_people_msgs</build_depend>
- 
+  <build_depend>vino_param_lib</build_depend>
+
   <run_depend>roscpp</run_depend>
   <run_depend>roslint</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>sensor_msgs</run_depend>
+  <run_depend>image_transport</run_depend>
   <run_depend>cv_bridge</run_depend>
-  <run_depend>vino_core_lib</run_depend>
-  <run_depend>vino_param_lib</run_depend>
   <run_depend>object_msgs</run_depend>
   <run_depend>vino_people_msgs</run_depend>
+  <run_depend>vino_param_lib</run_depend>
 </package>

@@ -30,7 +30,7 @@ find_package(
   object_msgs
   vino_people_msgs
   vino_param_lib
-  dynamic_vino_lib
+  vino_core_lib
 )
 
 find_package(
@@ -47,7 +47,7 @@ catkin_package(
   roscpp
   object_msgs
   vino_param_lib
-  dynamic_vino_lib
+  vino_core_lib
 )
 
 if (CMAKE_BUILD_TYPE EQUAL "RELEASE")
@@ -66,7 +66,7 @@ include_directories (
   ${InferenceEngine_INCLUDE_DIRS}/../build/samples/thirdparty/gflags/include
   ${InferenceEngine_INCLUDE_DIRS}/../samples
   ${InferenceEngine_DIR}/../src
-  ${dynamic_vino_lib_INCLUDE_DIRS}
+  ${vino_core_lib_INCLUDE_DIRS}
   ${vino_param_lib_INCLUDE_DIRS}
 )
 
@@ -104,7 +104,7 @@ add_executable(pipeline_with_params
 add_dependencies(pipeline_with_params
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
-  ${dynamic_vino_lib_TARGETS}
+  ${vino_core_lib_TARGETS}
 )
 
 target_link_libraries(pipeline_with_params
@@ -123,7 +123,7 @@ add_executable(image_people_server
 add_dependencies(image_people_server
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
-  ${dynamic_vino_lib_TARGETS}
+  ${vino_core_lib_TARGETS}
 )
 
 target_link_libraries(image_people_server
@@ -143,7 +143,7 @@ add_executable(image_people_client
 add_dependencies(image_people_client
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
-  ${dynamic_vino_lib_TARGETS}
+  ${vino_core_lib_TARGETS}
 )
 
 target_link_libraries(image_people_client
@@ -162,7 +162,7 @@ add_executable(image_object_server
 add_dependencies(image_object_server
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
-  ${dynamic_vino_lib_TARGETS}
+  ${vino_core_lib_TARGETS}
 )
 
 target_link_libraries(image_object_server
@@ -182,7 +182,7 @@ add_executable(image_object_client
 add_dependencies(image_object_client
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
-  ${dynamic_vino_lib_TARGETS}
+  ${vino_core_lib_TARGETS}
 )
 
 target_link_libraries(image_object_client
@@ -202,7 +202,7 @@ add_executable(image_segmentation_client
 add_dependencies(image_segmentation_client
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
-  ${dynamic_vino_lib_TARGETS}
+  ${vino_core_lib_TARGETS}
 )
 
 target_link_libraries(image_segmentation_client
@@ -221,7 +221,7 @@ add_executable(image_segmentation_server
 add_dependencies(image_segmentation_server
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
-  ${dynamic_vino_lib_TARGETS}
+  ${vino_core_lib_TARGETS}
 )
 
 target_link_libraries(image_segmentation_server
@@ -241,7 +241,7 @@ add_executable(image_reidentification_client
 add_dependencies(image_reidentification_client
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
-  ${dynamic_vino_lib_TARGETS}
+  ${vino_core_lib_TARGETS}
 )
 
 target_link_libraries(image_reidentification_client
@@ -260,7 +260,7 @@ add_executable(image_reidentification_server
 add_dependencies(image_reidentification_server
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
-  ${dynamic_vino_lib_TARGETS}
+  ${vino_core_lib_TARGETS}
 )
 
 target_link_libraries(image_reidentification_server

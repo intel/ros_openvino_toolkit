@@ -22,7 +22,7 @@ catkin_package(
   LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS
   roslaunch
-  dynamic_vino_lib
+  vino_core_lib
   vino_param_lib
   vino_sample
   nodelet
