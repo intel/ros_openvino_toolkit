@@ -126,23 +126,20 @@ See below pictures for the demo result snapshots.
 	* Download OpenVINO toolkit by following the [guide](https://software.intel.com/en-us/openvino-toolkit/choose-download)</br>
 	```bash
 	cd ~/Downloads
-	wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/15078/l_openvino_toolkit_p_2018.5.455.tgz
+	wget -c http://registrationcenter-download.intel.com/akdlm/irc_nas/16057/l_openvino_toolkit_p_2019.3.376_online.tgz
 	```
 	* Install OpenVINO toolkit by following the [guide](https://software.intel.com/en-us/articles/OpenVINO-Install-Linux) </br>
 	```bash
 	cd ~/Downloads
-	tar -xvf l_openvino_toolkit_p_2018.5.455.tgz
-	cd l_openvino_toolkit_p_2018.5.455
+	tar -xvf l_openvino_toolkit_p_2019.3.376.tgz
+	cd l_openvino_toolkit_p_2019.3.376
 	# root is required instead of sudo
-	sudo -E ./install_cv_sdk_dependencies.sh
+	sudo -E ./install_openvino_dependencies.sh
 	sudo ./install_GUI.sh
 	# build sample code under OpenVINO toolkit
-	source /opt/intel/computer_vision_sdk/bin/setupvars.sh
- 	cd /opt/intel/computer_vision_sdk/deployment_tools/inference_engine/samples/
- 	mkdir build
-	cd build
- 	cmake ..
- 	make
+ 	cd /opt/intel/openvino/deployment_tools/inference_engine/samples/
+ 	./build_samples.sh
+	sudo ln -s ~/inference_engine_samples_build  /opt/intel/openvino/deployment_tools/inference_engine/samples/build
 	```
 	* Configure the Neural Compute Stick USB Driver
 	```bash
@@ -159,38 +156,109 @@ See below pictures for the demo result snapshots.
 	rm 97-usbboot.rules
 	```
 	
-2. Configure the environment (you can write the configuration to your ~/.basrch file)</br>
+## Enable ROS ENVIRONMENT </br>
+
+- For Ubuntu18.04, install ROS Melodic Desktop-Full [(guide)](http://wiki.ros.org/melodic/Installation/Ubuntu)</br>
+
+	```bash
+	sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+	curl -sSL 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC1CF6E31E6BADE8868B172B4F42ED6FBAB17C654' | sudo apt-key add -
+	sudo apt update
+	sudo apt install ros-melodic-desktop-full
+	apt search ros-melodic
+	sudo rosdep init
+	rosdep update
+	echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
+	source ~/.bashrc
+	source /opt/ros/melodic/setup.bash
+	sudo apt install python-rosinstall python-rosinstall-generator python-wstool build-essential
+    ```
+## Dependencies Installation </br>
+1.	Install OPENCV3</br>
+	```bash
+	mkdir -p ~/code && cd ~/code
+	git clone https://github.com/opencv/opencv.git
+	git clone https://github.com/opencv/opencv_contrib.git
+
+	cd ~/code/opencv
+	git checkout 3.4.2
+	cd ~/code/opencv_contrib
+	git checkout 3.4.2
+
+	cd ~/code/opencv
+	mkdir build && cd build
+	cmake -DOPENCV_EXTRA_MODULES_PATH=$HOME/code/opencv_contrib/modules -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_opencv_cnn_3dobj=OFF ..
+	make -j4
+	sudo make install
+	```
+2.	Install Intel® RealSense™ SDK 2.0 [(tag v2.17.1)](https://github.com/IntelRealSense/librealsense/tree/v2.17.1)<br>
+	* [Install from source code](https://github.com/IntelRealSense/librealsense/blob/v2.17.1/doc/installation.md)(Recommended)<br>
+	* [Install from package](https://github.com/IntelRealSense/librealsense/blob/v2.17.1/doc/distribution_linux.md)<br>
+
+
+3.	Configure the environment (you can write the configuration to your ~/.basrch file)</br>
 	**Note**: If you used root privileges to install the OpenVINO binary package, it installs the Intel Distribution of OpenVINO toolkit in this directory: */opt/intel/openvino_<version>/*
 	```bash
-	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/computer_vision_sdk/deployment_tools/inference_engine/samples/build/intel64/Release/lib
-	source /opt/intel/computer_vision_sdk/bin/setupvars.sh
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/openvino/deployment_tools/inference_engine/samples/build/intel64/Release/lib
+	source /opt/intel/openvino/bin/setupvars.sh
 	```
 
-## Dependencies Installation
-One-step installation scripts are provided for the dependencies' installation. Please see [the guide](https://github.com/intel/ros_openvino_toolkit/blob/master/doc/OPEN_SOURCE_CODE_README.md) for details.
+## Building ROS and Installation </br>
 
+1.	download the source code</br>
+	```bash
+	mkdir -p ~/catkin_ws/src
+	cd ~/catkin_ws/src
+	git clone https://github.com/intel/ros_openvino_toolkit
+	git clone https://github.com/intel/object_msgs
+	git clone https://github.com/ros-perception/vision_opencv
+	git clone https://github.com/intel-ros/realsense
+	cd realsense
+	git checkout 2.1.3
+	```
+2.	set ENV InferenceEngine_DIR, CPU_EXTENSION_LIB and GFLAGS_LIB</br>
+	```bash
+ 	export InferenceEngine_DIR=~/inference_engine_samples_build/
+	export CPU_EXTENSION_LIB=~/inference_engine_samples_build/intel64/Release/lib/libcpu_extension.so
+ 	export GFLAGS_LIB=~/inference_engine_samples_build/intel64/Release/lib/libgflags_nothreads.a
+	```
+
+3.	build the code</br>
+	```bash
+	cd /opt/intel/openvino/deployment_tools/model_optimizer/install_prerequisites
+	sudo -E ./install_prerequisites.sh
+	cd ~/catkin_ws
+	source /opt/ros/melodic/setup.bash
+	catkin_make
+	source devel/setup.bash
+	sudo mkdir -p /opt/openvino_toolkit
+	sudo ln -s ~/catkin_ws/src/ros_openvino_toolkit /opt/openvino_toolkit/ros_openvino_toolkit
+	```
 ## Launching
 * Preparation
 	* download and convert a trained model to produce an optimized Intermediate Representation (IR) of the model 
 		```bash
 		#object segmentation model
-		cd /opt/openvino_toolkit/dldt/model-optimizer/install_prerequisites
-		sudo ./install_prerequisites.sh
 		mkdir -p ~/Downloads/models
 		cd ~/Downloads/models
 		wget http://download.tensorflow.org/models/object_detection/mask_rcnn_inception_v2_coco_2018_01_28.tar.gz
 		tar -zxvf mask_rcnn_inception_v2_coco_2018_01_28.tar.gz
 		cd mask_rcnn_inception_v2_coco_2018_01_28
-		python3 /opt/openvino_toolkit/dldt/model-optimizer/mo_tf.py --input_model frozen_inference_graph.pb --tensorflow_use_custom_operations_config /opt/openvino_toolkit/dldt/model-optimizer/extensions/front/tf/mask_rcnn_support.json --tensorflow_object_detection_api_pipeline_config pipeline.config --reverse_input_channels --output_dir ./output/
+		sudo cp /opt/intel/openvino/deployment_tools/model_optimizer/extensions/front/tf/mask_rcnn_support.json .
+		python3 /opt/intel/openvino/deployment_tools/model_optimizer/mo_tf.py --input_model frozen_inference_graph.pb --tensorflow_use_custom_operations_config mask_rcnn_support.json --tensorflow_object_detection_api_pipeline_config pipeline.config --reverse_input_channels --output_dir ./output/
 		sudo mkdir -p /opt/models
 		sudo ln -s ~/Downloads/models/mask_rcnn_inception_v2_coco_2018_01_28 /opt/models/
 		#object detection model
-		cd /opt/openvino_toolkit/open_model_zoo/model_downloader
+		cd ~/code
+		git clone https://github.com/opencv/open_model_zoo.git
+		git checkout 2018_R5
+		sudo ln -s ~/code/open_model_zoo /opt/openvino_toolkit/open_model_zoo
+		cd /opt/openvino_toolkit/open_model_zoo/model_downloader 
 		python3 ./downloader.py --name mobilenet-ssd
  		#FP32 precision model
- 		sudo python3 /opt/openvino_toolkit/dldt/model-optimizer/mo.py --input_model /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel --output_dir /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP32 --mean_values [127.5,127.5,127.5] --scale_values [127.5]
+ 		sudo python3 /opt/intel/openvino/deployment_tools/model_optimizer/mo.py --input_model /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel --output_dir /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP32 --mean_values [127.5,127.5,127.5] --scale_values [127.5]
  		#FP16 precision model
- 		sudo python3 /opt/openvino_toolkit/dldt/model-optimizer/mo.py --input_model /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel --output_dir /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP16 --data_type=FP16 --mean_values [127.5,127.5,127.5] --scale_values [127.5]
+ 		sudo python3 /opt/intel/openvino/deployment_tools/model_optimizer/mo.py --input_model /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/mobilenet-ssd.caffemodel --output_dir /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP16 --data_type=FP16 --mean_values [127.5,127.5,127.5] --scale_values [127.5]
 	* download the optimized Intermediate Representation (IR) of model (excute _once_)<br>
 		```bash
 		cd /opt/openvino_toolkit/open_model_zoo/model_downloader
@@ -209,10 +277,7 @@ One-step installation scripts are provided for the dependencies' installation. P
 		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP32
 		sudo cp /opt/openvino_toolkit/ros_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels /opt/openvino_toolkit/open_model_zoo/model_downloader/object_detection/common/mobilenet-ssd/caffe/output/FP16
 		```
-	* set ENV LD_LIBRARY_PATH<br>
-		```bash
-		export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/openvino_toolkit/dldt/inference-engine/bin/intel64/Release/lib
-		```
+
 * run face detection sample code input from StandardCamera.
 	```bash
 	roslaunch vino_launch pipeline_people_oss.launch
