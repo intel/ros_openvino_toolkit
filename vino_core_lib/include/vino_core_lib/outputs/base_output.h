@@ -33,6 +33,7 @@
 #include "vino_core_lib/inferences/object_detection.h"
 #include "vino_core_lib/inferences/object_segmentation.h"
 #include "vino_core_lib/inferences/person_reidentification.h"
+#include "vino_core_lib/inferences/human_pose_estimation.h"
 #include "vino_core_lib/services/frame_processing_server.h"
 #include "opencv2/opencv.hpp"
 
@@ -95,6 +96,12 @@ class BaseOutput
   * @brief Generate output content according to the person reidentification result.
   */
   virtual void accept(const std::vector<vino_core_lib::PersonReidentificationResult> &)
+  {
+  }
+  /**
+  * @brief Generate output content according to the human pose estimation result.
+  */
+  virtual void accept(const std::vector<vino_core_lib::HumanPoseResult> &)
   {
   }
   /**
