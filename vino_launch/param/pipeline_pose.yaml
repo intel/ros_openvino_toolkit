@@ -1,0 +1,44 @@
+Pipelines:
+- name: people
+  inputs: [RealSenseCamera]
+  infers:
+    - name: HumanPoseEstimation
+      model: /opt/openvino_toolkit/open_model_zoo/tools/downloader/intel/human-pose-estimation-0001/FP16/human-pose-estimation-0001.xml
+      engine: MYRIAD
+      label: to/be/set/xxx.labels
+      batch: 1
+    # - name: FaceDetection
+    #   model: /opt/openvino_toolkit/open_model_zoo/tools/downloader/intel/face-detection-adas-0001/FP16/face-detection-adas-0001.xml
+    #   engine: MYRIAD
+    #   label: to/be/set/xxx.labels
+    #   batch: 1
+    # - name: AgeGenderRecognition
+    #   model: /opt/openvino_toolkit/open_model_zoo/tools/downloader/intel/age-gender-recognition-retail-0013/FP16/age-gender-recognition-retail-0013.xml 
+    #   engine: MYRIAD
+    #   label: to/be/set/xxx.labels
+    #   batch: 16
+    # - name: EmotionRecognition
+    #   model: /opt/openvino_toolkit/open_model_zoo/tools/downloader/intel/emotions-recognition-retail-0003/FP16/emotions-recognition-retail-0003.xml
+    #   engine: MYRIAD
+    #   label: to/be/set/xxx.labels
+    #   batch: 16
+    # - name: HeadPoseEstimation
+    #   model: /opt/openvino_toolkit/open_model_zoo/tools/downloader/intel/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001.xml
+    #   engine: MYRIAD
+    #   label: to/be/set/xxx.labels
+    #   batch: 16
+  outputs: [ImageWindow, RosTopic]
+  confidence_threshold: 0.2
+  connects:
+    - left: RealSenseCamera
+      right: [HumanPoseEstimation]
+    - left: HumanPoseEstimation
+      right: [ImageWindow, RosTopic]
+    # - left: AgeGenderRecognition
+    #   right: [ImageWindow, RosTopic]
+    # - left: EmotionRecognition
+    #   right: [ImageWindow, RosTopic]
+    # - left: HeadPoseEstimation
+    #   right: [ImageWindow, RosTopic]
+
+OpenvinoCommon:

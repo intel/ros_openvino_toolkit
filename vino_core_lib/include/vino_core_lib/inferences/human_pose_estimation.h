@@ -28,6 +28,10 @@ class HumanPoseResult : public Result
 {
  public:
   explicit HumanPoseResult(const cv::Rect& location);
+  HumanPoseResult(
+    const cv::Rect& location,
+    const std::vector<cv::Point2f>& keypoints, // = std::vector<cv::Point2f>(),
+    const float& score); // = 0);
   
   // Following similar structure of vino_core_lib/inferences/object_detection.h
   // and human_pose_estimation_demo/src/human_pose_estimator.h
@@ -38,7 +42,7 @@ class HumanPoseResult : public Result
    */
   std::vector<cv::Point2f> getKeypoints() const
   {
-    return keypoints_;
+    return keypoints;
   }
 
   /**
@@ -47,11 +51,11 @@ class HumanPoseResult : public Result
    */
   float getScore() const
   {
-    return score_;
+    return score;
   }
 
-  std::vector<cv::Point2f> keypoints_;
-  float score_ = -1;
+  std::vector<cv::Point2f> keypoints;
+  float score = -1;
 };
 
 
@@ -115,8 +119,54 @@ class HumanPoseEstimation : public BaseInference
       const std::shared_ptr<Outputs::BaseOutput>& output) override;
 
  private:
+  /**
+   * @brief 
+   * 
+   * Copied from: https://github.com/opencv/open_model_zoo/blob/master/demos/human_pose_estimation_demo/src/human_pose_estimator.cpp
+   * 
+   * @param heatMapsData 
+   * @param heatMapOffset 
+   * @param nHeatMaps 
+   * @param pafsData 
+   * @param pafOffset 
+   * @param nPafs 
+   * @param featureMapWidth 
+   * @param featureMapHeight 
+   * @param imageSize 
+   * @return std::vector<Result> 
+   */
+  std::vector<Result> postprocess(
+            const float* heatMapsData, const int heatMapOffset, const int nHeatMaps,
+            const float* pafsData, const int pafOffset, const int nPafs,
+            const int featureMapWidth, const int featureMapHeight,
+            const cv::Size& imageSize) const;
+  
+  void resizeFeatureMaps(std::vector<cv::Mat>& featureMaps) const;
+
+  std::vector<Result> extractPoses(
+        const std::vector<cv::Mat>& heatMaps,
+        const std::vector<cv::Mat>& pafs) const;
+
+  void correctCoordinates(std::vector<Result>& poses,
+                          const cv::Size& featureMapsSize,
+                          const cv::Size& imageSize) const;
+
   std::shared_ptr<Models::HumanPoseEstimationModel> valid_model_;
   std::vector<Result> results_;
+  int width_ = 0;
+  int height_ = 0;
+
+  // TODO add doc
+  int upsampleRatio_; // = 4;
+  float minPeaksDistance_; // = 3.0f;
+  const size_t keypointsNumber_ = 18;
+  float midPointsScoreThreshold_; // = 0.05f;
+  float foundMidPointsRatioThreshold_; // = 0.8f;
+  int minJointsNumber_; // = 3;
+  float minSubsetScore_; // = 0.2f;
+  int stride_; // = 8;
+  cv::Vec4i pad_;
+  cv::Size imageSize_; // = image.size();
 };
 
 } //  namespace vino_core_lib

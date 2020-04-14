@@ -148,6 +148,7 @@ add_library(${PROJECT_NAME} SHARED
   src/inferences/object_segmentation.cpp
   src/inferences/person_reidentification.cpp
   src/inferences/human_pose_estimation.cpp
+  src/inferences/peak.cpp
   src/inputs/realsense_camera.cpp
   src/inputs/realsense_camera_topic.cpp
   src/inputs/standard_camera.cpp

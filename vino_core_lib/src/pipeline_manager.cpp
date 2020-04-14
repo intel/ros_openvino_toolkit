@@ -192,14 +192,16 @@ PipelineManager::parseInference(
 
     } else if (infer.name == kInferTpye_ObjectDetection) {
       object = createObjectDetection(infer);
-
     }
     else if (infer.name == kInferTpye_ObjectSegmentation) {
       object = createObjectSegmentation(infer);
     }
     else if (infer.name == kInferTpye_PersonReidentification) {
       object = createPersonReidentification(infer);
-    } 
+    }
+    else if (infer.name == kInferTpye_HumanPoseEstimation) {
+      object = createHumanPoseEstimation(infer);
+    }
     else {
       slog::err << "Invalid inference name: " << infer.name << slog::endl;
     }
@@ -323,6 +325,25 @@ PipelineManager::createPersonReidentification(
   reidentification_inference_ptr->loadEngine(person_reidentification_engine);
 
   return reidentification_inference_ptr;
+}
+
+std::shared_ptr<vino_core_lib::BaseInference>
+PipelineManager::createHumanPoseEstimation(
+  const Params::ParamManager::InferenceParams & infer)
+{
+  // Following createObjectDetection and createFaceDetection
+  // 1 input, 2 outputs, 1 batch
+  auto human_estimation_model =
+    std::make_shared<Models::HumanPoseEstimationModel>(infer.model, 1, 2, 1);
+  human_estimation_model->modelInit();
+  auto pose_engine = std::make_shared<Engines::Engine>(
+    plugins_for_devices_[infer.engine], human_estimation_model);
+  auto pose_inference_ptr =
+    std::make_shared<vino_core_lib::HumanPoseEstimation>(); //(infer.confidence_threshold);
+  pose_inference_ptr->loadNetwork(human_estimation_model);
+  pose_inference_ptr->loadEngine(pose_engine);
+
+  return pose_inference_ptr;
 }
 
 void PipelineManager::threadPipeline(const char* name) {
