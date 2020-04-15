@@ -36,6 +36,8 @@
 #include <vino_people_msgs/ObjectsInMasks.h>
 #include <vino_people_msgs/Reidentification.h>
 #include <vino_people_msgs/ReidentificationStamped.h>
+#include <vino_people_msgs/HumanPose.h>
+#include <vino_people_msgs/HumanPoseStamped.h>
 #include <ros/ros.h>
 
 #include <memory>
@@ -109,6 +111,13 @@ class RosTopicOutput : public BaseOutput
    */
   void accept(const std::vector<vino_core_lib::ObjectDetectionResult>&) override;
 
+  /**
+   * @brief Generate ros topic infomation according to
+   * the human pose estimation result.
+   * @param[in] An human pose estimation result objetc.
+   */
+  void accept(const std::vector<vino_core_lib::HumanPoseResult>&) override;
+
 
  private:
   std_msgs::Header getHeader();
@@ -130,6 +139,8 @@ class RosTopicOutput : public BaseOutput
   std::shared_ptr<vino_people_msgs::ReidentificationStamped> person_reid_msg_ptr_;
   ros::Publisher pub_segmented_object_;
   std::shared_ptr<vino_people_msgs::ObjectsInMasks> segmented_object_msg_ptr_;
+  ros::Publisher pub_human_pose_;
+  std::shared_ptr<vino_people_msgs::HumanPoseStamped> human_pose_msg_ptr_;
 
 };
 }  // namespace Outputs

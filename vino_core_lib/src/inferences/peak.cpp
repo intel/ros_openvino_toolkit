@@ -309,7 +309,7 @@ std::vector<Result> groupPeaksToPoses(const std::vector<std::vector<Peak> >& all
             continue;
         }
         int position = -1;
-        Result pose(cv::Rect(), // TODO get the correct Rect
+        Result pose(cv::Rect(), // TODO get the correct Rect, which can be the max/min x y points
             std::vector<cv::Point2f>(keypointsNumber, cv::Point2f(-1.0f, -1.0f)),
             subsetI.score * std::max(0, subsetI.nJoints - 1));
         for (const auto& peakIdx : subsetI.peaksIndices) {

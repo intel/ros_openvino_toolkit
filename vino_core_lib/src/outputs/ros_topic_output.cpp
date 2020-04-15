@@ -24,6 +24,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <geometry_msgs/Point.h>
 
 Outputs::RosTopicOutput::RosTopicOutput()
 {
@@ -41,6 +42,8 @@ Outputs::RosTopicOutput::RosTopicOutput()
       "/openvino_toolkit/reidentified_persons", 16);
   pub_segmented_object_ = nh_.advertise<vino_people_msgs::ObjectsInMasks>(
       "/openvino_toolkit/segmented_obejcts", 16);
+  pub_human_pose_ = nh_.advertise<vino_people_msgs::HumanPoseStamped>(
+      "/openvino_toolkit/human_poses", 16);
 
   emotions_msg_ptr_ = NULL;
   faces_msg_ptr_ = NULL;
@@ -49,6 +52,7 @@ Outputs::RosTopicOutput::RosTopicOutput()
   object_msg_ptr_ = NULL;
   person_reid_msg_ptr_ = NULL;
   segmented_object_msg_ptr_ = NULL;
+  human_pose_msg_ptr_ = NULL;
 }
 
 void Outputs::RosTopicOutput::feedFrame(const cv::Mat& frame) {}
@@ -201,6 +205,34 @@ void Outputs::RosTopicOutput::accept(
   }
 }
 
+void Outputs::RosTopicOutput::accept(
+    const std::vector<vino_core_lib::HumanPoseResult>& results)
+{
+  human_pose_msg_ptr_ = std::make_shared<vino_people_msgs::HumanPoseStamped>();
+
+  vino_people_msgs::HumanPose hp;
+  std::vector<geometry_msgs::Point> points;
+  points.reserve(18); // TODO read this from the inference engine.
+  for (auto r : results)
+  {
+    auto loc = r.getLocation();
+    hp.roi.x_offset = loc.x;
+    hp.roi.y_offset = loc.y;
+    hp.roi.width = loc.width;
+    hp.roi.height = loc.height;
+    hp.score = r.getScore();
+    auto p = geometry_msgs::Point();
+    for (auto kp : r.keypoints)
+    {
+      p.x = kp.x;
+      p.y = kp.y;
+      p.z = -1;
+      hp.keypoints.push_back(p);
+    }
+    human_pose_msg_ptr_->humanposes.push_back(hp);
+  }
+}
+
 void Outputs::RosTopicOutput::handleOutput()
 {
   std_msgs::Header header = getHeader();
@@ -264,7 +296,7 @@ void Outputs::RosTopicOutput::handleOutput()
     pub_object_.publish(object_msg);
     object_msg_ptr_ = nullptr;
   }
-  if (object_msg_ptr_ != nullptr)
+  if (object_msg_ptr_ != nullptr) // TODO: verify and remove duplicate code.
   {
     object_msgs::ObjectsInBoxes object_msg;
     object_msg.header = header;
@@ -272,6 +304,15 @@ void Outputs::RosTopicOutput::handleOutput()
 
     pub_object_.publish(object_msg);
     object_msg_ptr_ = nullptr;
+  }
+  if (human_pose_msg_ptr_ != nullptr)
+  {
+    vino_people_msgs::HumanPoseStamped human_pose_msg;
+    human_pose_msg.header = header;
+    human_pose_msg.humanposes.swap(human_pose_msg_ptr_->humanposes);
+
+    pub_human_pose_.publish(human_pose_msg);
+    human_pose_msg_ptr_ = nullptr;
   }
 }
 
