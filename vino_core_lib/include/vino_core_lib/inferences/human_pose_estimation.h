@@ -150,6 +150,8 @@ class HumanPoseEstimation : public BaseInference
   void correctCoordinates(std::vector<Result>& poses,
                           const cv::Size& featureMapsSize,
                           const cv::Size& imageSize) const;
+  
+  void correctROI(std::vector<Result>& poses) const;
 
   std::shared_ptr<Models::HumanPoseEstimationModel> valid_model_;
   std::vector<Result> results_;

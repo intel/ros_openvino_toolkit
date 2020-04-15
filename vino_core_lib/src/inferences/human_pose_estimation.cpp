@@ -176,6 +176,7 @@ std::vector<Result> vino_core_lib::HumanPoseEstimation::postprocess(
 
     std::vector<Result> poses = extractPoses(heatMaps, pafs);
     correctCoordinates(poses, heatMaps[0].size(), imageSize);
+    correctROI(poses);
     return poses;
 }
 
@@ -232,3 +233,29 @@ void vino_core_lib::HumanPoseEstimation::correctCoordinates(std::vector<Result>&
     }
 }
 
+void vino_core_lib::HumanPoseEstimation::correctROI(
+  std::vector<Result>& poses) const 
+{
+  for (auto& pose : poses)
+  {
+    int xMin = width_;
+    int xMax = 0;
+    int yMin = height_;
+    int yMax = 0;
+    for (auto& kp: pose.keypoints)
+    {
+      if (kp.x < 0) continue;
+
+      int x = static_cast<int>(kp.x);
+      int y = static_cast<int>(kp.y);
+
+      if (x > xMax) xMax = x;
+      else if (x < xMin) xMin = x;
+      
+      if (y > yMax) yMax = y;
+      else if (y < yMin) yMin = y;
+    }
+    cv::Rect newLocation = cv::Rect(xMin, yMin, xMax - xMin, yMax - yMin);
+    pose.setLocation(newLocation);
+  }
+}

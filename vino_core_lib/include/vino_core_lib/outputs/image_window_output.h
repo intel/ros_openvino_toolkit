@@ -95,6 +95,14 @@ class ImageWindowOutput : public BaseOutput
    * @param[in] An object segmentation result objetc.
    */
   void accept(const std::vector<vino_core_lib::PersonReidentificationResult> &) override;
+
+  /**
+   * @brief Generate image window output content according to
+   * the human pose estimation result.
+   * @param[in] An human pose estimation result objetc.
+   */
+  void accept(const std::vector<vino_core_lib::HumanPoseResult> &) override;
+
  /**
    * @brief Merge mask for image window ouput
    * the object segmentation result.
@@ -128,6 +136,7 @@ class ImageWindowOutput : public BaseOutput
     cv::Point hp_y;   // for headpose, end point of yAxis
     cv::Point hp_zs;  // for headpose, start point of zAxis
     cv::Point hp_ze;  // for headpose, end point of zAxis
+    std::vector<cv::Point2f> kp; // for humanpose, keypoints
   };
 
   std::vector<OutputData> outputs_;

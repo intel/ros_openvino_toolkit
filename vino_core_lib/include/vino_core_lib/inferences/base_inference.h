@@ -85,6 +85,7 @@ class Result
   friend class BaseInference;
   explicit Result(const cv::Rect& location);
   inline const cv::Rect getLocation() const { return location_; }
+  inline void setLocation(const cv::Rect& location) { location_ = location; }
 
  private:
   cv::Rect location_;

@@ -315,6 +315,22 @@ void Outputs::ImageWindowOutput::accept(
   }
 }
 
+void Outputs::ImageWindowOutput::accept(
+  const std::vector<vino_core_lib::HumanPoseResult> & results)
+{
+  OutputData output;
+  output.scalar = cv::Scalar(255, 0, 0);
+  for (unsigned i = 0; i < results.size(); i++) {
+    cv::Rect result_rect = results[i].getLocation();
+    auto score = std::to_string(results[i].getScore());
+
+    output.rect = result_rect;
+    output.desc = "Pose " + std::to_string(i) + " [" + score.substr(0, score.find(".") + 2) + "]";
+    output.kp = results[i].getKeypoints();
+    outputs_.push_back(output);
+  }
+}
+
 void Outputs::ImageWindowOutput::decorateFrame()
 {
   if (getPipeline()->getParameters()->isGetFps())
@@ -336,6 +352,12 @@ void Outputs::ImageWindowOutput::decorateFrame()
     cv::line(frame_, o.hp_cp, o.hp_y, cv::Scalar(0, 255, 0), 2);
     cv::line(frame_, o.hp_zs, o.hp_ze, cv::Scalar(255, 0, 0), 2);
     cv::circle(frame_, o.hp_ze, 3, cv::Scalar(255, 0, 0), 2);
+
+    for (auto kp : o.kp)
+    {
+      if (kp.x >= 0)
+        cv::circle(frame_, kp, 3, cv::Scalar(255, 0, 0), 1);
+    }
   }
 
   outputs_.clear();
