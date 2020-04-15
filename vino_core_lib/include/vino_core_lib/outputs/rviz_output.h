@@ -92,6 +92,15 @@ public:
    * @param[in] An object segmentation result objetc.
    */
   void accept(const std::vector<vino_core_lib::PersonReidentificationResult> &) override;
+
+  /**
+   * @brief Generate  rviz output content according to
+   * the human pose estimation result.
+   * @param[in] An object segmentation result objetc.
+   */
+  void accept(const std::vector<vino_core_lib::HumanPoseResult> &) override;
+
+ // TODO remove comment.
  /**
    * @brief Merge mask for image window ouput
    * the object segmentation result.

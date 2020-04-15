@@ -27,13 +27,13 @@ Pipelines:
     #   engine: MYRIAD
     #   label: to/be/set/xxx.labels
     #   batch: 16
-  outputs: [ImageWindow, RosTopic]
+  outputs: [ImageWindow, RosTopic, RViz]
   confidence_threshold: 0.2
   connects:
     - left: RealSenseCamera
       right: [HumanPoseEstimation]
     - left: HumanPoseEstimation
-      right: [ImageWindow, RosTopic]
+      right: [ImageWindow, RosTopic, RViz]
     # - left: AgeGenderRecognition
     #   right: [ImageWindow, RosTopic]
     # - left: EmotionRecognition

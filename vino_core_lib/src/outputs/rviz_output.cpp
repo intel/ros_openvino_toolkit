@@ -71,6 +71,10 @@ void Outputs::RvizOutput::accept(const std::vector<vino_core_lib::PersonReidenti
 {
   image_window_output_->accept(results);
 }
+void Outputs::RvizOutput::accept(const std::vector<vino_core_lib::HumanPoseResult> & results)
+{
+  image_window_output_->accept(results);
+}
  
 
 void Outputs::RvizOutput::handleOutput()
