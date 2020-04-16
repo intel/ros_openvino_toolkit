@@ -1,0 +1,19 @@
+Pipelines:
+- name: people
+  inputs: [Image]
+  infers:
+    - name: HumanPoseEstimation
+      model: /opt/openvino_toolkit/open_model_zoo/tools/downloader/intel/human-pose-estimation-0001/FP16/human-pose-estimation-0001.xml
+      engine: MYRIAD
+      label: to/be/set/xxx.labels
+      batch: 1
+  outputs: [RosService]
+  confidence_threshold: 0.2
+  connects:
+    - left: Image
+      right: [HumanPoseEstimation]
+    - left: HumanPoseEstimation
+      right: [RosService]
+  input_path: "/opt/openvino_toolkit/ros_openvino_toolkit/data/images/team.jpg"
+
+OpenvinoCommon:

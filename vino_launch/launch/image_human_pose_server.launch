@@ -1,0 +1,8 @@
+<launch>
+  <arg name="param_file" value="$(find vino_launch)/param/image_human_pose_server.yaml" />
+ 
+  <node pkg="vino_sample" type="image_human_pose_server"
+        name="image_human_pose_server" output="screen">
+    <param name="param_file" value="$(arg param_file)" />
+  </node>
+</launch>

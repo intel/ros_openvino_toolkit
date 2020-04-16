@@ -272,6 +272,43 @@ target_link_libraries(image_reidentification_server
   ${OpenCV_LIBRARIES}
 )
 
+add_executable(image_human_pose_client
+  src/image_human_pose_client.cpp
+)
+
+add_dependencies(image_human_pose_client
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${vino_core_lib_TARGETS}
+)
+
+target_link_libraries(image_human_pose_client
+  ${catkin_LIBRARIES}
+  cpu_extension
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
+
+add_executable(image_human_pose_server
+  src/image_human_pose_server.cpp
+)
+
+add_dependencies(image_human_pose_server
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${vino_core_lib_TARGETS}
+)
+
+target_link_libraries(image_human_pose_server
+  ${catkin_LIBRARIES}
+  cpu_extension
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
 
 if(UNIX OR APPLE)
   # Linker flags.

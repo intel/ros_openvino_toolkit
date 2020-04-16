@@ -92,6 +92,16 @@ void Outputs::RosServiceOutput::setServiceResponse(
   }
 
 void Outputs::RosServiceOutput::setServiceResponse(
+  boost::shared_ptr<vino_people_msgs::HumanPoseSrv::Response> response)
+{
+  slog::info << "in Human Pose Estimation service::Response ...";
+  if (human_pose_msg_ptr_ != nullptr) {
+    response->humanposes = human_pose_msg_ptr_->humanposes;
+  }
+  slog::info << "DONE!" << slog::endl;
+}
+
+void Outputs::RosServiceOutput::setServiceResponse(
   boost::shared_ptr<vino_people_msgs::PeopleSrv::Response> response)
 {
   slog::info << "in People::Response ...";
@@ -126,4 +136,5 @@ void Outputs::RosServiceOutput::clearData()
   headpose_msg_ptr_ = nullptr;
   segmented_object_msg_ptr_ = nullptr;
   person_reid_msg_ptr_ = nullptr;
+  human_pose_msg_ptr_ = nullptr;
 }

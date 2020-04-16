@@ -33,6 +33,8 @@
 #include <vino_people_msgs/ObjectsInMasks.h>
 #include <vino_people_msgs/Reidentification.h>
 #include <vino_people_msgs/ReidentificationStamped.h>
+#include <vino_people_msgs/HumanPose.h>
+#include <vino_people_msgs/HumanPoseStamped.h>
 
 #include <vino_people_msgs/AgeGenderSrv.h>
 #include <vino_people_msgs/EmotionSrv.h>
@@ -41,7 +43,7 @@
 #include <object_msgs/DetectObject.h>
 #include <vino_people_msgs/ObjectsInMasksSrv.h>
 #include <vino_people_msgs/ReidentificationSrv.h>
-
+#include <vino_people_msgs/HumanPoseSrv.h>
 
 #include <std_msgs/Header.h>
 
@@ -78,6 +80,7 @@ public:
   void setServiceResponse(boost::shared_ptr<vino_people_msgs::PeopleSrv::Response> response);
   void setServiceResponse(boost::shared_ptr<vino_people_msgs::ObjectsInMasksSrv::Response> response);
   void setServiceResponse(boost::shared_ptr<vino_people_msgs::ReidentificationSrv::Response> response);
+  void setServiceResponse(boost::shared_ptr<vino_people_msgs::HumanPoseSrv::Response> response);
 
 private:
   const std::string service_name_;

@@ -31,6 +31,7 @@
 #include <object_msgs/DetectObject.h>
 #include <vino_people_msgs/ObjectsInMasksSrv.h>
 #include <vino_people_msgs/ReidentificationSrv.h>
+#include <vino_people_msgs/HumanPoseSrv.h>
 
 #include <ros/ros.h>
 #include <memory>

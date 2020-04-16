@@ -47,6 +47,7 @@ add_service_files(FILES
   PeopleSrv.srv
   ReidentificationSrv.srv
   ObjectsInMasksSrv.srv
+  HumanPoseSrv.srv
 )
 generate_messages(DEPENDENCIES
   std_msgs

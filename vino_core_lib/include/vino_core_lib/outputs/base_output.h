@@ -133,6 +133,8 @@ class BaseOutput
     boost::shared_ptr<vino_people_msgs::ReidentificationSrvResponse> response) {}
   virtual void setServiceResponse(
     boost::shared_ptr<vino_people_msgs::ObjectsInMasksSrvResponse> response) {}
+  virtual void setServiceResponse(
+    boost::shared_ptr<vino_people_msgs::HumanPoseSrvResponse> response) {}
   Pipeline* getPipeline() const;
   cv::Mat getFrame() const;
   virtual void clearData() {}
