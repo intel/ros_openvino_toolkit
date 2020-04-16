@@ -210,23 +210,23 @@ void Outputs::RosTopicOutput::accept(
 {
   human_pose_msg_ptr_ = std::make_shared<vino_people_msgs::HumanPoseStamped>();
 
-  vino_people_msgs::HumanPose hp;
-  std::vector<geometry_msgs::Point> points;
-  points.reserve(18); // TODO read this from the inference engine.
   for (auto r : results)
   {
+    vino_people_msgs::HumanPose hp;
+
     auto loc = r.getLocation();
     hp.roi.x_offset = loc.x;
     hp.roi.y_offset = loc.y;
     hp.roi.width = loc.width;
     hp.roi.height = loc.height;
     hp.score = r.getScore();
+    
     auto p = geometry_msgs::Point();
+    p.z = -1;
     for (auto kp : r.keypoints)
     {
       p.x = kp.x;
       p.y = kp.y;
-      p.z = -1;
       hp.keypoints.push_back(p);
     }
     human_pose_msg_ptr_->humanposes.push_back(hp);
