@@ -70,6 +70,13 @@ class ParamManager  // singleton
     int batch;
     float confidence_threshold = 0.5;
     bool enable_roi_constraint = false;
+
+    // Human Pose Estimation parameters.
+    float min_peaks_distance = 3.0;
+    float mid_points_score_threshold = 0.05;
+    float found_mid_points_ratio_threshold = 0.8;
+    int min_joints_number = 3;
+    float min_subset_score = 0.2;
   };
   struct PipelineParams
   {

@@ -338,8 +338,18 @@ PipelineManager::createHumanPoseEstimation(
   human_estimation_model->modelInit();
   auto pose_engine = std::make_shared<Engines::Engine>(
     plugins_for_devices_[infer.engine], human_estimation_model);
+  slog::info << "params: " <<  infer.min_peaks_distance << ", " <<
+      infer.mid_points_score_threshold << ", " <<
+      infer.found_mid_points_ratio_threshold << ", " <<
+      infer.min_joints_number << ", " <<
+      infer.min_subset_score << slog::endl;
   auto pose_inference_ptr =
-    std::make_shared<vino_core_lib::HumanPoseEstimation>(); //(infer.confidence_threshold);
+    std::make_shared<vino_core_lib::HumanPoseEstimation>(
+      infer.min_peaks_distance,
+      infer.mid_points_score_threshold,
+      infer.found_mid_points_ratio_threshold,
+      infer.min_joints_number,
+      infer.min_subset_score);
   pose_inference_ptr->loadNetwork(human_estimation_model);
   pose_inference_ptr->loadEngine(pose_engine);
 

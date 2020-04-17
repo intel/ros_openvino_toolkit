@@ -68,7 +68,11 @@ class HumanPoseEstimation : public BaseInference
 {
  public:
   using Result = vino_core_lib::HumanPoseResult;
-  HumanPoseEstimation();
+  HumanPoseEstimation(float minPeaksDistance,
+                      float midPointsScoreThreshold,
+                      float foundMidPointsRatioThreshold,
+                      int minJointsNumber,
+                      float minSubsetScore);
   ~HumanPoseEstimation() override;
   /**
    * @brief Load the age gender detection model.
@@ -120,20 +124,20 @@ class HumanPoseEstimation : public BaseInference
 
  private:
   /**
-   * @brief 
+   * @brief Processess the network's outputs to extract the valid poses.
    * 
    * Copied from: https://github.com/opencv/open_model_zoo/blob/master/demos/human_pose_estimation_demo/src/human_pose_estimator.cpp
    * 
-   * @param heatMapsData 
-   * @param heatMapOffset 
-   * @param nHeatMaps 
-   * @param pafsData 
-   * @param pafOffset 
-   * @param nPafs 
-   * @param featureMapWidth 
-   * @param featureMapHeight 
-   * @param imageSize 
-   * @return std::vector<Result> 
+   * @param heatMapsData Data outputted by the heatmap network.
+   * @param heatMapOffset Size of each heatmap result.
+   * @param nHeatMaps Number of keypoints.
+   * @param pafsData Data outputted by the PAF network.
+   * @param pafOffset Size of each PAF result.
+   * @param nPafs Numver of PAFs.
+   * @param featureMapWidth Width of the heatmap.
+   * @param featureMapHeight Height of the heatmap.
+   * @param imageSize Size of the input image.
+   * @return std::vector<Result> A vector with the detected poses.
    */
   std::vector<Result> postprocess(
             const float* heatMapsData, const int heatMapOffset, const int nHeatMaps,
@@ -141,16 +145,40 @@ class HumanPoseEstimation : public BaseInference
             const int featureMapWidth, const int featureMapHeight,
             const cv::Size& imageSize) const;
   
+  /**
+   * @brief Resizes the heatmap by upSampleRatio.
+   * 
+   * @param featureMaps A vector with the heatmaps to resize.
+   */
   void resizeFeatureMaps(std::vector<cv::Mat>& featureMaps) const;
 
+  /**
+   * @brief Extracts the poses from the given heatmaps and PAFs.
+   * 
+   * @param heatMaps Postprocessed heatmaps.
+   * @param pafs Postprocessed PAFs.
+   * @return std::vector<Result> The detected poses.
+   */
   std::vector<Result> extractPoses(
         const std::vector<cv::Mat>& heatMaps,
         const std::vector<cv::Mat>& pafs) const;
 
+  /**
+   * @brief Aligns the poses' keypoints to the input image.
+   * 
+   * @param poses Poses (extracted from the heatmaps and PAFs).
+   * @param featureMapsSize  The size of the heatmaps.
+   * @param imageSize The input image size.
+   */
   void correctCoordinates(std::vector<Result>& poses,
                           const cv::Size& featureMapsSize,
                           const cv::Size& imageSize) const;
   
+  /**
+   * @brief Correct the bonding boxes based on the poses' keypoints.
+   * 
+   * @param poses Poses (with corrected keypoints).
+   */
   void correctROI(std::vector<Result>& poses) const;
 
   std::shared_ptr<Models::HumanPoseEstimationModel> valid_model_;
@@ -158,17 +186,15 @@ class HumanPoseEstimation : public BaseInference
   int width_ = 0;
   int height_ = 0;
 
-  // TODO add doc
-  int upsampleRatio_; // = 4;
-  float minPeaksDistance_; // = 3.0f;
   const size_t keypointsNumber_ = 18;
-  float midPointsScoreThreshold_; // = 0.05f;
-  float foundMidPointsRatioThreshold_; // = 0.8f;
-  int minJointsNumber_; // = 3;
-  float minSubsetScore_; // = 0.2f;
-  int stride_; // = 8;
+  int upsampleRatio_;
+  float minPeaksDistance_;
+  float midPointsScoreThreshold_;
+  float foundMidPointsRatioThreshold_;
+  int minJointsNumber_;
+  float minSubsetScore_;
+  int stride_;
   cv::Vec4i pad_;
-  cv::Size imageSize_; // = image.size();
 };
 
 } //  namespace vino_core_lib

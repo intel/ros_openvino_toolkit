@@ -16,66 +16,72 @@ namespace human_pose_estimation
 
 using Result = vino_core_lib::HumanPoseResult;
 
-struct Peak {
-    Peak(const int id = -1,
-         const cv::Point2f& pos = cv::Point2f(),
-         const float score = 0.0f);
+struct Peak
+{
+  Peak(const int id = -1,
+       const cv::Point2f &pos = cv::Point2f(),
+       const float score = 0.0f);
 
-    int id;
-    cv::Point2f pos;
-    float score;
+  int id;
+  cv::Point2f pos;
+  float score;
 };
 
-struct HumanPoseByPeaksIndices {
-    explicit HumanPoseByPeaksIndices(const int keypointsNumber);
+struct HumanPoseByPeaksIndices
+{
+  explicit HumanPoseByPeaksIndices(const int keypointsNumber);
 
-    std::vector<int> peaksIndices;
-    int nJoints;
-    float score;
+  std::vector<int> peaksIndices;
+  int nJoints;
+  float score;
 };
 
-struct TwoJointsConnection {
-    TwoJointsConnection(const int firstJointIdx,
-                        const int secondJointIdx,
-                        const float score);
+struct TwoJointsConnection
+{
+  TwoJointsConnection(const int firstJointIdx,
+                      const int secondJointIdx,
+                      const float score);
 
-    int firstJointIdx;
-    int secondJointIdx;
-    float score;
+  int firstJointIdx;
+  int secondJointIdx;
+  float score;
 };
 
-void findPeaks(const std::vector<cv::Mat>& heatMaps,
+void findPeaks(const std::vector<cv::Mat> &heatMaps,
                const float minPeaksDistance,
-               std::vector<std::vector<Peak> >& allPeaks,
+               std::vector<std::vector<Peak>> &allPeaks,
                int heatMapId);
 
 std::vector<Result> groupPeaksToPoses(
-        const std::vector<std::vector<Peak> >& allPeaks,
-        const std::vector<cv::Mat>& pafs,
-        const size_t keypointsNumber,
-        const float midPointsScoreThreshold,
-        const float foundMidPointsRatioThreshold,
-        const int minJointsNumber,
-        const float minSubsetScore);
+    const std::vector<std::vector<Peak>> &allPeaks,
+    const std::vector<cv::Mat> &pafs,
+    const size_t keypointsNumber,
+    const float midPointsScoreThreshold,
+    const float foundMidPointsRatioThreshold,
+    const int minJointsNumber,
+    const float minSubsetScore);
 
-class FindPeaksBody: public cv::ParallelLoopBody {
+class FindPeaksBody : public cv::ParallelLoopBody
+{
 public:
-    FindPeaksBody(const std::vector<cv::Mat>& heatMaps, float minPeaksDistance,
-                  std::vector<std::vector<Peak> >& peaksFromHeatMap)
-        : heatMaps(heatMaps),
-          minPeaksDistance(minPeaksDistance),
-          peaksFromHeatMap(peaksFromHeatMap) {}
+  FindPeaksBody(const std::vector<cv::Mat> &heatMaps, float minPeaksDistance,
+                std::vector<std::vector<Peak>> &peaksFromHeatMap)
+      : heatMaps(heatMaps),
+        minPeaksDistance(minPeaksDistance),
+        peaksFromHeatMap(peaksFromHeatMap) {}
 
-    virtual void operator()(const cv::Range& range) const {
-        for (int i = range.start; i < range.end; i++) {
-            findPeaks(heatMaps, minPeaksDistance, peaksFromHeatMap, i);
-        }
+  virtual void operator()(const cv::Range &range) const
+  {
+    for (int i = range.start; i < range.end; i++)
+    {
+      findPeaks(heatMaps, minPeaksDistance, peaksFromHeatMap, i);
     }
+  }
 
 private:
-    const std::vector<cv::Mat>& heatMaps;
-    float minPeaksDistance;
-    std::vector<std::vector<Peak> >& peaksFromHeatMap;
+  const std::vector<cv::Mat> &heatMaps;
+  float minPeaksDistance;
+  std::vector<std::vector<Peak>> &peaksFromHeatMap;
 };
 
-}  // namespace human_pose_estimation
+} // namespace human_pose_estimation

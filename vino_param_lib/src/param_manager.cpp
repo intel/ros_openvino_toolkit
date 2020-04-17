@@ -105,6 +105,13 @@ void operator>>(const YAML::Node& node, ParamManager::InferenceParams& infer)
   YAML_PARSE(node, "batch", infer.batch)
   YAML_PARSE(node, "confidence_threshold", infer.confidence_threshold)
   YAML_PARSE(node, "enable_roi_constraint", infer.enable_roi_constraint)
+
+  // Human Pose Estimation parameters
+  YAML_PARSE(node, "min_peaks_distance", infer.min_peaks_distance)
+  YAML_PARSE(node, "mid_points_score_threshold", infer.mid_points_score_threshold)
+  YAML_PARSE(node, "found_mid_points_ratio_threshold", infer.found_mid_points_ratio_threshold)
+  YAML_PARSE(node, "min_joints_number", infer.min_joints_number)
+  YAML_PARSE(node, "min_subset_score", infer.min_subset_score)
   slog::info << "Inference Params:name=" << infer.name << slog::endl;
 }
 
@@ -184,6 +191,11 @@ void ParamManager::print() const
       slog::info << "\t\tBatch: " << infer.batch << slog::endl;
       slog::info << "\t\tConfidence_threshold: " << infer.confidence_threshold << slog::endl;
       slog::info << "\t\tEnable_roi_constraint: " << infer.enable_roi_constraint << slog::endl;
+      slog::info << "\t\tMin_peaks_distance: " << infer.min_peaks_distance << slog::endl;
+      slog::info << "\t\tMid_points_score_threshold: " << infer.mid_points_score_threshold << slog::endl;
+      slog::info << "\t\tFound_mid_points_ratio_threshold: " << infer.found_mid_points_ratio_threshold << slog::endl;
+      slog::info << "\t\tMin_joints_number: " << infer.min_joints_number << slog::endl;
+      slog::info << "\t\tMin_subset_score: " << infer.min_subset_score << slog::endl;
     }
 
     slog::info << "\tConnections: " << slog::endl;
