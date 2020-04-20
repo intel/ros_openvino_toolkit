@@ -136,7 +136,7 @@ class ImageWindowOutput : public BaseOutput
     cv::Point hp_y;   // for headpose, end point of yAxis
     cv::Point hp_zs;  // for headpose, start point of zAxis
     cv::Point hp_ze;  // for headpose, end point of zAxis
-    std::vector<cv::Point2f> kp; // for humanpose, keypoints
+    std::vector<vino_core_lib::HumanPoseKeypoint> kp; // for humanpose, keypoints
   };
 
   std::vector<OutputData> outputs_;

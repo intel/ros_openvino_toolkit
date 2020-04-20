@@ -356,7 +356,12 @@ void Outputs::ImageWindowOutput::decorateFrame()
     for (auto kp : o.kp)
     {
       if (kp.x >= 0)
-        cv::circle(frame_, kp, 3, cv::Scalar(255, 0, 0), 1);
+      {
+        std::string score = std::to_string(kp.score).substr(0, 3);
+        cv::circle(frame_, kp, 3, cv::Scalar(255, 0, 0), cv::FILLED);
+        cv::putText(frame_, score, kp + cv::Point2f(5, 0),
+                cv::FONT_HERSHEY_COMPLEX_SMALL, 0.5, o.scalar);
+      }
     }
   }
 

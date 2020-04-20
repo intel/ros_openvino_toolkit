@@ -350,7 +350,7 @@ std::vector<Result> groupPeaksToPoses(
     }
     int position = -1;
     Result pose(cv::Rect(),
-                std::vector<cv::Point2f>(keypointsNumber, cv::Point2f(-1.0f, -1.0f)),
+                std::vector<vino_core_lib::HumanPoseKeypoint>(keypointsNumber, cv::Point2f(-1.0f, -1.0f)),
                 subsetI.score * std::max(0, subsetI.nJoints - 1));
     for (const auto &peakIdx : subsetI.peaksIndices)
     {
@@ -360,6 +360,7 @@ std::vector<Result> groupPeaksToPoses(
         pose.keypoints[position] = candidates[peakIdx].pos;
         pose.keypoints[position].x += 0.5;
         pose.keypoints[position].y += 0.5;
+        pose.keypoints[position].score = candidates[peakIdx].score;
       }
     }
     poses.push_back(pose);

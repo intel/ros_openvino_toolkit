@@ -12,6 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-geometry_msgs/Point[] keypoints     # Keypoints
+vino_people_msgs/HumanPoseKeypoint[] keypoints     # Keypoints
 float32 score                       # score
-sensor_msgs/RegionOfInterest roi 	# region of interest for a person's face
+sensor_msgs/RegionOfInterest roi 	# region of interest for a person's body

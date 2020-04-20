@@ -20,6 +20,18 @@
 namespace vino_core_lib
 {
 
+class HumanPoseKeypoint : public cv::Point2f
+{
+public:
+  HumanPoseKeypoint(float x, float y, float score)
+    : HumanPoseKeypoint::Point_(x, y),
+      score(score) {};
+  HumanPoseKeypoint(cv::Point2f point)
+    : HumanPoseKeypoint::Point_(point),
+      score(score) {};
+  float score;
+};
+
 /**
  * @class HumanPoseResult
  * @brief Class for storing and processing age and gender detection result.
@@ -30,7 +42,7 @@ class HumanPoseResult : public Result
   explicit HumanPoseResult(const cv::Rect& location);
   HumanPoseResult(
     const cv::Rect& location,
-    const std::vector<cv::Point2f>& keypoints, // = std::vector<cv::Point2f>(),
+    const std::vector<HumanPoseKeypoint>& keypoints, // = std::vector<cv::Point2f>(),
     const float& score); // = 0);
   
   // Following similar structure of vino_core_lib/inferences/object_detection.h
@@ -40,7 +52,7 @@ class HumanPoseResult : public Result
    * @brief Get the age keypoints of the estimated pose from the result.
    * @return The estimated keypoints.
    */
-  std::vector<cv::Point2f> getKeypoints() const
+  std::vector<HumanPoseKeypoint> getKeypoints() const
   {
     return keypoints;
   }
@@ -54,7 +66,8 @@ class HumanPoseResult : public Result
     return score;
   }
 
-  std::vector<cv::Point2f> keypoints;
+  std::vector<float> keypointsScores;
+  std::vector<HumanPoseKeypoint> keypoints;
   float score = -1;
 };
 

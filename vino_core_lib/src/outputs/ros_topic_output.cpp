@@ -221,12 +221,12 @@ void Outputs::RosTopicOutput::accept(
     hp.roi.height = loc.height;
     hp.score = r.getScore();
     
-    auto p = geometry_msgs::Point();
-    p.z = -1;
+    auto p = vino_people_msgs::HumanPoseKeypoint();// geometry_msgs::Point();
     for (auto kp : r.keypoints)
     {
       p.x = kp.x;
       p.y = kp.y;
+      p.score = kp.score;
       hp.keypoints.push_back(p);
     }
     human_pose_msg_ptr_->humanposes.push_back(hp);

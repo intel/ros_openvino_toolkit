@@ -36,6 +36,7 @@ add_message_files(DIRECTORY msg FILES
   ObjectsInMasks.msg
   Reidentification.msg
   ReidentificationStamped.msg
+  HumanPoseKeypoint.msg
   HumanPose.msg
   HumanPoseStamped.msg
 )

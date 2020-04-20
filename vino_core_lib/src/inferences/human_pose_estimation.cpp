@@ -23,7 +23,7 @@ vino_core_lib::HumanPoseResult::HumanPoseResult(const cv::Rect& location)
 
 vino_core_lib::HumanPoseResult::HumanPoseResult(
     const cv::Rect& location,
-    const std::vector<cv::Point2f>& keypoints,
+    const std::vector<HumanPoseKeypoint>& keypoints,
     const float& score)
     : keypoints(keypoints),
       score(score),
