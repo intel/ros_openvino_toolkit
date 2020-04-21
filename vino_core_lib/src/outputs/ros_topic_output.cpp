@@ -222,11 +222,20 @@ void Outputs::RosTopicOutput::accept(
     hp.score = r.getScore();
     
     auto p = vino_people_msgs::HumanPoseKeypoint();// geometry_msgs::Point();
+    p.position.z = -1;
     for (auto kp : r.keypoints)
     {
-      p.x = kp.x;
-      p.y = kp.y;
-      p.score = kp.score;
+      p.position.x = kp.x;
+      p.position.y = kp.y;
+      if (kp.x >= 0)
+      {
+        p.score = kp.score;
+      }
+      else
+      {
+        p.score = 0;
+      }
+      
       hp.keypoints.push_back(p);
     }
     human_pose_msg_ptr_->humanposes.push_back(hp);

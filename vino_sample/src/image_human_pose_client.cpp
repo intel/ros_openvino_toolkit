@@ -48,7 +48,7 @@ int main(int argc, char ** argv)
       
       for (auto kp : srv.response.humanposes[i].keypoints)
       {
-          os << std::endl<< "\tx: " << kp.x << "\ty: " << kp.y << "\tscore: " << kp.score;
+          os << std::endl<< "\tx: " << kp.position.x << "\ty: " << kp.position.y << "\tscore: " << kp.score;
       }
       ROS_INFO(os.str().c_str());
     }
