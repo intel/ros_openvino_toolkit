@@ -95,8 +95,10 @@ bool vino_core_lib::FaceDetection::fetchResults()
     auto label_num = static_cast<size_t>(detections[i * object_size_ + 1]);
     std::vector<std::string>& labels = valid_model_->getLabels();
 
-    r.x = static_cast<int>(detections[i * object_size_ + 3] * width_);
-    r.y = static_cast<int>(detections[i * object_size_ + 4] * height_);
+    int x_ = static_cast<int>(detections[i * object_size_ + 3] * width_);
+    int y_ = static_cast<int>(detections[i * object_size_ + 4] * height_);
+    r.x = (x_ & -(0 < x_));
+    r.y = (y_ & -(0 < y_));
     r.width = static_cast<int>(detections[i * object_size_ + 5] * width_ - r.x);
     r.height =
         static_cast<int>(detections[i * object_size_ + 6] * height_ - r.y);
