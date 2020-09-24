@@ -80,6 +80,8 @@ This project is a ROS wrapper for CV API of [OpenVINO™](https://software.intel
 	git clone https://github.com/opencv/dldt.git
 	cd dldt/inference-engine/
 	git checkout 2018_R4
+	git submodule init
+	git submodule update --recursive
 	./install_dependencies.sh
 	mkdir build && cd build
 	cmake -DCMAKE_BUILD_TYPE=Release ..
