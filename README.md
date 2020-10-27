@@ -159,7 +159,7 @@ See below pictures for the demo result snapshots.
 	rm 97-usbboot.rules
 	```
 	
-2. Configure the environment (you can write the configuration to your ~/.basrch file)</br>
+2. Configure the environment (you can write the configuration to your ~/.bashrc file)</br>
 	**Note**: If you used root privileges to install the OpenVINO binary package, it installs the Intel Distribution of OpenVINO toolkit in this directory: */opt/intel/openvino_<version>/*
 	```bash
 	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/computer_vision_sdk/deployment_tools/inference_engine/samples/build/intel64/Release/lib
