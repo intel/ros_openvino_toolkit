@@ -14,7 +14,7 @@
 
 /**
  * @brief A header file with declaration for NetworkEngine class
- * @file engine.h
+ * @file engine_manager.h
  */
 #ifndef DYNAMIC_VINO_LIB__ENGINES__ENGINE_MANAGER_HPP_
 #define DYNAMIC_VINO_LIB__ENGINES__ENGINE_MANAGER_HPP_
@@ -42,6 +42,7 @@ public:
     const std::string &, const std::shared_ptr<Models::BaseModel> &);
 
 private:
+#if(defined(USE_OLD_E_PLUGIN_API))
   std::map<std::string, InferenceEngine::InferencePlugin> plugins_for_devices_;
 
   std::unique_ptr<InferenceEngine::InferencePlugin>
@@ -51,11 +52,11 @@ private:
 
   std::shared_ptr<Engine> createEngine_beforeV2019R2(
     const std::string &, const std::shared_ptr<Models::BaseModel> &);
+#endif
 
-#if(defined(USE_IE_CORE))
   std::shared_ptr<Engine> createEngine_V2019R2_plus(
     const std::string &, const std::shared_ptr<Models::BaseModel> &);
-#endif
+
 };
 }  // namespace Engines
 
