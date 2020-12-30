@@ -35,32 +35,13 @@
 namespace Input
 {
 /**
+ * DEPRECATED!
+ * Using the new class ImageTopic to handle all image topics.
  * @class RealSenseCameraTopic
  * @brief Class for recieving a realsense camera topic as input.
  */
-class RealSenseCameraTopic : public BaseInputDevice
-{
- public:
-  RealSenseCameraTopic();
-  bool initialize() override;
-  bool initialize(int t) override
-  {
-    return true;
-  };
-  bool initialize(size_t width, size_t height) override
-  {
-    return true;
-  };
-  bool read(cv::Mat* frame) override;
+typedef ImageTopic RealSenseCameraTopic;
 
- private:
-  ros::NodeHandle nh_;
-  image_transport::Subscriber sub_;
-  cv::Mat image;
-  cv::Mat last_image;
-
-  void cb(const sensor_msgs::ImageConstPtr& image_msg);
-};
 }  // namespace Input
 
 #endif  // DYNAMIC_VINO_LIB_INPUTS_REALSENSE_CAMERA_TOPIC_H_

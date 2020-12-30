@@ -42,15 +42,6 @@ class Image : public BaseInputDevice
    */
   bool initialize() override;
   /**
-   * @brief (Only work for standard camera)
-   * No implementation for Image class.
-   * @return Whether the input device is successfully turned on.
-   */
-  bool initialize(int t) override
-  {
-    return initialize();
-  };
-  /**
    * @brief Initialize the input device with given width and height.
    * No implementation for Image class.
    * @return Whether the input device is successfully turned on.
@@ -58,7 +49,7 @@ class Image : public BaseInputDevice
   bool initialize(size_t width, size_t height) override
   {
     return initialize();
-  };
+  }
   /**
    * @brief Read next frame, and give the value to argument frame.
    * @return Whether the next frame is successfully read.
