@@ -165,7 +165,7 @@ add_library(${PROJECT_NAME} SHARED
   src/inferences/vehicle_attribs_detection.cpp
   src/inferences/license_plate_detection.cpp
   src/inputs/realsense_camera.cpp
-  src/inputs/realsense_camera_topic.cpp
+  src/inputs/image_topic.cpp
   src/inputs/standard_camera.cpp
   src/inputs/video_input.cpp
   src/inputs/image_input.cpp
