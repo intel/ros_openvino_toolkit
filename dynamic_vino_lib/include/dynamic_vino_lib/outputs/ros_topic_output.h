@@ -151,27 +151,27 @@ class RosTopicOutput : public BaseOutput
   ros::NodeHandle nh_;
  protected:
   ros::Publisher pub_face_;
-  std::shared_ptr<object_msgs::ObjectsInBoxes> faces_msg_ptr_;
+  std::shared_ptr<object_msgs::ObjectsInBoxes> faces_topic_;
   ros::Publisher pub_emotion_;
-  std::shared_ptr<people_msgs::EmotionsStamped> emotions_msg_ptr_;
+  std::shared_ptr<people_msgs::EmotionsStamped> emotions_topic_;
   ros::Publisher pub_age_gender_;
-  std::shared_ptr<people_msgs::AgeGenderStamped> age_gender_msg_ptr_;
+  std::shared_ptr<people_msgs::AgeGenderStamped> age_gender_topic_;
   ros::Publisher pub_headpose_;
-  std::shared_ptr<people_msgs::HeadPoseStamped> headpose_msg_ptr_;
+  std::shared_ptr<people_msgs::HeadPoseStamped> headpose_topic_;
   ros::Publisher pub_object_;
-  std::shared_ptr<object_msgs::ObjectsInBoxes> object_msg_ptr_;
+  std::shared_ptr<object_msgs::ObjectsInBoxes> detected_objects_topic_;
   ros::Publisher pub_person_reid_;
   std::shared_ptr<people_msgs::ReidentificationStamped> person_reid_msg_ptr_;
   ros::Publisher pub_segmented_object_;
-  std::shared_ptr<people_msgs::ObjectsInMasks> segmented_object_msg_ptr_;
+  std::shared_ptr<people_msgs::ObjectsInMasks> segmented_objects_topic_;
   ros::Publisher pub_face_reid_;
-  std::shared_ptr<people_msgs::ReidentificationStamped> face_reid_msg_ptr_;
+  std::shared_ptr<people_msgs::ReidentificationStamped> face_reid_topic_;
   ros::Publisher pub_person_attribs_;
-  std::shared_ptr<people_msgs::PersonAttributeStamped> person_attribs_msg_ptr_;
+  std::shared_ptr<people_msgs::PersonAttributeStamped> person_attribs_topic_;
   ros::Publisher pub_license_plate_;
-  std::shared_ptr<people_msgs::LicensePlateStamped> license_plate_msg_ptr_;
+  std::shared_ptr<people_msgs::LicensePlateStamped> license_plate_topic_;
   ros::Publisher pub_vehicle_attribs_;
-  std::shared_ptr<people_msgs::VehicleAttribsStamped> vehicle_attribs_msg_ptr_;
+  std::shared_ptr<people_msgs::VehicleAttribsStamped> vehicle_attribs_topic_;
 
 };
 }  // namespace Outputs
