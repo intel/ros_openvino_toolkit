@@ -79,21 +79,21 @@ else()
     return()
 endif()
 
-if (NOT DEFINED ENV{CPU_EXTENSION_LIB})
-  message(FATAL_ERROR "Please set ENV CPU_EXTENSION_LIB with 'export CPU_EXTENSION_LIB=<path-to-libcpu_extension.so>'")
-endif()
-set (CpuExtension_lib $ENV{CPU_EXTENSION_LIB})
-add_library(cpu_extension SHARED IMPORTED)
-set_target_properties(cpu_extension PROPERTIES
-  IMPORTED_LOCATION $ENV{CPU_EXTENSION_LIB})
+#if (NOT DEFINED ENV{CPU_EXTENSION_LIB})
+#  message(FATAL_ERROR "Please set ENV CPU_EXTENSION_LIB with 'export CPU_EXTENSION_LIB=<path-to-libcpu_extension.so>'")
+#endif()
+#set (CpuExtension_lib $ENV{CPU_EXTENSION_LIB})
+#add_library(cpu_extension SHARED IMPORTED)
+#set_target_properties(cpu_extension PROPERTIES
+#  IMPORTED_LOCATION $ENV{CPU_EXTENSION_LIB})
 
-if (NOT DEFINED ENV{GFLAGS_LIB})
-  message(FATAL_ERROR "Please set ENV GFLAGS_LIB with 'export GFLAGS_LIB=<path-to-libgflags_nothreads.a>'")
-endif()
-set (Gflags_lib $ENV{GFLAGS_LIB})
-add_library(gflags STATIC IMPORTED)
-set_target_properties(gflags PROPERTIES
-  IMPORTED_LOCATION $ENV{GFLAGS_LIB})
+#if (NOT DEFINED ENV{GFLAGS_LIB})
+#  message(FATAL_ERROR "Please set ENV GFLAGS_LIB with 'export GFLAGS_LIB=<path-to-libgflags_nothreads.a>'")
+#endif()
+#set (Gflags_lib $ENV{GFLAGS_LIB})
+#add_library(gflags STATIC IMPORTED)
+#set_target_properties(gflags PROPERTIES
+#  IMPORTED_LOCATION $ENV{GFLAGS_LIB})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
