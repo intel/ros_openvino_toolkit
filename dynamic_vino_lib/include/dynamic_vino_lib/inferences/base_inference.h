@@ -23,14 +23,13 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "dynamic_vino_lib/engines/engine.h"
+#include "dynamic_vino_lib/models/base_model.h"
 #include "dynamic_vino_lib/slog.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
-#include "dynamic_vino_lib/models/object_detection_ssd_model.h"
-#include "dynamic_vino_lib/models/object_detection_yolov2voc_model.h"
-
 
 namespace Outputs
 {
@@ -179,6 +178,8 @@ public:
   virtual const std::vector<cv::Rect> getFilteredROIs(
     const std::string filter_conditions) const = 0;
 
+  void addCandidatedModel(std::shared_ptr<Models::BaseModel> model);
+
 protected:
   /**
     * @brief Enqueue the fram into the input blob of the target calculation
@@ -202,11 +203,12 @@ protected:
   }
 
   std::vector<Result> results_;
-  int enqueued_frames_ = 0;
-  
+
 protected:
   std::shared_ptr<Engines::Engine> engine_ = nullptr;
+  std::vector<std::shared_ptr<Models::BaseModel> > candidated_models_;
   int max_batch_size_ = 1;
+  int enqueued_frames_ = 0;
   bool results_fetched_ = false;
 };
 }  // namespace dynamic_vino_lib

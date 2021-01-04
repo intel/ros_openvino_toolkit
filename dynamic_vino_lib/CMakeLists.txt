@@ -72,13 +72,13 @@ include_directories (
     ${CMAKE_CURRENT_SOURCE_DIR}/../vino_param_lib/include
 )
 
-if (NOT DEFINED ENV{CPU_EXTENSION_LIB})
-  message(FATAL_ERROR "Please set ENV CPU_EXTENSION_LIB with 'export CPU_EXTENSION_LIB=<path-to-libcpu_extension.so>'")
-endif()
-set (CpuExtension_lib $ENV{CPU_EXTENSION_LIB})
-add_library(cpu_extension SHARED IMPORTED)
-set_target_properties(cpu_extension PROPERTIES
-  IMPORTED_LOCATION $ENV{CPU_EXTENSION_LIB})
+#if (NOT DEFINED ENV{CPU_EXTENSION_LIB})
+#  message(FATAL_ERROR "Please set ENV CPU_EXTENSION_LIB with 'export CPU_EXTENSION_LIB=<path-to-libcpu_extension.so>'")
+#endif()
+#set (CpuExtension_lib $ENV{CPU_EXTENSION_LIB})
+#add_library(cpu_extension SHARED IMPORTED)
+#set_target_properties(cpu_extension PROPERTIES
+#  IMPORTED_LOCATION $ENV{CPU_EXTENSION_LIB})
 
 # Flags
 if(UNIX OR APPLE)
@@ -154,8 +154,6 @@ add_library(${PROJECT_NAME} SHARED
   src/inferences/face_detection.cpp
   src/inferences/head_pose_detection.cpp
   src/inferences/object_detection.cpp
-  src/inferences/object_detection_ssd.cpp
-  src/inferences/object_detection_yolov2_voc.cpp
   src/inferences/object_segmentation.cpp
   src/inferences/person_reidentification.cpp
   src/inferences/face_reidentification.cpp

@@ -118,6 +118,10 @@ class EmotionsDetection : public BaseInference
   void observeOutput(
       const std::shared_ptr<Outputs::BaseOutput>& output) override;
 
+  std::vector<Result> getResults()
+  {
+    return results_;
+  }
   const std::vector<cv::Rect> getFilteredROIs(
     const std::string filter_conditions) const override;
   
