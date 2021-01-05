@@ -118,6 +118,14 @@ class Pipeline
   void setCallback();
 
   void printPipeline();
+  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> getOutputHandle()
+  {
+    return name_to_output_map_;
+  }
+  void setParams(PipelineParams pipeline_params)
+  {
+    params_ = std::make_shared<PipelineParams>(pipeline_params);
+  }
   const std::shared_ptr<PipelineParams> getParameters()
   {
     return params_;
@@ -136,10 +144,6 @@ class Pipeline
   int getFPS() const
   {
     return fps_;
-  }
-  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> getOutputHandle()
-  {
-    return name_to_output_map_;
   }
 
   std::string findFilterConditions(const std::string & input, const std::string & output)
@@ -174,7 +178,7 @@ class Pipeline
       name_to_detection_map_;
   std::map<std::string, std::shared_ptr<Outputs::BaseOutput>>
       name_to_output_map_;
-
+  int total_inference_ = 0;
   std::set<std::string> output_names_;
   int width_ = 0;
   int height_ = 0;
@@ -184,6 +188,8 @@ class Pipeline
   std::mutex counter_mutex_;
   std::condition_variable cv_;
   int fps_ = 0;
+  int frame_cnt_ = 0;
+  std::chrono::time_point<std::chrono::high_resolution_clock> t_start_;
 };
 
 #endif  // DYNAMIC_VINO_LIB_PIPELINE_H_

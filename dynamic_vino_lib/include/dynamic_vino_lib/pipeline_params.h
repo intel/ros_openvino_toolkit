@@ -39,7 +39,9 @@
 const char kInputType_Image[] = "Image";
 const char kInputType_Video[] = "Video";
 const char kInputType_StandardCamera[] = "StandardCamera";
+const char kInputType_IpCamera[] = "IpCamera";
 const char kInputType_CameraTopic[] = "RealSenseCameraTopic";
+const char kInputType_ImageTopic[] = "ImageTopic";
 const char kInputType_RealSenseCamera[] = "RealSenseCamera";
 const char kInputType_ServiceImage[] = "ServiceImage";
 

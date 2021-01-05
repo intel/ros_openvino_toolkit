@@ -91,9 +91,9 @@ class PipelineManager {
   void operator=(PipelineManager const&);
   void threadPipeline(const char* name);
   std::map<std::string, std::shared_ptr<Input::BaseInputDevice>>
-  parseInputDevice(const Params::ParamManager::PipelineRawData& params);
-  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> parseOutput(
-      const Params::ParamManager::PipelineRawData& params);
+  parseInputDevice(const PipelineData & params);
+  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>>
+  parseOutput(const PipelineData & pdata);
   std::map<std::string, std::shared_ptr<dynamic_vino_lib::BaseInference>>
   parseInference(const Params::ParamManager::PipelineRawData& params);
   std::shared_ptr<dynamic_vino_lib::BaseInference> createFaceDetection(
