@@ -43,8 +43,7 @@ bool Input::Video::initialize(size_t width, size_t height)
   setWidth(width);
   setHeight(height);
   setInitStatus(cap.open(video_));
-  if (isInit())
-  {
+  if (isInit()) {
     cap.set(cv::CAP_PROP_FRAME_WIDTH, width);
     cap.set(cv::CAP_PROP_FRAME_HEIGHT, height);
   }
@@ -53,20 +52,10 @@ bool Input::Video::initialize(size_t width, size_t height)
 
 bool Input::Video::read(cv::Mat* frame)
 {
-  if (!isInit())
-  {
+  if (!isInit()) {
     return false;
   }
   cap.grab();
+  setHeader("video_frame");
   return cap.retrieve(*frame);
-}
-
-void Input::Video::config(const Input::Config & config)
-{
-  if (config.path != "") {
-    video_.assign(config.path);
-    initialize();
-    slog::info << "Image Input device was reinitialized with new file:" <<
-      config.path.c_str() << slog::endl;
-  }
 }

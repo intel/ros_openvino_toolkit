@@ -99,27 +99,13 @@ public:
    * @return The name of the Inference instance.
    */
   const std::string getName() const override;
-  /**
-   * @brief Calculate the similarity between a new detected person with
-   * the already recorded persons.
-   * @return The similarity value.
-   */
-  float calcSimilarity(const std::vector<float> &, const std::vector<float> &);
-  /**
-   * @brief Try to find the matched person from the recorded persons, if there are not,
-   * record it in the recorded persons.
-   * @return The id of the matched person (or the new person).
-   */
-  std::string findMatchPerson(const std::vector<float> &);
-
   const std::vector<cv::Rect> getFilteredROIs(
     const std::string filter_conditions) const override;
 
 private:
   std::shared_ptr<Models::PersonReidentificationModel> valid_model_;
   std::vector<Result> results_;
-  std::vector<std::vector<float>> recorded_persons_;
-  double match_thresh_ = 0;
+  std::shared_ptr<dynamic_vino_lib::Tracker> person_tracker_;
 };
 }  // namespace dynamic_vino_lib
 #endif  // DYNAMIC_VINO_LIB__INFERENCES__PERSON_REIDENTIFICATION_HPP_

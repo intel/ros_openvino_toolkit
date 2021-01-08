@@ -26,28 +26,38 @@ namespace Models {
  * @class ObjectDetectionModel
  * @brief This class generates the face detection model.
  */
-class ObjectDetectionYolov2vocModel : public ObjectDetectionModel {
- public:
-  ObjectDetectionYolov2vocModel(const std::string&, int, int, int);
-  inline const std::string getInputName() { return input_; }
-  inline const std::string getOutputName() { return output_; }
-  InferenceEngine::CNNLayerPtr getLayer() { return output_layer_; }
-  InferenceEngine::InputInfo::Ptr getInputInfo() { return input_info_; }
+class ObjectDetectionYolov2Model : public ObjectDetectionModel
+{
+  using Result = dynamic_vino_lib::ObjectDetectionResult;
+
+public:
+  ObjectDetectionYolov2Model(const std::string & model_loc, int batch_size = 1);
+
+  bool fetchResults(
+    const std::shared_ptr<Engines::Engine> & engine,
+    std::vector<dynamic_vino_lib::ObjectDetectionResult> & results,
+    const float & confidence_thresh = 0.3,
+    const bool & enable_roi_constraint = false) override;
+
+  bool enqueue(
+    const std::shared_ptr<Engines::Engine> & engine,
+    const cv::Mat & frame,
+    const cv::Rect & input_frame_loc) override;
+
+  bool matToBlob(
+    const cv::Mat & orig_image, const cv::Rect &, float scale_factor,
+    int batch_index, const std::shared_ptr<Engines::Engine> & engine) override;
+
   /**
    * @brief Get the name of this detection model.
    * @return Name of the model.
    */
-  const std::string getModelName() const override;
+  const std::string getModelCategory() const override;
+  bool updateLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
 
- protected:
-  void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr&) override;
-  void setLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
-
-  std::string input_;
-  std::string output_;
-
-  InferenceEngine::CNNLayerPtr output_layer_;
-  InferenceEngine::InputInfo::Ptr input_info_;
+protected:
+  int getEntryIndex(int side, int lcoords, int lclasses, int location, int entry);
+  InferenceEngine::InputInfo::Ptr input_info_ = nullptr;
 };
 }  // namespace Models
 #endif  // DYNAMIC_VINO_LIB_MODELS_OBJECT_DETECTION_YOLOV2VOC_MODEL_H

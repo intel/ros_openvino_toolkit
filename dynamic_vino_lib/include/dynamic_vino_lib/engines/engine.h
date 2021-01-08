@@ -35,12 +35,16 @@ namespace Engines
 {
 class Engine
 {
- public:
+public:
+#if(defined(USE_OLD_E_PLUGIN_API))
   /**
+   * DEPRECATED! instead of using Engine(InferenceEngine::InferRequest::Ptr &)
    * @brief Create an NetworkEngine instance
    * from a inference plugin and an inference network.
    */
   Engine(InferenceEngine::InferencePlugin, Models::BaseModel::Ptr);
+#endif
+
   /**
    * @brief Using an Inference Request to initialize the inference Engine.
    */
@@ -65,7 +69,7 @@ class Engine
   }
 
  private:
-  InferenceEngine::InferRequest::Ptr request_;
+  InferenceEngine::InferRequest::Ptr request_ = nullptr;
 };
 }  // namespace Engines
 

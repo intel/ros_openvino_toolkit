@@ -47,12 +47,6 @@ class BaseInputDevice : public Ros2Handler
    */
   virtual bool initialize() = 0;
   /**
-   * @brief (Only work for standard camera)
-   * Initialize camera by its index when multiple standard camera is connected.
-   * @return Whether the input device is successfully turned on.
-   */
-  virtual bool initialize(int) = 0;
-  /**
    * @brief Initialize the input device with given width and height.
    * @return Whether the input device is successfully turned on.
    */
@@ -61,7 +55,11 @@ class BaseInputDevice : public Ros2Handler
    * @brief Read next frame, and give the value to argument frame.
    * @return Whether the next frame is successfully read.
    */
-  virtual bool read(cv::Mat* frame) = 0;
+  virtual bool read(cv::Mat * frame) = 0;
+  virtual bool readService(cv::Mat * frame, std::string config_path)
+  {
+    return true;
+  }
   virtual void config(const Config &) {}
   virtual ~BaseInputDevice() = default;
   /**
@@ -112,28 +110,11 @@ class BaseInputDevice : public Ros2Handler
   {
     is_init_ = is_init;
   }
-  /**
-   * @brief Set the frame_id of input device for ROSTopic outputs.
-   * @param[in] frame_id The frame_id of input device.
-   */
-  inline void setFrameID(std::string frame_id)
-  {
-    frame_id_ = frame_id;
-  }
-  /**
-   * @brief Get the frame_id of input device.
-   * @return Frame_id of input device.
-   */
-  inline std::string getFrameID()
-  {
-    return frame_id_;
-  }
 
  private:
-  size_t width_ = 0;
-  size_t height_ = 0;
+  size_t width_ = 0;  // 0 means using the original size
+  size_t height_ = 0; // 0 means using the original size
   bool is_init_ = false;
-  std::string frame_id_;
 };
 }  // namespace Input
 #endif  // DYNAMIC_VINO_LIB_INPUTS_BASE_INPUT_H

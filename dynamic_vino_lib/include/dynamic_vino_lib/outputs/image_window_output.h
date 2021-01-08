@@ -141,7 +141,7 @@ class ImageWindowOutput : public BaseOutput
  private:
 
   unsigned findOutput(const cv::Rect &);
-  void initOutputs(unsigned size);
+  //void initOutputs(unsigned size);
   /**
    * @brief Calculate the axises of the coordinates for showing
    * the image window.
@@ -155,6 +155,8 @@ class ImageWindowOutput : public BaseOutput
    */
   cv::Mat getRotationTransform(double yaw, double pitch, double roll);
 
+  void mergeMask(const std::vector<dynamic_vino_lib::ObjectSegmentationResult> &);
+
   struct OutputData
   {
     std::string desc;
@@ -165,6 +167,8 @@ class ImageWindowOutput : public BaseOutput
     cv::Point hp_y;   // for headpose, end point of yAxis
     cv::Point hp_zs;  // for headpose, start point of zAxis
     cv::Point hp_ze;  // for headpose, end point of zAxis
+    cv::Point pa_top; // for person attributes, top position
+    cv::Point pa_bottom; //for person attributes, bottom position
     std::vector<cv::Point> landmarks;
   };
 

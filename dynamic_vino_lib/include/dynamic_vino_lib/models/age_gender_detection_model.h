@@ -33,23 +33,20 @@ namespace Models
  */
 class AgeGenderDetectionModel : public BaseModel
 {
- public:
-  AgeGenderDetectionModel(const std::string&, int, int, int);
+public:
+  AgeGenderDetectionModel(const std::string & model_loc, int batch_size = 1);
   /**
    * @brief Get the input name.
    * @return Input name.
    */
-  inline const std::string getInputName() const
-  {
-    return input_;
-  }
+
   /**
    * @brief Get the age from the detection reuslt.
    * @return Detected age.
    */
   inline const std::string getOutputAgeName() const
   {
-    return output_age_;
+    return getOutputName("age");
   }
   /**
    * @brief Get the gender from the detection reuslt.
@@ -57,22 +54,17 @@ class AgeGenderDetectionModel : public BaseModel
    */
   inline const std::string getOutputGenderName() const
   {
-    return output_gender_;
+    return getOutputName("gender");
   }
   /**
    * @brief Get the name of this detection model.
    * @return Name of the model.
    */
-  const std::string getModelName() const override;
+  const std::string getModelCategory() const override;
 
- protected:
-  void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr&) override;
-  void setLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
+protected:
+  bool updateLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
 
- private:
-  std::string input_;
-  std::string output_age_;
-  std::string output_gender_;
 };
 }  // namespace Models
 

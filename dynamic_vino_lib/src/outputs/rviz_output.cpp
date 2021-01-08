@@ -26,6 +26,7 @@
 #include "dynamic_vino_lib/outputs/rviz_output.h"
 
 Outputs::RvizOutput::RvizOutput(std::string pipeline_name)
+: BaseOutput(pipeline_name)
 {
   image_topic_ = nullptr;
   pub_image_ = nh_.advertise<sensor_msgs::Image>("/openvino_toolkit/"+pipeline_name+"/images", 16);
@@ -101,22 +102,11 @@ void Outputs::RvizOutput::handleOutput()
   image_window_output_->setPipeline(getPipeline());
   image_window_output_->decorateFrame();
   cv::Mat frame = image_window_output_->getFrame();
-  std_msgs::Header header = getHeader();
+  std_msgs::Header header = getPipeline()->getInputDevice()->getLockedHeader();
   std::shared_ptr<cv_bridge::CvImage> cv_ptr =
     std::make_shared<cv_bridge::CvImage>(header, "bgr8", frame);
    sensor_msgs::Image image_msg;
   image_topic_ = cv_ptr->toImageMsg();
   pub_image_.publish(image_topic_);
 }
-  std::shared_ptr<sensor_msgs::Image> image_topic_;
-std_msgs::Header Outputs::RvizOutput::getHeader()
-{
-  std_msgs::Header header;
-  header.frame_id = getPipeline()->getInputDevice()->getFrameID();
 
-  std::chrono::high_resolution_clock::time_point tp = std::chrono::high_resolution_clock::now();
-  int64 ns = tp.time_since_epoch().count();
-  header.stamp.sec = ns / 1000000000;
-  header.stamp.nsec = ns % 1000000000;
-  return header;
-}

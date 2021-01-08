@@ -42,15 +42,6 @@ class RealSenseCamera : public BaseInputDevice
    */
   bool initialize() override;
   /**
-   * @brief (Only work for standard camera)
-   * Initialize camera by its index when multiple standard camera is connected.
-   * @return Whether the input device is successfully turned on.
-   */
-  bool initialize(int t) override
-  {
-    return true;
-  };
-  /**
    * @brief Initialize the input device with given width and height.
    * @return Whether the input device is successfully turned on.
    */
@@ -62,6 +53,9 @@ class RealSenseCamera : public BaseInputDevice
   bool read(cv::Mat* frame) override;
 
  private:
+  void bypassFewFramesOnceInited();
+  std::string getCameraSN();
+
   rs2::config cfg_;
   rs2::pipeline pipe_;
   bool first_read_ = true;

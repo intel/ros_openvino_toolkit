@@ -20,8 +20,8 @@
 #include "dynamic_vino_lib/models/landmarks_detection_model.h"
 // Validated Landmarks Detection Network
 Models::LandmarksDetectionModel::LandmarksDetectionModel(
-  const std::string & model_loc, int input_num, int output_num, int max_batch_size)
-: BaseModel(model_loc, input_num, output_num, max_batch_size) {}
+  const std::string & model_loc, int max_batch_size)
+: BaseModel(model_loc, max_batch_size) {}
 
 void Models::LandmarksDetectionModel::setLayerProperty(
   InferenceEngine::CNNNetReader::Ptr net_reader)
@@ -58,7 +58,7 @@ void Models::LandmarksDetectionModel::checkLayerProperty(
   }
 }
 
-const std::string Models::LandmarksDetectionModel::getModelName() const
+const std::string Models::LandmarksDetectionModel::getModelCategory() const
 {
   return "Landmarks Detection";
 }

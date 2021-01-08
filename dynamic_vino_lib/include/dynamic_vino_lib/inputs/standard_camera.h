@@ -23,7 +23,13 @@
 #define DYNAMIC_VINO_LIB_INPUTS_STANDARD_CAMERA_H
 
 #include <opencv2/opencv.hpp>
-#include "dynamic_vino_lib/inputs/base_input.h"
+
+#include "dynamic_vino_lib/inputs/base_input.hpp"
+#include <stdio.h>
+#include <linux/videodev2.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
 
 namespace Input
 {
@@ -42,12 +48,6 @@ class StandardCamera : public BaseInputDevice
    */
   bool initialize() override;
   /**
-   * @brief (Only work for standard camera)
-   * Initialize camera by its index when multiple standard camera is connected.
-   * @return Whether the input device is successfully turned on.
-   */
-  bool initialize(int t) override;
-  /**
    * @brief Initialize the input device with given width and height.
    * @return Whether the input device is successfully turned on.
    */
@@ -59,8 +59,9 @@ class StandardCamera : public BaseInputDevice
   bool read(cv::Mat* frame) override;
 
  private:
+  int getCameraId();
   cv::VideoCapture cap;
-  static int camera_count_;
+  int camera_id_ = -1;
 };
 }  // namespace Input
 #endif  // DYNAMIC_VINO_LIB_INPUTS_STANDARD_CAMERA_H

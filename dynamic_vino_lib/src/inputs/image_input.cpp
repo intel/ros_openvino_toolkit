@@ -31,16 +31,12 @@ Input::Image::Image(const std::string& file)
 
 bool Input::Image::initialize()
 {
-  setFrameID("image_frame");
   image_ = cv::imread(file_);
-  if (image_.data != NULL)
-  {
+  if (image_.data != NULL) {
     setInitStatus(true);
     setWidth((size_t)image_.cols);
     setHeight((size_t)image_.rows);
-  }
-  else
-  {
+  } else {
     setInitStatus(false);
   }
   return isInit();
@@ -53,6 +49,7 @@ bool Input::Image::read(cv::Mat* frame)
     return false;
   }
   *frame = image_;
+  setHeader("image_frame");
   return true;
 }
 
