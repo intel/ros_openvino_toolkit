@@ -23,7 +23,7 @@ project(dynamic_vino_lib)
 ####################################
 
 message(STATUS "Looking for inference engine configuration file at: ${CMAKE_PREFIX_PATH}")
-find_package(InferenceEngine 1.1)
+find_package(InferenceEngine REQUIRED)
 if (NOT InferenceEngine_FOUND)
     message(FATAL_ERROR "")
 endif()
@@ -188,11 +188,11 @@ add_library(${PROJECT_NAME} SHARED
   src/outputs/ros_service_output.cpp
 )
 
-add_dependencies(${PROJECT_NAME}
-  ${${PROJECT_NAME}_EXPORTED_TARGETS}
-  ${catkin_EXPORTED_TARGETS}
-  "object_msgs"
-)
+#add_dependencies(${PROJECT_NAME}
+#  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+#  ${catkin_EXPORTED_TARGETS}
+#  "object_msgs"
+#)
 
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}

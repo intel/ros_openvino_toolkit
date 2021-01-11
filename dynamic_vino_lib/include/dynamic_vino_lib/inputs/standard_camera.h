@@ -24,7 +24,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#include "dynamic_vino_lib/inputs/base_input.hpp"
+#include "dynamic_vino_lib/inputs/base_input.h"
 #include <stdio.h>
 #include <linux/videodev2.h>
 #include <fcntl.h>
