@@ -38,7 +38,7 @@
 #include <people_msgs/EmotionSrv.h>
 #include <people_msgs/HeadPoseSrv.h>
 #include <people_msgs/PeopleSrv.h>
-#include <object_msgs/DetectObjectSrv.h>
+#include <object_msgs/DetectObjectRequest.h>
 #include <people_msgs/ObjectsInMasksSrv.h>
 #include <people_msgs/ReidentificationSrv.h>
 

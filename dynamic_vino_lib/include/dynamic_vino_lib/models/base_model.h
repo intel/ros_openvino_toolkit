@@ -31,6 +31,7 @@
 #include <fstream>
 
 #include "inference_engine.hpp"
+#include "dynamic_vino_lib/models/attributes/base_attribute.h"
 
 namespace Engines
 {
@@ -139,7 +140,5 @@ namespace Models
   };
 
 } // namespace Models
-
-}  // namespace Models
 
 #endif  // DYNAMIC_VINO_LIB__MODELS__BASE_MODEL_HPP_

@@ -16,8 +16,8 @@
 #include <people_msgs/PeopleSrv.h>
 #include <people_msgs/ObjectsInMasksSrv.h>
 #include <people_msgs/ReidentificationSrv.h>
-#include <object_msgs/DetectObjectSrv.h>
-#include <pipeline_srv_msgs/PipelineSrv.h>
+#include <object_msgs/DetectObjectRequest.h>
+#include <pipeline_srv_msgs/PipelineRequest.h>
 #include <pipeline_srv_msgs/Pipeline.h>
 #include <pipeline_srv_msgs/Pipelines.h>
 #include <vino_param_lib/param_manager.h>
