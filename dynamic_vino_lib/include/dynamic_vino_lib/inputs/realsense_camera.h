@@ -34,7 +34,7 @@ namespace Input
  */
 class RealSenseCamera : public BaseInputDevice
 {
- public:
+public:
   /**
    * @brief Initialize the input device, turn the
    * camera on and get ready to read frames.
@@ -52,7 +52,7 @@ class RealSenseCamera : public BaseInputDevice
    */
   bool read(cv::Mat* frame) override;
 
- private:
+private:
   void bypassFewFramesOnceInited();
   std::string getCameraSN();
 

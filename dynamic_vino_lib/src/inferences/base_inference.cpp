@@ -24,7 +24,7 @@
 #include "dynamic_vino_lib/inferences/base_inference.h"
 
 // Result
-dynamic_vino_lib::Result::Result(const cv::Rect & location)
+dynamic_vino_lib::Result::Result(const cv::Rect& location)
 {
   location_ = location;
 }
@@ -41,10 +41,12 @@ void dynamic_vino_lib::BaseInference::loadEngine(const std::shared_ptr<Engines::
 
 bool dynamic_vino_lib::BaseInference::submitRequest()
 {
-  if (engine_->getRequest() == nullptr) {
+  if (engine_->getRequest() == nullptr)
+  {
     return false;
   }
-  if (!enqueued_frames_) {
+  if (!enqueued_frames_)
+  {
     return false;
   }
   enqueued_frames_ = 0;
@@ -55,10 +57,12 @@ bool dynamic_vino_lib::BaseInference::submitRequest()
 
 bool dynamic_vino_lib::BaseInference::SynchronousRequest()
 {
-  if (engine_->getRequest() == nullptr) {
+  if (engine_->getRequest() == nullptr)
+  {
     return false;
   }
-  if (!enqueued_frames_) {
+  if (!enqueued_frames_)
+  {
     return false;
   }
   enqueued_frames_ = 0;
@@ -69,7 +73,8 @@ bool dynamic_vino_lib::BaseInference::SynchronousRequest()
 
 bool dynamic_vino_lib::BaseInference::fetchResults()
 {
-  if (results_fetched_) {
+  if (results_fetched_)
+  {
     return false;
   }
   results_fetched_ = true;
@@ -79,7 +84,8 @@ bool dynamic_vino_lib::BaseInference::fetchResults()
 void dynamic_vino_lib::BaseInference::addCandidatedModel(std::shared_ptr<Models::BaseModel> model)
 {
   slog::info << "TESTING in addCandidatedModel()" << slog::endl;
-  if (model != nullptr) {
+  if (model != nullptr)
+  {
     slog::info << "adding new Model Candidate..." << slog::endl;
     candidated_models_.push_back(model);
   }

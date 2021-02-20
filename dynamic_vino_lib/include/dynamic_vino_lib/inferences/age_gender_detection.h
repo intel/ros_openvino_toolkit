@@ -44,7 +44,7 @@ namespace dynamic_vino_lib
  */
 class AgeGenderResult : public Result
 {
- public:
+public:
   explicit AgeGenderResult(const cv::Rect& location);
   /**
    * @brief Get the age of the detected person from the result.
@@ -75,7 +75,7 @@ class AgeGenderResult : public Result
  */
 class AgeGenderDetection : public BaseInference
 {
- public:
+public:
   using Result = dynamic_vino_lib::AgeGenderResult;
   AgeGenderDetection();
   ~AgeGenderDetection() override;
@@ -124,14 +124,11 @@ class AgeGenderDetection : public BaseInference
    * @brief Show the observed detection result either through image window
    * or ROS topic.
    */
-  void observeOutput(
-      const std::shared_ptr<Outputs::BaseOutput>& output) override;
+  void observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output) override;
 
-  const std::vector<cv::Rect> getFilteredROIs(
-    const std::string filter_conditions) const override;
+  const std::vector<cv::Rect> getFilteredROIs(const std::string filter_conditions) const override;
 
-
- private:
+private:
   std::shared_ptr<Models::AgeGenderDetectionModel> valid_model_;
   std::vector<Result> results_;
 };

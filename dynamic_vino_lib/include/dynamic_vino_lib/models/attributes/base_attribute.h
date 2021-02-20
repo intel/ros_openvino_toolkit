@@ -38,7 +38,8 @@ class ModelAttribute
 {
 public:
   using Ptr = std::shared_ptr<ModelAttribute>;
-  struct ModelAttr {
+  struct ModelAttr
+  {
     int max_proposal_count = 0;
     int object_size = 0;
     int input_height = 0;
@@ -48,7 +49,7 @@ public:
     std::map<std::string, std::string> output_names;
     std::vector<std::string> labels;
   };
-  
+
   ModelAttribute(const std::string model_name)
   {
     attr_.model_name = model_name;
@@ -56,8 +57,8 @@ public:
 
   inline bool isVerified()
   {
-    return (attr_.max_proposal_count > 0 && attr_.object_size > 0 && attr_.input_height > 0
-      && attr_.input_width > 0 && attr_.input_names.empty() && attr_.output_names.empty());
+    return (attr_.max_proposal_count > 0 && attr_.object_size > 0 && attr_.input_height > 0 && attr_.input_width > 0 &&
+            attr_.input_names.empty() && attr_.output_names.empty());
   }
   inline void printAttribute()
   {
@@ -68,26 +69,30 @@ public:
     slog::info << "| input_height: " << attr_.input_height << slog::endl;
     slog::info << "| input_width: " << attr_.input_width << slog::endl;
     slog::info << "| input_names: " << slog::endl;
-    for (auto & item: attr_.input_names) {
+    for (auto& item : attr_.input_names)
+    {
       slog::info << "|    " << item.first << "-->" << item.second << slog::endl;
     }
     slog::info << "| output_names: " << slog::endl;
-    for (auto & item: attr_.output_names) {
+    for (auto& item : attr_.output_names)
+    {
       slog::info << "|    " << item.first << "-->" << item.second << slog::endl;
     }
 
-    if(attr_.max_proposal_count <= 0 || attr_.object_size <= 0 || attr_.input_height <= 0
-      || attr_.input_width <= 0 || attr_.input_names.empty() || attr_.output_names.empty()){
+    if (attr_.max_proposal_count <= 0 || attr_.object_size <= 0 || attr_.input_height <= 0 || attr_.input_width <= 0 ||
+        attr_.input_names.empty() || attr_.output_names.empty())
+    {
       slog::info << "--------" << slog::endl;
       slog::warn << "Not all attributes are set correctly! not 0 or empty is allowed in"
-        << " the above list." << slog::endl;
+                 << " the above list." << slog::endl;
     }
     slog::info << "--------------------------------" << slog::endl;
   }
 
-  virtual bool updateLayerProperty(
-    const InferenceEngine::CNNNetReader::Ptr &)
-  { return false; }
+  virtual bool updateLayerProperty(const InferenceEngine::CNNNetReader::Ptr&)
+  {
+    return false;
+  }
 
   inline std::string getModelName() const
   {
@@ -103,23 +108,25 @@ public:
   {
     // std::map<std::string, std::string>::iterator it;
     auto it = attr_.input_names.find(name);
-    if(it == attr_.input_names.end()){
+    if (it == attr_.input_names.end())
+    {
       slog::warn << "No input named: " << name << slog::endl;
       return std::string("");
     }
-    
+
     return it->second;
   }
 
   inline std::string getOutputName(std::string name = "output") const
   {
-    //std::map<std::string, std::string>::iterator it;
+    // std::map<std::string, std::string>::iterator it;
     auto it = attr_.output_names.find(name);
-    if(it == attr_.output_names.end()){
+    if (it == attr_.output_names.end())
+    {
       slog::warn << "No output named: " << name << slog::endl;
       return std::string("");
     }
-    
+
     return it->second;
   }
 
@@ -136,15 +143,14 @@ public:
   inline void loadLabelsFromFile(const std::string file_path)
   {
     std::ifstream input_file(file_path);
-    std::copy(std::istream_iterator<std::string>(input_file),
-      std::istream_iterator<std::string>(),
-      std::back_inserter(attr_.labels));
-    }
+    std::copy(std::istream_iterator<std::string>(input_file), std::istream_iterator<std::string>(),
+              std::back_inserter(attr_.labels));
+  }
 
-    inline std::vector<std::string>& getLabels()
-    {
-      return attr_.labels;
-    }
+  inline std::vector<std::string>& getLabels()
+  {
+    return attr_.labels;
+  }
 
   inline void addInputInfo(std::string key, std::string value)
   {
@@ -178,10 +184,9 @@ public:
 
 protected:
   ModelAttr attr_;
-
 };
 
-#if 0 //not used
+#if 0  // not used
 class SSDModelAttr : public ModelAttribute
 {
 public:
@@ -192,7 +197,6 @@ public:
 
 };
 #endif
-
 
 }  // namespace Models
 

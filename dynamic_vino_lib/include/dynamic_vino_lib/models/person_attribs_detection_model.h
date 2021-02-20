@@ -29,9 +29,9 @@ namespace Models
 class PersonAttribsDetectionModel : public BaseModel
 {
 public:
-  PersonAttribsDetectionModel(const std::string & model_loc, int batch_size = 1);
-  //inline const std::string getInputName() {return input_;}
-  //inline const std::string getOutputName() {return output_;}
+  PersonAttribsDetectionModel(const std::string& model_loc, int batch_size = 1);
+  // inline const std::string getInputName() {return input_;}
+  // inline const std::string getOutputName() {return output_;}
   /**
    * @brief Get the name of this detection model.
    * @return Name of the model.
@@ -39,8 +39,8 @@ public:
   const std::string getModelCategory() const override;
 
 protected:
-  //void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr &) override;
-  //void setLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
+  // void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr &) override;
+  // void setLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
   bool updateLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
   std::string input_;
   std::string output_;

@@ -37,14 +37,12 @@
 /**
 * @brief This function check input args and find images in given folder
 */
-void readImagesArguments(std::vector<std::string>& images,
-                         const std::string& arg)
+void readImagesArguments(std::vector<std::string>& images, const std::string& arg)
 {
   struct stat sb;
   if (stat(arg.c_str(), &sb) != 0)
   {
-    std::cout << "[ WARNING ] File " << arg << " cannot be opened!"
-              << std::endl;
+    std::cout << "[ WARNING ] File " << arg << " cannot be opened!" << std::endl;
     return;
   }
   if (S_ISDIR(sb.st_mode))
@@ -53,8 +51,7 @@ void readImagesArguments(std::vector<std::string>& images,
     dp = opendir(arg.c_str());
     if (dp == nullptr)
     {
-      std::cout << "[ WARNING ] Directory " << arg << " cannot be opened!"
-                << std::endl;
+      std::cout << "[ WARNING ] Directory " << arg << " cannot be opened!" << std::endl;
       return;
     }
 
@@ -62,9 +59,9 @@ void readImagesArguments(std::vector<std::string>& images,
     while (nullptr != (ep = readdir(dp)))
     {
       std::string fileName = ep->d_name;
-      if (fileName == "." || fileName == "..") continue;
-      std::cout << "[ INFO ] Add file  " << ep->d_name << " from directory "
-                << arg << "." << std::endl;
+      if (fileName == "." || fileName == "..")
+        continue;
+      std::cout << "[ INFO ] Add file  " << ep->d_name << " from directory " << arg << "." << std::endl;
       images.push_back(arg + "/" + ep->d_name);
     }
   }

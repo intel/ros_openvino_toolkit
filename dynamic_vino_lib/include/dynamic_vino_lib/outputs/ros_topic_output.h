@@ -59,7 +59,7 @@ namespace Outputs
  */
 class RosTopicOutput : public BaseOutput
 {
- public:
+public:
   RosTopicOutput(){};
   RosTopicOutput(std::string pipeline_name);
   /**
@@ -77,46 +77,43 @@ class RosTopicOutput : public BaseOutput
    * the license plate detection result.
    * @param[in] A license plate detection result objetc.
    */
-  void accept(
-    const std::vector<dynamic_vino_lib::LicensePlateDetectionResult> &) override;
+  void accept(const std::vector<dynamic_vino_lib::LicensePlateDetectionResult>&) override;
   /**
    * @brief Generate image window output content according to
    * the vehicle attributes detection result.
    * @param[in] A vehicle attributes detection result objetc.
    */
-  void accept(
-    const std::vector<dynamic_vino_lib::VehicleAttribsDetectionResult> &) override;
+  void accept(const std::vector<dynamic_vino_lib::VehicleAttribsDetectionResult>&) override;
   /**
    * @brief Generate ros topic infomation according to
    * the person attributes detection result.
    * @param[in] results a bundle of person attributes detection results.
    */
-  void accept(const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult> &) override;
+  void accept(const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult>&) override;
   /**
    * @brief Generate ros topic infomation according to
    * the face reidentification result.
    * @param[in] results a bundle of face reidentification results.
    */
-  void accept(const std::vector<dynamic_vino_lib::FaceReidentificationResult> &) override;
+  void accept(const std::vector<dynamic_vino_lib::FaceReidentificationResult>&) override;
   /**
    * @brief Generate ros topic infomation according to
    * the person reidentification result.
    * @param[in] results a bundle of person reidentification results.
    */
-  void accept(const std::vector<dynamic_vino_lib::PersonReidentificationResult> &) override;
+  void accept(const std::vector<dynamic_vino_lib::PersonReidentificationResult>&) override;
   /**
    * @brief Generate ros topic infomation according to
    * the object segmentation result.
    * @param[in] results a bundle of object segmentation results.
    */
-  void accept(const std::vector<dynamic_vino_lib::ObjectSegmentationResult> &) override;
+  void accept(const std::vector<dynamic_vino_lib::ObjectSegmentationResult>&) override;
   /**
    * @brief Generate ros topic infomation according to
    * the face detection result.
    * @param[in] An face detection result objetc.
    */
-  void accept(
-      const std::vector<dynamic_vino_lib::FaceDetectionResult>&) override;
+  void accept(const std::vector<dynamic_vino_lib::FaceDetectionResult>&) override;
   /**
    * @brief Generate ros topic infomation according to
    * the emotion detection result.
@@ -128,7 +125,7 @@ class RosTopicOutput : public BaseOutput
    * the age gender detection result.
    * @param[in] An age gender detection result objetc.
    */
-  void accept(const std::vector<dynamic_vino_lib::AgeGenderResult> &) override;
+  void accept(const std::vector<dynamic_vino_lib::AgeGenderResult>&) override;
   /**detected_objects_topic_
    * @brief Generate ros topic infomation according to
    * the headpose detection result.
@@ -142,14 +139,14 @@ class RosTopicOutput : public BaseOutput
    */
   void accept(const std::vector<dynamic_vino_lib::ObjectDetectionResult>&) override;
 
-
- private:
+private:
   std_msgs::Header getHeader();
   const std::string pipeline_name_;
   const std::string topic_name_;
   cv::Mat frame_;
   ros::NodeHandle nh_;
- protected:
+
+protected:
   ros::Publisher pub_face_;
   std::shared_ptr<object_msgs::ObjectsInBoxes> faces_topic_;
   ros::Publisher pub_emotion_;
@@ -172,7 +169,6 @@ class RosTopicOutput : public BaseOutput
   std::shared_ptr<people_msgs::LicensePlateStamped> license_plate_topic_;
   ros::Publisher pub_vehicle_attribs_;
   std::shared_ptr<people_msgs::VehicleAttribsStamped> vehicle_attribs_topic_;
-
 };
 }  // namespace Outputs
 #endif  // DYNAMIC_VINO_LIB_OUTPUTS_ROS_TOPIC_OUTPUT_H

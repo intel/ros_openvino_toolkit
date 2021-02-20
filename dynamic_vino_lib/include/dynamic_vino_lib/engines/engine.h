@@ -36,7 +36,7 @@ namespace Engines
 class Engine
 {
 public:
-#if(defined(USE_OLD_E_PLUGIN_API))
+#if (defined(USE_OLD_E_PLUGIN_API))
   /**
    * DEPRECATED! instead of using Engine(InferenceEngine::InferRequest::Ptr &)
    * @brief Create an NetworkEngine instance
@@ -48,7 +48,7 @@ public:
   /**
    * @brief Using an Inference Request to initialize the inference Engine.
    */
-  Engine(InferenceEngine::InferRequest::Ptr &);
+  Engine(InferenceEngine::InferRequest::Ptr&);
   /**
    * @brief Get the inference request this instance holds.
    * @return The inference request this instance holds.
@@ -68,7 +68,7 @@ public:
     request_->SetCompletionCallback(callbackToSet);
   }
 
- private:
+private:
   InferenceEngine::InferRequest::Ptr request_ = nullptr;
 };
 }  // namespace Engines

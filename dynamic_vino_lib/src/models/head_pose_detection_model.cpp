@@ -27,22 +27,20 @@
 #include "dynamic_vino_lib/slog.h"
 
 // Validated Head Pose Network
-Models::HeadPoseDetectionModel::HeadPoseDetectionModel(
-  const std::string & model_loc, int max_batch_size)
-: BaseModel(model_loc, max_batch_size)
+Models::HeadPoseDetectionModel::HeadPoseDetectionModel(const std::string& model_loc, int max_batch_size)
+  : BaseModel(model_loc, max_batch_size)
 {
 }
 
-bool Models::HeadPoseDetectionModel::updateLayerProperty
-(InferenceEngine::CNNNetReader::Ptr net_reader)
+bool Models::HeadPoseDetectionModel::updateLayerProperty(InferenceEngine::CNNNetReader::Ptr net_reader)
 {
   slog::info << "Checking INPUTs for model " << getModelName() << slog::endl;
   // set input property
   InferenceEngine::InputsDataMap input_info_map(net_reader->getNetwork().getInputsInfo());
-  if (input_info_map.size() != 1) {
-    slog::warn << "This model should have only one input, but we got"
-      << std::to_string(input_info_map.size()) << "inputs"
-      << slog::endl;
+  if (input_info_map.size() != 1)
+  {
+    slog::warn << "This model should have only one input, but we got" << std::to_string(input_info_map.size())
+               << "inputs" << slog::endl;
     return false;
   }
   InferenceEngine::InputInfo::Ptr input_info = input_info_map.begin()->second;
@@ -52,15 +50,20 @@ bool Models::HeadPoseDetectionModel::updateLayerProperty
 
   // set output property
   InferenceEngine::OutputsDataMap output_info_map(net_reader->getNetwork().getOutputsInfo());
-  for (auto & output : output_info_map) {
+  for (auto& output : output_info_map)
+  {
     output.second->setPrecision(InferenceEngine::Precision::FP32);
     output.second->setLayout(InferenceEngine::Layout::NC);
   }
 
-  for (const std::string& outName : {output_angle_r_, output_angle_p_, output_angle_y_}) {
-    if (output_info_map.find(outName) == output_info_map.end()) {
+  for (const std::string& outName : { output_angle_r_, output_angle_p_, output_angle_y_ })
+  {
+    if (output_info_map.find(outName) == output_info_map.end())
+    {
       throw std::logic_error("There is no " + outName + " output in Head Pose Estimation network");
-    } else {
+    }
+    else
+    {
       addOutputInfo(outName, outName);
     }
   }

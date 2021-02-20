@@ -20,26 +20,27 @@
 #include "dynamic_vino_lib/models/license_plate_detection_model.h"
 #include "dynamic_vino_lib/slog.h"
 // Validated Vehicle Attributes Detection Network
-Models::LicensePlateDetectionModel::LicensePlateDetectionModel(
-  const std::string & model_loc, int max_batch_size)
-: BaseModel(model_loc, max_batch_size) {}
+Models::LicensePlateDetectionModel::LicensePlateDetectionModel(const std::string& model_loc, int max_batch_size)
+  : BaseModel(model_loc, max_batch_size)
+{
+}
 
-bool Models::LicensePlateDetectionModel::updateLayerProperty(
-  const InferenceEngine::CNNNetReader::Ptr net_reader)
+bool Models::LicensePlateDetectionModel::updateLayerProperty(const InferenceEngine::CNNNetReader::Ptr net_reader)
 {
   slog::info << "Checking INPUTs for model " << getModelName() << slog::endl;
-  InferenceEngine::InputsDataMap input_info_map(
-    net_reader->getNetwork().getInputsInfo());
-  if (input_info_map.size() != 2) {
+  InferenceEngine::InputsDataMap input_info_map(net_reader->getNetwork().getInputsInfo());
+  if (input_info_map.size() != 2)
+  {
     throw std::logic_error("Vehicle Attribs topology should have only two inputs");
   }
   auto sequence_input = (++input_info_map.begin());
-  if (sequence_input->second->getTensorDesc().getDims()[0] != getMaxSequenceSize()) {
+  if (sequence_input->second->getTensorDesc().getDims()[0] != getMaxSequenceSize())
+  {
     throw std::logic_error("License plate detection max sequence size dismatch");
   }
-  InferenceEngine::OutputsDataMap output_info_map(
-    net_reader->getNetwork().getOutputsInfo());
-  if (output_info_map.size() != 1) {
+  InferenceEngine::OutputsDataMap output_info_map(net_reader->getNetwork().getOutputsInfo());
+  if (output_info_map.size() != 1)
+  {
     throw std::logic_error("Vehicle Attribs Network expects networks having one output");
   }
 

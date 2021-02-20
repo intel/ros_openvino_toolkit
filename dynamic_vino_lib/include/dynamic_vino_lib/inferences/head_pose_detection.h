@@ -39,7 +39,7 @@ namespace dynamic_vino_lib
  */
 class HeadPoseResult : public Result
 {
- public:
+public:
   friend class HeadPoseDetection;
   explicit HeadPoseResult(const cv::Rect& location);
   /**
@@ -67,7 +67,7 @@ class HeadPoseResult : public Result
     return angle_r_;
   }
 
- private:
+private:
   float angle_y_ = -1;
   float angle_p_ = -1;
   float angle_r_ = -1;
@@ -79,7 +79,7 @@ class HeadPoseResult : public Result
  */
 class HeadPoseDetection : public BaseInference
 {
- public:
+public:
   using Result = dynamic_vino_lib::HeadPoseResult;
   HeadPoseDetection();
   ~HeadPoseDetection() override;
@@ -128,17 +128,15 @@ class HeadPoseDetection : public BaseInference
    * @brief Show the observed detection result either through image window
      or ROS topic.
    */
-  void observeOutput(
-      const std::shared_ptr<Outputs::BaseOutput>& output) override;
+  void observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output) override;
 
   std::vector<Result> getResults()
   {
     return results_;
   }
-  const std::vector<cv::Rect> getFilteredROIs(
-    const std::string filter_conditions) const override;
+  const std::vector<cv::Rect> getFilteredROIs(const std::string filter_conditions) const override;
 
- private:
+private:
   std::shared_ptr<Models::HeadPoseDetectionModel> valid_model_;
   std::vector<Result> results_;
 };

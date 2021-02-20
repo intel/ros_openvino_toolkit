@@ -46,7 +46,7 @@ namespace dynamic_vino_lib
 class FaceDetectionResult : public ObjectDetectionResult
 {
 public:
-  explicit FaceDetectionResult(const cv::Rect & location);
+  explicit FaceDetectionResult(const cv::Rect& location);
 };
 
 /**

@@ -27,37 +27,33 @@
 #include "dynamic_vino_lib/outputs/base_output.h"
 
 // AgeGenderResult
-dynamic_vino_lib::AgeGenderResult::AgeGenderResult(const cv::Rect& location)
-    : Result(location)
+dynamic_vino_lib::AgeGenderResult::AgeGenderResult(const cv::Rect& location) : Result(location)
 {
 }
 
 // AgeGender Detection
-dynamic_vino_lib::AgeGenderDetection::AgeGenderDetection()
-    : dynamic_vino_lib::BaseInference()
+dynamic_vino_lib::AgeGenderDetection::AgeGenderDetection() : dynamic_vino_lib::BaseInference()
 {
 }
 
 dynamic_vino_lib::AgeGenderDetection::~AgeGenderDetection() = default;
 
-void dynamic_vino_lib::AgeGenderDetection::loadNetwork(
-    std::shared_ptr<Models::AgeGenderDetectionModel> network)
+void dynamic_vino_lib::AgeGenderDetection::loadNetwork(std::shared_ptr<Models::AgeGenderDetectionModel> network)
 {
   valid_model_ = network;
   setMaxBatchSize(network->getMaxBatchSize());
 }
 
-bool dynamic_vino_lib::AgeGenderDetection::enqueue(
-    const cv::Mat& frame, const cv::Rect& input_frame_loc)
+bool dynamic_vino_lib::AgeGenderDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
 {
   if (getEnqueuedNum() == 0)
   {
     results_.clear();
   }
-  bool succeed = dynamic_vino_lib::BaseInference::enqueue<float>(
-      frame, input_frame_loc, 1, getResultsLength(),
-      valid_model_->getInputName());
-  if (!succeed) return false;
+  bool succeed = dynamic_vino_lib::BaseInference::enqueue<float>(frame, input_frame_loc, 1, getResultsLength(),
+                                                                 valid_model_->getInputName());
+  if (!succeed)
+    return false;
   Result r(input_frame_loc);
   results_.emplace_back(r);
   return true;
@@ -71,12 +67,11 @@ bool dynamic_vino_lib::AgeGenderDetection::submitRequest()
 bool dynamic_vino_lib::AgeGenderDetection::fetchResults()
 {
   bool can_fetch = dynamic_vino_lib::BaseInference::fetchResults();
-  if (!can_fetch) return false;
+  if (!can_fetch)
+    return false;
   auto request = getEngine()->getRequest();
-  InferenceEngine::Blob::Ptr genderBlob =
-      request->GetBlob(valid_model_->getOutputGenderName());
-  InferenceEngine::Blob::Ptr ageBlob =
-      request->GetBlob(valid_model_->getOutputAgeName());
+  InferenceEngine::Blob::Ptr genderBlob = request->GetBlob(valid_model_->getOutputGenderName());
+  InferenceEngine::Blob::Ptr ageBlob = request->GetBlob(valid_model_->getOutputAgeName());
 
   for (size_t i = 0; i < results_.size(); ++i)
   {
@@ -91,8 +86,7 @@ int dynamic_vino_lib::AgeGenderDetection::getResultsLength() const
   return static_cast<int>(results_.size());
 }
 
-const dynamic_vino_lib::Result*
-dynamic_vino_lib::AgeGenderDetection::getLocationResult(int idx) const
+const dynamic_vino_lib::Result* dynamic_vino_lib::AgeGenderDetection::getLocationResult(int idx) const
 {
   return &(results_[idx]);
 }
@@ -102,8 +96,7 @@ const std::string dynamic_vino_lib::AgeGenderDetection::getName() const
   return valid_model_->getModelCategory();
 }
 
-void dynamic_vino_lib::AgeGenderDetection::observeOutput(
-    const std::shared_ptr<Outputs::BaseOutput>& output)
+void dynamic_vino_lib::AgeGenderDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
 {
   if (output != nullptr)
   {
@@ -111,15 +104,17 @@ void dynamic_vino_lib::AgeGenderDetection::observeOutput(
   }
 }
 
-const std::vector<cv::Rect> dynamic_vino_lib::AgeGenderDetection::getFilteredROIs(
-  const std::string filter_conditions) const
+const std::vector<cv::Rect>
+dynamic_vino_lib::AgeGenderDetection::getFilteredROIs(const std::string filter_conditions) const
 {
-  if (!filter_conditions.empty()) {
-    slog::err << "Age gender detection does not support filtering now! " <<
-      "Filter conditions: " << filter_conditions << slog::endl;
+  if (!filter_conditions.empty())
+  {
+    slog::err << "Age gender detection does not support filtering now! "
+              << "Filter conditions: " << filter_conditions << slog::endl;
   }
   std::vector<cv::Rect> filtered_rois;
-  for (auto res : results_) {
+  for (auto res : results_)
+  {
     filtered_rois.push_back(res.getLocation());
   }
   return filtered_rois;

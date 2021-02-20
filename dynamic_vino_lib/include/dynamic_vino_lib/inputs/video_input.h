@@ -33,7 +33,7 @@ namespace Input
  */
 class Video : public BaseInputDevice
 {
- public:
+public:
   explicit Video(const std::string&);
   /**
    * @brief Read a video file from the file path.
@@ -53,7 +53,7 @@ class Video : public BaseInputDevice
    */
   bool read(cv::Mat* frame) override;
 
- private:
+private:
   cv::VideoCapture cap;
   std::string video_;
 };

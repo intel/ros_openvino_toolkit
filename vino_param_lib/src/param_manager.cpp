@@ -23,34 +23,32 @@
 
 namespace Params
 {
-
-void operator>>(const YAML::Node & node, ParamManager::PipelineRawData & pipeline);
-void operator>>(const YAML::Node & node, std::vector<ParamManager::InferenceRawData> & list);
-void operator>>(const YAML::Node & node, ParamManager::InferenceRawData & infer);
+void operator>>(const YAML::Node& node, ParamManager::PipelineRawData& pipeline);
+void operator>>(const YAML::Node& node, std::vector<ParamManager::InferenceRawData>& list);
+void operator>>(const YAML::Node& node, ParamManager::InferenceRawData& infer);
 void operator>>(const YAML::Node& node, std::vector<std::string>& list);
 void operator>>(const YAML::Node& node, std::multimap<std::string, std::string>& connect);
-void operator>>(const YAML::Node & node, std::vector<ParamManager::FilterRawData> & filters);
+void operator>>(const YAML::Node& node, std::vector<ParamManager::FilterRawData>& filters);
 void operator>>(const YAML::Node& node, std::string& str);
 void operator>>(const YAML::Node& node, bool& val);
 void operator>>(const YAML::Node& node, int& val);
 void operator>>(const YAML::Node& node, float& val);
 void operator>>(const YAML::Node& node, ParamManager::CommonRawData& common);
-#define YAML_PARSE(node, key, val)                                       \
-  try                                                                    \
-  {                                                                      \
-    node[key] >> val;                                                    \
-  }                                                                      \
-  catch (YAML::Exception e)                                              \
-  {                                                                      \
-    slog::warn << e.msg << slog::endl;                                   \
-  }                                                                      \
-  catch (...)                                                            \
-  {                                                                      \
-    slog::warn << "Exception occurs when parsing string." << slog::endl; \
+#define YAML_PARSE(node, key, val)                                                                                     \
+  try                                                                                                                  \
+  {                                                                                                                    \
+    node[key] >> val;                                                                                                  \
+  }                                                                                                                    \
+  catch (YAML::Exception e)                                                                                            \
+  {                                                                                                                    \
+    slog::warn << e.msg << slog::endl;                                                                                 \
+  }                                                                                                                    \
+  catch (...)                                                                                                          \
+  {                                                                                                                    \
+    slog::warn << "Exception occurs when parsing string." << slog::endl;                                               \
   }
 
-void operator>>(const YAML::Node& node,
-                std::vector<ParamManager::PipelineRawData>& list)
+void operator>>(const YAML::Node& node, std::vector<ParamManager::PipelineRawData>& list)
 {
   slog::info << "Pipeline size: " << node.size() << slog::endl;
   for (unsigned i = 0; i < node.size(); i++)
@@ -69,8 +67,7 @@ void operator>>(const YAML::Node& node, ParamManager::CommonRawData& common)
   YAML_PARSE(node, "enable_performance_count", common.enable_performance_count)
 }
 
-void operator>>(const YAML::Node& node,
-                ParamManager::PipelineRawData& pipeline)
+void operator>>(const YAML::Node& node, ParamManager::PipelineRawData& pipeline)
 {
   YAML_PARSE(node, "name", pipeline.name)
   YAML_PARSE(node, "inputs", pipeline.inputs)
@@ -82,8 +79,7 @@ void operator>>(const YAML::Node& node,
   slog::info << "Pipeline Params:name=" << pipeline.name << slog::endl;
 }
 
-void operator>>(const YAML::Node& node,
-                std::vector<ParamManager::InferenceRawData>& list)
+void operator>>(const YAML::Node& node, std::vector<ParamManager::InferenceRawData>& list)
 {
   slog::info << "Inferences size: " << node.size() << slog::endl;
   for (unsigned i = 0; i < node.size(); i++)
@@ -117,35 +113,40 @@ void operator>>(const YAML::Node& node, std::vector<std::string>& list)
   }
 }
 
-void operator>>(const YAML::Node& node,
-                std::multimap<std::string, std::string>& connect)
+void operator>>(const YAML::Node& node, std::multimap<std::string, std::string>& connect)
 {
   for (unsigned i = 0; i < node.size(); i++)
   {
     std::string left;
     node[i]["left"] >> left;
     YAML::Node rights = node[i]["right"];
-    for (unsigned i = 0; i < rights.size(); i++) {
+    for (unsigned i = 0; i < rights.size(); i++)
+    {
       std::string right;
-      if (rights[i].Type() == YAML::NodeType::Map) {
+      if (rights[i].Type() == YAML::NodeType::Map)
+      {
         rights[i].begin()->first >> right;
       }
-      else {
+      else
+      {
         rights[i] >> right;
       }
-      connect.insert({left, right});
+      connect.insert({ left, right });
     }
   }
 }
 
-void operator>>(const YAML::Node & node, std::vector<ParamManager::FilterRawData> & filters)
+void operator>>(const YAML::Node& node, std::vector<ParamManager::FilterRawData>& filters)
 {
-  for (unsigned i = 0; i < node.size(); i++) {
+  for (unsigned i = 0; i < node.size(); i++)
+  {
     std::string left;
     node[i]["left"] >> left;
     YAML::Node rights = node[i]["right"];
-    for (unsigned i = 0; i < rights.size(); i++) {
-      if (rights[i].Type() == YAML::NodeType::Map) {
+    for (unsigned i = 0; i < rights.size(); i++)
+    {
+      if (rights[i].Type() == YAML::NodeType::Map)
+      {
         ParamManager::FilterRawData filter;
         filter.input = left;
         rights[i].begin()->first >> filter.output;
@@ -166,12 +167,12 @@ void operator>>(const YAML::Node& node, bool& val)
   val = node.as<bool>();
 }
 
-void operator>>(const YAML::Node & node, int & val)
+void operator>>(const YAML::Node& node, int& val)
 {
   val = node.as<int>();
 }
 
-void operator>>(const YAML::Node & node, float & val)
+void operator>>(const YAML::Node& node, float& val)
 {
   val = node.as<float>();
 }
@@ -218,12 +219,9 @@ void ParamManager::print() const
   // Pring Common Info
   slog::info << "Common:" << slog::endl;
   slog::info << "\tcamera_topic: " << common_.camera_topic << slog::endl;
-  slog::info << "\tcustom_cpu_library: " << common_.custom_cpu_library
-             << slog::endl;
-  slog::info << "\tcustom_cldnn_library: " << common_.custom_cldnn_library
-             << slog::endl;
-  slog::info << "\tenable_performance_count: "
-             << common_.enable_performance_count << slog::endl;
+  slog::info << "\tcustom_cpu_library: " << common_.custom_cpu_library << slog::endl;
+  slog::info << "\tcustom_cldnn_library: " << common_.custom_cldnn_library << slog::endl;
+  slog::info << "\tenable_performance_count: " << common_.enable_performance_count << slog::endl;
 }
 
 void ParamManager::parse(std::string path)
@@ -251,8 +249,7 @@ std::vector<std::string> ParamManager::getPipelineNames() const
   return names;
 }
 
-ParamManager::PipelineRawData ParamManager::getPipeline(
-    const std::string& name) const
+ParamManager::PipelineRawData ParamManager::getPipeline(const std::string& name) const
 {
   for (auto& p : pipelines_)
   {
@@ -263,4 +260,4 @@ ParamManager::PipelineRawData ParamManager::getPipeline(
   }
   throw std::logic_error("No parameters found for pipeline [" + name + "]");
 }
-} // namespace Params
+}  // namespace Params
