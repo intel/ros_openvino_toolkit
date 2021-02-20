@@ -25,30 +25,32 @@
 #include "dynamic_vino_lib/slog.h"
 
 // PersonAttribsDetectionResult
-dynamic_vino_lib::PersonAttribsDetectionResult::PersonAttribsDetectionResult(
-  const cv::Rect & location)
-: Result(location) {}
+dynamic_vino_lib::PersonAttribsDetectionResult::PersonAttribsDetectionResult(const cv::Rect& location)
+  : Result(location)
+{
+}
 
 // PersonAttribsDetection
 dynamic_vino_lib::PersonAttribsDetection::PersonAttribsDetection(double attribs_confidence)
-: attribs_confidence_(attribs_confidence), dynamic_vino_lib::BaseInference() {}
+  : attribs_confidence_(attribs_confidence), dynamic_vino_lib::BaseInference()
+{
+}
 
 dynamic_vino_lib::PersonAttribsDetection::~PersonAttribsDetection() = default;
 void dynamic_vino_lib::PersonAttribsDetection::loadNetwork(
-  const std::shared_ptr<Models::PersonAttribsDetectionModel> network)
+    const std::shared_ptr<Models::PersonAttribsDetectionModel> network)
 {
   valid_model_ = network;
   setMaxBatchSize(network->getMaxBatchSize());
 }
 
-bool dynamic_vino_lib::PersonAttribsDetection::enqueue(
-  const cv::Mat & frame, const cv::Rect & input_frame_loc)
+bool dynamic_vino_lib::PersonAttribsDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
 {
-  if (getEnqueuedNum() == 0) {
+  if (getEnqueuedNum() == 0)
+  {
     results_.clear();
   }
-  if (!dynamic_vino_lib::BaseInference::enqueue<u_int8_t>(
-      frame, input_frame_loc, 1, 0, valid_model_->getInputName()))
+  if (!dynamic_vino_lib::BaseInference::enqueue<u_int8_t>(frame, input_frame_loc, 1, 0, valid_model_->getInputName()))
   {
     return false;
   }
@@ -88,7 +90,10 @@ bool dynamic_vino_lib::PersonAttribsDetection::fetchResults()
 bool dynamic_vino_lib::PersonAttribsDetection::fetchResults()
 {
   bool can_fetch = dynamic_vino_lib::BaseInference::fetchResults();
-  if (!can_fetch) {return false;}
+  if (!can_fetch)
+  {
+    return false;
+  }
   bool found_result = false;
   InferenceEngine::InferRequest::Ptr request = getEngine()->getRequest();
   slog::debug << "Analyzing Attributes Detection results..." << slog::endl;
@@ -108,22 +113,26 @@ bool dynamic_vino_lib::PersonAttribsDetection::fetchResults()
   auto bottom_values = bottomBlob->buffer().as<float*>();
 
   int net_attrib_length = net_attributes_.size();
-  for (int i = 0; i < getResultsLength(); i++) {
+  for (int i = 0; i < getResultsLength(); i++)
+  {
     results_[i].male_probability_ = attri_values[i * net_attrib_length];
     results_[i].top_point_.x = top_values[i];
-    results_[i].top_point_.y = top_values[i+1];
+    results_[i].top_point_.y = top_values[i + 1];
     results_[i].bottom_point_.x = bottom_values[i];
-    results_[i].bottom_point_.y = bottom_values[i+1];
+    results_[i].bottom_point_.y = bottom_values[i + 1];
     std::string attrib = "";
-    for (int j = 1; j < net_attrib_length; j++) {
-      attrib += (attri_values[i * net_attrib_length + j] > attribs_confidence_) ?
-        net_attributes_[j] + ", " : "";
+    for (int j = 1; j < net_attrib_length; j++)
+    {
+      attrib += (attri_values[i * net_attrib_length + j] > attribs_confidence_) ? net_attributes_[j] + ", " : "";
     }
-    results_[i].attributes_ = attrib;    
+    results_[i].attributes_ = attrib;
 
     found_result = true;
-  }  
-  if (!found_result) {results_.clear();}
+  }
+  if (!found_result)
+  {
+    results_.clear();
+  }
   return true;
 }
 
@@ -132,8 +141,7 @@ int dynamic_vino_lib::PersonAttribsDetection::getResultsLength() const
   return static_cast<int>(results_.size());
 }
 
-const dynamic_vino_lib::Result *
-dynamic_vino_lib::PersonAttribsDetection::getLocationResult(int idx) const
+const dynamic_vino_lib::Result* dynamic_vino_lib::PersonAttribsDetection::getLocationResult(int idx) const
 {
   return &(results_[idx]);
 }
@@ -143,23 +151,25 @@ const std::string dynamic_vino_lib::PersonAttribsDetection::getName() const
   return valid_model_->getModelCategory();
 }
 
-void dynamic_vino_lib::PersonAttribsDetection::observeOutput(
-  const std::shared_ptr<Outputs::BaseOutput> & output)
+void dynamic_vino_lib::PersonAttribsDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
 {
-  if (output != nullptr) {
+  if (output != nullptr)
+  {
     output->accept(results_);
   }
 }
 
-const std::vector<cv::Rect> dynamic_vino_lib::PersonAttribsDetection::getFilteredROIs(
-  const std::string filter_conditions) const
+const std::vector<cv::Rect>
+dynamic_vino_lib::PersonAttribsDetection::getFilteredROIs(const std::string filter_conditions) const
 {
-  if (!filter_conditions.empty()) {
-    slog::err << "Person attributes detection does not support filtering now! " <<
-      "Filter conditions: " << filter_conditions << slog::endl;
+  if (!filter_conditions.empty())
+  {
+    slog::err << "Person attributes detection does not support filtering now! "
+              << "Filter conditions: " << filter_conditions << slog::endl;
   }
   std::vector<cv::Rect> filtered_rois;
-  for (auto res : results_) {
+  for (auto res : results_)
+  {
     filtered_rois.push_back(res.getLocation());
   }
   return filtered_rois;

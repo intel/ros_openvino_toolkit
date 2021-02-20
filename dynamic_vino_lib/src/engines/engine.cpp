@@ -20,18 +20,14 @@
  */
 #include "dynamic_vino_lib/engines/engine.h"
 
-#if(defined(USE_OLD_E_PLUGIN_API))
-Engines::Engine::Engine(
-  InferenceEngine::InferencePlugin plg,
-  const Models::BaseModel::Ptr base_model)
+#if (defined(USE_OLD_E_PLUGIN_API))
+Engines::Engine::Engine(InferenceEngine::InferencePlugin plg, const Models::BaseModel::Ptr base_model)
 {
-  request_ = (plg.LoadNetwork(base_model->getNetReader()->getNetwork(), {}))
-                 .CreateInferRequestPtr();
+  request_ = (plg.LoadNetwork(base_model->getNetReader()->getNetwork(), {})).CreateInferRequestPtr();
 }
 #endif
 
-Engines::Engine::Engine(
-  InferenceEngine::InferRequest::Ptr & request)
+Engines::Engine::Engine(InferenceEngine::InferRequest::Ptr& request)
 {
   request_ = request;
 }

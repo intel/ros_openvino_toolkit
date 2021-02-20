@@ -49,13 +49,12 @@ class LogStream
   std::ostream* _log_stream;
   bool _new_line;
 
- public:
+public:
   /**
    * @brief A constructor. Creates an LogStream object
    * @param prefix The prefix to print
    */
-  LogStream(const std::string& prefix, std::ostream& log_stream)
-      : _prefix(prefix), _new_line(true)
+  LogStream(const std::string& prefix, std::ostream& log_stream) : _prefix(prefix), _new_line(true)
   {
     _log_stream = &log_stream;
   }

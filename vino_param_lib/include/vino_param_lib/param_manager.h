@@ -42,7 +42,7 @@ namespace Params
  */
 class ParamManager  // singleton
 {
- public:
+public:
   /**
    * @brief Get the singleton instance of ParamManager class.
    * The instance will be created when first call.
@@ -72,7 +72,8 @@ class ParamManager  // singleton
     bool enable_roi_constraint = false;
   };
 
-  struct FilterRawData {
+  struct FilterRawData
+  {
     std::string input;
     std::string output;
     std::string filter_conditions;
@@ -88,7 +89,7 @@ class ParamManager  // singleton
     std::string input_meta;
     std::vector<FilterRawData> filters;
   };
-  
+
   struct CommonRawData
   {
     std::string custom_cpu_library;
@@ -137,7 +138,7 @@ class ParamManager  // singleton
     return common_;
   }
 
- private:
+private:
   ParamManager()
   {
   }
@@ -149,4 +150,4 @@ class ParamManager  // singleton
 };
 
 }  // namespace Params
-#endif // VINO_PARAM_LIB_PARAM_MANAGER_H
+#endif  // VINO_PARAM_LIB_PARAM_MANAGER_H

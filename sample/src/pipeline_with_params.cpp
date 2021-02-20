@@ -82,9 +82,8 @@ bool parseAndCheckCommandLine(int argc, char** argv)
 
 int main(int argc, char** argv)
 {
+  ros::init(argc, argv, "sample_with_params");
 
-  ros::init(argc, argv, "sample_with_params"); 
-  
   // register signal SIGINT and signal handler
   signal(SIGINT, signalHandler);
 
@@ -94,8 +93,7 @@ int main(int argc, char** argv)
 
   try
   {
-    std::cout << "InferenceEngine: "
-              << InferenceEngine::GetInferenceEngineVersion() << std::endl;
+    std::cout << "InferenceEngine: " << InferenceEngine::GetInferenceEngineVersion() << std::endl;
 
     // ----- Parsing and validation of input args-----------------------
     if (!parseAndCheckCommandLine(argc, argv))
@@ -113,15 +111,15 @@ int main(int argc, char** argv)
       throw std::logic_error("Pipeline parameters should be set!");
     }
 
-    for (auto & p : pipelines) {
+    for (auto& p : pipelines)
+    {
       PipelineManager::getInstance().createPipeline(p);
     }
-   
+
     PipelineManager::getInstance().runAll();
     PipelineManager::getInstance().joinAll();
 
     slog::info << "Execution successful" << slog::endl;
-   
   }
   catch (const std::exception& error)
   {

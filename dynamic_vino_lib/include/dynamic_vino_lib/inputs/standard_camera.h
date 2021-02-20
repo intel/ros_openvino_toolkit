@@ -39,7 +39,7 @@ namespace Input
  */
 class StandardCamera : public BaseInputDevice
 {
- public:
+public:
   /**
    * @brief Initialize the input device,
    * for cameras, it will turn the camera on and get ready to read frames,
@@ -58,7 +58,7 @@ class StandardCamera : public BaseInputDevice
    */
   bool read(cv::Mat* frame) override;
 
- private:
+private:
   int getCameraId();
   cv::VideoCapture cap;
   int camera_id_ = -1;

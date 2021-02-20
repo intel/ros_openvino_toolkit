@@ -27,92 +27,92 @@
 #include <pipeline_srv_msgs/PipelineSrv.h>
 #include <pipeline_srv_msgs/Pipelines.h>
 
-
-pipeline_srv_msgs::PipelineSrv getRequestMsg(std::string cmd, std::string value){
+pipeline_srv_msgs::PipelineSrv getRequestMsg(std::string cmd, std::string value)
+{
   pipeline_srv_msgs::PipelineSrv srv;
   srv.request.pipeline_request.cmd = cmd;
   srv.request.pipeline_request.value = value;
   return srv;
 }
 
-bool stopPipelineByName(ros::ServiceClient& client,std::string name){
-
-  auto srv = getRequestMsg("STOP_PIPELINE",name);//object_pipeline1
+bool stopPipelineByName(ros::ServiceClient& client, std::string name)
+{
+  auto srv = getRequestMsg("STOP_PIPELINE", name);  // object_pipeline1
   bool result = client.call(srv) ? true : false;
   return result;
 }
 
-bool pausePipelineByName(ros::ServiceClient& client,std::string name){
-
-  auto srv = getRequestMsg("PAUSE_PIPELINE",name);//object_pipeline1
+bool pausePipelineByName(ros::ServiceClient& client, std::string name)
+{
+  auto srv = getRequestMsg("PAUSE_PIPELINE", name);  // object_pipeline1
   bool result = client.call(srv) ? true : false;
   return result;
 }
 
-bool runPipelineByName(ros::ServiceClient& client,std::string name){
-
-  auto srv = getRequestMsg("RUN_PIPELINE",name);//object_pipeline1
+bool runPipelineByName(ros::ServiceClient& client, std::string name)
+{
+  auto srv = getRequestMsg("RUN_PIPELINE", name);  // object_pipeline1
   bool result = client.call(srv) ? true : false;
   return result;
 }
 
-bool request(ros::ServiceClient& client,std::string cmd_name, std::string cmd_value){
-
-  auto srv = getRequestMsg(cmd_name, cmd_value);//object_pipeline1
+bool request(ros::ServiceClient& client, std::string cmd_name, std::string cmd_value)
+{
+  auto srv = getRequestMsg(cmd_name, cmd_value);  // object_pipeline1
   bool result = client.call(srv) ? true : false;
   return result;
 }
 
-bool getAllPipelines(ros::ServiceClient& client, std::vector<pipeline_srv_msgs::Pipelines> & pipelines){
-  auto srv = getRequestMsg("GET_PIPELINE","");
+bool getAllPipelines(ros::ServiceClient& client, std::vector<pipeline_srv_msgs::Pipelines>& pipelines)
+{
+  auto srv = getRequestMsg("GET_PIPELINE", "");
   bool success = client.call(srv) ? true : false;
-  if(success)
+  if (success)
   {
     for (auto it = srv.response.pipelines.begin(); it != srv.response.pipelines.end(); ++it)
     {
-        pipelines.push_back(*it);
-        std::cout<<it->name<<" status:"<<it->running_status << std::endl;
-        for( auto connect = it->connections.begin(); connect!= it->connections.end(); ++connect)
-        {
-            printf("%s --> %s\n", connect->input.c_str(),
-                 connect->output.c_str());
-        }
+      pipelines.push_back(*it);
+      std::cout << it->name << " status:" << it->running_status << std::endl;
+      for (auto connect = it->connections.begin(); connect != it->connections.end(); ++connect)
+      {
+        printf("%s --> %s\n", connect->input.c_str(), connect->output.c_str());
+      }
     }
   }
   return success;
 }
 
-
-int main(int argc, char ** argv)
+int main(int argc, char** argv)
 {
-  if (argc != 3) {
+  if (argc != 3)
+  {
     ROS_INFO("Usage: rosrun dynamic_vino_sample pipeline_service_client <cmd_name> <cmd_value>");
     return -1;
   }
-  std::string cmd_name  = argv[1];
+  std::string cmd_name = argv[1];
   std::string cmd_value = argv[2];
 
-
-  ros::init(argc, argv, "pipeline_service_client"); 
+  ros::init(argc, argv, "pipeline_service_client");
 
   ros::NodeHandle n;
 
   ros::ServiceClient client = n.serviceClient<pipeline_srv_msgs::PipelineSrv>("/openvino_toolkit/pipeline/service");
 
   std::vector<pipeline_srv_msgs::Pipelines> pipelines;
-  
-  auto success = getAllPipelines(client,pipelines) ? true : false;
 
-  if(!success) { ROS_ERROR("Failed to request service."); return -1;}
+  auto success = getAllPipelines(client, pipelines) ? true : false;
 
-  success = request(client,cmd_name, cmd_value);
-  if(!success) { ROS_ERROR("Failed to request service."); return -1;}
-  //stopPipelineByName(client,"object_pipeline1");
+  if (!success)
+  {
+    ROS_ERROR("Failed to request service.");
+    return -1;
+  }
 
-
-
-
+  success = request(client, cmd_name, cmd_value);
+  if (!success)
+  {
+    ROS_ERROR("Failed to request service.");
+    return -1;
+  }
+  // stopPipelineByName(client,"object_pipeline1");
 }
-
-
- 

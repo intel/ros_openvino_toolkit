@@ -27,9 +27,7 @@
 
 #define INPUT_TOPIC "/camera/color/image_raw"
 
-
-Input::ImageTopic::ImageTopic(rclcpp::Node::SharedPtr node)
-: node_(node)
+Input::ImageTopic::ImageTopic(rclcpp::Node::SharedPtr node) : node_(node)
 {
 }
 
@@ -37,24 +35,24 @@ bool Input::ImageTopic::initialize()
 {
   slog::debug << "before Image Topic init" << slog::endl;
 
-  if(node_ == nullptr){
+  if (node_ == nullptr)
+  {
     throw std::runtime_error("Image Topic is not instancialized because of no parent node.");
     return false;
   }
   auto qos = rclcpp::QoS(rclcpp::KeepLast(1)).best_effort();
-  sub_ = node_->create_subscription<sensor_msgs::msg::Image>(
-    INPUT_TOPIC, qos,
-    std::bind(&ImageTopic::cb, this, std::placeholders::_1));
+  sub_ = node_->create_subscription<sensor_msgs::msg::Image>(INPUT_TOPIC, qos,
+                                                             std::bind(&ImageTopic::cb, this, std::placeholders::_1));
 
   return true;
 }
 
-  bool Input::ImageTopic::initialize(size_t width, size_t height)
-  {
-    slog::warn << "BE CAREFUL: nothing for resolution is done when calling initialize(width, height)"
-      << " for Image Topic" << slog::endl;
-    return initialize();
-  }
+bool Input::ImageTopic::initialize(size_t width, size_t height)
+{
+  slog::warn << "BE CAREFUL: nothing for resolution is done when calling initialize(width, height)"
+             << " for Image Topic" << slog::endl;
+  return initialize();
+}
 
 void Input::ImageTopic::cb(const sensor_msgs::msg::Image::SharedPtr image_msg)
 {
@@ -62,16 +60,17 @@ void Input::ImageTopic::cb(const sensor_msgs::msg::Image::SharedPtr image_msg)
   setHeader(image_msg->header);
 
   image_ = cv_bridge::toCvCopy(image_msg, "bgr8")->image;
-  //Suppose Image Topic is sent within BGR order, so the below line would work.
-  //image_ = cv::Mat(image_msg->height, image_msg->width, CV_8UC3,
+  // Suppose Image Topic is sent within BGR order, so the below line would work.
+  // image_ = cv::Mat(image_msg->height, image_msg->width, CV_8UC3,
   //  const_cast<uchar *>(&image_msg->data[0]), image_msg->step);
 
   image_count_.increaseCounter();
 }
 
-bool Input::ImageTopic::read(cv::Mat * frame)
+bool Input::ImageTopic::read(cv::Mat* frame)
 {
-  if (image_count_.get() < 0 || image_.empty()) {
+  if (image_count_.get() < 0 || image_.empty())
+  {
     slog::debug << "No data received in CameraTopic instance" << slog::endl;
     return false;
   }

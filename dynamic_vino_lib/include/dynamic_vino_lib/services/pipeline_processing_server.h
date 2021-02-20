@@ -41,34 +41,28 @@
 
 namespace vino_service
 {
-template<typename T>
-class PipelineProcessingServer 
+template <typename T>
+class PipelineProcessingServer
 {
 public:
-  explicit PipelineProcessingServer(
-    const std::string & service_name); 
+  explicit PipelineProcessingServer(const std::string& service_name);
 
 private:
-
-  void initPipelineService(); 
+  void initPipelineService();
 
   std::shared_ptr<ros::NodeHandle> nh_;
 
-  bool cbService(ros::ServiceEvent<typename T::Request,typename T::Response>& event);
+  bool cbService(ros::ServiceEvent<typename T::Request, typename T::Response>& event);
 
-  void setResponse(
-    ros::ServiceEvent<typename T::Request,typename T::Response>& event);
-  
+  void setResponse(ros::ServiceEvent<typename T::Request, typename T::Response>& event);
+
   void setPipelineByRequest(std::string pipeline_name, PipelineManager::PipelineState state);
 
   std::shared_ptr<ros::ServiceServer> service_;
 
-  std::map<std::string, PipelineManager::PipelineData> *  pipelines_;
+  std::map<std::string, PipelineManager::PipelineData>* pipelines_;
 
   std::string service_name_;
-
-
-    
 };
 }  // namespace vino_service
-#endif // DYNAMIC_VINO_LIB__SERVICES__FRAME_PROCESSING_SERVER_HPP_
+#endif  // DYNAMIC_VINO_LIB__SERVICES__FRAME_PROCESSING_SERVER_HPP_

@@ -25,64 +25,58 @@
 #include "dynamic_vino_lib/pipeline.h"
 #include "dynamic_vino_lib/outputs/rviz_output.h"
 
-Outputs::RvizOutput::RvizOutput(std::string pipeline_name)
-: BaseOutput(pipeline_name)
+Outputs::RvizOutput::RvizOutput(std::string pipeline_name) : BaseOutput(pipeline_name)
 {
   image_topic_ = nullptr;
-  pub_image_ = nh_.advertise<sensor_msgs::Image>("/openvino_toolkit/"+pipeline_name+"/images", 16);
+  pub_image_ = nh_.advertise<sensor_msgs::Image>("/openvino_toolkit/" + pipeline_name + "/images", 16);
   image_window_output_ = std::make_shared<Outputs::ImageWindowOutput>(pipeline_name, 950);
 }
 
-void Outputs::RvizOutput::feedFrame(const cv::Mat & frame)
+void Outputs::RvizOutput::feedFrame(const cv::Mat& frame)
 {
   image_window_output_->feedFrame(frame);
 }
 
-void Outputs::RvizOutput::accept(
-  const std::vector<dynamic_vino_lib::LicensePlateDetectionResult> & results) 
+void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::LicensePlateDetectionResult>& results)
 {
   image_window_output_->accept(results);
 }
-void Outputs::RvizOutput::accept(
-  const std::vector<dynamic_vino_lib::VehicleAttribsDetectionResult> & results) 
-{
-  image_window_output_->accept(results);
-}
-
-void Outputs::RvizOutput::accept(
-  const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult> & results)
+void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::VehicleAttribsDetectionResult>& results)
 {
   image_window_output_->accept(results);
 }
 
-void Outputs::RvizOutput::accept(
-  const std::vector<dynamic_vino_lib::FaceReidentificationResult> & results)
+void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult>& results)
 {
   image_window_output_->accept(results);
 }
 
-void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::FaceDetectionResult> & results)
+void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::FaceReidentificationResult>& results)
 {
   image_window_output_->accept(results);
 }
 
-void Outputs::RvizOutput::accept(
-  const std::vector<dynamic_vino_lib::ObjectDetectionResult> & results)
+void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::FaceDetectionResult>& results)
 {
   image_window_output_->accept(results);
 }
 
-void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::EmotionsResult> & results)
+void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::ObjectDetectionResult>& results)
 {
   image_window_output_->accept(results);
 }
 
-void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::AgeGenderResult> & results)
+void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::EmotionsResult>& results)
 {
   image_window_output_->accept(results);
 }
 
-void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::HeadPoseResult> & results)
+void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::AgeGenderResult>& results)
+{
+  image_window_output_->accept(results);
+}
+
+void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::HeadPoseResult>& results)
 {
   image_window_output_->accept(results);
 }
@@ -91,11 +85,10 @@ void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::ObjectSegme
 {
   image_window_output_->accept(results);
 }
-void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::PersonReidentificationResult> & results)
+void Outputs::RvizOutput::accept(const std::vector<dynamic_vino_lib::PersonReidentificationResult>& results)
 {
   image_window_output_->accept(results);
 }
- 
 
 void Outputs::RvizOutput::handleOutput()
 {
@@ -103,10 +96,8 @@ void Outputs::RvizOutput::handleOutput()
   image_window_output_->decorateFrame();
   cv::Mat frame = image_window_output_->getFrame();
   std_msgs::Header header = getPipeline()->getInputDevice()->getLockedHeader();
-  std::shared_ptr<cv_bridge::CvImage> cv_ptr =
-    std::make_shared<cv_bridge::CvImage>(header, "bgr8", frame);
-   sensor_msgs::Image image_msg;
+  std::shared_ptr<cv_bridge::CvImage> cv_ptr = std::make_shared<cv_bridge::CvImage>(header, "bgr8", frame);
+  sensor_msgs::Image image_msg;
   image_topic_ = cv_ptr->toImageMsg();
   pub_image_.publish(image_topic_);
 }
-

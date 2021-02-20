@@ -43,7 +43,7 @@
  */
 class Pipeline
 {
- public:
+public:
   explicit Pipeline(const std::string& name = "pipeline");
   /**
    * @brief Add input device to the pipeline.
@@ -51,8 +51,7 @@ class Pipeline
    * @param[in] input_device the input device instance to be added.
    * @return whether the add operation is successful
    */
-  bool add(const std::string& name,
-           std::shared_ptr<Input::BaseInputDevice> input_device);
+  bool add(const std::string& name, std::shared_ptr<Input::BaseInputDevice> input_device);
   /**
    * @brief Add inference network to the pipeline.
    * @param[in] parent name of the parent device or inference.
@@ -68,8 +67,7 @@ class Pipeline
    * @param[in] inference the inference instance to be added.
    * @return whether the add operation is successful
    */
-  bool add(const std::string & name, 
-           std::shared_ptr<dynamic_vino_lib::BaseInference> inference);
+  bool add(const std::string& name, std::shared_ptr<dynamic_vino_lib::BaseInference> inference);
   /**
    * @brief Add output device to the pipeline.
    * @param[in] parent name of the parent inference.
@@ -77,16 +75,14 @@ class Pipeline
    * @param[in] output the output instance to be added.
    * @return whether the add operation is successful
    */
-  bool add(const std::string& parent, const std::string& name,
-           std::shared_ptr<Outputs::BaseOutput> output);
+  bool add(const std::string& parent, const std::string& name, std::shared_ptr<Outputs::BaseOutput> output);
   /**
    * @brief Add output device to the pipeline.
    * @param[in] name name of the current output device.
    * @param[in] output the output instance to be added.
    * @return whether the add operation is successful
    */
-  bool add(const std::string& name,
-           std::shared_ptr<Outputs::BaseOutput> output);
+  bool add(const std::string& name, std::shared_ptr<Outputs::BaseOutput> output);
   /**
    * @brief Add inference network-output device edge to the pipeline.
    * @param[in] parent name of the parent inference.
@@ -99,7 +95,7 @@ class Pipeline
    * @param[in]  name of the instance.
    * @return the category order of this instance.
    */
-  void addConnect(const std::string & parent, const std::string & name);
+  void addConnect(const std::string& parent, const std::string& name);
   /**
    * @brief Do the inference once.
    * Data flow from input device to inference network, then to output device.
@@ -146,12 +142,12 @@ class Pipeline
     return fps_;
   }
 
-  std::string findFilterConditions(const std::string & input, const std::string & output)
+  std::string findFilterConditions(const std::string& input, const std::string& output)
   {
     return params_->findFilterConditions(input, output);
   }
 
- private:
+private:
   void initInferenceCounter();
   void increaseInferenceCounter();
   void decreaseInferenceCounter();
@@ -174,10 +170,8 @@ class Pipeline
   std::shared_ptr<Input::BaseInputDevice> input_device_;
   std::string input_device_name_;
   std::multimap<std::string, std::string> next_;
-  std::map<std::string, std::shared_ptr<dynamic_vino_lib::BaseInference>>
-      name_to_detection_map_;
-  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>>
-      name_to_output_map_;
+  std::map<std::string, std::shared_ptr<dynamic_vino_lib::BaseInference>> name_to_detection_map_;
+  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> name_to_output_map_;
   int total_inference_ = 0;
   std::set<std::string> output_names_;
   int width_ = 0;

@@ -26,10 +26,9 @@
 
 namespace Input
 {
-
 class Ros2Handler
 {
- public:
+public:
   void setHandler(const std::shared_ptr<ros::NodeHandle>& node)
   {
     node_ = node;
@@ -39,7 +38,7 @@ class Ros2Handler
     return node_;
   }
 
- private:
+private:
   std::shared_ptr<ros::NodeHandle> node_;
 };
 

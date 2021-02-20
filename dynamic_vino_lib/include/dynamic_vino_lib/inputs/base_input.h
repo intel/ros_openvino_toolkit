@@ -38,7 +38,7 @@ struct Config
 
 class BaseInputDevice : public Ros2Handler
 {
- public:
+public:
   /**
    * @brief Initialize the input device,
    * for cameras, it will turn the camera on and get ready to read frames,
@@ -55,12 +55,14 @@ class BaseInputDevice : public Ros2Handler
    * @brief Read next frame, and give the value to argument frame.
    * @return Whether the next frame is successfully read.
    */
-  virtual bool read(cv::Mat * frame) = 0;
-  virtual bool readService(cv::Mat * frame, std::string config_path)
+  virtual bool read(cv::Mat* frame) = 0;
+  virtual bool readService(cv::Mat* frame, std::string config_path)
   {
     return true;
   }
-  virtual void config(const Config &) {}
+  virtual void config(const Config&)
+  {
+  }
   virtual ~BaseInputDevice() = default;
   /**
    * @brief Get the width of the frame read from input device.
@@ -111,9 +113,9 @@ class BaseInputDevice : public Ros2Handler
     is_init_ = is_init;
   }
 
- private:
-  size_t width_ = 0;  // 0 means using the original size
-  size_t height_ = 0; // 0 means using the original size
+private:
+  size_t width_ = 0;   // 0 means using the original size
+  size_t height_ = 0;  // 0 means using the original size
   bool is_init_ = false;
 };
 }  // namespace Input

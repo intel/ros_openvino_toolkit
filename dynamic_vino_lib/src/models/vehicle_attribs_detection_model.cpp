@@ -20,30 +20,30 @@
 #include "dynamic_vino_lib/models/vehicle_attribs_detection_model.h"
 #include "dynamic_vino_lib/slog.h"
 // Validated Vehicle Attributes Detection Network
-Models::VehicleAttribsDetectionModel::VehicleAttribsDetectionModel(
-  const std::string & model_loc, int max_batch_size)
-: BaseModel(model_loc, max_batch_size) {}
+Models::VehicleAttribsDetectionModel::VehicleAttribsDetectionModel(const std::string& model_loc, int max_batch_size)
+  : BaseModel(model_loc, max_batch_size)
+{
+}
 
-bool Models::VehicleAttribsDetectionModel::updateLayerProperty(
-  InferenceEngine::CNNNetReader::Ptr net_reader)
+bool Models::VehicleAttribsDetectionModel::updateLayerProperty(InferenceEngine::CNNNetReader::Ptr net_reader)
 {
   slog::info << "Checking INPUTs for model " << getModelName() << slog::endl;
-    // set input property
-  InferenceEngine::InputsDataMap input_info_map(
-    net_reader->getNetwork().getInputsInfo());
-  if (input_info_map.size() != 1) {
+  // set input property
+  InferenceEngine::InputsDataMap input_info_map(net_reader->getNetwork().getInputsInfo());
+  if (input_info_map.size() != 1)
+  {
     throw std::logic_error("Vehicle Attribs topology should have only one input");
   }
-  InferenceEngine::OutputsDataMap output_info_map(
-    net_reader->getNetwork().getOutputsInfo());
-  if (output_info_map.size() != 2) {
+  InferenceEngine::OutputsDataMap output_info_map(net_reader->getNetwork().getOutputsInfo());
+  if (output_info_map.size() != 2)
+  {
     throw std::logic_error("Vehicle Attribs Network expects networks having two outputs");
   }
 
   InferenceEngine::InputInfo::Ptr input_info = input_info_map.begin()->second;
   input_info->setPrecision(InferenceEngine::Precision::U8);
   input_info->getInputData()->setLayout(InferenceEngine::Layout::NCHW);
- 
+
   // set input and output layer name
   input_ = input_info_map.begin()->first;
   auto output_iter = output_info_map.begin();
@@ -51,9 +51,9 @@ bool Models::VehicleAttribsDetectionModel::updateLayerProperty(
   // type_output_ = (output_iter++)->second->name;
   InferenceEngine::DataPtr color_output_ptr = (output_iter++)->second;
   InferenceEngine::DataPtr type_output_ptr = (output_iter++)->second;
-    
+
   addOutputInfo("color_output_", color_output_ptr->getName());
-  //output_gender_ = gender_output_ptr->name;
+  // output_gender_ = gender_output_ptr->name;
   addOutputInfo("type_output_", type_output_ptr->getName());
 
   printAttribute();
@@ -64,4 +64,3 @@ const std::string Models::VehicleAttribsDetectionModel::getModelCategory() const
 {
   return "Vehicle Attributes Detection";
 }
-

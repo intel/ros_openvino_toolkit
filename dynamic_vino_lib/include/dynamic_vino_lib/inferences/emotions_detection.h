@@ -43,7 +43,7 @@ namespace dynamic_vino_lib
  */
 class EmotionsResult : public Result
 {
- public:
+public:
   friend class EmotionsDetection;
   explicit EmotionsResult(const cv::Rect& location);
   /**
@@ -55,7 +55,7 @@ class EmotionsResult : public Result
     return label_;
   }
 
- private:
+private:
   std::string label_ = "";
   float confidence_ = -1;
 };
@@ -66,7 +66,7 @@ class EmotionsResult : public Result
  */
 class EmotionsDetection : public BaseInference
 {
- public:
+public:
   using Result = dynamic_vino_lib::EmotionsResult;
   EmotionsDetection();
   ~EmotionsDetection() override;
@@ -115,17 +115,15 @@ class EmotionsDetection : public BaseInference
    * @brief Show the observed detection result either through image window
    * or ROS topic.
    */
-  void observeOutput(
-      const std::shared_ptr<Outputs::BaseOutput>& output) override;
+  void observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output) override;
 
   std::vector<Result> getResults()
   {
     return results_;
   }
-  const std::vector<cv::Rect> getFilteredROIs(
-    const std::string filter_conditions) const override;
-  
- private:
+  const std::vector<cv::Rect> getFilteredROIs(const std::string filter_conditions) const override;
+
+private:
   std::shared_ptr<Models::EmotionDetectionModel> valid_model_;
   std::vector<Result> results_;
 };

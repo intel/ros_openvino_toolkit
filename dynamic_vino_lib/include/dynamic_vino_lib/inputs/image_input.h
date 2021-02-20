@@ -33,7 +33,7 @@ namespace Input
  */
 class Image : public BaseInputDevice
 {
- public:
+public:
   explicit Image(const std::string&);
   /**
    * @brief Read an image file from the file path.
@@ -56,9 +56,9 @@ class Image : public BaseInputDevice
    */
   bool read(cv::Mat* frame) override;
 
-  void config(const Config &) override;
+  void config(const Config&) override;
 
- private:
+private:
   cv::Mat image_;
   std::string file_;
 };

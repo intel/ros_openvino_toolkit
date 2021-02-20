@@ -28,11 +28,8 @@
 #include "dynamic_vino_lib/slog.h"
 
 // Validated Base Network
-Models::BaseModel::BaseModel(
-  const std::string & model_loc, int max_batch_size)
-: model_loc_(model_loc),
-  max_batch_size_(max_batch_size),
-  ModelAttribute(model_loc)
+Models::BaseModel::BaseModel(const std::string& model_loc, int max_batch_size)
+  : model_loc_(model_loc), max_batch_size_(max_batch_size), ModelAttribute(model_loc)
 {
   if (model_loc.empty())
   {
@@ -87,7 +84,7 @@ bool Models::BaseModel::updateLayerProperty(
 }
 #endif
 
-Models::ObjectDetectionModel::ObjectDetectionModel(
-  const std::string & model_loc,
-  int max_batch_size)
-: BaseModel(model_loc, max_batch_size) {}
+Models::ObjectDetectionModel::ObjectDetectionModel(const std::string& model_loc, int max_batch_size)
+  : BaseModel(model_loc, max_batch_size)
+{
+}

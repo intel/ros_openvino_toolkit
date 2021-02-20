@@ -24,91 +24,99 @@
 #include "cv_bridge/cv_bridge.h"
 #include <object_msgs/ObjectsInBoxes.h>
 
-void Outputs::RosServiceOutput::setServiceResponse(
-  boost::shared_ptr<object_msgs::DetectObjectSrv::Response> response)
+void Outputs::RosServiceOutput::setServiceResponse(boost::shared_ptr<object_msgs::DetectObjectSrv::Response> response)
 {
-  if (detected_objects_topic_ != nullptr && detected_objects_topic_->objects_vector.size() > 0) {
+  if (detected_objects_topic_ != nullptr && detected_objects_topic_->objects_vector.size() > 0)
+  {
     object_msgs::ObjectsInBoxes objs;
     objs.objects_vector = detected_objects_topic_->objects_vector;
     response->objects.push_back(objs);
-  } else if (faces_topic_ != nullptr && faces_topic_ ->objects_vector.size() > 0) {
-    object_msgs::ObjectsInBoxes objs; 
+  }
+  else if (faces_topic_ != nullptr && faces_topic_->objects_vector.size() > 0)
+  {
+    object_msgs::ObjectsInBoxes objs;
     objs.objects_vector = faces_topic_->objects_vector;
     response->objects.push_back(objs);
   }
 }
 
-void Outputs::RosServiceOutput::setResponseForFace(
-  boost::shared_ptr<object_msgs::DetectObjectSrv::Response> response)
+void Outputs::RosServiceOutput::setResponseForFace(boost::shared_ptr<object_msgs::DetectObjectSrv::Response> response)
 {
-  if (faces_topic_ != nullptr && faces_topic_->objects_vector.size() > 0) {
-    object_msgs::ObjectsInBoxes objs; 
-    objs.objects_vector = faces_topic_->objects_vector; 
+  if (faces_topic_ != nullptr && faces_topic_->objects_vector.size() > 0)
+  {
+    object_msgs::ObjectsInBoxes objs;
+    objs.objects_vector = faces_topic_->objects_vector;
     response->objects.push_back(objs);
   }
 }
 
-void Outputs::RosServiceOutput::setServiceResponse(
-  boost::shared_ptr<people_msgs::AgeGenderSrv::Response> response)
+void Outputs::RosServiceOutput::setServiceResponse(boost::shared_ptr<people_msgs::AgeGenderSrv::Response> response)
 {
-  if (age_gender_topic_ != nullptr) {
+  if (age_gender_topic_ != nullptr)
+  {
     response->age_gender.objects = age_gender_topic_->objects;
   }
 }
 
-void Outputs::RosServiceOutput::setServiceResponse(
-  boost::shared_ptr<people_msgs::EmotionSrv::Response> response)
+void Outputs::RosServiceOutput::setServiceResponse(boost::shared_ptr<people_msgs::EmotionSrv::Response> response)
 {
-  if (emotions_topic_ != nullptr) {
+  if (emotions_topic_ != nullptr)
+  {
     response->emotion.emotions = emotions_topic_->emotions;
   }
 }
 
-void Outputs::RosServiceOutput::setServiceResponse(
-  boost::shared_ptr<people_msgs::HeadPoseSrv::Response> response)
+void Outputs::RosServiceOutput::setServiceResponse(boost::shared_ptr<people_msgs::HeadPoseSrv::Response> response)
 {
-  if (headpose_topic_ != nullptr) {
+  if (headpose_topic_ != nullptr)
+  {
     response->headpose.headposes = headpose_topic_->headposes;
   }
 }
 
-void Outputs::RosServiceOutput::setServiceResponse(
-  boost::shared_ptr<people_msgs::ObjectsInMasksSrv::Response> response)
-  {
-    slog::info << "in ObjectsInMasks service::Response ...";
-    if (segmented_objects_topic_ != nullptr) {
-      response->segmentation.objects_vector = segmented_objects_topic_->objects_vector;
-    }
-  }
-void Outputs::RosServiceOutput::setServiceResponse(
-  boost::shared_ptr<people_msgs::ReidentificationSrv::Response> response)
-  {
-    slog::info << "in Reidentification service::Response ...";
-    if (person_reid_topic_ != nullptr) {
-      response->reidentification.reidentified_vector = person_reid_msg_ptr_->reidentified_vector;
-    }
-  }
-
-void Outputs::RosServiceOutput::setServiceResponse(
-  boost::shared_ptr<people_msgs::PeopleSrv::Response> response)
+void Outputs::RosServiceOutput::setServiceResponse(boost::shared_ptr<people_msgs::ObjectsInMasksSrv::Response> response)
 {
-    slog::info << "in People::Response ...";
-  if (faces_topic_ != nullptr) {
+  slog::info << "in ObjectsInMasks service::Response ...";
+  if (segmented_objects_topic_ != nullptr)
+  {
+    response->segmentation.objects_vector = segmented_objects_topic_->objects_vector;
+  }
+}
+void Outputs::RosServiceOutput::setServiceResponse(
+    boost::shared_ptr<people_msgs::ReidentificationSrv::Response> response)
+{
+  slog::info << "in Reidentification service::Response ...";
+  if (person_reid_topic_ != nullptr)
+  {
+    response->reidentification.reidentified_vector = person_reid_msg_ptr_->reidentified_vector;
+  }
+}
+
+void Outputs::RosServiceOutput::setServiceResponse(boost::shared_ptr<people_msgs::PeopleSrv::Response> response)
+{
+  slog::info << "in People::Response ...";
+  if (faces_topic_ != nullptr)
+  {
     slog::info << "[FACES],";
     response->persons.faces = faces_topic_->objects_vector;
-  } else if (detected_objects_topic_ != nullptr) {
+  }
+  else if (detected_objects_topic_ != nullptr)
+  {
     slog::info << "[FACES(objects)],";
     response->persons.faces = detected_objects_topic_->objects_vector;
   }
-  if (age_gender_topic_ != nullptr) {
+  if (age_gender_topic_ != nullptr)
+  {
     slog::info << "[AGE_GENDER],";
     response->persons.agegenders = age_gender_topic_->objects;
   }
-  if (emotions_topic_ != nullptr) {
+  if (emotions_topic_ != nullptr)
+  {
     slog::info << "[EMOTION],";
     response->persons.emotions = emotions_topic_->emotions;
   }
-  if (headpose_topic_ != nullptr) {
+  if (headpose_topic_ != nullptr)
+  {
     slog::info << "[HEADPOSE],";
     response->persons.headposes = headpose_topic_->headposes;
   }
