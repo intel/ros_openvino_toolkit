@@ -27,7 +27,7 @@
 
 #define INPUT_TOPIC "/camera/color/image_raw"
 
-Input::ImageTopic::ImageTopic(rclcpp::Node::SharedPtr node) : node_(node)
+Input::ImageTopic::ImageTopic(boost::shared_ptr node) : node_(node)
 {
 }
 

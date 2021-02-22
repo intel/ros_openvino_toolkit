@@ -141,10 +141,10 @@ public:
   virtual void handleOutput() = 0;
 
   void setPipeline(Pipeline* const pipeline);
-  virtual void setServiceResponse(boost::shared_ptr<object_msgs::DetectObjectSrvResponse> response)
+  virtual void setServiceResponse(boost::shared_ptr<object_msgs::DetectObjectRequest> response)
   {
   }
-  virtual void setServiceResponseForFace(boost::shared_ptr<object_msgs::DetectObjectSrvResponse> response)
+  virtual void setServiceResponseForFace(boost::shared_ptr<object_msgs::DetectObjectRequest> response)
   {
   }
   virtual void setServiceResponse(boost::shared_ptr<people_msgs::AgeGenderSrvResponse> response)

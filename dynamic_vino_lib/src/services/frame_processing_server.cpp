@@ -16,6 +16,7 @@
 #include <people_msgs/PeopleSrv.h>
 #include <people_msgs/ObjectsInMasksSrv.h>
 #include <people_msgs/ReidentificationSrv.h>
+#include <object_msgs/DetectObject.h>
 #include <object_msgs/DetectObjectRequest.h>
 #include <object_msgs/DetectObjectResponse.h>
 #include <pipeline_srv_msgs/PipelineSrv.h>
@@ -98,7 +99,7 @@ bool FrameProcessingServer<T>::cbService(ros::ServiceEvent<typename T::Request, 
   return false;
 }
 
-template class FrameProcessingServer<object_msgs::DetectObjectSrv>;
+template class FrameProcessingServer<object_msgs::DetectObject>;
 template class FrameProcessingServer<people_msgs::PeopleSrv>;
 template class FrameProcessingServer<people_msgs::ReidentificationSrv>;
 template class FrameProcessingServer<people_msgs::ObjectsInMasksSrv>;

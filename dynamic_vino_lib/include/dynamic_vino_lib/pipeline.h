@@ -172,7 +172,6 @@ private:
   std::multimap<std::string, std::string> next_;
   std::map<std::string, std::shared_ptr<dynamic_vino_lib::BaseInference>> name_to_detection_map_;
   std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> name_to_output_map_;
-  int total_inference_ = 0;
   std::set<std::string> output_names_;
   int width_ = 0;
   int height_ = 0;

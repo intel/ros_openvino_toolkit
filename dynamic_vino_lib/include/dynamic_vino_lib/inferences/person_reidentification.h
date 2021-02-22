@@ -24,6 +24,7 @@
 #include "dynamic_vino_lib/models/person_reidentification_model.h"
 #include "dynamic_vino_lib/engines/engine.h"
 #include "dynamic_vino_lib/inferences/base_inference.h"
+#include "dynamic_vino_lib/inferences/base_reidentification.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
 // namespace

@@ -32,6 +32,7 @@
 
 #include "dynamic_vino_lib/engines/engine.h"
 #include "dynamic_vino_lib/inferences/base_inference.h"
+#include "dynamic_vino_lib/inferences/object_detection.h"
 #include "dynamic_vino_lib/models/face_detection_model.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"

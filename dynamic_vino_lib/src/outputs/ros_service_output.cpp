@@ -24,7 +24,7 @@
 #include "cv_bridge/cv_bridge.h"
 #include <object_msgs/ObjectsInBoxes.h>
 
-void Outputs::RosServiceOutput::setServiceResponse(boost::shared_ptr<object_msgs::DetectObjectSrv::Response> response)
+void Outputs::RosServiceOutput::setServiceResponse(boost::shared_ptr<object_msgs::DetectObject::Response> response)
 {
   if (detected_objects_topic_ != nullptr && detected_objects_topic_->objects_vector.size() > 0)
   {
@@ -40,7 +40,7 @@ void Outputs::RosServiceOutput::setServiceResponse(boost::shared_ptr<object_msgs
   }
 }
 
-void Outputs::RosServiceOutput::setResponseForFace(boost::shared_ptr<object_msgs::DetectObjectSrv::Response> response)
+void Outputs::RosServiceOutput::setResponseForFace(boost::shared_ptr<object_msgs::DetectObject::Response> response)
 {
   if (faces_topic_ != nullptr && faces_topic_->objects_vector.size() > 0)
   {
