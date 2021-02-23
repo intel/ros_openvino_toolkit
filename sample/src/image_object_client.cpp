@@ -24,7 +24,7 @@
 #include <ros/ros.h>
 #include "opencv2/opencv.hpp"
 
-#include <object_msgs/DetectObjectSrv.h>
+#include <object_msgs/DetectObject.h>
 
 int main(int argc, char** argv)
 {
@@ -40,9 +40,9 @@ int main(int argc, char** argv)
   }
 
   std::string image_path = argv[1];
-  ros::ServiceClient client = n.serviceClient<object_msgs::DetectObjectSrv>("/openvino_toolkit/service");
+  ros::ServiceClient client = n.serviceClient<object_msgs::DetectObject>("/openvino_toolkit/service");
 
-  object_msgs::DetectObjectSrv srv;
+  object_msgs::DetectObject srv;
   srv.request.image_path = image_path;
 
   if (client.call(srv))

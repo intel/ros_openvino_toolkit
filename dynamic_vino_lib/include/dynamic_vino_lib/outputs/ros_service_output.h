@@ -23,6 +23,7 @@
 #include <object_msgs/Object.h>
 #include <object_msgs/ObjectInBox.h>
 #include <object_msgs/ObjectsInBoxes.h>
+#include <object_msgs/DetectObject.h>
 #include <people_msgs/Emotion.h>
 #include <people_msgs/EmotionsStamped.h>
 #include <people_msgs/AgeGender.h>
@@ -73,8 +74,8 @@ public:
   }
   void clearData();
 
-  void setServiceResponse(boost::shared_ptr<object_msgs::DetectObjectSrv::Response> response);
-  void setResponseForFace(boost::shared_ptr<object_msgs::DetectObjectSrv::Response> response);
+  void setServiceResponse(boost::shared_ptr<object_msgs::DetectObject::Response> response);
+  void setResponseForFace(boost::shared_ptr<object_msgs::DetectObject::Response> response);
   void setServiceResponse(boost::shared_ptr<people_msgs::AgeGenderSrv::Response> response);
   void setServiceResponse(boost::shared_ptr<people_msgs::EmotionSrv::Response> response);
   void setServiceResponse(boost::shared_ptr<people_msgs::HeadPoseSrv::Response> response);

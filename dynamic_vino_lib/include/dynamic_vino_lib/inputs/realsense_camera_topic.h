@@ -31,6 +31,7 @@
 #include <memory>
 
 #include "dynamic_vino_lib/inputs/base_input.h"
+#include "dynamic_vino_lib/inputs/image_topic.h"
 
 namespace Input
 {

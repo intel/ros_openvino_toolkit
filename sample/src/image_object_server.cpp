@@ -87,7 +87,7 @@ int main(int argc, char** argv)
   // ----- Parsing and validation of input args-----------------------
 
   auto node =
-      std::make_shared<vino_service::FrameProcessingServer<object_msgs::DetectObjectSrv>>(service_name, FLAGS_config);
+      std::make_shared<vino_service::FrameProcessingServer<object_msgs::DetectObject>>(service_name, FLAGS_config);
 
   slog::info << "Waiting for service request..." << slog::endl;
   ros::spin();
