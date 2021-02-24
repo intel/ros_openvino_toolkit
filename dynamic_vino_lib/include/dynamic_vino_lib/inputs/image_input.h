@@ -25,14 +25,16 @@
 #include <opencv2/opencv.hpp>
 #include <string>
 
-namespace Input {
+namespace Input
+{
 /**
  * @class Image
  * @brief Class for recieving an image file as input.
  */
-class Image : public BaseInputDevice {
+class Image : public BaseInputDevice
+{
 public:
-  explicit Image(const std::string &);
+  explicit Image(const std::string&);
   /**
    * @brief Read an image file from the file path.
    * @param[in] An image file path.
@@ -44,19 +46,22 @@ public:
    * No implementation for Image class.
    * @return Whether the input device is successfully turned on.
    */
-  bool initialize(size_t width, size_t height) override { return initialize(); }
+  bool initialize(size_t width, size_t height) override
+  {
+    return initialize();
+  }
   /**
    * @brief Read next frame, and give the value to argument frame.
    * @return Whether the next frame is successfully read.
    */
-  bool read(cv::Mat *frame) override;
+  bool read(cv::Mat* frame) override;
 
-  void config(const Config &) override;
+  void config(const Config&) override;
 
 private:
   cv::Mat image_;
   std::string file_;
 };
-} // namespace Input
+}  // namespace Input
 
-#endif // DYNAMIC_VINO_LIB_INPUTS_IMAGE_INPUT_H
+#endif  // DYNAMIC_VINO_LIB_INPUTS_IMAGE_INPUT_H

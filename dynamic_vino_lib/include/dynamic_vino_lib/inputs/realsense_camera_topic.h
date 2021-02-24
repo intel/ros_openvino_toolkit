@@ -33,7 +33,8 @@
 #include "dynamic_vino_lib/inputs/base_input.h"
 #include "dynamic_vino_lib/inputs/image_topic.h"
 
-namespace Input {
+namespace Input
+{
 /**
  * DEPRECATED!
  * Using the new class ImageTopic to handle all image topics.
@@ -42,6 +43,6 @@ namespace Input {
  */
 typedef ImageTopic RealSenseCameraTopic;
 
-} // namespace Input
+}  // namespace Input
 
-#endif // DYNAMIC_VINO_LIB_INPUTS_REALSENSE_CAMERA_TOPIC_H_
+#endif  // DYNAMIC_VINO_LIB_INPUTS_REALSENSE_CAMERA_TOPIC_H_

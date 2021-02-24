@@ -25,14 +25,16 @@
 #include "dynamic_vino_lib/models/base_model.h"
 #include <string>
 
-namespace Models {
+namespace Models
+{
 /**
  * @class AgeGenderDetectionModel
  * @brief This class generates the age gender detection model.
  */
-class AgeGenderDetectionModel : public BaseModel {
+class AgeGenderDetectionModel : public BaseModel
+{
 public:
-  AgeGenderDetectionModel(const std::string &model_loc, int batch_size = 1);
+  AgeGenderDetectionModel(const std::string& model_loc, int batch_size = 1);
   /**
    * @brief Get the input name.
    * @return Input name.
@@ -42,14 +44,16 @@ public:
    * @brief Get the age from the detection reuslt.
    * @return Detected age.
    */
-  inline const std::string getOutputAgeName() const {
+  inline const std::string getOutputAgeName() const
+  {
     return getOutputName("age");
   }
   /**
    * @brief Get the gender from the detection reuslt.
    * @return Detected gender.
    */
-  inline const std::string getOutputGenderName() const {
+  inline const std::string getOutputGenderName() const
+  {
     return getOutputName("gender");
   }
   /**
@@ -61,6 +65,6 @@ public:
 protected:
   bool updateLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
 };
-} // namespace Models
+}  // namespace Models
 
-#endif // DYNAMIC_VINO_LIB_MODELS_AGE_GENDER_DETECTION_MODEL_H
+#endif  // DYNAMIC_VINO_LIB_MODELS_AGE_GENDER_DETECTION_MODEL_H

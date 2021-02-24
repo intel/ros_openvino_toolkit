@@ -31,8 +31,10 @@
  * @brief This class is used to get the infer request
  * from a inference plugin and an inference network
  */
-namespace Engines {
-class Engine {
+namespace Engines
+{
+class Engine
+{
 public:
 #if (defined(USE_OLD_E_PLUGIN_API))
   /**
@@ -46,24 +48,29 @@ public:
   /**
    * @brief Using an Inference Request to initialize the inference Engine.
    */
-  Engine(InferenceEngine::InferRequest::Ptr &);
+  Engine(InferenceEngine::InferRequest::Ptr&);
   /**
    * @brief Get the inference request this instance holds.
    * @return The inference request this instance holds.
    */
-  inline InferenceEngine::InferRequest::Ptr &getRequest() { return request_; }
+  inline InferenceEngine::InferRequest::Ptr& getRequest()
+  {
+    return request_;
+  }
   /**
    * @brief Set a callback function for the infer request.
    * @param[in] callbackToSet A lambda function as callback function.
    * The callback function will be called when request is finished.
    */
-  template <typename T> void setCompletionCallback(const T &callbackToSet) {
+  template <typename T>
+  void setCompletionCallback(const T& callbackToSet)
+  {
     request_->SetCompletionCallback(callbackToSet);
   }
 
 private:
   InferenceEngine::InferRequest::Ptr request_ = nullptr;
 };
-} // namespace Engines
+}  // namespace Engines
 
-#endif // DYNAMIC_VINO_LIB_ENGINES_ENGINE_H
+#endif  // DYNAMIC_VINO_LIB_ENGINES_ENGINE_H

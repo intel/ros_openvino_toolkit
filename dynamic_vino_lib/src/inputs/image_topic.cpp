@@ -27,24 +27,25 @@
 
 #define INPUT_TOPIC "/camera/color/image_raw"
 
-bool Input::ImageTopic::initialize() {
+bool Input::ImageTopic::initialize()
+{
   slog::info << "before Image Topic init" << slog::endl;
-  std::shared_ptr<image_transport::ImageTransport> it =
-      std::make_shared<image_transport::ImageTransport>(nh_);
-  sub_ = it->subscribe(
-      <sensor_msgs::msg::Image>(INPUT_TOPIC, 1, &ImageTopic::cb, this));
+  std::shared_ptr<image_transport::ImageTransport> it = std::make_shared<image_transport::ImageTransport>(nh_);
+  sub_ = it->subscribe(<sensor_msgs::msg::Image>(INPUT_TOPIC, 1, &ImageTopic::cb, this));
 
   return true;
 }
 
-bool Input::ImageTopic::initialize(size_t width, size_t height) {
+bool Input::ImageTopic::initialize(size_t width, size_t height)
+{
   slog::warn << "BE CAREFUL: nothing for resolution is done when calling "
                 "initialize(width, height)"
              << " for Image Topic" << slog::endl;
   return initialize();
 }
 
-void Input::ImageTopic::cb(const sensor_msgs::msg::Image::SharedPtr image_msg) {
+void Input::ImageTopic::cb(const sensor_msgs::msg::Image::SharedPtr image_msg)
+{
   slog::debug << "Receiving a new image from Camera topic." << slog::endl;
   setHeader(image_msg->header);
 
@@ -56,9 +57,11 @@ void Input::ImageTopic::cb(const sensor_msgs::msg::Image::SharedPtr image_msg) {
   image_count_.increaseCounter();
 }
 
-bool Input::ImageTopic::read(cv::Mat *frame) {
+bool Input::ImageTopic::read(cv::Mat* frame)
+{
   ros::spinOnce();
-  if (image_count_.get() < 0 || image_.empty()) {
+  if (image_count_.get() < 0 || image_.empty())
+  {
     slog::debug << "No data received in CameraTopic instance" << slog::endl;
     return false;
   }

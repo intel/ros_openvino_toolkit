@@ -26,12 +26,14 @@
 #include <librealsense2/rs.hpp>
 #include <opencv2/opencv.hpp>
 
-namespace Input {
+namespace Input
+{
 /**
  * @class RealSenseCamera
  * @brief Class for recieving a realsense camera as input.
  */
-class RealSenseCamera : public BaseInputDevice {
+class RealSenseCamera : public BaseInputDevice
+{
 public:
   /**
    * @brief Initialize the input device, turn the
@@ -48,7 +50,7 @@ public:
    * @brief Read next frame, and give the value to argument frame.
    * @return Whether the next frame is successfully read.
    */
-  bool read(cv::Mat *frame) override;
+  bool read(cv::Mat* frame) override;
 
 private:
   void bypassFewFramesOnceInited();
@@ -59,6 +61,6 @@ private:
   bool first_read_ = true;
   static int rscamera_count;
 };
-} // namespace Input
+}  // namespace Input
 
-#endif // DYNAMIC_VINO_LIB_INPUTS_REALSENSE_CAMERA_H
+#endif  // DYNAMIC_VINO_LIB_INPUTS_REALSENSE_CAMERA_H

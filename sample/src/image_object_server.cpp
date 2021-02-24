@@ -58,10 +58,12 @@
 #include "sample/utility.hpp"
 #include <vino_param_lib/param_manager.h>
 
-bool parseAndCheckCommandLine(int argc, char **argv) {
+bool parseAndCheckCommandLine(int argc, char** argv)
+{
   // -----Parsing and validation of input args---------------------------
   gflags::ParseCommandLineNonHelpFlags(&argc, &argv, true);
-  if (FLAGS_h) {
+  if (FLAGS_h)
+  {
     showUsageForParam();
     return false;
   }
@@ -69,14 +71,14 @@ bool parseAndCheckCommandLine(int argc, char **argv) {
   return true;
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv)
+{
   ros::init(argc, argv, "image_object_servier");
 
   if (!parseAndCheckCommandLine(argc, argv))
     return 0;
 
-  ros::param::param<std::string>("~param_file", FLAGS_config,
-                                 "/param/pipeline_people.yaml");
+  ros::param::param<std::string>("~param_file", FLAGS_config, "/param/pipeline_people.yaml");
 
   slog::info << "FLAGS_config=" << FLAGS_config << slog::endl;
 
@@ -84,12 +86,10 @@ int main(int argc, char **argv) {
   slog::info << "service name=" << service_name << slog::endl;
   // ----- Parsing and validation of input args-----------------------
 
-  auto node = std::make_shared<
-      vino_service::FrameProcessingServer<object_msgs::DetectObject>>(
-      service_name, FLAGS_config);
+  auto node =
+      std::make_shared<vino_service::FrameProcessingServer<object_msgs::DetectObject>>(service_name, FLAGS_config);
 
   slog::info << "Waiting for service request..." << slog::endl;
   ros::spin();
-  slog::info << "--------------End of Excution--------------" << FLAGS_config
-             << slog::endl;
+  slog::info << "--------------End of Excution--------------" << FLAGS_config << slog::endl;
 }

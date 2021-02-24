@@ -38,11 +38,13 @@
 #include <ros/ros.h>
 #include <string>
 
-namespace vino_service {
-template <typename T> class FrameProcessingServer {
+namespace vino_service
+{
+template <typename T>
+class FrameProcessingServer
+{
 public:
-  explicit FrameProcessingServer(const std::string &service_name,
-                                 const std::string &config_path);
+  explicit FrameProcessingServer(const std::string& service_name, const std::string& config_path);
   void initService();
 
 private:
@@ -51,8 +53,7 @@ private:
   std::shared_ptr<ros::NodeHandle> nh_;
   std::shared_ptr<ros::ServiceServer> service_;
 
-  bool cbService(
-      ros::ServiceEvent<typename T::Request, typename T::Response> &event);
+  bool cbService(ros::ServiceEvent<typename T::Request, typename T::Response>& event);
 };
-} // namespace vino_service
-#endif // DYNAMIC_VINO_LIB__SERVICES__FRAME_PROCESSING_SERVER_HPP_
+}  // namespace vino_service
+#endif  // DYNAMIC_VINO_LIB__SERVICES__FRAME_PROCESSING_SERVER_HPP_

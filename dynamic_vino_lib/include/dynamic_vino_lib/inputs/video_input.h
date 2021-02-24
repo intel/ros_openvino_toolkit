@@ -25,14 +25,16 @@
 #include <opencv2/opencv.hpp>
 #include <string>
 
-namespace Input {
+namespace Input
+{
 /**
  * @class Video
  * @brief Class for recieving a video file as input.
  */
-class Video : public BaseInputDevice {
+class Video : public BaseInputDevice
+{
 public:
-  explicit Video(const std::string &);
+  explicit Video(const std::string&);
   /**
    * @brief Read a video file from the file path.
    * @param[in] An video file path.
@@ -49,12 +51,12 @@ public:
    * @brief Read next frame, and give the value to argument frame.
    * @return Whether the next frame is successfully read.
    */
-  bool read(cv::Mat *frame) override;
+  bool read(cv::Mat* frame) override;
 
 private:
   cv::VideoCapture cap;
   std::string video_;
 };
-} // namespace Input
+}  // namespace Input
 
-#endif // DYNAMIC_VINO_LIB_INPUTS_VIDEO_INPUT_H
+#endif  // DYNAMIC_VINO_LIB_INPUTS_VIDEO_INPUT_H

@@ -30,16 +30,18 @@
 #include <ros/ros.h>
 #include <sensor_msgs/Image.h>
 
-namespace Input {
+namespace Input
+{
 /**
  * @class ImageTopic
  * @brief Class for recieving a realsense camera topic as input.
  */
-class ImageTopic : public BaseInputDevice {
+class ImageTopic : public BaseInputDevice
+{
 public:
   bool initialize() override;
   bool initialize(size_t width, size_t height) override;
-  bool read(cv::Mat *frame) override;
+  bool read(cv::Mat* frame) override;
 
 private:
   ros::NodeHandle nh_;
@@ -47,8 +49,8 @@ private:
   cv::Mat image_;
   MutexCounter image_count_;
 
-  void cb(const sensor_msgs::ImageConstPtr &image_msg);
+  void cb(const sensor_msgs::ImageConstPtr& image_msg);
 };
-} // namespace Input
+}  // namespace Input
 
-#endif // DYNAMIC_VINO_LIB__INPUTS__IMAGE_TOPIC_HPP_
+#endif  // DYNAMIC_VINO_LIB__INPUTS__IMAGE_TOPIC_HPP_

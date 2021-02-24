@@ -26,13 +26,16 @@
 #include <iostream>
 #include <string>
 
-namespace slog {
+namespace slog
+{
 /**
  * @class LogStreamEndLine
  * @brief The LogStreamEndLine class implements an end line marker for a log
  * stream
  */
-class LogStreamEndLine {};
+class LogStreamEndLine
+{
+};
 
 static constexpr LogStreamEndLine endl;
 
@@ -40,9 +43,10 @@ static constexpr LogStreamEndLine endl;
  * @class LogStream
  * @brief The LogStream class implements a stream for sample logging
  */
-class LogStream {
+class LogStream
+{
   std::string _prefix;
-  std::ostream *_log_stream;
+  std::ostream* _log_stream;
   bool _new_line;
 
 public:
@@ -50,8 +54,8 @@ public:
    * @brief A constructor. Creates an LogStream object
    * @param prefix The prefix to print
    */
-  LogStream(const std::string &prefix, std::ostream &log_stream)
-      : _prefix(prefix), _new_line(true) {
+  LogStream(const std::string& prefix, std::ostream& log_stream) : _prefix(prefix), _new_line(true)
+  {
     _log_stream = &log_stream;
   }
 
@@ -59,8 +63,11 @@ public:
    * @brief A stream output operator to be used within the logger
    * @param arg Object for serialization in the logger message
    */
-  template <class T> LogStream &operator<<(const T &arg) {
-    if (_new_line) {
+  template <class T>
+  LogStream& operator<<(const T& arg)
+  {
+    if (_new_line)
+    {
       (*_log_stream) << "[ " << _prefix << " ] ";
       _new_line = false;
     }
@@ -70,7 +77,8 @@ public:
   }
 
   // Specializing for LogStreamEndLine to support slog::endl
-  LogStream &operator<<(const LogStreamEndLine &arg) {
+  LogStream& operator<<(const LogStreamEndLine& arg)
+  {
     _new_line = true;
 
     (*_log_stream) << std::endl;
@@ -82,5 +90,5 @@ static LogStream info("INFO", std::cout);
 static LogStream warn("WARNING", std::cout);
 static LogStream err("ERROR", std::cerr);
 
-} // namespace slog
-#endif // VINO_PARAM_LIB_SLOG_H
+}  // namespace slog
+#endif  // VINO_PARAM_LIB_SLOG_H

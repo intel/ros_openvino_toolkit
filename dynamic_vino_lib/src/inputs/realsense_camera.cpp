@@ -22,14 +22,17 @@
 #include "dynamic_vino_lib/slog.h"
 
 // RealSenseCamera
-bool Input::RealSenseCamera::initialize() { return initialize(640, 480); }
+bool Input::RealSenseCamera::initialize()
+{
+  return initialize(640, 480);
+}
 
-bool Input::RealSenseCamera::initialize(size_t width, size_t height) {
-  if (3 * width != 4 * height) {
-    slog::err << "The aspect ratio must be 4:3 when using RealSense camera"
-              << slog::endl;
-    throw std::runtime_error(
-        "The aspect ratio must be 4:3 when using RealSense camera!");
+bool Input::RealSenseCamera::initialize(size_t width, size_t height)
+{
+  if (3 * width != 4 * height)
+  {
+    slog::err << "The aspect ratio must be 4:3 when using RealSense camera" << slog::endl;
+    throw std::runtime_error("The aspect ratio must be 4:3 when using RealSense camera!");
     return false;
   }
 
@@ -37,8 +40,7 @@ bool Input::RealSenseCamera::initialize(size_t width, size_t height) {
   slog::info << "RealSense Serial number : " << devSerialNumber << slog::endl;
 
   cfg_.enable_device(devSerialNumber);
-  cfg_.enable_stream(RS2_STREAM_COLOR, static_cast<int>(width),
-                     static_cast<int>(height), RS2_FORMAT_BGR8, 30);
+  cfg_.enable_stream(RS2_STREAM_COLOR, static_cast<int>(width), static_cast<int>(height), RS2_FORMAT_BGR8, 30);
 
   setInitStatus(pipe_.start(cfg_));
   setWidth(width);
@@ -51,22 +53,25 @@ bool Input::RealSenseCamera::initialize(size_t width, size_t height) {
   return isInit();
 }
 
-bool Input::RealSenseCamera::read(cv::Mat *frame) {
-  if (!isInit()) {
+bool Input::RealSenseCamera::read(cv::Mat* frame)
+{
+  if (!isInit())
+  {
     return false;
   }
 
-  try {
-    rs2::frameset data =
-        pipe_.wait_for_frames(); // Wait for next set of frames from the camera
+  try
+  {
+    rs2::frameset data = pipe_.wait_for_frames();  // Wait for next set of frames from the camera
     rs2::frame color_frame;
     color_frame = data.get_color_frame();
 
-    cv::Mat(
-        cv::Size(static_cast<int>(getWidth()), static_cast<int>(getHeight())),
-        CV_8UC3, const_cast<void *>(color_frame.get_data()), cv::Mat::AUTO_STEP)
+    cv::Mat(cv::Size(static_cast<int>(getWidth()), static_cast<int>(getHeight())), CV_8UC3,
+            const_cast<void*>(color_frame.get_data()), cv::Mat::AUTO_STEP)
         .copyTo(*frame);
-  } catch (...) {
+  }
+  catch (...)
+  {
     return false;
   }
 
@@ -74,7 +79,8 @@ bool Input::RealSenseCamera::read(cv::Mat *frame) {
   return true;
 }
 
-std::string Input::RealSenseCamera::getCameraSN() {
+std::string Input::RealSenseCamera::getCameraSN()
+{
   static int rscamera_count = 0;
   // Get all devices connected
   rs2::context cxt;
@@ -87,13 +93,16 @@ std::string Input::RealSenseCamera::getCameraSN() {
   return devSerialNumber;
 }
 
-void Input::RealSenseCamera::bypassFewFramesOnceInited() {
-  if (!isInit() || !first_read_) {
+void Input::RealSenseCamera::bypassFewFramesOnceInited()
+{
+  if (!isInit() || !first_read_)
+  {
     return;
   }
 
   rs2::frameset frames;
-  for (int i = 0; i < 30; i++) {
+  for (int i = 0; i < 30; i++)
+  {
     frames = pipe_.wait_for_frames();
   }
   first_read_ = false;

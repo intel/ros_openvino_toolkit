@@ -34,36 +34,38 @@
 #include "dynamic_vino_lib/pipeline_manager.h"
 #include "dynamic_vino_lib/slog.h"
 
-namespace vino_service {
+namespace vino_service
+{
 template <typename T>
-PipelineProcessingServer<T>::PipelineProcessingServer(
-    const std::string &service_name)
-    : service_name_(service_name) {
+PipelineProcessingServer<T>::PipelineProcessingServer(const std::string& service_name) : service_name_(service_name)
+{
   nh_ = std::make_shared<ros::NodeHandle>();
   pipelines_ = PipelineManager::getInstance().getPipelinesPtr();
   initPipelineService();
 }
 
-template <typename T> void PipelineProcessingServer<T>::initPipelineService() {
+template <typename T>
+void PipelineProcessingServer<T>::initPipelineService()
+{
   ros::ServiceServer srv = nh_->advertiseService<
-      ros::ServiceEvent<pipeline_srv_msgs::PipelineSrv::Request,
-                        pipeline_srv_msgs::PipelineSrv::Response>>(
+      ros::ServiceEvent<pipeline_srv_msgs::PipelineSrv::Request, pipeline_srv_msgs::PipelineSrv::Response>>(
       "/openvino_toolkit/pipeline/service",
-      std::bind(&PipelineProcessingServer::cbService, this,
-                std::placeholders::_1));
+      std::bind(&PipelineProcessingServer::cbService, this, std::placeholders::_1));
   service_ = std::make_shared<ros::ServiceServer>(srv);
 }
 
 template <typename T>
-void PipelineProcessingServer<T>::setResponse(
-    ros::ServiceEvent<typename T::Request, typename T::Response> &event) {
-  for (auto it = pipelines_->begin(); it != pipelines_->end(); ++it) {
+void PipelineProcessingServer<T>::setResponse(ros::ServiceEvent<typename T::Request, typename T::Response>& event)
+{
+  for (auto it = pipelines_->begin(); it != pipelines_->end(); ++it)
+  {
     pipeline_srv_msgs::Pipelines pipeline_msg;
     pipeline_msg.name = it->first;
     pipeline_msg.running_status = std::to_string(it->second.state);
 
     auto connection_map = it->second.pipeline->getPipelineDetail();
-    for (auto &current_pipe : connection_map) {
+    for (auto& current_pipe : connection_map)
+    {
       pipeline_srv_msgs::Pipeline connection;
       connection.input = current_pipe.first.c_str();
       connection.output = current_pipe.second.c_str();
@@ -74,26 +76,27 @@ void PipelineProcessingServer<T>::setResponse(
 }
 
 template <typename T>
-void PipelineProcessingServer<T>::setPipelineByRequest(
-    std::string pipeline_name, PipelineManager::PipelineState state) {
-  for (auto it = pipelines_->begin(); it != pipelines_->end(); ++it) {
-    if (pipeline_name == it->first) {
+void PipelineProcessingServer<T>::setPipelineByRequest(std::string pipeline_name, PipelineManager::PipelineState state)
+{
+  for (auto it = pipelines_->begin(); it != pipelines_->end(); ++it)
+  {
+    if (pipeline_name == it->first)
+    {
       it->second.state = state;
     }
   }
 }
 
 template <typename T>
-bool PipelineProcessingServer<T>::cbService(
-    ros::ServiceEvent<typename T::Request, typename T::Response> &event) {
+bool PipelineProcessingServer<T>::cbService(ros::ServiceEvent<typename T::Request, typename T::Response>& event)
+{
   std::string req_cmd = event.getRequest().pipeline_request.cmd;
   std::string req_val = event.getRequest().pipeline_request.value;
-  slog::info << "[PipelineProcessingServer] Pipeline Service get request cmd: "
-             << req_cmd << " val:" << req_val << slog::endl;
+  slog::info << "[PipelineProcessingServer] Pipeline Service get request cmd: " << req_cmd << " val:" << req_val
+             << slog::endl;
 
   PipelineManager::PipelineState state;
-  if (req_cmd !=
-      "GET_PIPELINE") // not only get pipeline but also set pipeline by request
+  if (req_cmd != "GET_PIPELINE")  // not only get pipeline but also set pipeline by request
   {
     if (req_cmd == "STOP_PIPELINE")
       state = PipelineManager::PipelineState_ThreadStopped;
@@ -103,7 +106,8 @@ bool PipelineProcessingServer<T>::cbService(
       state = PipelineManager::PipelineState_ThreadPasued;
 
     setPipelineByRequest(req_val, state);
-  } else // fill in pipeline status into service response
+  }
+  else  // fill in pipeline status into service response
   {
     setResponse(event);
   }
@@ -111,4 +115,4 @@ bool PipelineProcessingServer<T>::cbService(
   return true;
 }
 template class PipelineProcessingServer<pipeline_srv_msgs::PipelineSrv>;
-} // namespace vino_service
+}  // namespace vino_service

@@ -20,14 +20,16 @@
 #define DYNAMIC_VINO_LIB__MODELS__PERSON_ATTRIBS_DETECTION_MODEL_H_
 #include "dynamic_vino_lib/models/base_model.h"
 #include <string>
-namespace Models {
+namespace Models
+{
 /**
  * @class PersonAttribsDetectionModel
  * @brief This class generates the person attributes detection model.
  */
-class PersonAttribsDetectionModel : public BaseModel {
+class PersonAttribsDetectionModel : public BaseModel
+{
 public:
-  PersonAttribsDetectionModel(const std::string &model_loc, int batch_size = 1);
+  PersonAttribsDetectionModel(const std::string& model_loc, int batch_size = 1);
   // inline const std::string getInputName() {return input_;}
   // inline const std::string getOutputName() {return output_;}
   /**
@@ -44,5 +46,5 @@ protected:
   std::string input_;
   std::string output_;
 };
-} // namespace Models
-#endif // DYNAMIC_VINO_LIB__MODELS__PERSON_ATTRIBS_DETECTION_MODEL_HPP_
+}  // namespace Models
+#endif  // DYNAMIC_VINO_LIB__MODELS__PERSON_ATTRIBS_DETECTION_MODEL_HPP_

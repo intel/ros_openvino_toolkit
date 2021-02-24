@@ -26,21 +26,22 @@
 #include <string>
 #include <vector>
 
-namespace Outputs {
+namespace Outputs
+{
 /**
  * @class ImageWindowOutput
  * @brief This class handles and shows the detection result with image window.
  */
-class ImageWindowOutput : public BaseOutput {
+class ImageWindowOutput : public BaseOutput
+{
 public:
-  explicit ImageWindowOutput(const std::string &window_name,
-                             int focal_length = 950);
+  explicit ImageWindowOutput(const std::string& window_name, int focal_length = 950);
   /**
    * @brief Calculate the camera matrix of a frame for image
    * window output.
    * @param[in] A frame.
    */
-  void feedFrame(const cv::Mat &) override;
+  void feedFrame(const cv::Mat&) override;
   /**
    * @brief Decorate frame according to detection result
    */
@@ -55,94 +56,84 @@ public:
    * the license plate detection result.
    * @param[in] A license plate detection result objetc.
    */
-  void accept(const std::vector<dynamic_vino_lib::LicensePlateDetectionResult>
-                  &) override;
+  void accept(const std::vector<dynamic_vino_lib::LicensePlateDetectionResult>&) override;
   /**
    * @brief Generate image window output content according to
    * the vehicle attributes detection result.
    * @param[in] A vehicle attributes detection result objetc.
    */
-  void accept(const std::vector<dynamic_vino_lib::VehicleAttribsDetectionResult>
-                  &) override;
+  void accept(const std::vector<dynamic_vino_lib::VehicleAttribsDetectionResult>&) override;
   /**
 *@brief Generate image window output content according to
 *the landmarks detection result.
 *@param[in] A landmarks detection result objetc.
 */
-  void accept(
-      const std::vector<dynamic_vino_lib::LandmarksDetectionResult> &) override;
+  void accept(const std::vector<dynamic_vino_lib::LandmarksDetectionResult>&) override;
   /**
    * @brief Generate image window output content according to
    * the person attributes detection result.
    * @param[in] A person attributes detection result objetc.
    */
-  void accept(const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult>
-                  &) override;
+  void accept(const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult>&) override;
   /**
   * @brief Generate image window output content according to
   * the landmarks detetection result.
   * the face reidentification result.
   * @param[in] A face reidentification result objetc.
   */
-  void accept(const std::vector<dynamic_vino_lib::FaceReidentificationResult> &)
-      override;
+  void accept(const std::vector<dynamic_vino_lib::FaceReidentificationResult>&) override;
   /**
    * @brief Generate image window output content according to
    * the face detection result.
    * @param[in] A face detection result objetc.
    */
 
-  void
-  accept(const std::vector<dynamic_vino_lib::FaceDetectionResult> &) override;
+  void accept(const std::vector<dynamic_vino_lib::FaceDetectionResult>&) override;
   /**
    * @brief Generate image window output content according to
    * the emotion detection result.
    * @param[in] A emotion detection result objetc.
    */
-  void accept(const std::vector<dynamic_vino_lib::EmotionsResult> &) override;
+  void accept(const std::vector<dynamic_vino_lib::EmotionsResult>&) override;
   /**
    * @brief Generate image window output content according to
    * the age and gender detection result.
    * @param[in] A head pose detection result objetc.
    */
-  void accept(const std::vector<dynamic_vino_lib::HeadPoseResult> &) override;
+  void accept(const std::vector<dynamic_vino_lib::HeadPoseResult>&) override;
   /**
    * @brief Generate image window output content according to
    * the headpose detection result.
    * @param[in] An age gender detection result objetc.
    */
-  void accept(const std::vector<dynamic_vino_lib::AgeGenderResult> &) override;
+  void accept(const std::vector<dynamic_vino_lib::AgeGenderResult>&) override;
   /**
    * @brief Generate image window output content according to
    * the object detection result.
    * @param[in] An object detection result objetc.
    */
-  void
-  accept(const std::vector<dynamic_vino_lib::ObjectDetectionResult> &) override;
+  void accept(const std::vector<dynamic_vino_lib::ObjectDetectionResult>&) override;
   /**
    * @brief Generate image window output content according to
    * the object segmentation result.
    * @param[in] An object segmentation result objetc.
    */
-  void accept(
-      const std::vector<dynamic_vino_lib::ObjectSegmentationResult> &) override;
+  void accept(const std::vector<dynamic_vino_lib::ObjectSegmentationResult>&) override;
   /**
   * @brief Generate image window output content according to
   * the person re-ID result.
   * @param[in] An object segmentation result objetc.
   */
-  void accept(const std::vector<dynamic_vino_lib::PersonReidentificationResult>
-                  &) override;
+  void accept(const std::vector<dynamic_vino_lib::PersonReidentificationResult>&) override;
   /**
     * @brief Merge mask for image window ouput
     * the object segmentation result.
     * @param[in] An object segmentation result objetc.
     */
-  void
-  mergeMask(const std::vector<dynamic_vino_lib::ObjectSegmentationResult> &);
+  void mergeMask(const std::vector<dynamic_vino_lib::ObjectSegmentationResult>&);
 
 private:
-  unsigned findOutput(const cv::Rect &);
+  unsigned findOutput(const cv::Rect&);
   // void initOutputs(unsigned size);
   /**
    * @brief Calculate the axises of the coordinates for showing
@@ -160,17 +151,18 @@ private:
   // void mergeMask(const
   // std::vector<dynamic_vino_lib::ObjectSegmentationResult>&);
 
-  struct OutputData {
+  struct OutputData
+  {
     std::string desc;
     cv::Rect rect;
     cv::Scalar scalar;
-    cv::Point hp_cp;     // for headpose, center point
-    cv::Point hp_x;      // for headpose, end point of xAxis
-    cv::Point hp_y;      // for headpose, end point of yAxis
-    cv::Point hp_zs;     // for headpose, start point of zAxis
-    cv::Point hp_ze;     // for headpose, end point of zAxis
-    cv::Point pa_top;    // for person attributes, top position
-    cv::Point pa_bottom; // for person attributes, bottom position
+    cv::Point hp_cp;      // for headpose, center point
+    cv::Point hp_x;       // for headpose, end point of xAxis
+    cv::Point hp_y;       // for headpose, end point of yAxis
+    cv::Point hp_zs;      // for headpose, start point of zAxis
+    cv::Point hp_ze;      // for headpose, end point of zAxis
+    cv::Point pa_top;     // for person attributes, top position
+    cv::Point pa_bottom;  // for person attributes, bottom position
     std::vector<cv::Point> landmarks;
   };
 
@@ -178,13 +170,12 @@ private:
   const std::string window_name_;
   float focal_length_;
   cv::Mat camera_matrix_;
-  std::vector<std::vector<int>> colors_ = {
-      {128, 64, 128},  {232, 35, 244},  {70, 70, 70},   {156, 102, 102},
-      {153, 153, 190}, {153, 153, 153}, {30, 170, 250}, {0, 220, 220},
-      {35, 142, 107},  {152, 251, 152}, {180, 130, 70}, {60, 20, 220},
-      {0, 0, 255},     {142, 0, 0},     {70, 0, 0},     {100, 60, 0},
-      {90, 0, 0},      {230, 0, 0},     {32, 11, 119},  {0, 74, 111},
-      {81, 0, 81}};
+  std::vector<std::vector<int>> colors_ = { { 128, 64, 128 },  { 232, 35, 244 },  { 70, 70, 70 },   { 156, 102, 102 },
+                                            { 153, 153, 190 }, { 153, 153, 153 }, { 30, 170, 250 }, { 0, 220, 220 },
+                                            { 35, 142, 107 },  { 152, 251, 152 }, { 180, 130, 70 }, { 60, 20, 220 },
+                                            { 0, 0, 255 },     { 142, 0, 0 },     { 70, 0, 0 },     { 100, 60, 0 },
+                                            { 90, 0, 0 },      { 230, 0, 0 },     { 32, 11, 119 },  { 0, 74, 111 },
+                                            { 81, 0, 81 } };
 };
-} // namespace Outputs
-#endif // DYNAMIC_VINO_LIB_OUTPUTS_IMAGE_WINDOW_OUTPUT_H
+}  // namespace Outputs
+#endif  // DYNAMIC_VINO_LIB_OUTPUTS_IMAGE_WINDOW_OUTPUT_H

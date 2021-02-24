@@ -57,14 +57,10 @@
  * @param s - string to trim
  * @return trimmed string
  */
-inline std::string &trim(std::string &s) {
-  s.erase(s.begin(),
-          std::find_if(s.begin(), s.end(),
-                       std::not1(std::ptr_fun<int, int>(std::isspace))));
-  s.erase(std::find_if(s.rbegin(), s.rend(),
-                       std::not1(std::ptr_fun<int, int>(std::isspace)))
-              .base(),
-          s.end());
+inline std::string& trim(std::string& s)
+{
+  s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+  s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
   return s;
 }
 
@@ -74,8 +70,8 @@ inline std::string &trim(std::string &s) {
 * @return TargetDevice value that corresponds to input string.
 *         eDefault in case no corresponding value was found
 */
-static InferenceEngine::TargetDevice
-getDeviceFromStr(const std::string &deviceName) {
+static InferenceEngine::TargetDevice getDeviceFromStr(const std::string& deviceName)
+{
   return InferenceEngine::TargetDeviceInfo::fromStr(deviceName);
 }
 
@@ -86,14 +82,18 @@ getDeviceFromStr(const std::string &deviceName) {
 * @param device - device to infer on
 * @return Plugin pointer
 */
-static InferenceEngine::InferenceEnginePluginPtr
-selectPlugin(const std::vector<std::string> &pluginDirs,
-             const std::string &plugin, InferenceEngine::TargetDevice device) {
+static InferenceEngine::InferenceEnginePluginPtr selectPlugin(const std::vector<std::string>& pluginDirs,
+                                                              const std::string& plugin,
+                                                              InferenceEngine::TargetDevice device)
+{
   InferenceEngine::PluginDispatcher dispatcher(pluginDirs);
 
-  if (!plugin.empty()) {
+  if (!plugin.empty())
+  {
     return dispatcher.getPluginByName(plugin);
-  } else {
+  }
+  else
+  {
     return dispatcher.getSuitablePlugin(device);
   }
 }
@@ -105,9 +105,10 @@ selectPlugin(const std::vector<std::string> &pluginDirs,
  * @param device - string representation of device to infer on
  * @return Plugin pointer
  */
-static UNUSED InferenceEngine::InferenceEnginePluginPtr
-selectPlugin(const std::vector<std::string> &pluginDirs,
-             const std::string &plugin, const std::string &device) {
+static UNUSED InferenceEngine::InferenceEnginePluginPtr selectPlugin(const std::vector<std::string>& pluginDirs,
+                                                                     const std::string& plugin,
+                                                                     const std::string& device)
+{
   return selectPlugin(pluginDirs, plugin, getDeviceFromStr(device));
 }
 
@@ -116,7 +117,8 @@ selectPlugin(const std::vector<std::string> &pluginDirs,
  * @param filepath - full file name
  * @return filename without extension
  */
-static UNUSED std::string fileNameNoExt(const std::string &filepath) {
+static UNUSED std::string fileNameNoExt(const std::string& filepath)
+{
   auto pos = filepath.rfind('.');
   if (pos == std::string::npos)
     return filepath;
@@ -128,25 +130,31 @@ static UNUSED std::string fileNameNoExt(const std::string &filepath) {
 * @param filename - name of the file which extension should be extracted
 * @return string with extracted file extension
 */
-inline std::string fileExt(const std::string &filename) {
+inline std::string fileExt(const std::string& filename)
+{
   auto pos = filename.rfind('.');
   if (pos == std::string::npos)
     return "";
   return filename.substr(pos + 1);
 }
 
-static UNUSED std::ostream &
-operator<<(std::ostream &os, const InferenceEngine::Version *version) {
+static UNUSED std::ostream& operator<<(std::ostream& os, const InferenceEngine::Version* version)
+{
   os << "\n\tAPI version ............ ";
-  if (nullptr == version) {
+  if (nullptr == version)
+  {
     os << "UNKNOWN";
-  } else {
+  }
+  else
+  {
     os << version->apiVersion.major << "." << version->apiVersion.minor;
-    if (nullptr != version->buildNumber) {
+    if (nullptr != version->buildNumber)
+    {
       os << "\n\t"
          << "Build .................. " << version->buildNumber;
     }
-    if (nullptr != version->description) {
+    if (nullptr != version->description)
+    {
       os << "\n\t"
          << "Description ....... " << version->description;
     }
@@ -158,71 +166,91 @@ operator<<(std::ostream &os, const InferenceEngine::Version *version) {
  * @class PluginVersion
  * @brief A PluginVersion class stores plugin version and initialization status
  */
-struct PluginVersion : public InferenceEngine::Version {
+struct PluginVersion : public InferenceEngine::Version
+{
   bool initialized = false;
 
-  explicit PluginVersion(const InferenceEngine::Version *ver) {
-    if (nullptr == ver) {
+  explicit PluginVersion(const InferenceEngine::Version* ver)
+  {
+    if (nullptr == ver)
+    {
       return;
     }
     InferenceEngine::Version::operator=(*ver);
     initialized = true;
   }
 
-  operator bool() const noexcept { return initialized; }
+  operator bool() const noexcept
+  {
+    return initialized;
+  }
 };
 
-static UNUSED std::ostream &operator<<(std::ostream &os,
-                                       const PluginVersion &version) {
+static UNUSED std::ostream& operator<<(std::ostream& os, const PluginVersion& version)
+{
   os << "\tPlugin version ......... ";
-  if (!version) {
+  if (!version)
+  {
     os << "UNKNOWN";
-  } else {
+  }
+  else
+  {
     os << version.apiVersion.major << "." << version.apiVersion.minor;
   }
 
   os << "\n\tPlugin name ............ ";
-  if (!version || version.description == nullptr) {
+  if (!version || version.description == nullptr)
+  {
     os << "UNKNOWN";
-  } else {
+  }
+  else
+  {
     os << version.description;
   }
 
   os << "\n\tPlugin build ........... ";
-  if (!version || version.buildNumber == nullptr) {
+  if (!version || version.buildNumber == nullptr)
+  {
     os << "UNKNOWN";
-  } else {
+  }
+  else
+  {
     os << version.buildNumber;
   }
 
   return os;
 }
 
-inline void printPluginVersion(InferenceEngine::InferenceEnginePluginPtr ptr,
-                               std::ostream &stream) {
-  const PluginVersion *pluginVersion;
-  ptr->GetVersion((const InferenceEngine::Version *&)pluginVersion);
+inline void printPluginVersion(InferenceEngine::InferenceEnginePluginPtr ptr, std::ostream& stream)
+{
+  const PluginVersion* pluginVersion;
+  ptr->GetVersion((const InferenceEngine::Version*&)pluginVersion);
   stream << pluginVersion << std::endl;
 }
 
-static UNUSED std::vector<std::vector<size_t>>
-blobToImageOutputArray(InferenceEngine::TBlob<float>::Ptr output,
-                       size_t *pWidth, size_t *pHeight, size_t *pChannels) {
+static UNUSED std::vector<std::vector<size_t>> blobToImageOutputArray(InferenceEngine::TBlob<float>::Ptr output,
+                                                                      size_t* pWidth, size_t* pHeight,
+                                                                      size_t* pChannels)
+{
   std::vector<std::vector<size_t>> outArray;
   size_t W = output->dims().at(0);
   size_t H = output->dims().at(1);
   size_t C = output->dims().at(2);
 
   // Get classes
-  const float *outData = output->data();
-  for (unsigned h = 0; h < H; h++) {
+  const float* outData = output->data();
+  for (unsigned h = 0; h < H; h++)
+  {
     std::vector<size_t> row;
-    for (unsigned w = 0; w < W; w++) {
+    for (unsigned w = 0; w < W; w++)
+    {
       float max_value = outData[h * W + w];
       size_t index = 0;
-      for (size_t c = 1; c < C; c++) {
+      for (size_t c = 1; c < C; c++)
+      {
         size_t dataIndex = c * H * W + h * W + w;
-        if (outData[dataIndex] > max_value) {
+        if (outData[dataIndex] > max_value)
+        {
           index = c;
           max_value = outData[dataIndex];
         }
@@ -246,7 +274,8 @@ blobToImageOutputArray(InferenceEngine::TBlob<float>::Ptr output,
  * @class Color
  * @brief A Color class stores channels of a given color
  */
-class Color {
+class Color
+{
 private:
   unsigned char _r;
   unsigned char _g;
@@ -259,14 +288,24 @@ public:
    * @param g - value for green channel
    * @param b - value for blue channel
    */
-  Color(unsigned char r, unsigned char g, unsigned char b)
-      : _r(r), _g(g), _b(b) {}
+  Color(unsigned char r, unsigned char g, unsigned char b) : _r(r), _g(g), _b(b)
+  {
+  }
 
-  inline unsigned char red() { return _r; }
+  inline unsigned char red()
+  {
+    return _r;
+  }
 
-  inline unsigned char blue() { return _b; }
+  inline unsigned char blue()
+  {
+    return _b;
+  }
 
-  inline unsigned char green() { return _g; }
+  inline unsigned char green()
+  {
+    return _g;
+  }
 };
 
 // TODO : keep only one version of writeOutputBMP
@@ -278,19 +317,19 @@ public:
  * @param classesNum - the number of classes
  * @return false if error else true
  */
-static UNUSED void writeOutputBmp(std::vector<std::vector<size_t>> data,
-                                  size_t classesNum, std::ostream &outFile) {
+static UNUSED void writeOutputBmp(std::vector<std::vector<size_t>> data, size_t classesNum, std::ostream& outFile)
+{
   unsigned int seed = (unsigned int)time(NULL);
   // Known colors for training classes from Cityscape dataset
-  static std::vector<Color> colors = {
-      {128, 64, 128},  {232, 35, 244},  {70, 70, 70},   {156, 102, 102},
-      {153, 153, 190}, {153, 153, 153}, {30, 170, 250}, {0, 220, 220},
-      {35, 142, 107},  {152, 251, 152}, {180, 130, 70}, {60, 20, 220},
-      {0, 0, 255},     {142, 0, 0},     {70, 0, 0},     {100, 60, 0},
-      {90, 0, 0},      {230, 0, 0},     {32, 11, 119},  {0, 74, 111},
-      {81, 0, 81}};
+  static std::vector<Color> colors = { { 128, 64, 128 },  { 232, 35, 244 },  { 70, 70, 70 },   { 156, 102, 102 },
+                                       { 153, 153, 190 }, { 153, 153, 153 }, { 30, 170, 250 }, { 0, 220, 220 },
+                                       { 35, 142, 107 },  { 152, 251, 152 }, { 180, 130, 70 }, { 60, 20, 220 },
+                                       { 0, 0, 255 },     { 142, 0, 0 },     { 70, 0, 0 },     { 100, 60, 0 },
+                                       { 90, 0, 0 },      { 230, 0, 0 },     { 32, 11, 119 },  { 0, 74, 111 },
+                                       { 81, 0, 81 } };
 
-  while (classesNum > colors.size()) {
+  while (classesNum > colors.size())
+  {
     static std::mt19937 rng(seed);
     std::uniform_int_distribution<int> dist(0, 255);
     Color color(dist(rng), dist(rng), dist(rng));
@@ -298,31 +337,31 @@ static UNUSED void writeOutputBmp(std::vector<std::vector<size_t>> data,
   }
 
   unsigned char file[14] = {
-      'B',     'M',       // magic
-      0,       0,   0, 0, // size in bytes
-      0,       0,         // app data
-      0,       0,         // app data
-      40 + 14, 0,   0, 0  // start of data offset
+    'B',     'M',        // magic
+    0,       0,   0, 0,  // size in bytes
+    0,       0,          // app data
+    0,       0,          // app data
+    40 + 14, 0,   0, 0   // start of data offset
   };
   unsigned char info[40] = {
-      40,   0,    0, 0, // info hd size
-      0,    0,    0, 0, // width
-      0,    0,    0, 0, // height
-      1,    0,          // number color planes
-      24,   0,          // bits per pixel
-      0,    0,    0, 0, // compression is none
-      0,    0,    0, 0, // image bits size
-      0x13, 0x0B, 0, 0, // horz resolution in pixel / m
-      0x13, 0x0B, 0, 0, // vert resolution (0x03C3 = 96 dpi, 0x0B13 = 72 dpi)
-      0,    0,    0, 0, // #colors in palette
-      0,    0,    0, 0, // #important colors
+    40,   0,    0, 0,  // info hd size
+    0,    0,    0, 0,  // width
+    0,    0,    0, 0,  // height
+    1,    0,           // number color planes
+    24,   0,           // bits per pixel
+    0,    0,    0, 0,  // compression is none
+    0,    0,    0, 0,  // image bits size
+    0x13, 0x0B, 0, 0,  // horz resolution in pixel / m
+    0x13, 0x0B, 0, 0,  // vert resolution (0x03C3 = 96 dpi, 0x0B13 = 72 dpi)
+    0,    0,    0, 0,  // #colors in palette
+    0,    0,    0, 0,  // #important colors
   };
 
   auto height = data.size();
   auto width = data.at(0).size();
 
-  if (height > (size_t)std::numeric_limits<int32_t>::max ||
-      width > (size_t)std::numeric_limits<int32_t>::max) {
+  if (height > (size_t)std::numeric_limits<int32_t>::max || width > (size_t)std::numeric_limits<int32_t>::max)
+  {
     THROW_IE_EXCEPTION << "File size is too big: " << height << " X " << width;
   }
 
@@ -351,21 +390,23 @@ static UNUSED void writeOutputBmp(std::vector<std::vector<size_t>> data,
   info[22] = (unsigned char)(sizeData >> 16);
   info[23] = (unsigned char)(sizeData >> 24);
 
-  outFile.write(reinterpret_cast<char *>(file), sizeof(file));
-  outFile.write(reinterpret_cast<char *>(info), sizeof(info));
+  outFile.write(reinterpret_cast<char*>(file), sizeof(file));
+  outFile.write(reinterpret_cast<char*>(info), sizeof(info));
 
-  unsigned char pad[3] = {0, 0, 0};
+  unsigned char pad[3] = { 0, 0, 0 };
 
-  for (size_t y = 0; y < height; y++) {
-    for (size_t x = 0; x < width; x++) {
+  for (size_t y = 0; y < height; y++)
+  {
+    for (size_t x = 0; x < width; x++)
+    {
       unsigned char pixel[3];
       size_t index = data.at(y).at(x);
       pixel[0] = colors.at(index).red();
       pixel[1] = colors.at(index).green();
       pixel[2] = colors.at(index).blue();
-      outFile.write(reinterpret_cast<char *>(pixel), 3);
+      outFile.write(reinterpret_cast<char*>(pixel), 3);
     }
-    outFile.write(reinterpret_cast<char *>(pad), padSize);
+    outFile.write(reinterpret_cast<char*>(pad), padSize);
   }
 }
 
@@ -377,37 +418,38 @@ static UNUSED void writeOutputBmp(std::vector<std::vector<size_t>> data,
 * @param width - width of the target image
 * @return false if error else true
 */
-static UNUSED bool writeOutputBmp(std::string name, unsigned char *data,
-                                  size_t height, size_t width) {
+static UNUSED bool writeOutputBmp(std::string name, unsigned char* data, size_t height, size_t width)
+{
   std::ofstream outFile;
   outFile.open(name, std::ofstream::binary);
-  if (!outFile.is_open()) {
+  if (!outFile.is_open())
+  {
     return false;
   }
 
   unsigned char file[14] = {
-      'B',     'M',       // magic
-      0,       0,   0, 0, // size in bytes
-      0,       0,         // app data
-      0,       0,         // app data
-      40 + 14, 0,   0, 0  // start of data offset
+    'B',     'M',        // magic
+    0,       0,   0, 0,  // size in bytes
+    0,       0,          // app data
+    0,       0,          // app data
+    40 + 14, 0,   0, 0   // start of data offset
   };
   unsigned char info[40] = {
-      40,   0,    0, 0, // info hd size
-      0,    0,    0, 0, // width
-      0,    0,    0, 0, // height
-      1,    0,          // number color planes
-      24,   0,          // bits per pixel
-      0,    0,    0, 0, // compression is none
-      0,    0,    0, 0, // image bits size
-      0x13, 0x0B, 0, 0, // horz resolution in pixel / m
-      0x13, 0x0B, 0, 0, // vert resolution (0x03C3 = 96 dpi, 0x0B13 = 72 dpi)
-      0,    0,    0, 0, // #colors in palette
-      0,    0,    0, 0, // #important colors
+    40,   0,    0, 0,  // info hd size
+    0,    0,    0, 0,  // width
+    0,    0,    0, 0,  // height
+    1,    0,           // number color planes
+    24,   0,           // bits per pixel
+    0,    0,    0, 0,  // compression is none
+    0,    0,    0, 0,  // image bits size
+    0x13, 0x0B, 0, 0,  // horz resolution in pixel / m
+    0x13, 0x0B, 0, 0,  // vert resolution (0x03C3 = 96 dpi, 0x0B13 = 72 dpi)
+    0,    0,    0, 0,  // #colors in palette
+    0,    0,    0, 0,  // #important colors
   };
 
-  if (height > (size_t)std::numeric_limits<int32_t>::max ||
-      width > (size_t)std::numeric_limits<int32_t>::max) {
+  if (height > (size_t)std::numeric_limits<int32_t>::max || width > (size_t)std::numeric_limits<int32_t>::max)
+  {
     THROW_IE_EXCEPTION << "File size is too big: " << height << " X " << width;
   }
 
@@ -436,21 +478,23 @@ static UNUSED bool writeOutputBmp(std::string name, unsigned char *data,
   info[22] = (unsigned char)(sizeData >> 16);
   info[23] = (unsigned char)(sizeData >> 24);
 
-  outFile.write(reinterpret_cast<char *>(file), sizeof(file));
-  outFile.write(reinterpret_cast<char *>(info), sizeof(info));
+  outFile.write(reinterpret_cast<char*>(file), sizeof(file));
+  outFile.write(reinterpret_cast<char*>(info), sizeof(info));
 
-  unsigned char pad[3] = {0, 0, 0};
+  unsigned char pad[3] = { 0, 0, 0 };
 
-  for (size_t y = 0; y < height; y++) {
-    for (size_t x = 0; x < width; x++) {
+  for (size_t y = 0; y < height; y++)
+  {
+    for (size_t x = 0; x < width; x++)
+    {
       unsigned char pixel[3];
       pixel[0] = data[y * width * 3 + x * 3];
       pixel[1] = data[y * width * 3 + x * 3 + 1];
       pixel[2] = data[y * width * 3 + x * 3 + 2];
 
-      outFile.write(reinterpret_cast<char *>(pixel), 3);
+      outFile.write(reinterpret_cast<char*>(pixel), 3);
     }
-    outFile.write(reinterpret_cast<char *>(pad), padSize);
+    outFile.write(reinterpret_cast<char*>(pad), padSize);
   }
   return true;
 }
@@ -463,31 +507,31 @@ static UNUSED bool writeOutputBmp(std::string name, unsigned char *data,
  * \return false if error else true
  */
 
-static UNUSED bool writeOutputBmp(unsigned char *data, size_t height,
-                                  size_t width, std::ostream &outFile) {
+static UNUSED bool writeOutputBmp(unsigned char* data, size_t height, size_t width, std::ostream& outFile)
+{
   unsigned char file[14] = {
-      'B',     'M',       // magic
-      0,       0,   0, 0, // size in bytes
-      0,       0,         // app data
-      0,       0,         // app data
-      40 + 14, 0,   0, 0  // start of data offset
+    'B',     'M',        // magic
+    0,       0,   0, 0,  // size in bytes
+    0,       0,          // app data
+    0,       0,          // app data
+    40 + 14, 0,   0, 0   // start of data offset
   };
   unsigned char info[40] = {
-      40,   0,    0, 0, // info hd size
-      0,    0,    0, 0, // width
-      0,    0,    0, 0, // height
-      1,    0,          // number color planes
-      24,   0,          // bits per pixel
-      0,    0,    0, 0, // compression is none
-      0,    0,    0, 0, // image bits size
-      0x13, 0x0B, 0, 0, // horz resolution in pixel / m
-      0x13, 0x0B, 0, 0, // vert resolution (0x03C3 = 96 dpi, 0x0B13 = 72 dpi)
-      0,    0,    0, 0, // #colors in palette
-      0,    0,    0, 0, // #important colors
+    40,   0,    0, 0,  // info hd size
+    0,    0,    0, 0,  // width
+    0,    0,    0, 0,  // height
+    1,    0,           // number color planes
+    24,   0,           // bits per pixel
+    0,    0,    0, 0,  // compression is none
+    0,    0,    0, 0,  // image bits size
+    0x13, 0x0B, 0, 0,  // horz resolution in pixel / m
+    0x13, 0x0B, 0, 0,  // vert resolution (0x03C3 = 96 dpi, 0x0B13 = 72 dpi)
+    0,    0,    0, 0,  // #colors in palette
+    0,    0,    0, 0,  // #important colors
   };
 
-  if (height > (size_t)std::numeric_limits<int32_t>::max ||
-      width > (size_t)std::numeric_limits<int32_t>::max) {
+  if (height > (size_t)std::numeric_limits<int32_t>::max || width > (size_t)std::numeric_limits<int32_t>::max)
+  {
     THROW_IE_EXCEPTION << "File size is too big: " << height << " X " << width;
   }
 
@@ -516,83 +560,84 @@ static UNUSED bool writeOutputBmp(unsigned char *data, size_t height,
   info[22] = (unsigned char)(sizeData >> 16);
   info[23] = (unsigned char)(sizeData >> 24);
 
-  outFile.write(reinterpret_cast<char *>(file), sizeof(file));
-  outFile.write(reinterpret_cast<char *>(info), sizeof(info));
+  outFile.write(reinterpret_cast<char*>(file), sizeof(file));
+  outFile.write(reinterpret_cast<char*>(info), sizeof(info));
 
-  unsigned char pad[3] = {0, 0, 0};
+  unsigned char pad[3] = { 0, 0, 0 };
 
-  for (size_t y = 0; y < height; y++) {
-    for (size_t x = 0; x < width; x++) {
+  for (size_t y = 0; y < height; y++)
+  {
+    for (size_t x = 0; x < width; x++)
+    {
       unsigned char pixel[3];
       pixel[0] = data[y * width * 3 + x * 3];
       pixel[1] = data[y * width * 3 + x * 3 + 1];
       pixel[2] = data[y * width * 3 + x * 3 + 2];
-      outFile.write(reinterpret_cast<char *>(pixel), 3);
+      outFile.write(reinterpret_cast<char*>(pixel), 3);
     }
-    outFile.write(reinterpret_cast<char *>(pad), padSize);
+    outFile.write(reinterpret_cast<char*>(pad), padSize);
   }
 
   return true;
 }
 
-inline double getDurationOf(std::function<void()> func) {
+inline double getDurationOf(std::function<void()> func)
+{
   auto t0 = std::chrono::high_resolution_clock::now();
   func();
   auto t1 = std::chrono::high_resolution_clock::now();
   std::chrono::duration<float> fs = t1 - t0;
-  return std::chrono::duration_cast<
-             std::chrono::duration<double, std::ratio<1, 1000>>>(fs)
-      .count();
+  return std::chrono::duration_cast<std::chrono::duration<double, std::ratio<1, 1000>>>(fs).count();
 }
 
-static UNUSED void printPerformanceCounts(
-    const std::map<std::string, InferenceEngine::InferenceEngineProfileInfo>
-        &performanceMap,
-    std::ostream &stream, bool bshowHeader = true) {
+static UNUSED void
+printPerformanceCounts(const std::map<std::string, InferenceEngine::InferenceEngineProfileInfo>& performanceMap,
+                       std::ostream& stream, bool bshowHeader = true)
+{
   long long totalTime = 0;
   // Print performance counts
-  if (bshowHeader) {
+  if (bshowHeader)
+  {
     stream << std::endl << "performance counts:" << std::endl << std::endl;
   }
-  for (const auto &it : performanceMap) {
+  for (const auto& it : performanceMap)
+  {
     std::string toPrint(it.first);
     const int maxLayerName = 30;
 
-    if (it.first.length() >= maxLayerName) {
+    if (it.first.length() >= maxLayerName)
+    {
       toPrint = it.first.substr(0, maxLayerName - 4);
       toPrint += "...";
     }
 
     stream << std::setw(maxLayerName) << std::left << toPrint;
-    switch (it.second.status) {
-    case InferenceEngine::InferenceEngineProfileInfo::EXECUTED:
-      stream << std::setw(15) << std::left << "EXECUTED";
-      break;
-    case InferenceEngine::InferenceEngineProfileInfo::NOT_RUN:
-      stream << std::setw(15) << std::left << "NOT_RUN";
-      break;
-    case InferenceEngine::InferenceEngineProfileInfo::OPTIMIZED_OUT:
-      stream << std::setw(15) << std::left << "OPTIMIZED_OUT";
-      break;
+    switch (it.second.status)
+    {
+      case InferenceEngine::InferenceEngineProfileInfo::EXECUTED:
+        stream << std::setw(15) << std::left << "EXECUTED";
+        break;
+      case InferenceEngine::InferenceEngineProfileInfo::NOT_RUN:
+        stream << std::setw(15) << std::left << "NOT_RUN";
+        break;
+      case InferenceEngine::InferenceEngineProfileInfo::OPTIMIZED_OUT:
+        stream << std::setw(15) << std::left << "OPTIMIZED_OUT";
+        break;
     }
-    stream << std::setw(30) << std::left
-           << "layerType: " + std::string(it.second.layer_type) + " ";
-    stream << std::setw(20) << std::left
-           << "realTime: " + std::to_string(it.second.realTime_uSec);
-    stream << std::setw(20) << std::left
-           << " cpu: " + std::to_string(it.second.cpu_uSec);
+    stream << std::setw(30) << std::left << "layerType: " + std::string(it.second.layer_type) + " ";
+    stream << std::setw(20) << std::left << "realTime: " + std::to_string(it.second.realTime_uSec);
+    stream << std::setw(20) << std::left << " cpu: " + std::to_string(it.second.cpu_uSec);
     stream << " execType: " << it.second.exec_type << std::endl;
-    if (it.second.realTime_uSec > 0) {
+    if (it.second.realTime_uSec > 0)
+    {
       totalTime += it.second.realTime_uSec;
     }
   }
-  stream << std::setw(20) << std::left
-         << "Total time: " + std::to_string(totalTime) << " microseconds"
-         << std::endl;
+  stream << std::setw(20) << std::left << "Total time: " + std::to_string(totalTime) << " microseconds" << std::endl;
 }
 
-static UNUSED void printPerformanceCounts(InferenceEngine::InferRequest request,
-                                          std::ostream &stream) {
+static UNUSED void printPerformanceCounts(InferenceEngine::InferRequest request, std::ostream& stream)
+{
   auto perfomanceMap = request.GetPerformanceCounts();
   printPerformanceCounts(perfomanceMap, stream);
 }
@@ -600,11 +645,9 @@ static UNUSED void printPerformanceCounts(InferenceEngine::InferRequest request,
 /**
  * @deprecated
  */
-static UNUSED void
-printPerformanceCountsPlugin(InferenceEngine::InferenceEnginePluginPtr plugin,
-                             std::ostream &stream) {
-  std::map<std::string, InferenceEngine::InferenceEngineProfileInfo>
-      perfomanceMap;
+static UNUSED void printPerformanceCountsPlugin(InferenceEngine::InferenceEnginePluginPtr plugin, std::ostream& stream)
+{
+  std::map<std::string, InferenceEngine::InferenceEngineProfileInfo> perfomanceMap;
   plugin->GetPerformanceCounts(perfomanceMap, nullptr);
   printPerformanceCounts(perfomanceMap, stream);
 }
@@ -613,34 +656,34 @@ printPerformanceCountsPlugin(InferenceEngine::InferenceEnginePluginPtr plugin,
  * @brief This class represents an object that is found by an object detection
  * net
  */
-class DetectedObject {
+class DetectedObject
+{
 public:
   int objectType;
   float xmin, xmax, ymin, ymax, prob;
   bool difficult;
 
-  DetectedObject(int objectType, float xmin, float ymin, float xmax, float ymax,
-                 float prob, bool difficult = false)
-      : objectType(objectType), xmin(xmin), xmax(xmax), ymin(ymin), ymax(ymax),
-        prob(prob), difficult(difficult) {}
+  DetectedObject(int objectType, float xmin, float ymin, float xmax, float ymax, float prob, bool difficult = false)
+    : objectType(objectType), xmin(xmin), xmax(xmax), ymin(ymin), ymax(ymax), prob(prob), difficult(difficult)
+  {
+  }
 
-  DetectedObject(const DetectedObject &other) = default;
+  DetectedObject(const DetectedObject& other) = default;
 
-  static float ioU(const DetectedObject &detectedObject1_,
-                   const DetectedObject &detectedObject2_) {
+  static float ioU(const DetectedObject& detectedObject1_, const DetectedObject& detectedObject2_)
+  {
     // Add small space to eliminate empty squares
-    float epsilon = 0; // 1e-5f;
+    float epsilon = 0;  // 1e-5f;
 
-    DetectedObject detectedObject1(
-        detectedObject1_.objectType, (detectedObject1_.xmin - epsilon),
-        (detectedObject1_.ymin - epsilon), (detectedObject1_.xmax - epsilon),
-        (detectedObject1_.ymax - epsilon), detectedObject1_.prob);
-    DetectedObject detectedObject2(
-        detectedObject2_.objectType, (detectedObject2_.xmin + epsilon),
-        (detectedObject2_.ymin + epsilon), (detectedObject2_.xmax),
-        (detectedObject2_.ymax), detectedObject2_.prob);
+    DetectedObject detectedObject1(detectedObject1_.objectType, (detectedObject1_.xmin - epsilon),
+                                   (detectedObject1_.ymin - epsilon), (detectedObject1_.xmax - epsilon),
+                                   (detectedObject1_.ymax - epsilon), detectedObject1_.prob);
+    DetectedObject detectedObject2(detectedObject2_.objectType, (detectedObject2_.xmin + epsilon),
+                                   (detectedObject2_.ymin + epsilon), (detectedObject2_.xmax), (detectedObject2_.ymax),
+                                   detectedObject2_.prob);
 
-    if (detectedObject1.objectType != detectedObject2.objectType) {
+    if (detectedObject1.objectType != detectedObject2.objectType)
+    {
       // objects are different, so the result is 0
       return 0.0f;
     }
@@ -668,9 +711,12 @@ public:
 
     // intersection
     float intr;
-    if ((xmax >= xmin) && (ymax >= ymin)) {
+    if ((xmax >= xmin) && (ymax >= ymin))
+    {
       intr = (addendum + xmax - xmin) * (addendum + ymax - ymin);
-    } else {
+    }
+    else
+    {
       intr = 0.0f;
     }
 
@@ -685,33 +731,42 @@ public:
     return static_cast<float>(intr) / unn;
   }
 
-  DetectedObject scale(float scale_x, float scale_y) const {
-    return DetectedObject(objectType, xmin * scale_x, ymin * scale_y,
-                          xmax * scale_x, ymax * scale_y, prob, difficult);
+  DetectedObject scale(float scale_x, float scale_y) const
+  {
+    return DetectedObject(objectType, xmin * scale_x, ymin * scale_y, xmax * scale_x, ymax * scale_y, prob, difficult);
   }
 };
 
-class ImageDescription {
+class ImageDescription
+{
 public:
   const std::list<DetectedObject> alist;
   const bool check_probs;
 
-  explicit ImageDescription(const std::list<DetectedObject> &alist,
-                            bool check_probs = false)
-      : alist(alist), check_probs(check_probs) {}
+  explicit ImageDescription(const std::list<DetectedObject>& alist, bool check_probs = false)
+    : alist(alist), check_probs(check_probs)
+  {
+  }
 
-  ImageDescription scale(float scale_x, float scale_y) const {
+  ImageDescription scale(float scale_x, float scale_y) const
+  {
     std::list<DetectedObject> slist;
-    for (auto &dob : alist) {
+    for (auto& dob : alist)
+    {
       slist.push_back(dob.scale(scale_x, scale_y));
     }
     return ImageDescription(slist, check_probs);
   }
 };
 
-struct AveragePrecisionCalculator {
+struct AveragePrecisionCalculator
+{
 private:
-  enum MatchKind { TruePositive, FalsePositive };
+  enum MatchKind
+  {
+    TruePositive,
+    FalsePositive
+  };
 
   /**
    * Here we count all TP and FP matches for all the classes in all the images.
@@ -722,18 +777,20 @@ private:
 
   double threshold;
 
-  static bool SortBBoxDescend(const DetectedObject &bbox1,
-                              const DetectedObject &bbox2) {
+  static bool SortBBoxDescend(const DetectedObject& bbox1, const DetectedObject& bbox2)
+  {
     return bbox1.prob > bbox2.prob;
   }
 
-  static bool SortPairDescend(const std::pair<double, MatchKind> &p1,
-                              const std::pair<double, MatchKind> &p2) {
+  static bool SortPairDescend(const std::pair<double, MatchKind>& p1, const std::pair<double, MatchKind>& p2)
+  {
     return p1.first > p2.first;
   }
 
 public:
-  AveragePrecisionCalculator(double threshold) : threshold(threshold) {}
+  AveragePrecisionCalculator(double threshold) : threshold(threshold)
+  {
+  }
 
   // gt_bboxes -> des
   // bboxes -> det
@@ -746,18 +803,18 @@ public:
 * @param width - width of the rectangle
 * @param detectedObjects - vector of detected objects
 */
-static UNUSED void addRectangles(unsigned char *data, size_t height,
-                                 size_t width,
-                                 std::vector<DetectedObject> detectedObjects) {
-  std::vector<Color> colors = {
-      {128, 64, 128},  {232, 35, 244},  {70, 70, 70},   {156, 102, 102},
-      {153, 153, 190}, {153, 153, 153}, {30, 170, 250}, {0, 220, 220},
-      {35, 142, 107},  {152, 251, 152}, {180, 130, 70}, {60, 20, 220},
-      {0, 0, 255},     {142, 0, 0},     {70, 0, 0},     {100, 60, 0},
-      {90, 0, 0},      {230, 0, 0},     {32, 11, 119},  {0, 74, 111},
-      {81, 0, 81}};
+static UNUSED void addRectangles(unsigned char* data, size_t height, size_t width,
+                                 std::vector<DetectedObject> detectedObjects)
+{
+  std::vector<Color> colors = { { 128, 64, 128 },  { 232, 35, 244 },  { 70, 70, 70 },   { 156, 102, 102 },
+                                { 153, 153, 190 }, { 153, 153, 153 }, { 30, 170, 250 }, { 0, 220, 220 },
+                                { 35, 142, 107 },  { 152, 251, 152 }, { 180, 130, 70 }, { 60, 20, 220 },
+                                { 0, 0, 255 },     { 142, 0, 0 },     { 70, 0, 0 },     { 100, 60, 0 },
+                                { 90, 0, 0 },      { 230, 0, 0 },     { 32, 11, 119 },  { 0, 74, 111 },
+                                { 81, 0, 81 } };
 
-  for (size_t i = 0; i < detectedObjects.size(); i++) {
+  for (size_t i = 0; i < detectedObjects.size(); i++)
+  {
     int cls = detectedObjects[i].objectType % colors.size();
 
     int xmin = detectedObjects[i].xmin * width;
@@ -767,7 +824,8 @@ static UNUSED void addRectangles(unsigned char *data, size_t height,
 
     size_t shift_first = ymin * width * 3;
     size_t shift_second = ymax * width * 3;
-    for (int x = xmin; x < xmax; x++) {
+    for (int x = xmin; x < xmax; x++)
+    {
       data[shift_first + x * 3] = colors.at(cls).red();
       data[shift_first + x * 3 + 1] = colors.at(cls).green();
       data[shift_first + x * 3 + 2] = colors.at(cls).blue();
@@ -778,7 +836,8 @@ static UNUSED void addRectangles(unsigned char *data, size_t height,
 
     shift_first = xmin * 3;
     shift_second = xmax * 3;
-    for (int y = ymin; y < ymax; y++) {
+    for (int y = ymin; y < ymax; y++)
+    {
       data[shift_first + y * width * 3] = colors.at(cls).red();
       data[shift_first + y * width * 3 + 1] = colors.at(cls).green();
       data[shift_first + y * width * 3 + 2] = colors.at(cls).blue();

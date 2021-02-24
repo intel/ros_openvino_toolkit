@@ -34,36 +34,37 @@
  * @class InferenceManager
  * @brief This class manages inference resources.
  */
-class InferenceManager {
+class InferenceManager
+{
 public:
   /**
   * @brief Get the singleton instance of InferenceManager class.
   * The instance will be created when first call.
   * @return The reference of InferenceManager instance.
   */
-  static InferenceManager &getInstance() {
+  static InferenceManager& getInstance()
+  {
     static InferenceManager manager_;
     return manager_;
   }
 
-  std::shared_ptr<Pipeline>
-  createPipeline(const Params::ParamManager::PipelineRawData &params);
-  void removePipeline(const std::string &name);
-  InferenceManager &
-  updatePipeline(const std::string &name,
-                 const Params::ParamManager::PipelineRawData &params);
+  std::shared_ptr<Pipeline> createPipeline(const Params::ParamManager::PipelineRawData& params);
+  void removePipeline(const std::string& name);
+  InferenceManager& updatePipeline(const std::string& name, const Params::ParamManager::PipelineRawData& params);
 
   void runAll();
   void stopAll();
   void joinAll();
 
-  enum PipelineState {
+  enum PipelineState
+  {
     PipelineState_ThreadNotCreated,
     PipelineState_ThreadStopped,
     PipelineState_ThreadRunning,
     PipelineState_Error
   };
-  struct PipelineData {
+  struct PipelineData
+  {
     Params::ParamManager::PipelineRawData params;
     std::shared_ptr<Pipeline> pipeline;
     std::vector<std::shared_ptr<rclcpp::Node>> spin_nodes;
@@ -72,30 +73,32 @@ public:
   };
 
 private:
-  InferenceManager() {}
-  InferenceManager(InferenceManager const &);
-  void operator=(InferenceManager const &);
-  void threadPipeline(const char *name);
+  InferenceManager()
+  {
+  }
+  InferenceManager(InferenceManager const&);
+  void operator=(InferenceManager const&);
+  void threadPipeline(const char* name);
   std::map<std::string, std::shared_ptr<Input::BaseInputDevice>>
-  parseInputDevice(const Params::ParamManager::PipelineRawData &params);
+  parseInputDevice(const Params::ParamManager::PipelineRawData& params);
   std::map<std::string, std::shared_ptr<Outputs::BaseOutput>>
-  parseOutput(const Params::ParamManager::PipelineRawData &params);
+  parseOutput(const Params::ParamManager::PipelineRawData& params);
   std::map<std::string, std::shared_ptr<dynamic_vino_lib::BaseInference>>
-  parseInference(const Params::ParamManager::PipelineRawData &params);
+  parseInference(const Params::ParamManager::PipelineRawData& params);
   std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createFaceDetection(const Params::ParamManager::InferenceParams &infer);
-  std::shared_ptr<dynamic_vino_lib::BaseInference> createAgeGenderRecognition(
-      const Params::ParamManager::InferenceParams &infer);
+  createFaceDetection(const Params::ParamManager::InferenceParams& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createEmotionRecognition(const Params::ParamManager::InferenceParams &infer);
+  createAgeGenderRecognition(const Params::ParamManager::InferenceParams& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createHeadPoseEstimation(const Params::ParamManager::InferenceParams &infer);
+  createEmotionRecognition(const Params::ParamManager::InferenceParams& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createObjectDetection(const Params::ParamManager::InferenceParams &infer);
+  createHeadPoseEstimation(const Params::ParamManager::InferenceParams& infer);
+  std::shared_ptr<dynamic_vino_lib::BaseInference>
+  createObjectDetection(const Params::ParamManager::InferenceParams& infer);
 
   std::map<std::string, PipelineData> pipelines_;
   // std::map<std::string, InferenceEngine::InferencePlugin>
   // plugins_for_devices_;
 };
 
-#endif // DYNAMIC_VINO_LIB__INFERENCES__INFERENCE_MANAGER_HPP_
+#endif  // DYNAMIC_VINO_LIB__INFERENCES__INFERENCE_MANAGER_HPP_

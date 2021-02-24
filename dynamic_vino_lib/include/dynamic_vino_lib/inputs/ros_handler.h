@@ -24,18 +24,24 @@
 
 #include <ros/ros.h>
 
-namespace Input {
-class Ros2Handler {
+namespace Input
+{
+class Ros2Handler
+{
 public:
-  void setHandler(const std::shared_ptr<ros::NodeHandle> &node) {
+  void setHandler(const std::shared_ptr<ros::NodeHandle>& node)
+  {
     node_ = node;
   }
-  std::shared_ptr<ros::NodeHandle> getHandler() const { return node_; }
+  std::shared_ptr<ros::NodeHandle> getHandler() const
+  {
+    return node_;
+  }
 
 private:
   std::shared_ptr<ros::NodeHandle> node_;
 };
 
-} // namespace Input
+}  // namespace Input
 
-#endif // DYNAMIC_VINO_LIB_INPUTS_ROS_HANDLER_H
+#endif  // DYNAMIC_VINO_LIB_INPUTS_ROS_HANDLER_H

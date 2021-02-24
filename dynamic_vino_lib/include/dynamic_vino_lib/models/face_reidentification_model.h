@@ -20,16 +20,24 @@
 #define DYNAMIC_VINO_LIB__MODELS__FACE_REIDENTIFICATION_MODEL_H_
 #include "dynamic_vino_lib/models/base_model.h"
 #include <string>
-namespace Models {
+namespace Models
+{
 /**
  * @class FaceReidentificationModel
  * @brief This class generates the face reidentification model.
  */
-class FaceReidentificationModel : public BaseModel {
+class FaceReidentificationModel : public BaseModel
+{
 public:
-  FaceReidentificationModel(const std::string &model_loc, int batch_size = 1);
-  inline const std::string getInputName() { return input_; }
-  inline const std::string getOutputName() { return output_; }
+  FaceReidentificationModel(const std::string& model_loc, int batch_size = 1);
+  inline const std::string getInputName()
+  {
+    return input_;
+  }
+  inline const std::string getOutputName()
+  {
+    return output_;
+  }
   /**
    * @brief Get the name of this detection model.
    * @return Name of the model.
@@ -40,5 +48,5 @@ protected:
   std::string input_;
   std::string output_;
 };
-} // namespace Models
-#endif // DYNAMIC_VINO_LIB__MODELS__FACE_REIDENTIFICATION_MODEL_HPP_
+}  // namespace Models
+#endif  // DYNAMIC_VINO_LIB__MODELS__FACE_REIDENTIFICATION_MODEL_HPP_

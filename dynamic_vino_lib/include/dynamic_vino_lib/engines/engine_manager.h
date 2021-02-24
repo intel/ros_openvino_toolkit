@@ -25,39 +25,35 @@
 #include "dynamic_vino_lib/models/base_model.h"
 #include "inference_engine.hpp"
 
-namespace Engines {
+namespace Engines
+{
 /**
  * @class EngineManager
  * @brief This class is used to create and manage Inference engines.
  */
-class EngineManager {
+class EngineManager
+{
 public:
   /**
    * @brief Create InferenceEngine instance by given Engine Name and Network.
    * @return The shared pointer of created Engine instance.
    */
-  std::shared_ptr<Engine>
-  createEngine(const std::string &, const std::shared_ptr<Models::BaseModel> &);
+  std::shared_ptr<Engine> createEngine(const std::string&, const std::shared_ptr<Models::BaseModel>&);
 
 private:
 #if (defined(USE_OLD_E_PLUGIN_API))
   std::map<std::string, InferenceEngine::InferencePlugin> plugins_for_devices_;
 
-  std::unique_ptr<InferenceEngine::InferencePlugin>
-  makePluginByName(const std::string &device_name,
-                   const std::string &custom_cpu_library_message,
-                   const std::string &custom_cldnn_message,
-                   bool performance_message);
+  std::unique_ptr<InferenceEngine::InferencePlugin> makePluginByName(const std::string& device_name,
+                                                                     const std::string& custom_cpu_library_message,
+                                                                     const std::string& custom_cldnn_message,
+                                                                     bool performance_message);
 
-  std::shared_ptr<Engine>
-  createEngine_beforeV2019R2(const std::string &,
-                             const std::shared_ptr<Models::BaseModel> &);
+  std::shared_ptr<Engine> createEngine_beforeV2019R2(const std::string&, const std::shared_ptr<Models::BaseModel>&);
 #endif
 
-  std::shared_ptr<Engine>
-  createEngine_V2019R2_plus(const std::string &,
-                            const std::shared_ptr<Models::BaseModel> &);
+  std::shared_ptr<Engine> createEngine_V2019R2_plus(const std::string&, const std::shared_ptr<Models::BaseModel>&);
 };
-} // namespace Engines
+}  // namespace Engines
 
-#endif // DYNAMIC_VINO_LIB__ENGINES__ENGINE_MANAGER_HPP_
+#endif  // DYNAMIC_VINO_LIB__ENGINES__ENGINE_MANAGER_HPP_
