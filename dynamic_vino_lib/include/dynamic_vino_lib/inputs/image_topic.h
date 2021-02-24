@@ -22,8 +22,8 @@
 
 #include "dynamic_vino_lib/inputs/base_input.h"
 #include "dynamic_vino_lib/utils/mutex_counter.hpp"
-#include <image_transport/image_transport.h>
 #include <condition_variable>
+#include <image_transport/image_transport.h>
 #include <memory>
 #include <mutex>
 #include <opencv2/opencv.hpp>

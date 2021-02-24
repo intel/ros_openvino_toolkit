@@ -20,9 +20,9 @@
  */
 
 #include "dynamic_vino_lib/inputs/realsense_camera_topic.h"
-#include <image_transport/image_transport.h>
 #include "dynamic_vino_lib/slog.h"
 #include <cv_bridge/cv_bridge.h>
+#include <image_transport/image_transport.h>
 #include <memory>
 
 #define INPUT_TOPIC "/camera/color/image_raw"
@@ -58,8 +58,7 @@ void Input::ImageTopic::cb(const sensor_msgs::msg::Image::SharedPtr image_msg) {
 
 bool Input::ImageTopic::read(cv::Mat *frame) {
   ros::spinOnce();
-  if (image_count_.get() < 0 || image_.empty()) 
-  {
+  if (image_count_.get() < 0 || image_.empty()) {
     slog::debug << "No data received in CameraTopic instance" << slog::endl;
     return false;
   }
