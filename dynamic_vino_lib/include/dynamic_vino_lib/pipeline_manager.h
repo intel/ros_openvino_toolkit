@@ -29,38 +29,38 @@
 #include <set>
 #include <string>
 
-#include <vino_param_lib/param_manager.h>
-#include "dynamic_vino_lib/pipeline.h"
 #include "dynamic_vino_lib/engines/engine_manager.h"
+#include "dynamic_vino_lib/pipeline.h"
+#include <vino_param_lib/param_manager.h>
 
 /**
  * @class PipelineManager
  * @brief This class manages the lifecycles of pipelines.
  */
-class PipelineManager
-{
+class PipelineManager {
 public:
   /**
   * @brief Get the singleton instance of PipelineManager class.
   * The instance will be created when first call.
   * @return The reference of PipelineManager instance.
   */
-  static PipelineManager& getInstance()
-  {
+  static PipelineManager &getInstance() {
     static PipelineManager manager_;
     return manager_;
   };
 
-  std::shared_ptr<Pipeline> createPipeline(const Params::ParamManager::PipelineRawData& params);
-  void removePipeline(const std::string& name);
-  PipelineManager& updatePipeline(const std::string& name, const Params::ParamManager::PipelineRawData& params);
+  std::shared_ptr<Pipeline>
+  createPipeline(const Params::ParamManager::PipelineRawData &params);
+  void removePipeline(const std::string &name);
+  PipelineManager &
+  updatePipeline(const std::string &name,
+                 const Params::ParamManager::PipelineRawData &params);
 
   void runAll();
   void stopAll();
   void joinAll();
 
-  enum PipelineState
-  {
+  enum PipelineState {
     PipelineState_ThreadNotCreated = 0,
     PipelineState_ThreadStopped = 1,
     PipelineState_ThreadRunning = 2,
@@ -68,8 +68,7 @@ public:
     PipelineState_Error = 4
   };
 
-  struct PipelineData
-  {
+  struct PipelineData {
     Params::ParamManager::PipelineRawData params;
     std::shared_ptr<Pipeline> pipeline;
     std::vector<std::shared_ptr<ros::NodeHandle>> spin_nodes;
@@ -77,51 +76,48 @@ public:
     PipelineState state;
   };
   void runService();
-  std::map<std::string, PipelineData> getPipelines()
-  {
-    return pipelines_;
-  }
-  std::map<std::string, PipelineData>* getPipelinesPtr()
-  {
-    return &pipelines_;
-  }
+  std::map<std::string, PipelineData> getPipelines() { return pipelines_; }
+  std::map<std::string, PipelineData> *getPipelinesPtr() { return &pipelines_; }
 
 private:
   PipelineManager(){};
-  PipelineManager(PipelineManager const&);
-  void operator=(PipelineManager const&);
-  void threadPipeline(const char* name);
-  std::map<std::string, std::shared_ptr<Input::BaseInputDevice>> parseInputDevice(const PipelineData& params);
-  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> parseOutput(const PipelineData& pdata);
+  PipelineManager(PipelineManager const &);
+  void operator=(PipelineManager const &);
+  void threadPipeline(const char *name);
+  std::map<std::string, std::shared_ptr<Input::BaseInputDevice>>
+  parseInputDevice(const PipelineData &params);
+  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>>
+  parseOutput(const PipelineData &pdata);
   std::map<std::string, std::shared_ptr<dynamic_vino_lib::BaseInference>>
-  parseInference(const Params::ParamManager::PipelineRawData& params);
+  parseInference(const Params::ParamManager::PipelineRawData &params);
   std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createFaceDetection(const Params::ParamManager::InferenceRawData& infer);
+  createFaceDetection(const Params::ParamManager::InferenceRawData &infer);
+  std::shared_ptr<dynamic_vino_lib::BaseInference> createAgeGenderRecognition(
+      const Params::ParamManager::InferenceRawData &infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createAgeGenderRecognition(const Params::ParamManager::InferenceRawData& infer);
+  createEmotionRecognition(const Params::ParamManager::InferenceRawData &infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createEmotionRecognition(const Params::ParamManager::InferenceRawData& infer);
+  createHeadPoseEstimation(const Params::ParamManager::InferenceRawData &infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createHeadPoseEstimation(const Params::ParamManager::InferenceRawData& infer);
+  createObjectDetection(const Params::ParamManager::InferenceRawData &infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createObjectDetection(const Params::ParamManager::InferenceRawData& infer);
+  createObjectSegmentation(const Params::ParamManager::InferenceRawData &infer);
+  std::shared_ptr<dynamic_vino_lib::BaseInference> createPersonReidentification(
+      const Params::ParamManager::InferenceRawData &infer);
+  std::shared_ptr<dynamic_vino_lib::BaseInference> createFaceReidentification(
+      const Params::ParamManager::InferenceRawData &infer);
+  std::shared_ptr<dynamic_vino_lib::BaseInference> createPersonAttribsDetection(
+      const Params::ParamManager::InferenceRawData &infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createObjectSegmentation(const Params::ParamManager::InferenceRawData& infer);
+  createVehicleAttribsDetection(
+      const Params::ParamManager::InferenceRawData &infer);
+  std::shared_ptr<dynamic_vino_lib::BaseInference> createLicensePlateDetection(
+      const Params::ParamManager::InferenceRawData &infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createPersonReidentification(const Params::ParamManager::InferenceRawData& infer);
-  std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createFaceReidentification(const Params::ParamManager::InferenceRawData& infer);
-  std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createPersonAttribsDetection(const Params::ParamManager::InferenceRawData& infer);
-  std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createVehicleAttribsDetection(const Params::ParamManager::InferenceRawData& infer);
-  std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createLicensePlateDetection(const Params::ParamManager::InferenceRawData& infer);
-  std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createLandmarksDetection(const Params::ParamManager::InferenceRawData& infer);
+  createLandmarksDetection(const Params::ParamManager::InferenceRawData &infer);
 
   std::map<std::string, PipelineData> pipelines_;
   Engines::EngineManager engine_manager_;
 };
 
-#endif  // DYNAMIC_VINO_LIB__PIPELINE_MANAGER_HPP_
+#endif // DYNAMIC_VINO_LIB__PIPELINE_MANAGER_HPP_

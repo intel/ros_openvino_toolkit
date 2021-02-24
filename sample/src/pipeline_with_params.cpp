@@ -23,7 +23,6 @@
 #include <ros/package.h>
 #include <ros/ros.h>
 
-#include <unistd.h>
 #include <algorithm>
 #include <chrono>
 #include <csignal>
@@ -36,10 +35,10 @@
 #include <random>
 #include <string>
 #include <thread>
-#include <vector>
+#include <unistd.h>
 #include <utility>
+#include <vector>
 
-#include <vino_param_lib/param_manager.h>
 #include "dynamic_vino_lib/common.h"
 #include "dynamic_vino_lib/engines/engine.h"
 #include "dynamic_vino_lib/inferences/age_gender_detection.h"
@@ -47,8 +46,8 @@
 #include "dynamic_vino_lib/inferences/emotions_detection.h"
 #include "dynamic_vino_lib/inferences/face_detection.h"
 #include "dynamic_vino_lib/inferences/head_pose_detection.h"
-#include "dynamic_vino_lib/inferences/object_detection_yolov2_voc.h"
 #include "dynamic_vino_lib/inferences/object_detection_ssd.h"
+#include "dynamic_vino_lib/inferences/object_detection_yolov2_voc.h"
 #include "dynamic_vino_lib/inputs/realsense_camera_topic.h"
 #include "dynamic_vino_lib/outputs/image_window_output.h"
 #include "dynamic_vino_lib/outputs/ros_topic_output.h"
@@ -59,20 +58,19 @@
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
 #include "sample/utility.hpp"
+#include <vino_param_lib/param_manager.h>
 
-void signalHandler(int signum)
-{
-  slog::warn << "!!!!!!!!!!!Interrupt signal (" << signum << ") received!!!!!!!!!!!!" << slog::endl;
+void signalHandler(int signum) {
+  slog::warn << "!!!!!!!!!!!Interrupt signal (" << signum
+             << ") received!!!!!!!!!!!!" << slog::endl;
 
   PipelineManager::getInstance().stopAll();
 }
 
-bool parseAndCheckCommandLine(int argc, char** argv)
-{
+bool parseAndCheckCommandLine(int argc, char **argv) {
   // -----Parsing and validation of input args---------------------------
   gflags::ParseCommandLineNonHelpFlags(&argc, &argv, true);
-  if (FLAGS_h)
-  {
+  if (FLAGS_h) {
     showUsageForParam();
     return false;
   }
@@ -80,24 +78,23 @@ bool parseAndCheckCommandLine(int argc, char** argv)
   return true;
 }
 
-int main(int argc, char** argv)
-{
+int main(int argc, char **argv) {
   ros::init(argc, argv, "sample_with_params");
 
   // register signal SIGINT and signal handler
   signal(SIGINT, signalHandler);
 
   std::string FLAGS_config;
-  ros::param::param<std::string>("~param_file", FLAGS_config, "/param/pipeline_object_oss.yaml");
+  ros::param::param<std::string>("~param_file", FLAGS_config,
+                                 "/param/pipeline_object_oss.yaml");
   slog::info << "FLAGS_config=" << FLAGS_config << slog::endl;
 
-  try
-  {
-    std::cout << "InferenceEngine: " << InferenceEngine::GetInferenceEngineVersion() << std::endl;
+  try {
+    std::cout << "InferenceEngine: "
+              << InferenceEngine::GetInferenceEngineVersion() << std::endl;
 
     // ----- Parsing and validation of input args-----------------------
-    if (!parseAndCheckCommandLine(argc, argv))
-    {
+    if (!parseAndCheckCommandLine(argc, argv)) {
       return 0;
     }
 
@@ -106,13 +103,11 @@ int main(int argc, char** argv)
 
     auto pcommon = Params::ParamManager::getInstance().getCommon();
     auto pipelines = Params::ParamManager::getInstance().getPipelines();
-    if (pipelines.size() < 1)
-    {
+    if (pipelines.size() < 1) {
       throw std::logic_error("Pipeline parameters should be set!");
     }
 
-    for (auto& p : pipelines)
-    {
+    for (auto &p : pipelines) {
       PipelineManager::getInstance().createPipeline(p);
     }
 
@@ -120,14 +115,10 @@ int main(int argc, char** argv)
     PipelineManager::getInstance().joinAll();
 
     slog::info << "Execution successful" << slog::endl;
-  }
-  catch (const std::exception& error)
-  {
+  } catch (const std::exception &error) {
     slog::err << error.what() << slog::endl;
     return 1;
-  }
-  catch (...)
-  {
+  } catch (...) {
     slog::err << "Unknown/internal exception happened." << slog::endl;
     return 1;
   }

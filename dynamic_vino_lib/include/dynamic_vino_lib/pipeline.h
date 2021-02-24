@@ -41,17 +41,17 @@
  * the input device, output device and networks and make inference. One pipeline
  * should have only one input device.
  */
-class Pipeline
-{
+class Pipeline {
 public:
-  explicit Pipeline(const std::string& name = "pipeline");
+  explicit Pipeline(const std::string &name = "pipeline");
   /**
    * @brief Add input device to the pipeline.
    * @param[in] name name of the current input device.
    * @param[in] input_device the input device instance to be added.
    * @return whether the add operation is successful
    */
-  bool add(const std::string& name, std::shared_ptr<Input::BaseInputDevice> input_device);
+  bool add(const std::string &name,
+           std::shared_ptr<Input::BaseInputDevice> input_device);
   /**
    * @brief Add inference network to the pipeline.
    * @param[in] parent name of the parent device or inference.
@@ -59,7 +59,7 @@ public:
    * @param[in] inference the inference instance to be added.
    * @return whether the add operation is successful
    */
-  bool add(const std::string& parent, const std::string& name,
+  bool add(const std::string &parent, const std::string &name,
            std::shared_ptr<dynamic_vino_lib::BaseInference> inference);
   /**
    * @brief Add inference network to the pipeline.
@@ -67,7 +67,8 @@ public:
    * @param[in] inference the inference instance to be added.
    * @return whether the add operation is successful
    */
-  bool add(const std::string& name, std::shared_ptr<dynamic_vino_lib::BaseInference> inference);
+  bool add(const std::string &name,
+           std::shared_ptr<dynamic_vino_lib::BaseInference> inference);
   /**
    * @brief Add output device to the pipeline.
    * @param[in] parent name of the parent inference.
@@ -75,27 +76,29 @@ public:
    * @param[in] output the output instance to be added.
    * @return whether the add operation is successful
    */
-  bool add(const std::string& parent, const std::string& name, std::shared_ptr<Outputs::BaseOutput> output);
+  bool add(const std::string &parent, const std::string &name,
+           std::shared_ptr<Outputs::BaseOutput> output);
   /**
    * @brief Add output device to the pipeline.
    * @param[in] name name of the current output device.
    * @param[in] output the output instance to be added.
    * @return whether the add operation is successful
    */
-  bool add(const std::string& name, std::shared_ptr<Outputs::BaseOutput> output);
+  bool add(const std::string &name,
+           std::shared_ptr<Outputs::BaseOutput> output);
   /**
    * @brief Add inference network-output device edge to the pipeline.
    * @param[in] parent name of the parent inference.
    * @param[in] name name of the current output device.
    * @return whether the add operation is successful
    */
-  bool add(const std::string& parent, const std::string& name);
+  bool add(const std::string &parent, const std::string &name);
   /**
    * @brief Get a order of the input instance name.
    * @param[in]  name of the instance.
    * @return the category order of this instance.
    */
-  void addConnect(const std::string& parent, const std::string& name);
+  void addConnect(const std::string &parent, const std::string &name);
   /**
    * @brief Do the inference once.
    * Data flow from input device to inference network, then to output device.
@@ -105,7 +108,7 @@ public:
    * @brief The callback function provided for all the inference network in the
    * pipeline.
    */
-  void callback(const std::string& detection_name);
+  void callback(const std::string &detection_name);
   /**
    * @brief Set the inference network to call the callback function as soon as
    * each inference is
@@ -114,36 +117,27 @@ public:
   void setCallback();
 
   void printPipeline();
-  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> getOutputHandle()
-  {
+  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>>
+  getOutputHandle() {
     return name_to_output_map_;
   }
-  void setParams(PipelineParams pipeline_params)
-  {
+  void setParams(PipelineParams pipeline_params) {
     params_ = std::make_shared<PipelineParams>(pipeline_params);
   }
-  const std::shared_ptr<PipelineParams> getParameters()
-  {
-    return params_;
-  };
-  std::shared_ptr<Input::BaseInputDevice> getInputDevice()
-  {
+  const std::shared_ptr<PipelineParams> getParameters() { return params_; };
+  std::shared_ptr<Input::BaseInputDevice> getInputDevice() {
     return input_device_;
   }
-  const std::multimap<std::string, std::string> getPipelineDetail()
-  {
+  const std::multimap<std::string, std::string> getPipelineDetail() {
     return next_;
   }
   /**
   * @brief Get real time FPS (frames per second).
   */
-  int getFPS() const
-  {
-    return fps_;
-  }
+  int getFPS() const { return fps_; }
 
-  std::string findFilterConditions(const std::string& input, const std::string& output)
-  {
+  std::string findFilterConditions(const std::string &input,
+                                   const std::string &output) {
     return params_->findFilterConditions(input, output);
   }
 
@@ -154,10 +148,7 @@ private:
   bool isLegalConnect(const std::string parent, const std::string child);
   int getCatagoryOrder(const std::string name);
   void countFPS();
-  void setFPS(int fps)
-  {
-    fps_ = fps;
-  }
+  void setFPS(int fps) { fps_ = fps; }
 
   const int kCatagoryOrder_Unknown = -1;
   const int kCatagoryOrder_Input = 1;
@@ -170,8 +161,10 @@ private:
   std::shared_ptr<Input::BaseInputDevice> input_device_;
   std::string input_device_name_;
   std::multimap<std::string, std::string> next_;
-  std::map<std::string, std::shared_ptr<dynamic_vino_lib::BaseInference>> name_to_detection_map_;
-  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> name_to_output_map_;
+  std::map<std::string, std::shared_ptr<dynamic_vino_lib::BaseInference>>
+      name_to_detection_map_;
+  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>>
+      name_to_output_map_;
   std::set<std::string> output_names_;
   int width_ = 0;
   int height_ = 0;
@@ -185,4 +178,4 @@ private:
   std::chrono::time_point<std::chrono::high_resolution_clock> t_start_;
 };
 
-#endif  // DYNAMIC_VINO_LIB_PIPELINE_H_
+#endif // DYNAMIC_VINO_LIB_PIPELINE_H_

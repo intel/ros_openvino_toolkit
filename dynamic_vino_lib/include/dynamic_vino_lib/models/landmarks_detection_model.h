@@ -18,26 +18,18 @@
  */
 #ifndef DYNAMIC_VINO_LIB__MODELS__LANDMARKS_DETECTION_MODEL_HPP_
 #define DYNAMIC_VINO_LIB__MODELS__LANDMARKS_DETECTION_MODEL_HPP_
-#include <string>
 #include "dynamic_vino_lib/models/base_model.h"
-namespace Models
-{
+#include <string>
+namespace Models {
 /**
  * @class LandmarksDetectionModel
  * @brief This class generates the landmarks detection model.
  */
-class LandmarksDetectionModel : public BaseModel
-{
+class LandmarksDetectionModel : public BaseModel {
 public:
-  LandmarksDetectionModel(const std::string& model_loc, int batch_size = 1);
-  inline const std::string getInputName()
-  {
-    return input_;
-  }
-  inline const std::string getOutputName()
-  {
-    return output_;
-  }
+  LandmarksDetectionModel(const std::string &model_loc, int batch_size = 1);
+  inline const std::string getInputName() { return input_; }
+  inline const std::string getOutputName() { return output_; }
   /**
    * @brief Get the name of this detection model.
    * @return Name of the model.
@@ -48,5 +40,5 @@ protected:
   std::string input_;
   std::string output_;
 };
-}  // namespace Models
-#endif  // DYNAMIC_VINO_LIB__MODELS__LANDMARKS_DETECTION_MODEL_HPP_
+} // namespace Models
+#endif // DYNAMIC_VINO_LIB__MODELS__LANDMARKS_DETECTION_MODEL_HPP_

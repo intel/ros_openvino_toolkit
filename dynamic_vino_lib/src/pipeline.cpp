@@ -24,22 +24,19 @@
 #include <utility>
 #include <vector>
 
-#include <vino_param_lib/param_manager.h>
 #include "dynamic_vino_lib/pipeline.h"
+#include <vino_param_lib/param_manager.h>
 
-Pipeline::Pipeline(const std::string& name)
-{
-  if (!name.empty())
-  {
+Pipeline::Pipeline(const std::string &name) {
+  if (!name.empty()) {
     params_ = std::make_shared<PipelineParams>(name);
   }
   counter_ = 0;
 }
 
-bool Pipeline::add(const std::string& name, std::shared_ptr<Input::BaseInputDevice> input_device)
-{
-  if (name.empty())
-  {
+bool Pipeline::add(const std::string &name,
+                   std::shared_ptr<Input::BaseInputDevice> input_device) {
+  if (name.empty()) {
     slog::err << "Item name can't be empty!" << slog::endl;
     return false;
   }
@@ -51,16 +48,15 @@ bool Pipeline::add(const std::string& name, std::shared_ptr<Input::BaseInputDevi
   return true;
 }
 
-bool Pipeline::add(const std::string& parent, const std::string& name, std::shared_ptr<Outputs::BaseOutput> output)
-{
-  if (parent.empty() || name.empty() || !isLegalConnect(parent, name) || output == nullptr)
-  {
+bool Pipeline::add(const std::string &parent, const std::string &name,
+                   std::shared_ptr<Outputs::BaseOutput> output) {
+  if (parent.empty() || name.empty() || !isLegalConnect(parent, name) ||
+      output == nullptr) {
     slog::err << "ARGuments ERROR when adding output instance!" << slog::endl;
     return false;
   }
 
-  if (add(name, output))
-  {
+  if (add(name, output)) {
     addConnect(parent, name);
 
     return true;
@@ -69,10 +65,8 @@ bool Pipeline::add(const std::string& parent, const std::string& name, std::shar
   return false;
 }
 
-bool Pipeline::add(const std::string& parent, const std::string& name)
-{
-  if (isLegalConnect(parent, name))
-  {
+bool Pipeline::add(const std::string &parent, const std::string &name) {
+  if (isLegalConnect(parent, name)) {
     addConnect(parent, name);
     return true;
   }
@@ -80,18 +74,19 @@ bool Pipeline::add(const std::string& parent, const std::string& name)
   return false;
 }
 
-bool Pipeline::add(const std::string& name, std::shared_ptr<Outputs::BaseOutput> output)
-{
-  if (name.empty())
-  {
+bool Pipeline::add(const std::string &name,
+                   std::shared_ptr<Outputs::BaseOutput> output) {
+  if (name.empty()) {
     slog::err << "Item name can't be empty!" << slog::endl;
     return false;
   }
 
-  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>>::iterator it = name_to_output_map_.find(name);
-  if (it != name_to_output_map_.end())
-  {
-    slog::warn << "inferance instance for [" << name << "] already exists, update it with new instance." << slog::endl;
+  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>>::iterator it =
+      name_to_output_map_.find(name);
+  if (it != name_to_output_map_.end()) {
+    slog::warn << "inferance instance for [" << name
+               << "] already exists, update it with new instance."
+               << slog::endl;
   }
   name_to_output_map_[name] = output;
   output_names_.insert(name);
@@ -101,34 +96,34 @@ bool Pipeline::add(const std::string& name, std::shared_ptr<Outputs::BaseOutput>
   return true;
 }
 
-void Pipeline::addConnect(const std::string& parent, const std::string& name)
-{
-  std::pair<std::multimap<std::string, std::string>::iterator, std::multimap<std::string, std::string>::iterator> ret;
+void Pipeline::addConnect(const std::string &parent, const std::string &name) {
+  std::pair<std::multimap<std::string, std::string>::iterator,
+            std::multimap<std::string, std::string>::iterator>
+      ret;
   ret = next_.equal_range(parent);
 
-  for (std::multimap<std::string, std::string>::iterator it = ret.first; it != ret.second; ++it)
-  {
-    if (it->second == name)
-    {
-      slog::warn << "The connect [" << parent << "<-->" << name << "] already exists." << slog::endl;
+  for (std::multimap<std::string, std::string>::iterator it = ret.first;
+       it != ret.second; ++it) {
+    if (it->second == name) {
+      slog::warn << "The connect [" << parent << "<-->" << name
+                 << "] already exists." << slog::endl;
       return;
     }
   }
-  slog::info << "Adding connection into pipeline:[" << parent << "<-->" << name << "]" << slog::endl;
-  next_.insert({ parent, name });
+  slog::info << "Adding connection into pipeline:[" << parent << "<-->" << name
+             << "]" << slog::endl;
+  next_.insert({parent, name});
 }
 
-bool Pipeline::add(const std::string& parent, const std::string& name,
-                   std::shared_ptr<dynamic_vino_lib::BaseInference> inference)
-{
-  if (parent.empty() || name.empty() || !isLegalConnect(parent, name))
-  {
-    slog::err << "ARGuments ERROR when adding inference instance!" << slog::endl;
+bool Pipeline::add(const std::string &parent, const std::string &name,
+                   std::shared_ptr<dynamic_vino_lib::BaseInference> inference) {
+  if (parent.empty() || name.empty() || !isLegalConnect(parent, name)) {
+    slog::err << "ARGuments ERROR when adding inference instance!"
+              << slog::endl;
     return false;
   }
 
-  if (add(name, inference))
-  {
+  if (add(name, inference)) {
     addConnect(parent, name);
     return true;
   }
@@ -136,22 +131,21 @@ bool Pipeline::add(const std::string& parent, const std::string& name,
   return false;
 }
 
-bool Pipeline::add(const std::string& name, std::shared_ptr<dynamic_vino_lib::BaseInference> inference)
-{
-  if (name.empty())
-  {
+bool Pipeline::add(const std::string &name,
+                   std::shared_ptr<dynamic_vino_lib::BaseInference> inference) {
+  if (name.empty()) {
     slog::err << "Item name can't be empty!" << slog::endl;
     return false;
   }
 
-  std::map<std::string, std::shared_ptr<dynamic_vino_lib::BaseInference>>::iterator it =
+  std::map<std::string,
+           std::shared_ptr<dynamic_vino_lib::BaseInference>>::iterator it =
       name_to_detection_map_.find(name);
-  if (it != name_to_detection_map_.end())
-  {
-    slog::warn << "inferance instance for [" << name << "] already exists, update it with new instance." << slog::endl;
-  }
-  else
-  {
+  if (it != name_to_detection_map_.end()) {
+    slog::warn << "inferance instance for [" << name
+               << "] already exists, update it with new instance."
+               << slog::endl;
+  } else {
     ++total_inference_;
   }
   name_to_detection_map_[name] = inference;
@@ -159,68 +153,65 @@ bool Pipeline::add(const std::string& name, std::shared_ptr<dynamic_vino_lib::Ba
   return true;
 }
 
-bool Pipeline::isLegalConnect(const std::string parent, const std::string child)
-{
+bool Pipeline::isLegalConnect(const std::string parent,
+                              const std::string child) {
   int parent_order = getCatagoryOrder(parent);
   int child_order = getCatagoryOrder(child);
-  slog::info << "Checking connection into pipeline:[" << parent << "(" << parent_order << ")"
+  slog::info << "Checking connection into pipeline:[" << parent << "("
+             << parent_order << ")"
              << "<-->" << child << "(" << child_order << ")"
              << "]" << slog::endl;
 
-  return (parent_order != kCatagoryOrder_Unknown) && (child_order != kCatagoryOrder_Unknown) &&
+  return (parent_order != kCatagoryOrder_Unknown) &&
+         (child_order != kCatagoryOrder_Unknown) &&
          (parent_order <= child_order);
 }
 
-int Pipeline::getCatagoryOrder(const std::string name)
-{
+int Pipeline::getCatagoryOrder(const std::string name) {
   int order = kCatagoryOrder_Unknown;
-  if (name == input_device_name_)
-  {
+  if (name == input_device_name_) {
     order = kCatagoryOrder_Input;
-  }
-  else if (name_to_detection_map_.find(name) != name_to_detection_map_.end())
-  {
+  } else if (name_to_detection_map_.find(name) !=
+             name_to_detection_map_.end()) {
     order = kCatagoryOrder_Inference;
-  }
-  else if (name_to_output_map_.find(name) != name_to_output_map_.end())
-  {
+  } else if (name_to_output_map_.find(name) != name_to_output_map_.end()) {
     order = kCatagoryOrder_Output;
   }
 
   return order;
 }
 
-void Pipeline::runOnce()
-{
+void Pipeline::runOnce() {
   initInferenceCounter();
 
-  if (!input_device_->read(&frame_))
-  {
+  if (!input_device_->read(&frame_)) {
     // throw std::logic_error("Failed to get frame from cv::VideoCapture");
     // slog::warn << "Failed to get frame from input_device." << slog::endl;
-    return;  // do nothing if now frame read out
+    return; // do nothing if now frame read out
   }
 
   width_ = frame_.cols;
   height_ = frame_.rows;
   slog::debug << "DEBUG: in Pipeline run process..." << slog::endl;
   // auto t0 = std::chrono::high_resolution_clock::now();
-  for (auto pos = next_.equal_range(input_device_name_); pos.first != pos.second; ++pos.first)
-  {
+  for (auto pos = next_.equal_range(input_device_name_);
+       pos.first != pos.second; ++pos.first) {
     std::string detection_name = pos.first->second;
     auto detection_ptr = name_to_detection_map_[detection_name];
-    detection_ptr->enqueue(frame_, cv::Rect(width_ / 2, height_ / 2, width_, height_));
+    detection_ptr->enqueue(frame_,
+                           cv::Rect(width_ / 2, height_ / 2, width_, height_));
     increaseInferenceCounter();
     detection_ptr->submitRequest();
   }
 
-  for (auto& pair : name_to_output_map_)
-  {
+  for (auto &pair : name_to_output_map_) {
     pair.second->feedFrame(frame_);
   }
   countFPS();
 
-  slog::debug << "DEBUG: align inference process, waiting until all inferences done!" << slog::endl;
+  slog::debug
+      << "DEBUG: align inference process, waiting until all inferences done!"
+      << slog::endl;
   std::unique_lock<std::mutex> lock(counter_mutex_);
   cv_.wait(lock, [self = this]() { return self->counter_ == 0; });
 
@@ -228,25 +219,21 @@ void Pipeline::runOnce()
   // typedef std::chrono::duration<double, std::ratio<1, 1000>> ms;
 
   slog::debug << "DEBUG: in Pipeline run process...handleOutput" << slog::endl;
-  for (auto& pair : name_to_output_map_)
-  {
+  for (auto &pair : name_to_output_map_) {
     // slog::info << "Handling Output ..." << pair.first << slog::endl;
     pair.second->handleOutput();
   }
 }
 
-void Pipeline::printPipeline()
-{
-  for (auto& current_node : next_)
-  {
-    printf("%s --> %s\n", current_node.first.c_str(), current_node.second.c_str());
+void Pipeline::printPipeline() {
+  for (auto &current_node : next_) {
+    printf("%s --> %s\n", current_node.first.c_str(),
+           current_node.second.c_str());
   }
 }
 
-void Pipeline::setCallback()
-{
-  for (auto& pair : name_to_detection_map_)
-  {
+void Pipeline::setCallback() {
+  for (auto &pair : name_to_detection_map_) {
     std::string detection_name = pair.first;
 
     std::function<void(void)> callb;
@@ -258,42 +245,38 @@ void Pipeline::setCallback()
   }
 }
 
-void Pipeline::callback(const std::string& detection_name)
-{
+void Pipeline::callback(const std::string &detection_name) {
   // slog::info<<"Hello callback ----> " << detection_name <<slog::endl;
   auto detection_ptr = name_to_detection_map_[detection_name];
   detection_ptr->fetchResults();
   // set output
-  for (auto pos = next_.equal_range(detection_name); pos.first != pos.second; ++pos.first)
-  {
+  for (auto pos = next_.equal_range(detection_name); pos.first != pos.second;
+       ++pos.first) {
     std::string next_name = pos.first->second;
 
-    std::string filter_conditions = findFilterConditions(detection_name, next_name);
+    std::string filter_conditions =
+        findFilterConditions(detection_name, next_name);
     // if next is output, then print
-    if (output_names_.find(next_name) != output_names_.end())
-    {
+    if (output_names_.find(next_name) != output_names_.end()) {
       detection_ptr->observeOutput(name_to_output_map_[next_name]);
-    }
-    else
-    {
+    } else {
       auto detection_ptr_iter = name_to_detection_map_.find(next_name);
-      if (detection_ptr_iter != name_to_detection_map_.end())
-      {
+      if (detection_ptr_iter != name_to_detection_map_.end()) {
         auto next_detection_ptr = detection_ptr_iter->second;
         size_t batch_size = next_detection_ptr->getMaxBatchSize();
-        std::vector<cv::Rect> next_rois = detection_ptr->getFilteredROIs(filter_conditions);
-        for (size_t i = 0; i < next_rois.size(); i++)
-        {
+        std::vector<cv::Rect> next_rois =
+            detection_ptr->getFilteredROIs(filter_conditions);
+        for (size_t i = 0; i < next_rois.size(); i++) {
           auto roi = next_rois[i];
           auto clippedRect = roi & cv::Rect(0, 0, width_, height_);
           cv::Mat next_input = frame_(clippedRect);
           next_detection_ptr->enqueue(next_input, roi);
-          if ((i + 1) == next_rois.size() || (i + 1) % batch_size == 0)
-          {
+          if ((i + 1) == next_rois.size() || (i + 1) % batch_size == 0) {
             increaseInferenceCounter();
             next_detection_ptr->submitRequest();
             auto request = next_detection_ptr->getEngine()->getRequest();
-            request->Wait(InferenceEngine::IInferRequest::WaitMode::RESULT_READY);
+            request->Wait(
+                InferenceEngine::IInferRequest::WaitMode::RESULT_READY);
           }
         }
       }
@@ -304,33 +287,28 @@ void Pipeline::callback(const std::string& detection_name)
   cv_.notify_all();
 }
 
-void Pipeline::initInferenceCounter()
-{
+void Pipeline::initInferenceCounter() {
   std::lock_guard<std::mutex> lk(counter_mutex_);
   counter_ = 0;
   cv_.notify_all();
 }
 
-void Pipeline::increaseInferenceCounter()
-{
+void Pipeline::increaseInferenceCounter() {
   std::lock_guard<std::mutex> lk(counter_mutex_);
   ++counter_;
 }
 
-void Pipeline::decreaseInferenceCounter()
-{
+void Pipeline::decreaseInferenceCounter() {
   std::lock_guard<std::mutex> lk(counter_mutex_);
   --counter_;
 }
 
-void Pipeline::countFPS()
-{
+void Pipeline::countFPS() {
   frame_cnt_++;
   auto t_end = std::chrono::high_resolution_clock::now();
   typedef std::chrono::duration<double, std::ratio<1, 1000>> ms;
   ms secondDetection = std::chrono::duration_cast<ms>(t_end - t_start_);
-  if (secondDetection.count() > 1000)
-  {
+  if (secondDetection.count() > 1000) {
     setFPS(frame_cnt_);
     frame_cnt_ = 0;
     t_start_ = t_end;

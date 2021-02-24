@@ -68,18 +68,19 @@ const char kInferTpye_LicensePlateDetection[] = "LicensePlateDetection";
  * @brief This class is a pipeline parameter management that stores parameters
  * of a given pipeline
  */
-class PipelineParams
-{
+class PipelineParams {
 public:
-  explicit PipelineParams(const std::string& name);
-  explicit PipelineParams(const Params::ParamManager::PipelineRawData& params);
-  Params::ParamManager::PipelineRawData getPipeline(const std::string& name);
-  PipelineParams& operator=(const Params::ParamManager::PipelineRawData& params);
+  explicit PipelineParams(const std::string &name);
+  explicit PipelineParams(const Params::ParamManager::PipelineRawData &params);
+  Params::ParamManager::PipelineRawData getPipeline(const std::string &name);
+  PipelineParams &
+  operator=(const Params::ParamManager::PipelineRawData &params);
   void update();
-  void update(const Params::ParamManager::PipelineRawData& params);
-  bool isOutputTo(std::string& name);
+  void update(const Params::ParamManager::PipelineRawData &params);
+  bool isOutputTo(std::string &name);
   bool isGetFps();
-  std::string findFilterConditions(const std::string& input, const std::string& output);
+  std::string findFilterConditions(const std::string &input,
+                                   const std::string &output);
 
   const std::string kInputType_Image = "Image";
   const std::string kOutputTpye_RViz = "RViz";
@@ -88,4 +89,4 @@ private:
   Params::ParamManager::PipelineRawData params_;
 };
 
-#endif  // DYNAMIC_VINO_LIB_PIPELINE_PARAMS_H
+#endif // DYNAMIC_VINO_LIB_PIPELINE_PARAMS_H

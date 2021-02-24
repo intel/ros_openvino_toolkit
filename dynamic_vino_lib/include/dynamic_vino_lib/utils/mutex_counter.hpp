@@ -20,33 +20,26 @@
 #ifndef DYNAMIC_VINO_LIB__UTILS__MUTEX_COUNTER_HPP_
 #define DYNAMIC_VINO_LIB__UTILS__MUTEX_COUNTER_HPP_
 
+#include <condition_variable>
 #include <mutex>
-
-class MutexCounter
-{
+class MutexCounter {
 public:
-  explicit MutexCounter(int init_counter = 0)
-  {
+  explicit MutexCounter(int init_counter = 0) {
     std::lock_guard<std::mutex> lk(counter_mutex_);
     counter_ = init_counter;
   }
 
-  void increaseCounter()
-  {
+  void increaseCounter() {
     std::lock_guard<std::mutex> lk(counter_mutex_);
     ++counter_;
   }
 
-  void decreaseCounter()
-  {
+  void decreaseCounter() {
     std::lock_guard<std::mutex> lk(counter_mutex_);
     --counter_;
   }
 
-  int get()
-  {
-    return counter_;
-  }
+  int get() { return counter_; }
 
 private:
   std::atomic<int> counter_;
@@ -54,4 +47,4 @@ private:
   std::condition_variable cv_;
 };
 
-#endif  // DYNAMIC_VINO_LIB__UTILS__MUTEX_COUNTER_HPP_
+#endif // DYNAMIC_VINO_LIB__UTILS__MUTEX_COUNTER_HPP_

@@ -21,26 +21,24 @@
 
 #include "dynamic_vino_lib/outputs/image_window_output.h"
 #include <algorithm>
+#include <iomanip>
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
-#include <iomanip>
 
 #include "dynamic_vino_lib/outputs/image_window_output.h"
 #include "dynamic_vino_lib/pipeline.h"
 
-Outputs::ImageWindowOutput::ImageWindowOutput(const std::string& output_name, int focal_length)
-  : BaseOutput(output_name), focal_length_(focal_length)
-{
+Outputs::ImageWindowOutput::ImageWindowOutput(const std::string &output_name,
+                                              int focal_length)
+    : BaseOutput(output_name), focal_length_(focal_length) {
   cv::namedWindow(output_name_, cv::WINDOW_AUTOSIZE);
 }
 
-void Outputs::ImageWindowOutput::feedFrame(const cv::Mat& frame)
-{
+void Outputs::ImageWindowOutput::feedFrame(const cv::Mat &frame) {
   // frame_ = frame;
   frame_ = frame.clone();
-  if (camera_matrix_.empty())
-  {
+  if (camera_matrix_.empty()) {
     int cx = frame.cols / 2;
     int cy = frame.rows / 2;
     camera_matrix_ = cv::Mat::zeros(3, 3, CV_32F);
@@ -52,12 +50,9 @@ void Outputs::ImageWindowOutput::feedFrame(const cv::Mat& frame)
   }
 }
 
-unsigned Outputs::ImageWindowOutput::findOutput(const cv::Rect& result_rect)
-{
-  for (unsigned i = 0; i < outputs_.size(); i++)
-  {
-    if (outputs_[i].rect == result_rect)
-    {
+unsigned Outputs::ImageWindowOutput::findOutput(const cv::Rect &result_rect) {
+  for (unsigned i = 0; i < outputs_.size(); i++) {
+    if (outputs_[i].rect == result_rect) {
       return i;
     }
   }
@@ -68,10 +63,9 @@ unsigned Outputs::ImageWindowOutput::findOutput(const cv::Rect& result_rect)
   return outputs_.size() - 1;
 }
 
-void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::LicensePlateDetectionResult>& results)
-{
-  for (unsigned i = 0; i < results.size(); i++)
-  {
+void Outputs::ImageWindowOutput::accept(
+    const std::vector<dynamic_vino_lib::LicensePlateDetectionResult> &results) {
+  for (unsigned i = 0; i < results.size(); i++) {
     cv::Rect result_rect = results[i].getLocation();
     unsigned target_index = findOutput(result_rect);
     outputs_[target_index].rect = result_rect;
@@ -79,27 +73,26 @@ void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::Lice
   }
 }
 
-void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::VehicleAttribsDetectionResult>& results)
-{
-  for (unsigned i = 0; i < results.size(); i++)
-  {
+void Outputs::ImageWindowOutput::accept(
+    const std::vector<dynamic_vino_lib::VehicleAttribsDetectionResult>
+        &results) {
+  for (unsigned i = 0; i < results.size(); i++) {
     cv::Rect result_rect = results[i].getLocation();
     unsigned target_index = findOutput(result_rect);
     outputs_[target_index].rect = result_rect;
-    outputs_[target_index].desc += ("[" + results[i].getColor() + "," + results[i].getType() + "]");
+    outputs_[target_index].desc +=
+        ("[" + results[i].getColor() + "," + results[i].getType() + "]");
   }
 }
 
-void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::FaceDetectionResult>& results)
-{
-  for (unsigned i = 0; i < results.size(); i++)
-  {
+void Outputs::ImageWindowOutput::accept(
+    const std::vector<dynamic_vino_lib::FaceDetectionResult> &results) {
+  for (unsigned i = 0; i < results.size(); i++) {
     cv::Rect result_rect = results[i].getLocation();
     unsigned target_index = findOutput(result_rect);
     outputs_[target_index].rect = result_rect;
     auto fd_conf = results[i].getConfidence();
-    if (fd_conf >= 0)
-    {
+    if (fd_conf >= 0) {
       std::ostringstream ostream;
       ostream << "[" << std::fixed << std::setprecision(3) << fd_conf << "]";
       outputs_[target_index].desc += ostream.str();
@@ -107,10 +100,9 @@ void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::Face
   }
 }
 
-void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::EmotionsResult>& results)
-{
-  for (unsigned i = 0; i < results.size(); i++)
-  {
+void Outputs::ImageWindowOutput::accept(
+    const std::vector<dynamic_vino_lib::EmotionsResult> &results) {
+  for (unsigned i = 0; i < results.size(); i++) {
     cv::Rect result_rect = results[i].getLocation();
     unsigned target_index = findOutput(result_rect);
     outputs_[target_index].rect = result_rect;
@@ -120,27 +112,26 @@ void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::Emot
   }
 }
 
-void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::AgeGenderResult>& results)
-{
-  for (unsigned i = 0; i < results.size(); i++)
-  {
+void Outputs::ImageWindowOutput::accept(
+    const std::vector<dynamic_vino_lib::AgeGenderResult> &results) {
+  for (unsigned i = 0; i < results.size(); i++) {
     cv::Rect result_rect = results[i].getLocation();
     unsigned target_index = findOutput(result_rect);
     outputs_[target_index].rect = result_rect;
     std::ostringstream ostream;
-    ostream << "[Y" << std::fixed << std::setprecision(0) << results[i].getAge() << "]";
+    ostream << "[Y" << std::fixed << std::setprecision(0) << results[i].getAge()
+            << "]";
     outputs_[target_index].desc += ostream.str();
 
     auto male_prob = results[i].getMaleProbability();
-    if (male_prob < 0.5)
-    {
+    if (male_prob < 0.5) {
       outputs_[target_index].scalar = cv::Scalar(0, 0, 255);
     }
   }
 }
 
-cv::Point Outputs::ImageWindowOutput::calcAxis(cv::Mat r, double cx, double cy, double cz, cv::Point cp)
-{
+cv::Point Outputs::ImageWindowOutput::calcAxis(cv::Mat r, double cx, double cy,
+                                               double cz, cv::Point cp) {
   cv::Mat Axis(3, 1, CV_32F);
   Axis.at<float>(0) = cx;
   Axis.at<float>(1) = cy;
@@ -149,27 +140,32 @@ cv::Point Outputs::ImageWindowOutput::calcAxis(cv::Mat r, double cx, double cy, 
   o.at<float>(2) = camera_matrix_.at<float>(0);
   Axis = r * Axis + o;
   cv::Point point;
-  point.x = static_cast<int>((Axis.at<float>(0) / Axis.at<float>(2) * camera_matrix_.at<float>(0)) + cp.x);
-  point.y = static_cast<int>((Axis.at<float>(1) / Axis.at<float>(2) * camera_matrix_.at<float>(4)) + cp.y);
+  point.x = static_cast<int>(
+      (Axis.at<float>(0) / Axis.at<float>(2) * camera_matrix_.at<float>(0)) +
+      cp.x);
+  point.y = static_cast<int>(
+      (Axis.at<float>(1) / Axis.at<float>(2) * camera_matrix_.at<float>(4)) +
+      cp.y);
   return point;
 }
 
-cv::Mat Outputs::ImageWindowOutput::getRotationTransform(double yaw, double pitch, double roll)
-{
+cv::Mat Outputs::ImageWindowOutput::getRotationTransform(double yaw,
+                                                         double pitch,
+                                                         double roll) {
   pitch *= CV_PI / 180.0;
   yaw *= CV_PI / 180.0;
   roll *= CV_PI / 180.0;
-  cv::Matx33f Rx(1, 0, 0, 0, cos(pitch), -sin(pitch), 0, sin(pitch), cos(pitch));
+  cv::Matx33f Rx(1, 0, 0, 0, cos(pitch), -sin(pitch), 0, sin(pitch),
+                 cos(pitch));
   cv::Matx33f Ry(cos(yaw), 0, -sin(yaw), 0, 1, 0, sin(yaw), 0, cos(yaw));
   cv::Matx33f Rz(cos(roll), -sin(roll), 0, sin(roll), cos(roll), 0, 0, 0, 1);
   auto r = cv::Mat(Rz * Ry * Rx);
   return r;
 }
 
-void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::HeadPoseResult>& results)
-{
-  for (unsigned i = 0; i < results.size(); i++)
-  {
+void Outputs::ImageWindowOutput::accept(
+    const std::vector<dynamic_vino_lib::HeadPoseResult> &results) {
+  for (unsigned i = 0; i < results.size(); i++) {
     auto result = results[i];
     cv::Rect result_rect = result.getLocation();
     unsigned target_index = findOutput(result_rect);
@@ -181,7 +177,8 @@ void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::Head
     feedFrame(frame_);
     cv::Mat r = getRotationTransform(yaw, pitch, roll);
     cv::Rect location = result.getLocation();
-    auto cp = cv::Point(location.x + location.width / 2, location.y + location.height / 2);
+    auto cp = cv::Point(location.x + location.width / 2,
+                        location.y + location.height / 2);
     outputs_[target_index].hp_cp = cp;
     outputs_[target_index].hp_x = calcAxis(r, scale, 0, 0, cp);
     outputs_[target_index].hp_y = calcAxis(r, 0, -scale, 0, cp);
@@ -190,16 +187,14 @@ void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::Head
   }
 }
 
-void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::ObjectDetectionResult>& results)
-{
-  for (unsigned i = 0; i < results.size(); i++)
-  {
+void Outputs::ImageWindowOutput::accept(
+    const std::vector<dynamic_vino_lib::ObjectDetectionResult> &results) {
+  for (unsigned i = 0; i < results.size(); i++) {
     cv::Rect result_rect = results[i].getLocation();
     unsigned target_index = findOutput(result_rect);
     outputs_[target_index].rect = result_rect;
     auto fd_conf = results[i].getConfidence();
-    if (fd_conf >= 0)
-    {
+    if (fd_conf >= 0) {
       std::ostringstream ostream;
       ostream << "[" << std::fixed << std::setprecision(3) << fd_conf << "]";
       outputs_[target_index].desc += ostream.str();
@@ -209,8 +204,8 @@ void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::Obje
   }
 }
 
-void Outputs::ImageWindowOutput::mergeMask(const std::vector<dynamic_vino_lib::ObjectSegmentationResult>& results)
-{
+void Outputs::ImageWindowOutput::mergeMask(
+    const std::vector<dynamic_vino_lib::ObjectSegmentationResult> &results) {
   /*
   std::map<std::string, int> class_color;
   for (unsigned i = 0; i < results.size(); i++) {
@@ -230,7 +225,8 @@ void Outputs::ImageWindowOutput::mergeMask(const std::vector<dynamic_vino_lib::O
     for (int h = 0; h < mask.size().height; ++h) {
       for (int w = 0; w < mask.size().width; ++w) {
         for (int ch = 0; ch < colored_mask.channels(); ++ch) {
-          colored_mask.at<cv::Vec3b>(h, w)[ch] = mask.at<float>(h, w) > MASK_THRESHOLD ?
+          colored_mask.at<cv::Vec3b>(h, w)[ch] = mask.at<float>(h, w) >
+  MASK_THRESHOLD ?
             255 * color[ch] :
             roi_img.at<cv::Vec3b>(h, w)[ch];
         }
@@ -242,27 +238,26 @@ void Outputs::ImageWindowOutput::mergeMask(const std::vector<dynamic_vino_lib::O
   const float alpha = 0.5f;
   cv::Mat roi_img = frame_;
   cv::Mat colored_mask = results[0].getMask();
-  cv::resize(colored_mask, colored_mask, cv::Size(frame_.size().width, frame_.size().height));
+  cv::resize(colored_mask, colored_mask,
+             cv::Size(frame_.size().width, frame_.size().height));
   cv::addWeighted(colored_mask, alpha, roi_img, 1.0f - alpha, 0.0f, roi_img);
 }
 
-void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::ObjectSegmentationResult>& results)
-{
-  if (outputs_.size() == 0)
-  {
+void Outputs::ImageWindowOutput::accept(
+    const std::vector<dynamic_vino_lib::ObjectSegmentationResult> &results) {
+  if (outputs_.size() == 0) {
     initOutputs(results.size());
   }
-  if (outputs_.size() != results.size())
-  {
-    slog::err << "the size of Object Segmentation and Output Vector is not equal!" << slog::endl;
+  if (outputs_.size() != results.size()) {
+    slog::err
+        << "the size of Object Segmentation and Output Vector is not equal!"
+        << slog::endl;
     return;
   }
-  for (unsigned i = 0; i < results.size(); i++)
-  {
+  for (unsigned i = 0; i < results.size(); i++) {
     outputs_[i].rect = results[i].getLocation();
     auto fd_conf = results[i].getConfidence();
-    if (fd_conf >= 0)
-    {
+    if (fd_conf >= 0) {
       std::ostringstream ostream;
       ostream << "[" << std::fixed << std::setprecision(3) << fd_conf << "]";
       outputs_[i].desc += ostream.str();
@@ -273,34 +268,35 @@ void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::Obje
   mergeMask(results);
 }
 
-void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult>& results)
-{
-  for (unsigned i = 0; i < results.size(); i++)
-  {
+void Outputs::ImageWindowOutput::accept(
+    const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult>
+        &results) {
+  for (unsigned i = 0; i < results.size(); i++) {
     cv::Rect result_rect = results[i].getLocation();
     unsigned target_index = findOutput(result_rect);
-    if (results[i].getMaleProbability() < 0.5)
-    {
+    if (results[i].getMaleProbability() < 0.5) {
       outputs_[target_index].scalar = cv::Scalar(0, 0, 255);
-    }
-    else
-    {
+    } else {
       outputs_[target_index].scalar = cv::Scalar(0, 255, 0);
     }
-    outputs_[target_index].pa_top.x = results[i].getTopLocation().x * result_rect.width + result_rect.x;
-    outputs_[target_index].pa_top.y = results[i].getTopLocation().y * result_rect.height + result_rect.y;
-    outputs_[target_index].pa_bottom.x = results[i].getBottomLocation().x * result_rect.width + result_rect.x;
-    outputs_[target_index].pa_bottom.y = results[i].getBottomLocation().y * result_rect.height + result_rect.y;
+    outputs_[target_index].pa_top.x =
+        results[i].getTopLocation().x * result_rect.width + result_rect.x;
+    outputs_[target_index].pa_top.y =
+        results[i].getTopLocation().y * result_rect.height + result_rect.y;
+    outputs_[target_index].pa_bottom.x =
+        results[i].getBottomLocation().x * result_rect.width + result_rect.x;
+    outputs_[target_index].pa_bottom.y =
+        results[i].getBottomLocation().y * result_rect.height + result_rect.y;
 
     outputs_[target_index].rect = result_rect;
     outputs_[target_index].desc += "[" + results[i].getAttributes() + "]";
   }
 }
 
-void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::PersonReidentificationResult>& results)
-{
-  for (unsigned i = 0; i < results.size(); i++)
-  {
+void Outputs::ImageWindowOutput::accept(
+    const std::vector<dynamic_vino_lib::PersonReidentificationResult>
+        &results) {
+  for (unsigned i = 0; i < results.size(); i++) {
     cv::Rect result_rect = results[i].getLocation();
     unsigned target_index = findOutput(result_rect);
     outputs_[target_index].rect = result_rect;
@@ -308,10 +304,9 @@ void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::Pers
   }
 }
 
-void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::FaceReidentificationResult>& results)
-{
-  for (unsigned i = 0; i < results.size(); i++)
-  {
+void Outputs::ImageWindowOutput::accept(
+    const std::vector<dynamic_vino_lib::FaceReidentificationResult> &results) {
+  for (unsigned i = 0; i < results.size(); i++) {
     cv::Rect result_rect = results[i].getLocation();
     unsigned target_index = findOutput(result_rect);
     outputs_[target_index].rect = result_rect;
@@ -319,61 +314,52 @@ void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::Face
   }
 }
 
-void Outputs::ImageWindowOutput::accept(const std::vector<dynamic_vino_lib::LandmarksDetectionResult>& results)
-{
-  for (unsigned i = 0; i < results.size(); i++)
-  {
+void Outputs::ImageWindowOutput::accept(
+    const std::vector<dynamic_vino_lib::LandmarksDetectionResult> &results) {
+  for (unsigned i = 0; i < results.size(); i++) {
     cv::Rect result_rect = results[i].getLocation();
     unsigned target_index = findOutput(result_rect);
     std::vector<cv::Point> landmark_points = results[i].getLandmarks();
-    for (int j = 0; j < landmark_points.size(); j++)
-    {
+    for (int j = 0; j < landmark_points.size(); j++) {
       outputs_[target_index].landmarks.push_back(landmark_points[j]);
     }
   }
 }
 
-void Outputs::ImageWindowOutput::decorateFrame()
-{
-  if (getPipeline()->getParameters()->isGetFps())
-  {
+void Outputs::ImageWindowOutput::decorateFrame() {
+  if (getPipeline()->getParameters()->isGetFps()) {
     int fps = getPipeline()->getFPS();
     std::stringstream ss;
     ss << "FPS: " << fps;
-    cv::putText(frame_, ss.str(), cv::Point2f(0, 65), cv::FONT_HERSHEY_TRIPLEX, 0.5, cv::Scalar(255, 0, 0));
+    cv::putText(frame_, ss.str(), cv::Point2f(0, 65), cv::FONT_HERSHEY_TRIPLEX,
+                0.5, cv::Scalar(255, 0, 0));
   }
 
-  for (auto o : outputs_)
-  {
+  for (auto o : outputs_) {
     auto new_y = std::max(15, o.rect.y - 15);
-    cv::putText(frame_, o.desc, cv::Point2f(o.rect.x, new_y), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, o.scalar);
+    cv::putText(frame_, o.desc, cv::Point2f(o.rect.x, new_y),
+                cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, o.scalar);
     cv::rectangle(frame_, o.rect, o.scalar, 1);
-    if (o.hp_cp != o.hp_x)
-    {
+    if (o.hp_cp != o.hp_x) {
       cv::line(frame_, o.hp_cp, o.hp_x, cv::Scalar(0, 0, 255), 2);
     }
-    if (o.hp_cp != o.hp_y)
-    {
+    if (o.hp_cp != o.hp_y) {
       cv::line(frame_, o.hp_cp, o.hp_y, cv::Scalar(0, 255, 0), 2);
     }
-    if (o.hp_zs != o.hp_ze)
-    {
+    if (o.hp_zs != o.hp_ze) {
       cv::line(frame_, o.hp_zs, o.hp_ze, cv::Scalar(255, 0, 0), 2);
       cv::circle(frame_, o.hp_ze, 3, cv::Scalar(255, 0, 0), 2);
     }
 
-    for (int i = 0; i < o.landmarks.size(); i++)
-    {
+    for (int i = 0; i < o.landmarks.size(); i++) {
       cv::circle(frame_, o.landmarks[i], 3, cv::Scalar(255, 0, 0), 2);
     }
   }
 
   outputs_.clear();
 }
-void Outputs::ImageWindowOutput::handleOutput()
-{
-  if (frame_.cols == 0 || frame_.rows == 0)
-  {
+void Outputs::ImageWindowOutput::handleOutput() {
+  if (frame_.cols == 0 || frame_.rows == 0) {
     return;
   }
   decorateFrame();

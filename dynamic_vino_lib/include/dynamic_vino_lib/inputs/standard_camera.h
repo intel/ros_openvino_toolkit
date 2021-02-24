@@ -25,20 +25,18 @@
 #include <opencv2/opencv.hpp>
 
 #include "dynamic_vino_lib/inputs/base_input.h"
-#include <stdio.h>
-#include <linux/videodev2.h>
 #include <fcntl.h>
-#include <unistd.h>
+#include <linux/videodev2.h>
+#include <stdio.h>
 #include <sys/ioctl.h>
+#include <unistd.h>
 
-namespace Input
-{
+namespace Input {
 /**
  * @class StandardCamera
  * @brief Class for recieving a standard camera as input.
  */
-class StandardCamera : public BaseInputDevice
-{
+class StandardCamera : public BaseInputDevice {
 public:
   /**
    * @brief Initialize the input device,
@@ -56,12 +54,12 @@ public:
    * @brief Read next frame, and give the value to argument frame.
    * @return Whether the next frame is successfully read.
    */
-  bool read(cv::Mat* frame) override;
+  bool read(cv::Mat *frame) override;
 
 private:
   int getCameraId();
   cv::VideoCapture cap;
   int camera_id_ = -1;
 };
-}  // namespace Input
-#endif  // DYNAMIC_VINO_LIB_INPUTS_STANDARD_CAMERA_H
+} // namespace Input
+#endif // DYNAMIC_VINO_LIB_INPUTS_STANDARD_CAMERA_H

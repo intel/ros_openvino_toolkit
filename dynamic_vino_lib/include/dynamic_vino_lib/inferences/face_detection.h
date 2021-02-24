@@ -38,26 +38,23 @@
 #include "opencv2/opencv.hpp"
 
 // namespace
-namespace dynamic_vino_lib
-{
+namespace dynamic_vino_lib {
 /**
  * @class FaceDetectionResult
  * @brief Class for storing and processing face detection result.
  */
-class FaceDetectionResult : public ObjectDetectionResult
-{
+class FaceDetectionResult : public ObjectDetectionResult {
 public:
-  explicit FaceDetectionResult(const cv::Rect& location);
+  explicit FaceDetectionResult(const cv::Rect &location);
 };
 
 /**
  * @class FaceDetection
  * @brief Class to load face detection model and perform face detection.
  */
-class FaceDetection : public ObjectDetection
-{
+class FaceDetection : public ObjectDetection {
 public:
   explicit FaceDetection(bool, double);
 };
-}  // namespace dynamic_vino_lib
-#endif  // DYNAMIC_VINO_LIB_INFERENCES_FACE_DETECTION_H
+} // namespace dynamic_vino_lib
+#endif // DYNAMIC_VINO_LIB_INFERENCES_FACE_DETECTION_H

@@ -24,8 +24,7 @@
 #include "dynamic_vino_lib/inferences/base_inference.h"
 
 // Result
-dynamic_vino_lib::Result::Result(const cv::Rect& location)
-{
+dynamic_vino_lib::Result::Result(const cv::Rect &location) {
   location_ = location;
 }
 
@@ -34,19 +33,16 @@ dynamic_vino_lib::BaseInference::BaseInference() = default;
 
 dynamic_vino_lib::BaseInference::~BaseInference() = default;
 
-void dynamic_vino_lib::BaseInference::loadEngine(const std::shared_ptr<Engines::Engine> engine)
-{
+void dynamic_vino_lib::BaseInference::loadEngine(
+    const std::shared_ptr<Engines::Engine> engine) {
   engine_ = engine;
 }
 
-bool dynamic_vino_lib::BaseInference::submitRequest()
-{
-  if (engine_->getRequest() == nullptr)
-  {
+bool dynamic_vino_lib::BaseInference::submitRequest() {
+  if (engine_->getRequest() == nullptr) {
     return false;
   }
-  if (!enqueued_frames_)
-  {
+  if (!enqueued_frames_) {
     return false;
   }
   enqueued_frames_ = 0;
@@ -55,14 +51,11 @@ bool dynamic_vino_lib::BaseInference::submitRequest()
   return true;
 }
 
-bool dynamic_vino_lib::BaseInference::SynchronousRequest()
-{
-  if (engine_->getRequest() == nullptr)
-  {
+bool dynamic_vino_lib::BaseInference::SynchronousRequest() {
+  if (engine_->getRequest() == nullptr) {
     return false;
   }
-  if (!enqueued_frames_)
-  {
+  if (!enqueued_frames_) {
     return false;
   }
   enqueued_frames_ = 0;
@@ -71,21 +64,18 @@ bool dynamic_vino_lib::BaseInference::SynchronousRequest()
   return true;
 }
 
-bool dynamic_vino_lib::BaseInference::fetchResults()
-{
-  if (results_fetched_)
-  {
+bool dynamic_vino_lib::BaseInference::fetchResults() {
+  if (results_fetched_) {
     return false;
   }
   results_fetched_ = true;
   return true;
 }
 
-void dynamic_vino_lib::BaseInference::addCandidatedModel(std::shared_ptr<Models::BaseModel> model)
-{
+void dynamic_vino_lib::BaseInference::addCandidatedModel(
+    std::shared_ptr<Models::BaseModel> model) {
   slog::info << "TESTING in addCandidatedModel()" << slog::endl;
-  if (model != nullptr)
-  {
+  if (model != nullptr) {
     slog::info << "adding new Model Candidate..." << slog::endl;
     candidated_models_.push_back(model);
   }

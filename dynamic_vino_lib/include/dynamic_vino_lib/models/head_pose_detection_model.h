@@ -22,42 +22,37 @@
 #ifndef DYNAMIC_VINO_LIB_MODELS_HEAD_POSE_DETECTION_MODEL_H
 #define DYNAMIC_VINO_LIB_MODELS_HEAD_POSE_DETECTION_MODEL_H
 
-#include <string>
 #include "dynamic_vino_lib/models/base_model.h"
+#include <string>
 
-namespace Models
-{
+namespace Models {
 /**
  * @class HeadPoseDetectionModel
  * @brief This class generates the headpose detection model.
  */
-class HeadPoseDetectionModel : public BaseModel
-{
+class HeadPoseDetectionModel : public BaseModel {
 public:
-  HeadPoseDetectionModel(const std::string& model_loc, int batch_size = 1);
+  HeadPoseDetectionModel(const std::string &model_loc, int batch_size = 1);
 
   /**
    * @brief Get the output angle roll.
    * @return Roll value.
    */
-  inline const std::string getOutputOutputAngleR() const
-  {
+  inline const std::string getOutputOutputAngleR() const {
     return output_angle_r_;
   }
   /**
    * @brief Get the output angle pitch.
    * @return Pitch value.
    */
-  inline const std::string getOutputOutputAngleP() const
-  {
+  inline const std::string getOutputOutputAngleP() const {
     return output_angle_p_;
   }
   /**
    * @brief Get the output angle yawl.
    * @return Yawl value.
    */
-  inline const std::string getOutputOutputAngleY() const
-  {
+  inline const std::string getOutputOutputAngleY() const {
     return output_angle_y_;
   }
   /**
@@ -72,6 +67,6 @@ private:
   std::string output_angle_p_ = "angle_p_fc";
   std::string output_angle_y_ = "angle_y_fc";
 };
-}  // namespace Models
+} // namespace Models
 
-#endif  // DYNAMIC_VINO_LIB_MODELS_HEAD_POSE_DETECTION_MODEL_H
+#endif // DYNAMIC_VINO_LIB_MODELS_HEAD_POSE_DETECTION_MODEL_H

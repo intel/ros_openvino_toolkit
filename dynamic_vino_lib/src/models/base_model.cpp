@@ -28,19 +28,17 @@
 #include "dynamic_vino_lib/slog.h"
 
 // Validated Base Network
-Models::BaseModel::BaseModel(const std::string& model_loc, int max_batch_size)
-  : model_loc_(model_loc), max_batch_size_(max_batch_size), ModelAttribute(model_loc)
-{
-  if (model_loc.empty())
-  {
+Models::BaseModel::BaseModel(const std::string &model_loc, int max_batch_size)
+    : model_loc_(model_loc), max_batch_size_(max_batch_size),
+      ModelAttribute(model_loc) {
+  if (model_loc.empty()) {
     throw std::logic_error("model file name is empty!");
   }
 
   net_reader_ = std::make_shared<InferenceEngine::CNNNetReader>();
 }
 
-void Models::BaseModel::modelInit()
-{
+void Models::BaseModel::modelInit() {
   slog::info << "Loading network files" << slog::endl;
   // Read network model
   net_reader_->ReadNetwork(model_loc_);
@@ -84,7 +82,6 @@ bool Models::BaseModel::updateLayerProperty(
 }
 #endif
 
-Models::ObjectDetectionModel::ObjectDetectionModel(const std::string& model_loc, int max_batch_size)
-  : BaseModel(model_loc, max_batch_size)
-{
-}
+Models::ObjectDetectionModel::ObjectDetectionModel(const std::string &model_loc,
+                                                   int max_batch_size)
+    : BaseModel(model_loc, max_batch_size) {}

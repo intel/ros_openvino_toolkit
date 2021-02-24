@@ -24,31 +24,22 @@
 #include <string>
 
 // Image
-Input::Image::Image(const std::string& file)
-{
-  file_.assign(file);
-}
+Input::Image::Image(const std::string &file) { file_.assign(file); }
 
-bool Input::Image::initialize()
-{
+bool Input::Image::initialize() {
   image_ = cv::imread(file_);
-  if (image_.data != NULL)
-  {
+  if (image_.data != NULL) {
     setInitStatus(true);
     setWidth((size_t)image_.cols);
     setHeight((size_t)image_.rows);
-  }
-  else
-  {
+  } else {
     setInitStatus(false);
   }
   return isInit();
 }
 
-bool Input::Image::read(cv::Mat* frame)
-{
-  if (!isInit())
-  {
+bool Input::Image::read(cv::Mat *frame) {
+  if (!isInit()) {
     return false;
   }
   *frame = image_;
@@ -56,12 +47,11 @@ bool Input::Image::read(cv::Mat* frame)
   return true;
 }
 
-void Input::Image::config(const Input::Config& config)
-{
-  if (config.path != "")
-  {
+void Input::Image::config(const Input::Config &config) {
+  if (config.path != "") {
     file_.assign(config.path);
     initialize();
-    slog::info << "Image Input device was reinitialized with new file:" << config.path.c_str() << slog::endl;
+    slog::info << "Image Input device was reinitialized with new file:"
+               << config.path.c_str() << slog::endl;
   }
 }

@@ -22,26 +22,25 @@
 #ifndef DYNAMIC_VINO_LIB_MODELS_FACE_DETECTION_MODEL_H
 #define DYNAMIC_VINO_LIB_MODELS_FACE_DETECTION_MODEL_H
 
-#include <string>
 #include "dynamic_vino_lib/models/base_model.h"
+#include <string>
 
-namespace Models
-{
+namespace Models {
 /**
  * @class FaceDetectionModel
  * @brief This class generates the face detection model.
  */
-class FaceDetectionModel : public ObjectDetectionModel
-{
+class FaceDetectionModel : public ObjectDetectionModel {
 public:
-  FaceDetectionModel(const std::string& model_loc, int batch_size = 1);
-  // void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr &) override;
+  FaceDetectionModel(const std::string &model_loc, int batch_size = 1);
+  // void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr &)
+  // override;
   /**
    * @brief Get the name of this detection model.
    * @return Name of the model.
    */
   const std::string getModelCategory() const override;
 };
-}  // namespace Models
+} // namespace Models
 
-#endif  // DYNAMIC_VINO_LIB_MODELS_FACE_DETECTION_MODEL_H
+#endif // DYNAMIC_VINO_LIB_MODELS_FACE_DETECTION_MODEL_H

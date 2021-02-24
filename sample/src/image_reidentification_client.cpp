@@ -20,40 +20,41 @@
 * \file sample/main.cpp
 */
 
+#include "opencv2/opencv.hpp"
 #include <ros/package.h>
 #include <ros/ros.h>
-#include "opencv2/opencv.hpp"
 
 #include <people_msgs/ReidentificationSrv.h>
 
-int main(int argc, char** argv)
-{
+int main(int argc, char **argv) {
   ros::init(argc, argv, "image_reidentification_client");
 
   ros::NodeHandle n;
 
-  ros::ServiceClient client = n.serviceClient<people_msgs::ReidentificationSrv>("/openvino_toolkit/service");
+  ros::ServiceClient client = n.serviceClient<people_msgs::ReidentificationSrv>(
+      "/openvino_toolkit/service");
 
   people_msgs::ReidentificationSrv srv;
 
-  if (client.call(srv))
-  {
+  if (client.call(srv)) {
     ROS_INFO("Request service success!");
 
-    for (unsigned int i = 0; i < srv.response.reidentification.reidentified_vector.size(); i++)
-    {
+    for (unsigned int i = 0;
+         i < srv.response.reidentification.reidentified_vector.size(); i++) {
       std::stringstream ss;
       ss << srv.response.reidentification.reidentified_vector[i].identity;
-      ROS_INFO("%d: object: %s", i, srv.response.reidentification.reidentified_vector[i].identity.c_str());
+      ROS_INFO("%d: object: %s", i,
+               srv.response.reidentification.reidentified_vector[i]
+                   .identity.c_str());
 
-      ROS_INFO("location: (%d, %d, %d, %d)", srv.response.reidentification.reidentified_vector[i].roi.x_offset,
-               srv.response.reidentification.reidentified_vector[i].roi.y_offset,
-               srv.response.reidentification.reidentified_vector[i].roi.width,
-               srv.response.reidentification.reidentified_vector[i].roi.height);
+      ROS_INFO(
+          "location: (%d, %d, %d, %d)",
+          srv.response.reidentification.reidentified_vector[i].roi.x_offset,
+          srv.response.reidentification.reidentified_vector[i].roi.y_offset,
+          srv.response.reidentification.reidentified_vector[i].roi.width,
+          srv.response.reidentification.reidentified_vector[i].roi.height);
     }
-  }
-  else
-  {
+  } else {
     ROS_ERROR("Failed to request service \"openvino_toolkit/service\" ");
     return -1;
   }

@@ -26,10 +26,9 @@
 #include "dynamic_vino_lib/slog.h"
 
 // Validated Face Detection Network
-Models::FaceDetectionModel::FaceDetectionModel(const std::string& model_loc, int max_batch_size)
-  : ObjectDetectionModel(model_loc, max_batch_size)
-{
-}
+Models::FaceDetectionModel::FaceDetectionModel(const std::string &model_loc,
+                                               int max_batch_size)
+    : ObjectDetectionModel(model_loc, max_batch_size) {}
 
 #if 0
 void Models::FaceDetectionModel::checkLayerProperty(
@@ -94,7 +93,6 @@ void Models::FaceDetectionModel::checkLayerProperty(
 }
 #endif
 
-const std::string Models::FaceDetectionModel::getModelCategory() const
-{
+const std::string Models::FaceDetectionModel::getModelCategory() const {
   return "Face Detection";
 }

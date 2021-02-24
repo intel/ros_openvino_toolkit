@@ -29,12 +29,11 @@
 #include "dynamic_vino_lib/slog.h"
 
 // FaceDetectionResult
-dynamic_vino_lib::FaceDetectionResult::FaceDetectionResult(const cv::Rect& location) : ObjectDetectionResult(location)
-{
-}
+dynamic_vino_lib::FaceDetectionResult::FaceDetectionResult(
+    const cv::Rect &location)
+    : ObjectDetectionResult(location) {}
 
 // FaceDetection
-dynamic_vino_lib::FaceDetection::FaceDetection(bool enable_roi_constraint, double show_output_thresh)
-  : ObjectDetection(enable_roi_constraint, show_output_thresh)
-{
-}
+dynamic_vino_lib::FaceDetection::FaceDetection(bool enable_roi_constraint,
+                                               double show_output_thresh)
+    : ObjectDetection(enable_roi_constraint, show_output_thresh) {}

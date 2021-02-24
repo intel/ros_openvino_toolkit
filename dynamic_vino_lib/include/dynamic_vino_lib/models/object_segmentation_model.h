@@ -17,30 +17,24 @@
  */
 #ifndef DYNAMIC_VINO_LIB__MODELS__OBJECT_SEGMENTATION_MODEL_HPP_
 #define DYNAMIC_VINO_LIB__MODELS__OBJECT_SEGMENTATION_MODEL_HPP_
-#include <string>
 #include "dynamic_vino_lib/models/base_model.h"
-namespace Models
-{
+#include <string>
+namespace Models {
 /**
  * @class ObjectSegmentationModel
  * @brief This class generates the object segmentation model.
  */
-class ObjectSegmentationModel : public BaseModel
-{
+class ObjectSegmentationModel : public BaseModel {
 public:
-  ObjectSegmentationModel(const std::string& model_loc, int batch_size = 1);
-  inline int getMaxProposalCount() const
-  {
-    return max_proposal_count_;
-  }
-  inline int getObjectSize() const
-  {
-    return object_size_;
-  }
+  ObjectSegmentationModel(const std::string &model_loc, int batch_size = 1);
+  inline int getMaxProposalCount() const { return max_proposal_count_; }
+  inline int getObjectSize() const { return object_size_; }
 
-  bool enqueue(const std::shared_ptr<Engines::Engine>&, const cv::Mat&, const cv::Rect&) override;
+  bool enqueue(const std::shared_ptr<Engines::Engine> &, const cv::Mat &,
+               const cv::Rect &) override;
 
-  bool matToBlob(const cv::Mat&, const cv::Rect&, float, int, const std::shared_ptr<Engines::Engine>&);
+  bool matToBlob(const cv::Mat &, const cv::Rect &, float, int,
+                 const std::shared_ptr<Engines::Engine> &);
 
   /**
    * @brief Get the name of this segmentation model.
@@ -55,5 +49,5 @@ private:
 
   InferenceEngine::InputsDataMap input_info_;
 };
-}  // namespace Models
-#endif  // DYNAMIC_VINO_LIB__MODELS__OBJECT_SEGMENTATION_MODEL_HPP_
+} // namespace Models
+#endif // DYNAMIC_VINO_LIB__MODELS__OBJECT_SEGMENTATION_MODEL_HPP_

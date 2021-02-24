@@ -17,18 +17,11 @@
 #include "dynamic_vino_lib/outputs/base_output.h"
 #include "dynamic_vino_lib/pipeline.h"
 
-void Outputs::BaseOutput::setPipeline(Pipeline* const pipeline)
-{
+void Outputs::BaseOutput::setPipeline(Pipeline *const pipeline) {
   // pipeline->printPipeline();
   pipeline_ = pipeline;
 }
 
-Pipeline* Outputs::BaseOutput::getPipeline() const
-{
-  return pipeline_;
-}
+Pipeline *Outputs::BaseOutput::getPipeline() const { return pipeline_; }
 
-cv::Mat Outputs::BaseOutput::getFrame() const
-{
-  return frame_;
-}
+cv::Mat Outputs::BaseOutput::getFrame() const { return frame_; }

@@ -16,17 +16,16 @@
  * @brief a header file with declaration of PersonReidentificationModel class
  * @file person_reidentification_model.cpp
  */
-#include <string>
 #include "dynamic_vino_lib/models/person_reidentification_model.h"
 #include "dynamic_vino_lib/slog.h"
+#include <string>
 // Validated Object Detection Network
-Models::PersonReidentificationModel::PersonReidentificationModel(const std::string& model_loc, int max_batch_size)
-  : BaseModel(model_loc, max_batch_size)
-{
-}
+Models::PersonReidentificationModel::PersonReidentificationModel(
+    const std::string &model_loc, int max_batch_size)
+    : BaseModel(model_loc, max_batch_size) {}
 
-bool Models::PersonReidentificationModel::updateLayerProperty(InferenceEngine::CNNNetReader::Ptr netreader)
-{
+bool Models::PersonReidentificationModel::updateLayerProperty(
+    InferenceEngine::CNNNetReader::Ptr netreader) {
   slog::info << "Checking Inputs for Model" << getModelName() << slog::endl;
 
   auto network = netreader->getNetwork();
@@ -45,7 +44,7 @@ bool Models::PersonReidentificationModel::updateLayerProperty(InferenceEngine::C
   return true;
 }
 
-const std::string Models::PersonReidentificationModel::getModelCategory() const
-{
+const std::string
+Models::PersonReidentificationModel::getModelCategory() const {
   return "Person Reidentification";
 }

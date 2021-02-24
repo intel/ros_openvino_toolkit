@@ -17,34 +17,32 @@
 #include <object_msgs/Object.h>
 #include <object_msgs/ObjectInBox.h>
 #include <object_msgs/ObjectsInBoxes.h>
-#include <people_msgs/Emotion.h>
-#include <people_msgs/EmotionsStamped.h>
 #include <people_msgs/AgeGender.h>
 #include <people_msgs/AgeGenderStamped.h>
+#include <people_msgs/Emotion.h>
+#include <people_msgs/EmotionsStamped.h>
 #include <people_msgs/HeadPose.h>
 #include <people_msgs/HeadPoseStamped.h>
 
+#include <object_msgs/DetectObjectRequest.h>
 #include <people_msgs/AgeGenderSrv.h>
 #include <people_msgs/EmotionSrv.h>
 #include <people_msgs/HeadPoseSrv.h>
-#include <people_msgs/PeopleSrv.h>
-#include <object_msgs/DetectObjectRequest.h>
 #include <people_msgs/ObjectsInMasksSrv.h>
+#include <people_msgs/PeopleSrv.h>
 #include <people_msgs/ReidentificationSrv.h>
 #include <pipeline_srv_msgs/PipelineSrv.h>
 
-#include <ros/ros.h>
-#include <memory>
 #include <iostream>
+#include <memory>
+#include <ros/ros.h>
 #include <string>
 
-namespace vino_service
-{
-template <typename T>
-class FrameProcessingServer
-{
+namespace vino_service {
+template <typename T> class FrameProcessingServer {
 public:
-  explicit FrameProcessingServer(const std::string& service_name, const std::string& config_path);
+  explicit FrameProcessingServer(const std::string &service_name,
+                                 const std::string &config_path);
   void initService();
 
 private:
@@ -53,7 +51,8 @@ private:
   std::shared_ptr<ros::NodeHandle> nh_;
   std::shared_ptr<ros::ServiceServer> service_;
 
-  bool cbService(ros::ServiceEvent<typename T::Request, typename T::Response>& event);
+  bool cbService(
+      ros::ServiceEvent<typename T::Request, typename T::Response> &event);
 };
-}  // namespace vino_service
-#endif  // DYNAMIC_VINO_LIB__SERVICES__FRAME_PROCESSING_SERVER_HPP_
+} // namespace vino_service
+#endif // DYNAMIC_VINO_LIB__SERVICES__FRAME_PROCESSING_SERVER_HPP_

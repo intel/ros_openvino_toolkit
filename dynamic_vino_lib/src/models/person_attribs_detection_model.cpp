@@ -16,22 +16,22 @@
  * @brief a header file with declaration of PersonAttribsDetectionModel class
  * @file person_attribs_detection_model.cpp
  */
-#include <string>
 #include "dynamic_vino_lib/models/person_attribs_detection_model.h"
 #include "dynamic_vino_lib/slog.h"
+#include <string>
 // Validated Person Attributes Detection Network
-Models::PersonAttribsDetectionModel::PersonAttribsDetectionModel(const std::string& model_loc, int max_batch_size)
-  : BaseModel(model_loc, max_batch_size)
-{
-}
+Models::PersonAttribsDetectionModel::PersonAttribsDetectionModel(
+    const std::string &model_loc, int max_batch_size)
+    : BaseModel(model_loc, max_batch_size) {}
 
-bool Models::PersonAttribsDetectionModel::updateLayerProperty(InferenceEngine::CNNNetReader::Ptr net_reader)
-{
+bool Models::PersonAttribsDetectionModel::updateLayerProperty(
+    InferenceEngine::CNNNetReader::Ptr net_reader) {
   slog::info << "Checking INPUTs for model " << getModelName() << slog::endl;
-  InferenceEngine::InputsDataMap input_info_map(net_reader->getNetwork().getInputsInfo());
-  if (input_info_map.size() != 1)
-  {
-    throw std::logic_error("Person Attribs topology should have only one input");
+  InferenceEngine::InputsDataMap input_info_map(
+      net_reader->getNetwork().getInputsInfo());
+  if (input_info_map.size() != 1) {
+    throw std::logic_error(
+        "Person Attribs topology should have only one input");
   }
   InferenceEngine::InputInfo::Ptr input_info = input_info_map.begin()->second;
   input_info->setPrecision(InferenceEngine::Precision::U8);
@@ -39,10 +39,11 @@ bool Models::PersonAttribsDetectionModel::updateLayerProperty(InferenceEngine::C
   addInputInfo("input", input_info_map.begin()->first);
 
   slog::info << "Checking OUTPUTs for model " << getModelName() << slog::endl;
-  InferenceEngine::OutputsDataMap output_info_map(net_reader->getNetwork().getOutputsInfo());
-  if (output_info_map.size() != 3)
-  {
-    throw std::logic_error("Person Attribs Network expects networks having 3 output");
+  InferenceEngine::OutputsDataMap output_info_map(
+      net_reader->getNetwork().getOutputsInfo());
+  if (output_info_map.size() != 3) {
+    throw std::logic_error(
+        "Person Attribs Network expects networks having 3 output");
   }
   input_ = input_info_map.begin()->first;
   output_ = output_info_map.begin()->first;
@@ -60,7 +61,7 @@ bool Models::PersonAttribsDetectionModel::updateLayerProperty(InferenceEngine::C
   return true;
 }
 
-const std::string Models::PersonAttribsDetectionModel::getModelCategory() const
-{
+const std::string
+Models::PersonAttribsDetectionModel::getModelCategory() const {
   return "Person Attributes Detection";
 }

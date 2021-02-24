@@ -17,41 +17,38 @@
  * PersonAttribsDetectionResult class
  * @file person_attribs_detection.cpp
  */
-#include <memory>
-#include <string>
-#include <vector>
 #include "dynamic_vino_lib/inferences/person_attribs_detection.h"
 #include "dynamic_vino_lib/outputs/base_output.h"
 #include "dynamic_vino_lib/slog.h"
+#include <memory>
+#include <string>
+#include <vector>
 
 // PersonAttribsDetectionResult
-dynamic_vino_lib::PersonAttribsDetectionResult::PersonAttribsDetectionResult(const cv::Rect& location)
-  : Result(location)
-{
-}
+dynamic_vino_lib::PersonAttribsDetectionResult::PersonAttribsDetectionResult(
+    const cv::Rect &location)
+    : Result(location) {}
 
 // PersonAttribsDetection
-dynamic_vino_lib::PersonAttribsDetection::PersonAttribsDetection(double attribs_confidence)
-  : attribs_confidence_(attribs_confidence), dynamic_vino_lib::BaseInference()
-{
-}
+dynamic_vino_lib::PersonAttribsDetection::PersonAttribsDetection(
+    double attribs_confidence)
+    : attribs_confidence_(attribs_confidence),
+      dynamic_vino_lib::BaseInference() {}
 
 dynamic_vino_lib::PersonAttribsDetection::~PersonAttribsDetection() = default;
 void dynamic_vino_lib::PersonAttribsDetection::loadNetwork(
-    const std::shared_ptr<Models::PersonAttribsDetectionModel> network)
-{
+    const std::shared_ptr<Models::PersonAttribsDetectionModel> network) {
   valid_model_ = network;
   setMaxBatchSize(network->getMaxBatchSize());
 }
 
-bool dynamic_vino_lib::PersonAttribsDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
-{
-  if (getEnqueuedNum() == 0)
-  {
+bool dynamic_vino_lib::PersonAttribsDetection::enqueue(
+    const cv::Mat &frame, const cv::Rect &input_frame_loc) {
+  if (getEnqueuedNum() == 0) {
     results_.clear();
   }
-  if (!dynamic_vino_lib::BaseInference::enqueue<u_int8_t>(frame, input_frame_loc, 1, 0, valid_model_->getInputName()))
-  {
+  if (!dynamic_vino_lib::BaseInference::enqueue<u_int8_t>(
+          frame, input_frame_loc, 1, 0, valid_model_->getInputName())) {
     return false;
   }
   Result r(input_frame_loc);
@@ -59,8 +56,7 @@ bool dynamic_vino_lib::PersonAttribsDetection::enqueue(const cv::Mat& frame, con
   return true;
 }
 
-bool dynamic_vino_lib::PersonAttribsDetection::submitRequest()
-{
+bool dynamic_vino_lib::PersonAttribsDetection::submitRequest() {
   return dynamic_vino_lib::BaseInference::submitRequest();
 }
 /*
@@ -71,13 +67,15 @@ bool dynamic_vino_lib::PersonAttribsDetection::fetchResults()
   bool found_result = false;
   InferenceEngine::InferRequest::Ptr request = getEngine()->getRequest();
   std::string output = valid_model_->getOutputName();
-  const float * output_values = request->GetBlob(output)->buffer().as<float *>();
+  const float * output_values = request->GetBlob(output)->buffer().as<float
+*>();
   int net_attrib_length = net_attributes_.size();
   for (int i = 0; i < getResultsLength(); i++) {
     results_[i].male_probability_ = output_values[i * net_attrib_length];
     std::string attrib = "";
     for (int j = 1; j < net_attrib_length; j++) {
-      attrib += (output_values[i * net_attrib_length + j] > attribs_confidence_) ?
+      attrib += (output_values[i * net_attrib_length + j] > attribs_confidence_)
+?
         net_attributes_[j] + ", " : "";
     }
     results_[i].attributes_ = attrib;
@@ -87,89 +85,83 @@ bool dynamic_vino_lib::PersonAttribsDetection::fetchResults()
   return true;
 }
 */
-bool dynamic_vino_lib::PersonAttribsDetection::fetchResults()
-{
+bool dynamic_vino_lib::PersonAttribsDetection::fetchResults() {
   bool can_fetch = dynamic_vino_lib::BaseInference::fetchResults();
-  if (!can_fetch)
-  {
+  if (!can_fetch) {
     return false;
   }
   bool found_result = false;
   InferenceEngine::InferRequest::Ptr request = getEngine()->getRequest();
   slog::debug << "Analyzing Attributes Detection results..." << slog::endl;
-  std::string attribute_output = valid_model_->getOutputName("attributes_output_");
+  std::string attribute_output =
+      valid_model_->getOutputName("attributes_output_");
   std::string top_output = valid_model_->getOutputName("top_output_");
   std::string bottom_output = valid_model_->getOutputName("bottom_output_");
 
-  /*auto attri_values = request->GetBlob(attribute_output)->buffer().as<float*>();
+  /*auto attri_values =
+  request->GetBlob(attribute_output)->buffer().as<float*>();
   auto top_values = request->GetBlob(top_output)->buffer().as<float*>();
   auto bottom_values = request->GetBlob(bottom_output)->buffer().as<float*>();*/
   InferenceEngine::Blob::Ptr attribBlob = request->GetBlob(attribute_output);
   InferenceEngine::Blob::Ptr topBlob = request->GetBlob(top_output);
   InferenceEngine::Blob::Ptr bottomBlob = request->GetBlob(bottom_output);
 
-  auto attri_values = attribBlob->buffer().as<float*>();
-  auto top_values = topBlob->buffer().as<float*>();
-  auto bottom_values = bottomBlob->buffer().as<float*>();
+  auto attri_values = attribBlob->buffer().as<float *>();
+  auto top_values = topBlob->buffer().as<float *>();
+  auto bottom_values = bottomBlob->buffer().as<float *>();
 
   int net_attrib_length = net_attributes_.size();
-  for (int i = 0; i < getResultsLength(); i++)
-  {
+  for (int i = 0; i < getResultsLength(); i++) {
     results_[i].male_probability_ = attri_values[i * net_attrib_length];
     results_[i].top_point_.x = top_values[i];
     results_[i].top_point_.y = top_values[i + 1];
     results_[i].bottom_point_.x = bottom_values[i];
     results_[i].bottom_point_.y = bottom_values[i + 1];
     std::string attrib = "";
-    for (int j = 1; j < net_attrib_length; j++)
-    {
-      attrib += (attri_values[i * net_attrib_length + j] > attribs_confidence_) ? net_attributes_[j] + ", " : "";
+    for (int j = 1; j < net_attrib_length; j++) {
+      attrib += (attri_values[i * net_attrib_length + j] > attribs_confidence_)
+                    ? net_attributes_[j] + ", "
+                    : "";
     }
     results_[i].attributes_ = attrib;
 
     found_result = true;
   }
-  if (!found_result)
-  {
+  if (!found_result) {
     results_.clear();
   }
   return true;
 }
 
-int dynamic_vino_lib::PersonAttribsDetection::getResultsLength() const
-{
+int dynamic_vino_lib::PersonAttribsDetection::getResultsLength() const {
   return static_cast<int>(results_.size());
 }
 
-const dynamic_vino_lib::Result* dynamic_vino_lib::PersonAttribsDetection::getLocationResult(int idx) const
-{
+const dynamic_vino_lib::Result *
+dynamic_vino_lib::PersonAttribsDetection::getLocationResult(int idx) const {
   return &(results_[idx]);
 }
 
-const std::string dynamic_vino_lib::PersonAttribsDetection::getName() const
-{
+const std::string dynamic_vino_lib::PersonAttribsDetection::getName() const {
   return valid_model_->getModelCategory();
 }
 
-void dynamic_vino_lib::PersonAttribsDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
-{
-  if (output != nullptr)
-  {
+void dynamic_vino_lib::PersonAttribsDetection::observeOutput(
+    const std::shared_ptr<Outputs::BaseOutput> &output) {
+  if (output != nullptr) {
     output->accept(results_);
   }
 }
 
 const std::vector<cv::Rect>
-dynamic_vino_lib::PersonAttribsDetection::getFilteredROIs(const std::string filter_conditions) const
-{
-  if (!filter_conditions.empty())
-  {
+dynamic_vino_lib::PersonAttribsDetection::getFilteredROIs(
+    const std::string filter_conditions) const {
+  if (!filter_conditions.empty()) {
     slog::err << "Person attributes detection does not support filtering now! "
               << "Filter conditions: " << filter_conditions << slog::endl;
   }
   std::vector<cv::Rect> filtered_rois;
-  for (auto res : results_)
-  {
+  for (auto res : results_) {
     filtered_rois.push_back(res.getLocation());
   }
   return filtered_rois;

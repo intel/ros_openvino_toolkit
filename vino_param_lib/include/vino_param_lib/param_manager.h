@@ -19,15 +19,14 @@
 #ifndef VINO_PARAM_LIB_PARAM_MANAGER_H
 #define VINO_PARAM_LIB_PARAM_MANAGER_H
 
-#include <ros/ros.h>
-#include <yaml-cpp/yaml.h>
 #include <iostream>
 #include <map>
+#include <ros/ros.h>
 #include <string>
 #include <vector>
+#include <yaml-cpp/yaml.h>
 
-namespace Params
-{
+namespace Params {
 /**
  * @class ParamManager
  * @brief This class implements yaml-based parameter management.
@@ -40,7 +39,7 @@ namespace Params
  *      std::string topic = common.camera_topic;
  *      < further ops >
  */
-class ParamManager  // singleton
+class ParamManager // singleton
 {
 public:
   /**
@@ -48,8 +47,7 @@ public:
    * The instance will be created when first call.
    * @return The reference of paramManager class.
    */
-  static ParamManager& getInstance()
-  {
+  static ParamManager &getInstance() {
     static ParamManager manager_;
     return manager_;
   }
@@ -60,8 +58,7 @@ public:
    */
   void print() const;
 
-  struct InferenceRawData
-  {
+  struct InferenceRawData {
     std::string name;
     std::string engine;
     std::string model;
@@ -72,15 +69,13 @@ public:
     bool enable_roi_constraint = false;
   };
 
-  struct FilterRawData
-  {
+  struct FilterRawData {
     std::string input;
     std::string output;
     std::string filter_conditions;
   };
 
-  struct PipelineRawData
-  {
+  struct PipelineRawData {
     std::string name;
     std::vector<InferenceRawData> infers;
     std::vector<std::string> inputs;
@@ -90,8 +85,7 @@ public:
     std::vector<FilterRawData> filters;
   };
 
-  struct CommonRawData
-  {
+  struct CommonRawData {
     std::string custom_cpu_library;
     std::string custom_cldnn_library;
     bool enable_performance_count = false;
@@ -116,10 +110,7 @@ public:
    * @brief Retrieve pipeline parameters.
    * @return A list of struct PipelineRawData storing all pipeline parameters.
    */
-  std::vector<PipelineRawData> getPipelines() const
-  {
-    return pipelines_;
-  }
+  std::vector<PipelineRawData> getPipelines() const { return pipelines_; }
 
   /**
    * @brief Retrieve the specific pipeline parameters by the given pipeline
@@ -127,27 +118,22 @@ public:
    * @param[in] name: the name of the pipeline to be retrieved.
    * @return The pipeline paratmeters, or throw a loginc error.
    */
-  PipelineRawData getPipeline(const std::string& name) const;
+  PipelineRawData getPipeline(const std::string &name) const;
 
   /**
    * @brief Retrieve common parameters.
    * @return struct CommonRawData storing all common parameters.
    */
-  CommonRawData getCommon() const
-  {
-    return common_;
-  }
+  CommonRawData getCommon() const { return common_; }
 
 private:
-  ParamManager()
-  {
-  }
-  ParamManager(ParamManager const&);
-  void operator=(ParamManager const&);
+  ParamManager() {}
+  ParamManager(ParamManager const &);
+  void operator=(ParamManager const &);
 
   std::vector<PipelineRawData> pipelines_;
   CommonRawData common_;
 };
 
-}  // namespace Params
-#endif  // VINO_PARAM_LIB_PARAM_MANAGER_H
+} // namespace Params
+#endif // VINO_PARAM_LIB_PARAM_MANAGER_H

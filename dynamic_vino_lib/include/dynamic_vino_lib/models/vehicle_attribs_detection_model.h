@@ -18,30 +18,20 @@
  */
 #ifndef DYNAMIC_VINO_LIB__MODELS__VEHICLE_ATTRIBS_DETECTION_MODEL_HPP_
 #define DYNAMIC_VINO_LIB__MODELS__VEHICLE_ATTRIBS_DETECTION_MODEL_HPP_
-#include <string>
 #include "dynamic_vino_lib/models/base_model.h"
-namespace Models
-{
+#include <string>
+namespace Models {
 /**
  * @class VehicleAttribsDetectionModel
  * @brief This class generates the vehicle attributes detection model.
  */
-class VehicleAttribsDetectionModel : public BaseModel
-{
+class VehicleAttribsDetectionModel : public BaseModel {
 public:
-  VehicleAttribsDetectionModel(const std::string& model_loc, int batch_size = 1);
-  inline const std::string getInputName()
-  {
-    return input_;
-  }
-  inline const std::string getColorOutputName()
-  {
-    return color_output_;
-  }
-  inline const std::string getTypeOutputName()
-  {
-    return type_output_;
-  }
+  VehicleAttribsDetectionModel(const std::string &model_loc,
+                               int batch_size = 1);
+  inline const std::string getInputName() { return input_; }
+  inline const std::string getColorOutputName() { return color_output_; }
+  inline const std::string getTypeOutputName() { return type_output_; }
   /**
    * @brief Get the name of this detection model.
    * @return Name of the model.
@@ -49,12 +39,13 @@ public:
   const std::string getModelCategory() const override;
 
 protected:
-  // void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr &) override;
+  // void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr &)
+  // override;
   // void setLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
   bool updateLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
   std::string input_;
   std::string color_output_;
   std::string type_output_;
 };
-}  // namespace Models
-#endif  // DYNAMIC_VINO_LIB__MODELS__VEHICLE_ATTRIBS_DETECTION_MODEL_HPP_
+} // namespace Models
+#endif // DYNAMIC_VINO_LIB__MODELS__VEHICLE_ATTRIBS_DETECTION_MODEL_HPP_

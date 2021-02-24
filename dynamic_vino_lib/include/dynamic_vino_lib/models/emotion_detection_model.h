@@ -22,19 +22,17 @@
 #ifndef DYNAMIC_VINO_LIB_MODELS_EMOTION_DETECTION_MODEL_H
 #define DYNAMIC_VINO_LIB_MODELS_EMOTION_DETECTION_MODEL_H
 
-#include <string>
 #include "dynamic_vino_lib/models/base_model.h"
+#include <string>
 
-namespace Models
-{
+namespace Models {
 /**
  * @class EmotionDetectionModel
  * @brief This class generates the emotion detection model.
  */
-class EmotionDetectionModel : public BaseModel
-{
+class EmotionDetectionModel : public BaseModel {
 public:
-  EmotionDetectionModel(const std::string& model_loc, int batch_size = 1);
+  EmotionDetectionModel(const std::string &model_loc, int batch_size = 1);
 
   /**
    * @brief Get the name of this detection model.
@@ -44,8 +42,8 @@ public:
   bool updateLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
 
 private:
-  bool verifyOutputLayer(const InferenceEngine::DataPtr& ptr);
+  bool verifyOutputLayer(const InferenceEngine::DataPtr &ptr);
 };
-}  // namespace Models
+} // namespace Models
 
-#endif  // DYNAMIC_VINO_LIB_MODELS_EMOTION_DETECTION_MODEL_H
+#endif // DYNAMIC_VINO_LIB_MODELS_EMOTION_DETECTION_MODEL_H

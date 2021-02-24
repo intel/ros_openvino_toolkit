@@ -18,26 +18,18 @@
  */
 #ifndef DYNAMIC_VINO_LIB__MODELS__PERSON_REIDENTIFICATION_MODEL_HPP_
 #define DYNAMIC_VINO_LIB__MODELS__PERSON_REIDENTIFICATION_MODEL_HPP_
-#include <string>
 #include "dynamic_vino_lib/models/base_model.h"
-namespace Models
-{
+#include <string>
+namespace Models {
 /**
  * @class PersonReidentificationModel
  * @brief This class generates the person reidentification model.
  */
-class PersonReidentificationModel : public BaseModel
-{
+class PersonReidentificationModel : public BaseModel {
 public:
-  PersonReidentificationModel(const std::string& model_loc, int batch_size = 1);
-  inline const std::string getInputName()
-  {
-    return input_;
-  }
-  inline const std::string getOutputName()
-  {
-    return output_;
-  }
+  PersonReidentificationModel(const std::string &model_loc, int batch_size = 1);
+  inline const std::string getInputName() { return input_; }
+  inline const std::string getOutputName() { return output_; }
   /**
    * @brief Get the name of this detection model.
    * @return Name of the model.
@@ -46,10 +38,11 @@ public:
 
 protected:
   bool updateLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
-  // void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr &) override;
+  // void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr &)
+  // override;
   // void setLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
   std::string input_;
   std::string output_;
 };
-}  // namespace Models
-#endif  // DYNAMIC_VINO_LIB__MODELS__PERSON_REIDENTIFICATION_MODEL_HPP_
+} // namespace Models
+#endif // DYNAMIC_VINO_LIB__MODELS__PERSON_REIDENTIFICATION_MODEL_HPP_
