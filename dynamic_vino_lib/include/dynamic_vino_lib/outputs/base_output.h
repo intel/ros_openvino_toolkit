@@ -40,6 +40,14 @@
 #include "dynamic_vino_lib/services/frame_processing_server.h"
 #include "opencv2/opencv.hpp"
 
+#include <object_msgs/DetectObjectResponse.h>
+#include <people_msgs/AgeGenderSrvResponse.h>
+#include <people_msgs/EmotionSrvResponse.h>
+#include <people_msgs/HeadPoseSrvResponse.h>
+#include <people_msgs/PeopleSrvResponse.h>
+#include <people_msgs/ReidentificationSrvResponse.h>
+#include <people_msgs/ObjectsInMasksSrvResponse.h>
+
 class Pipeline;
 namespace Outputs
 {
@@ -141,10 +149,10 @@ public:
   virtual void handleOutput() = 0;
 
   void setPipeline(Pipeline* const pipeline);
-  virtual void setServiceResponse(boost::shared_ptr<object_msgs::DetectObjectRequest> response)
+  virtual void setServiceResponse(boost::shared_ptr<object_msgs::DetectObjectResponse> response)
   {
   }
-  virtual void setServiceResponseForFace(boost::shared_ptr<object_msgs::DetectObjectRequest> response)
+  virtual void setServiceResponseForFace(boost::shared_ptr<object_msgs::DetectObjectResponse> response)
   {
   }
   virtual void setServiceResponse(boost::shared_ptr<people_msgs::AgeGenderSrvResponse> response)
