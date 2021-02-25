@@ -148,8 +148,6 @@ private:
    */
   cv::Mat getRotationTransform(double yaw, double pitch, double roll);
 
-  void mergeMask(const std::vector<dynamic_vino_lib::ObjectSegmentationResult>&);
-
   struct OutputData
   {
     std::string desc;

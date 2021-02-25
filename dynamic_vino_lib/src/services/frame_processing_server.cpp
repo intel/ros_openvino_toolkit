@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "dynamic_vino_lib/services/frame_processing_server.h"
 #include <people_msgs/PeopleSrv.h>
 #include <people_msgs/ObjectsInMasksSrv.h>
 #include <people_msgs/ReidentificationSrv.h>
@@ -22,6 +21,7 @@
 #include <pipeline_srv_msgs/PipelineSrv.h>
 #include <vino_param_lib/param_manager.h>
 #include <ros/ros.h>
+#include <ros/service_callback_helper.h>
 #include <memory>
 #include <string>
 #include <map>
@@ -32,6 +32,7 @@
 #include "dynamic_vino_lib/pipeline.h"
 #include "dynamic_vino_lib/inputs/base_input.h"
 #include "dynamic_vino_lib/inputs/image_input.h"
+#include "dynamic_vino_lib/services/frame_processing_server.h"
 #include "dynamic_vino_lib/slog.h"
 
 namespace vino_service
