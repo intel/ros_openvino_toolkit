@@ -20,12 +20,15 @@
 #ifndef DYNAMIC_VINO_LIB__INPUTS__IMAGE_TOPIC_HPP_
 #define DYNAMIC_VINO_LIB__INPUTS__IMAGE_TOPIC_HPP_
 
-#include <ros/ros.h>
-#include <opencv2/opencv.hpp>
-#include <sensor_msgs/Image.h>
-#include <memory>
-#include "dynamic_vino_lib/utils/mutex_counter.hpp"
 #include "dynamic_vino_lib/inputs/base_input.h"
+#include "dynamic_vino_lib/utils/mutex_counter.hpp"
+#include <condition_variable>
+#include <image_transport/image_transport.h>
+#include <memory>
+#include <mutex>
+#include <opencv2/opencv.hpp>
+#include <ros/ros.h>
+#include <sensor_msgs/Image.h>
 
 namespace Input
 {
@@ -36,7 +39,6 @@ namespace Input
 class ImageTopic : public BaseInputDevice
 {
 public:
-  ImageTopic(boost::shared_ptr node = nullptr);
   bool initialize() override;
   bool initialize(size_t width, size_t height) override;
   bool read(cv::Mat* frame) override;
@@ -46,7 +48,6 @@ private:
   image_transport::Subscriber sub_;
   cv::Mat image_;
   MutexCounter image_count_;
-  boost::shared_ptr node_ = nullptr;
 
   void cb(const sensor_msgs::ImageConstPtr& image_msg);
 };
