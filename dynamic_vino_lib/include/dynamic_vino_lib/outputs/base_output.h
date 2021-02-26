@@ -52,6 +52,9 @@ namespace Outputs
 class BaseOutput
 {
 public:
+  explicit BaseOutput()
+  {
+  }
   explicit BaseOutput(std::string output_name) : output_name_(output_name)
   {
   }
