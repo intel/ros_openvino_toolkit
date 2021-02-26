@@ -59,7 +59,6 @@ void Input::ImageTopic::cb(const sensor_msgs::msg::Image::SharedPtr image_msg)
 
 bool Input::ImageTopic::read(cv::Mat* frame)
 {
-  ros::spinOnce();
   if (image_count_.get() < 0 || image_.empty())
   {
     slog::debug << "No data received in CameraTopic instance" << slog::endl;
