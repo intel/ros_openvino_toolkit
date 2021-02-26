@@ -20,6 +20,7 @@
 #ifndef DYNAMIC_VINO_LIB__UTILS__MUTEX_COUNTER_HPP_
 #define DYNAMIC_VINO_LIB__UTILS__MUTEX_COUNTER_HPP_
 
+#include <condition_variable>
 #include <mutex>
 
 class MutexCounter
