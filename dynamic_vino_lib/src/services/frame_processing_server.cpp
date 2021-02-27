@@ -45,7 +45,7 @@ FrameProcessingServer<T>::FrameProcessingServer(const std::string& service_name,
   initService();
 }
 
-template <typename T>
+template <typename T>                                                           
 void FrameProcessingServer<T>::initService()
 {
   std::cout << "!!!!" << config_path_ << std::endl;
