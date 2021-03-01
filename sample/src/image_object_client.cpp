@@ -43,7 +43,7 @@ int main(int argc, char** argv)
   ros::ServiceClient client = n.serviceClient<object_msgs::DetectObject>("/openvino_toolkit/service");
 
   object_msgs::DetectObject srv;
-  srv.request.image_path = image_path;
+  srv.request.image_paths = image_path;
 
   if (client.call(srv))
   {
