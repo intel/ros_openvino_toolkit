@@ -32,7 +32,10 @@
 namespace vino_service
 {
 template <typename T>
-FrameProcessingServer<T>::FrameProcessingServer(const std::string& service_name, const std::string& config_path)
+class FrameProcessingObjectServer : public FrameProcessingServer<T>;
+
+template <typename T>
+FrameProcessingObjectServer<T>::FrameProcessingObjectServer(const std::string& service_name, const std::string& config_path)
   : service_name_(service_name), config_path_(config_path)
 {
   nh_ = std::make_shared<ros::NodeHandle>(service_name_);
@@ -40,7 +43,7 @@ FrameProcessingServer<T>::FrameProcessingServer(const std::string& service_name,
 }
 
 template <typename T>                                                           
-void FrameProcessingServer<T>::initService()
+void FrameProcessingObjectServer<T>::initService()
 {
   std::cout << "!!!!" << config_path_ << std::endl;
   Params::ParamManager::getInstance().parse(config_path_);
@@ -60,12 +63,12 @@ void FrameProcessingServer<T>::initService()
   }
 
   ros::ServiceServer srv = nh_->advertiseService<ros::ServiceEvent<typename T::Request, typename T::Response> >(
-      "/openvino_toolkit/service", std::bind(&FrameProcessingServer::cbService, this, std::placeholders::_1));
+      "/openvino_toolkit/service", std::bind(&FrameProcessingObjectServer::cbService, this, std::placeholders::_1));
   service_ = std::make_shared<ros::ServiceServer>(srv);
 }
 
 template <typename T>
-bool FrameProcessingServer<T>::cbService(ros::ServiceEvent<typename T::Request, typename T::Response>& event)
+bool FrameProcessingObjectServer<T>::cbService(ros::ServiceEvent<typename T::Request, typename T::Response>& event)
 {
   boost::shared_ptr<typename T::Response> res = boost::make_shared<typename T::Response>();
   std::map<std::string, PipelineManager::PipelineData> pipelines_ = PipelineManager::getInstance().getPipelines();
@@ -75,7 +78,7 @@ bool FrameProcessingServer<T>::cbService(ros::ServiceEvent<typename T::Request, 
     auto input = p.pipeline->getInputDevice();
     
     Input::Config config;
-    config.path = event.getRequest().image_path;
+    config.path = event.getRequest().image_paths;
     input->config(config);
 
     p.pipeline->runOnce();
@@ -92,11 +95,9 @@ bool FrameProcessingServer<T>::cbService(ros::ServiceEvent<typename T::Request, 
       }
     }
   }
-  slog::info << "[FrameProcessingServer] Callback finished!" << slog::endl;
+  slog::info << "[FrameProcessingObjectServer] Callback finished!" << slog::endl;
   return false;
 }
 
-template class FrameProcessingServer<people_msgs::PeopleSrv>;
-template class FrameProcessingServer<people_msgs::ReidentificationSrv>;
-template class FrameProcessingServer<people_msgs::ObjectsInMasksSrv>;
+template class FrameProcessingObjectServer<object_msgs::DetectObject>;
 }  // namespace vino_service
