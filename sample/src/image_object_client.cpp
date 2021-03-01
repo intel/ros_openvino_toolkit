@@ -60,7 +60,8 @@ int main(int argc, char** argv)
          << srv.response.objects[0].objects_vector[i].object.probability * 100 << "%";
       ROS_INFO("%d: object: %s", i, srv.response.objects[0].objects_vector[i].object.object_name.c_str());
       ROS_INFO("prob: %f", srv.response.objects[0].objects_vector[i].object.probability);
-      ROS_INFO("location: (%d, %d, %d, %d)", srv.response.objects[0].objects_vector[i].roi.x_offset,
+      ROS_INFO("location: (%d, %d, %d, %d)", 
+               srv.response.objects[0].objects_vector[i].roi.x_offset,
                srv.response.objects[0].objects_vector[i].roi.y_offset,
                srv.response.objects[0].objects_vector[i].roi.width,
                srv.response.objects[0].objects_vector[i].roi.height);

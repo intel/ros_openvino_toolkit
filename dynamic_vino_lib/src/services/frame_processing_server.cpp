@@ -12,13 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <people_msgs/PeopleSrv.h>
-#include <people_msgs/ObjectsInMasksSrv.h>
-#include <people_msgs/ReidentificationSrv.h>
-#include <object_msgs/DetectObject.h>
-#include <object_msgs/DetectObjectRequest.h>
-#include <object_msgs/DetectObjectResponse.h>
-#include <pipeline_srv_msgs/PipelineSrv.h>
 #include <vino_param_lib/param_manager.h>
 #include <ros/ros.h>
 #include <ros/service_callback_helper.h>
@@ -28,11 +21,12 @@
 #include <chrono>
 #include <thread>
 
+#include "dynamic_vino_lib/services/frame_processing_server.h"
+
 #include "dynamic_vino_lib/pipeline_manager.h"
 #include "dynamic_vino_lib/pipeline.h"
 #include "dynamic_vino_lib/inputs/base_input.h"
 #include "dynamic_vino_lib/inputs/image_input.h"
-#include "dynamic_vino_lib/services/frame_processing_server.h"
 #include "dynamic_vino_lib/slog.h"
 
 namespace vino_service
@@ -79,9 +73,11 @@ bool FrameProcessingServer<T>::cbService(ros::ServiceEvent<typename T::Request, 
   {
     PipelineManager::PipelineData& p = pipelines_[it->second.params.name.c_str()];
     auto input = p.pipeline->getInputDevice();
+    
     Input::Config config;
     config.path = event.getRequest().image_path;
     input->config(config);
+
     p.pipeline->runOnce();
     auto output_handle = p.pipeline->getOutputHandle();
 
