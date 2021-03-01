@@ -23,6 +23,7 @@
 #define DYNAMIC_VINO_LIB_INPUTS_ROS_HANDLER_H
 
 #include <ros/ros.h>
+#include <ros/connection.h>
 
 namespace Input
 {
