@@ -69,6 +69,7 @@ std::shared_ptr<Pipeline> PipelineManager::createPipeline(const Params::ParamMan
   pipeline->getParameters()->update(params);
 
   PipelineData data;
+  data.parent_node = node;
   data.pipeline = pipeline;
   data.params = params;
   data.state = PipelineState_ThreadNotCreated;
