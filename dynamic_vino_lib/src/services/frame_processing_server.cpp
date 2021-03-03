@@ -107,7 +107,9 @@ bool FrameProcessingServer<object_msgs::DetectObject>::cbService(ros::ServiceEve
     auto input = p.pipeline->getInputDevice();
     
     Input::Config config;
-    config.path = event.getRequest().image_paths;
+
+    //TODO (Corsair-cxs) It's unfinished, I only do it for build success.
+    config.path = event.getRequest().image_paths.front();
     input->config(config);
 
     p.pipeline->runOnce();
@@ -127,8 +129,9 @@ bool FrameProcessingServer<object_msgs::DetectObject>::cbService(ros::ServiceEve
   slog::info << "[FrameProcessingServer] Callback finished!" << slog::endl;
   return false;
 }
-
+//TODO It is not advisable to use object_msgs like DetectObject or ClassifyObject as a param for FrameProcessingServer.
 template class FrameProcessingServer<object_msgs::DetectObject>;
+
 template class FrameProcessingServer<people_msgs::PeopleSrv>;
 template class FrameProcessingServer<people_msgs::ReidentificationSrv>;
 template class FrameProcessingServer<people_msgs::ObjectsInMasksSrv>;
