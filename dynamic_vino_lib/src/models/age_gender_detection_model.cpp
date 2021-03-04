@@ -26,11 +26,11 @@
 #include "dynamic_vino_lib/slog.h"
 
 // Validated Age Gender Classification Network
-Models::AgeGenderDetectionModel::AgeGenderDetectionModel(const std::string& model_loc, int input_num, int output_num,
-                                                         int max_batch_size)
-  : BaseModel(model_loc, input_num, output_num, max_batch_size)
-{
-}
+// Models::AgeGenderDetectionModel::AgeGenderDetectionModel(const std::string& model_loc, int input_num, int output_num,
+//                                                          int max_batch_size)
+//   : BaseModel(model_loc, input_num, output_num, max_batch_size)
+// {
+// }
 bool Models::AgeGenderDetectionModel::updateLayerProperty(InferenceEngine::CNNNetReader::Ptr net_reader)
 {
   slog::info << "Checking INPUTs for model " << getModelName() << slog::endl;

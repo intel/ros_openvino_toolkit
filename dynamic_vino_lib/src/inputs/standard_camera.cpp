@@ -45,7 +45,7 @@ bool Input::StandardCamera::read(cv::Mat* frame)
     return false;
   }
   cap.grab();
-  setHeader("standard_camera_frame");
+  // setHeader("standard_camera_frame");
   return cap.retrieve(*frame);
 }
 

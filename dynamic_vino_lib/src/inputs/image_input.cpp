@@ -52,7 +52,7 @@ bool Input::Image::read(cv::Mat* frame)
     return false;
   }
   *frame = image_;
-  setHeader("image_frame");
+  // setHeader("image_frame");
   return true;
 }
 
