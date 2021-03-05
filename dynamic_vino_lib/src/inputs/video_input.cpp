@@ -58,6 +58,6 @@ bool Input::Video::read(cv::Mat* frame)
     return false;
   }
   cap.grab();
-  setHeader("video_frame");
+  // setHeader("video_frame");
   return cap.retrieve(*frame);
 }

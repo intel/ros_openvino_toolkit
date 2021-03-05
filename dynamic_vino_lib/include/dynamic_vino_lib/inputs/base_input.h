@@ -36,7 +36,7 @@ struct Config
   std::string path;
 };
 
-class BaseInputDevice : public Ros2Handler
+class BaseInputDevice : public RosHandler
 {
 public:
   /**

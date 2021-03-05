@@ -49,7 +49,8 @@ private:
   cv::Mat image_;
   MutexCounter image_count_;
 
-  void cb(const sensor_msgs::ImageConstPtr& image_msg);
+  // void cb(const sensor_msgs::ImageConstPtr& image_msg);
+  void cb(const sensor_msgs::Image::Ptr image_msg);
 };
 }  // namespace Input
 

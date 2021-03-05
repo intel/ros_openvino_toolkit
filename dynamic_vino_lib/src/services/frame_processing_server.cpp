@@ -96,7 +96,42 @@ bool FrameProcessingServer<T>::cbService(ros::ServiceEvent<typename T::Request, 
   return false;
 }
 
+template <>
+bool FrameProcessingServer<object_msgs::DetectObject>::cbService(ros::ServiceEvent<object_msgs::DetectObject::Request, object_msgs::DetectObject::Response>& event)
+{
+  boost::shared_ptr<object_msgs::DetectObject::Response> res = boost::make_shared<object_msgs::DetectObject::Response>();
+  std::map<std::string, PipelineManager::PipelineData> pipelines_ = PipelineManager::getInstance().getPipelines();
+  for (auto it = pipelines_.begin(); it != pipelines_.end(); ++it)
+  {
+    PipelineManager::PipelineData& p = pipelines_[it->second.params.name.c_str()];
+    auto input = p.pipeline->getInputDevice();
+    
+    Input::Config config;
+
+    //TODO (Corsair-cxs) It's unfinished, I only do it for build success.
+    config.path = event.getRequest().image_paths.front();
+    input->config(config);
+
+    p.pipeline->runOnce();
+    auto output_handle = p.pipeline->getOutputHandle();
+
+    for (auto& pair : output_handle)
+    {
+      if (!pair.first.compare(kOutputTpye_RosService))
+      {
+        pair.second->setServiceResponse(res);
+        event.getResponse() = *res;
+        pair.second->clearData();
+        return true;  // TODO(weizhi) , return directly, suppose only 1 pipeline dealing with 1 request.
+      }
+    }
+  }
+  slog::info << "[FrameProcessingServer] Callback finished!" << slog::endl;
+  return false;
+}
+//TODO It is not advisable to use object_msgs like DetectObject or ClassifyObject as a param for FrameProcessingServer.
 template class FrameProcessingServer<object_msgs::DetectObject>;
+
 template class FrameProcessingServer<people_msgs::PeopleSrv>;
 template class FrameProcessingServer<people_msgs::ReidentificationSrv>;
 template class FrameProcessingServer<people_msgs::ObjectsInMasksSrv>;

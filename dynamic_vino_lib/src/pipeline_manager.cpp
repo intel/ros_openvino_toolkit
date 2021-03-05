@@ -69,7 +69,6 @@ std::shared_ptr<Pipeline> PipelineManager::createPipeline(const Params::ParamMan
   pipeline->getParameters()->update(params);
 
   PipelineData data;
-  data.parent_node = node;
   data.pipeline = pipeline;
   data.params = params;
   data.state = PipelineState_ThreadNotCreated;
@@ -132,17 +131,17 @@ PipelineManager::parseInputDevice(const PipelineData& pdata)
     {
       device = std::make_shared<Input::StandardCamera>();
     }
-    else if (name == kInputType_IpCamera)
-    {
-      if (pdata.params.input_meta != "")
-      {
-        device = std::make_shared<Input::IpCamera>(pdata.params.input_meta);
-      }
-    }
-    else if (name == kInputType_CameraTopic || name == kInputType_ImageTopic)
-    {
-      device = std::make_shared<Input::RealSenseCameraTopic>(pdata.parent_node);
-    }
+    // else if (name == kInputType_IpCamera)
+    // {
+    //   if (pdata.params.input_meta != "")
+    //   {
+    //     device = std::make_shared<Input::IpCamera>(pdata.params.input_meta);
+    //   }
+    // }
+    // else if (name == kInputType_CameraTopic || name == kInputType_ImageTopic)
+    // {
+    //   device = std::make_shared<Input::RealSenseCameraTopic>(pdata.parent_node);
+    // }
     else if (name == kInputType_Video)
     {
       if (pdata.params.input_meta != "")
@@ -182,7 +181,7 @@ std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> PipelineManager::par
     std::shared_ptr<Outputs::BaseOutput> object = nullptr;
     if (name == kOutputTpye_RosTopic)
     {
-      object = std::make_shared<Outputs::RosTopicOutput>(pdata.params.name, pdata.parent_node);
+      // object = std::make_shared<Outputs::RosTopicOutput>(pdata.params.name, pdata.parent_node);
     }
     else if (name == kOutputTpye_ImageWindow)
     {
@@ -190,7 +189,7 @@ std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> PipelineManager::par
     }
     else if (name == kOutputTpye_RViz)
     {
-      object = std::make_shared<Outputs::RvizOutput>(pdata.params.name, pdata.parent_node);
+      // object = std::make_shared<Outputs::RvizOutput>(pdata.params.name, pdata.parent_node);
     }
     else if (name == kOutputTpye_RosService)
     {
@@ -341,7 +340,7 @@ PipelineManager::createObjectDetection(const Params::ParamManager::InferenceRawD
   {
     object_detection_model = std::make_shared<Models::ObjectDetectionSSDModel>(infer.model, infer.batch);
   }
-  if (infer.model_type == kInferTpye_ObjectDetectionTypeYolov2)
+  if (infer.model_type == kInferTpye_ObjectDetectionTypeYolov2voc)
   {
     object_detection_model = std::make_shared<Models::ObjectDetectionYolov2Model>(infer.model, infer.batch);
   }
@@ -445,6 +444,7 @@ void PipelineManager::threadPipeline(const char* name)
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
   }
 }
+
 void PipelineManager::runAll()
 {
   for (auto it = pipelines_.begin(); it != pipelines_.end(); ++it)
@@ -471,12 +471,14 @@ void PipelineManager::stopAll()
     }
   }
 }
+
 void PipelineManager::runService()
 {
   auto node =
       std::make_shared<vino_service::PipelineProcessingServer<pipeline_srv_msgs::PipelineSrv>>("pipeline_service");
   ros::spin();  // hold the thread waiting for pipeline service
 }
+
 void PipelineManager::joinAll()
 {
   auto service_thread = std::make_shared<std::thread>(&PipelineManager::runService, this);

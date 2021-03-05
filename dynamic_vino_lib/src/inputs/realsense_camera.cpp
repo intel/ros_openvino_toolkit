@@ -74,7 +74,7 @@ bool Input::RealSenseCamera::read(cv::Mat* frame)
     return false;
   }
 
-  setHeader("realsense_camera_frame");
+  // setHeader("realsense_camera_frame");
   return true;
 }
 

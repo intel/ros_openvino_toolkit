@@ -31,7 +31,7 @@ bool Input::ImageTopic::initialize()
 {
   slog::info << "before Image Topic init" << slog::endl;
   std::shared_ptr<image_transport::ImageTransport> it = std::make_shared<image_transport::ImageTransport>(nh_);
-  sub_ = it->subscribe(<sensor_msgs::msg::Image>(INPUT_TOPIC, 1, &ImageTopic::cb, this));
+  // sub_ = it->subscribe(<sensor_msgs::Image>(INPUT_TOPIC, 1, &ImageTopic::cb, this));
 
   return true;
 }
@@ -44,10 +44,10 @@ bool Input::ImageTopic::initialize(size_t width, size_t height)
   return initialize();
 }
 
-void Input::ImageTopic::cb(const sensor_msgs::msg::Image::SharedPtr image_msg)
+void Input::ImageTopic::cb(const sensor_msgs::Image::Ptr image_msg)
 {
   slog::debug << "Receiving a new image from Camera topic." << slog::endl;
-  setHeader(image_msg->header);
+  // setHeader(image_msg->header);
 
   image_ = cv_bridge::toCvCopy(image_msg, "bgr8")->image;
   // Suppose Image Topic is sent within BGR order, so the below line would work.
