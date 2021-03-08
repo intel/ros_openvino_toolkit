@@ -41,13 +41,13 @@
 #include "dynamic_vino_lib/models/emotion_detection_model.h"
 #include "dynamic_vino_lib/models/face_detection_model.h"
 #include "dynamic_vino_lib/models/head_pose_detection_model.h"
-#include "dynamic_vino_lib/models/object_detection_ssd_model.h"
-#include "dynamic_vino_lib/models/object_detection_yolov2voc_model.h"
-#include "dynamic_vino_lib/models/face_reidentification_model.h"
+// #include "dynamic_vino_lib/models/object_detection_ssd_model.h"
+// #include "dynamic_vino_lib/models/object_detection_yolov2voc_model.h"
+// #include "dynamic_vino_lib/models/face_reidentification_model.h"
 #include "dynamic_vino_lib/models/person_attribs_detection_model.h"
 #include "dynamic_vino_lib/models/vehicle_attribs_detection_model.h"
 #include "dynamic_vino_lib/models/license_plate_detection_model.h"
-#include "dynamic_vino_lib/models/landmarks_detection_model.h"
+// #include "dynamic_vino_lib/models/landmarks_detection_model.h"
 #include "dynamic_vino_lib/outputs/image_window_output.h"
 #include "dynamic_vino_lib/outputs/ros_topic_output.h"
 #include "dynamic_vino_lib/outputs/rviz_output.h"
@@ -336,14 +336,14 @@ PipelineManager::createObjectDetection(const Params::ParamManager::InferenceRawD
   std::shared_ptr<Models::ObjectDetectionModel> object_detection_model;
   std::shared_ptr<dynamic_vino_lib::ObjectDetection> object_inference_ptr;
   slog::debug << "for test in createObjectDetection()" << slog::endl;
-  if (infer.model_type == kInferTpye_ObjectDetectionTypeSSD)
-  {
-    object_detection_model = std::make_shared<Models::ObjectDetectionSSDModel>(infer.model, infer.batch);
-  }
-  if (infer.model_type == kInferTpye_ObjectDetectionTypeYolov2voc)
-  {
-    object_detection_model = std::make_shared<Models::ObjectDetectionYolov2Model>(infer.model, infer.batch);
-  }
+  // if (infer.model_type == kInferTpye_ObjectDetectionTypeSSD)
+  // {
+  //   object_detection_model = std::make_shared<Models::ObjectDetectionSSDModel>(infer.model, infer.batch);
+  // }
+  // if (infer.model_type == kInferTpye_ObjectDetectionTypeYolov2voc)
+  // {
+  //   object_detection_model = std::make_shared<Models::ObjectDetectionYolov2Model>(infer.model, infer.batch);
+  // }
 
   slog::debug << "for test in createObjectDetection(), Created SSDModel" << slog::endl;
   object_inference_ptr = std::make_shared<dynamic_vino_lib::ObjectDetection>(

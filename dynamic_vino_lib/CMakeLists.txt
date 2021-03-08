@@ -136,7 +136,8 @@ if (SUPPORT_SSE41 EQUAL 0)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
 endif()
 
-set(DEPENDENCIES realsense2 ${OpenCV_LIBS} cpu_extension)
+set(DEPENDENCIES realsense2 ${OpenCV_LIBS})
+# set(DEPENDENCIES realsense2 ${OpenCV_LIBS} cpu_extension)
 
 add_library(${PROJECT_NAME} SHARED
   src/services/frame_processing_server.cpp
@@ -172,13 +173,13 @@ add_library(${PROJECT_NAME} SHARED
   src/models/age_gender_detection_model.cpp
   src/models/face_detection_model.cpp
   src/models/head_pose_detection_model.cpp
-  src/models/object_detection_ssd_model.cpp
-  src/models/object_detection_yolov2voc_model.cpp
+  # src/models/object_detection_ssd_model.cpp
+  # src/models/object_detection_yolov2voc_model.cpp
   src/models/object_segmentation_model.cpp
   src/models/person_reidentification_model.cpp
-  src/models/face_reidentification_model.cpp
+  # src/models/face_reidentification_model.cpp
   src/models/person_attribs_detection_model.cpp
-  src/models/landmarks_detection_model.cpp
+  # src/models/landmarks_detection_model.cpp
   src/models/vehicle_attribs_detection_model.cpp
   src/models/license_plate_detection_model.cpp
   src/outputs/image_window_output.cpp

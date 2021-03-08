@@ -109,7 +109,7 @@ add_dependencies(pipeline_with_params
 
 target_link_libraries(pipeline_with_params
   ${catkin_LIBRARIES}
-  cpu_extension
+  # cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -128,7 +128,7 @@ add_dependencies(image_people_server
 
 target_link_libraries(image_people_server
   ${catkin_LIBRARIES}
-  cpu_extension
+  # cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -148,7 +148,7 @@ add_dependencies(image_people_client
 
 target_link_libraries(image_people_client
   ${catkin_LIBRARIES}
-  cpu_extension
+  # cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -167,7 +167,7 @@ add_dependencies(image_object_server
 
 target_link_libraries(image_object_server
   ${catkin_LIBRARIES}
-  cpu_extension
+  # cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -187,7 +187,7 @@ add_dependencies(image_object_client
 
 target_link_libraries(image_object_client
   ${catkin_LIBRARIES}
-  cpu_extension
+  # cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -207,7 +207,7 @@ add_dependencies(image_segmentation_client
 
 target_link_libraries(image_segmentation_client
   ${catkin_LIBRARIES}
-  cpu_extension
+  # cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -226,7 +226,7 @@ add_dependencies(image_segmentation_server
 
 target_link_libraries(image_segmentation_server
   ${catkin_LIBRARIES}
-  cpu_extension
+  # cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -246,7 +246,7 @@ add_dependencies(image_reidentification_client
 
 target_link_libraries(image_reidentification_client
   ${catkin_LIBRARIES}
-  cpu_extension
+  # cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -265,7 +265,7 @@ add_dependencies(image_reidentification_server
 
 target_link_libraries(image_reidentification_server
   ${catkin_LIBRARIES}
-  cpu_extension
+  # cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -284,7 +284,7 @@ add_dependencies(pipeline_service_client
 
 target_link_libraries(pipeline_service_client
   ${catkin_LIBRARIES}
-  cpu_extension
+  # cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}

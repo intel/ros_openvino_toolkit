@@ -23,9 +23,12 @@
 #define DYNAMIC_VINO_LIB_INPUTS_ROS_HANDLER_H
 
 #include <ros/ros.h>
+#include <ros/types.h>
+#include <ros/time.h>
 
 namespace Input
 {
+
 class RosHandler
 {
 public:
@@ -57,9 +60,26 @@ public:
   //   header_ = header;
   // }
 
+  // inline void lockHeader()
+  // {
+  //   locked_header_ = header_;
+  // }
+
+  // /**
+  //  * @brief Get the frame_id of input device.
+  //  * @return Frame_id of input device.
+  //  */
+
+  // inline std_msgs::Header getLockedHeader()
+  // {
+  //   return locked_header_;
+  // }
+
 private:
   std::shared_ptr<ros::NodeHandle> node_;
+
   // std_msgs::Header header_;
+  // std_msgs::Header locked_header_;
 };
 
 }  // namespace Input

@@ -46,6 +46,8 @@ Outputs::RosTopicOutput::RosTopicOutput(std::string pipeline_name) : pipeline_na
       "/openvino_toolkit/" + pipeline_name_ + "/detected_license_plates", 16);
   pub_vehicle_attribs_ = nh_.advertise<people_msgs::VehicleAttribsStamped>(
       "/openvino_toolkit/" + pipeline_name_ + "/detected_vehicles_attribs", 16);
+  pub_landmarks_ = nh_.advertise<people_msgs::LandmarkStamped>(
+      "/openvino_toolkit/" + pipeline_name_ + "/detected_landmarks", 16);
 
   emotions_topic_ = NULL;
   faces_topic_ = NULL;
@@ -55,6 +57,7 @@ Outputs::RosTopicOutput::RosTopicOutput(std::string pipeline_name) : pipeline_na
   person_reid_msg_ptr_ = NULL;
   segmented_objects_topic_ = NULL;
   face_reid_topic_ = NULL;
+  landmarks_topic_ = NULL;
   person_attribs_topic_ = NULL;
   license_plate_topic_ = NULL;
   vehicle_attribs_topic_ = NULL;
@@ -279,8 +282,8 @@ void Outputs::RosTopicOutput::accept(const std::vector<dynamic_vino_lib::ObjectD
 
 void Outputs::RosTopicOutput::accept(const std::vector<dynamic_vino_lib::LandmarksDetectionResult>& results)
 {
-  landmarks_topic_ = std::make_shared<people_msgs::msg::LandmarkStamped>();
-  people_msgs::msg::Landmark landmark;
+  landmarks_topic_ = std::make_shared<people_msgs::LandmarkStamped>();
+  people_msgs::Landmark landmark;
   for (auto& r : results)
   {
     // slog::info << ">";
@@ -292,7 +295,7 @@ void Outputs::RosTopicOutput::accept(const std::vector<dynamic_vino_lib::Landmar
     std::vector<cv::Point> landmark_points = r.getLandmarks();
     for (auto pt : landmark_points)
     {
-      geometry_msgs::msg::Point point;
+      geometry_msgs::Point point;
       point.x = pt.x;
       point.y = pt.y;
       landmark.landmark_points.push_back(point);
@@ -303,8 +306,9 @@ void Outputs::RosTopicOutput::accept(const std::vector<dynamic_vino_lib::Landmar
 
 void Outputs::RosTopicOutput::handleOutput()
 {
-  // std_msgs::Header header = getHeader();
-  auto header = getPipeline()->getInputDevice()->getLockedHeader();
+  //Is's deprecated
+  std_msgs::Header header = getHeader();
+  // auto header = getPipeline()->getInputDevice()->getLockedHeader();
   if (vehicle_attribs_topic_ != nullptr)
   {
     people_msgs::VehicleAttribsStamped vehicle_attribs_msg;
@@ -409,9 +413,10 @@ void Outputs::RosTopicOutput::handleOutput()
     pub_face_reid_.publish(face_reid_msg);
     face_reid_topic_ = nullptr;
   }
+  // TODO Corsair-cxs: add landmarks_topic_ 
 }
 
-#if 0   // deprecated
+#if 1   // deprecated
 /**
  * Don't use this inferface to create new time stamp, it'd better use camera/topic
  * time stamp.

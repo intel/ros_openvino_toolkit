@@ -40,7 +40,9 @@
 
 #include <cpp/ie_cnn_net_reader.h>
 #include <cpp/ie_infer_request.hpp>
+#if (defined(USE_OLD_E_PLUGIN_API))
 #include <ie_device.hpp>
+#endif
 #include <ie_plugin_dispatcher.hpp>
 #include <ie_plugin_ptr.hpp>
 

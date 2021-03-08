@@ -41,6 +41,8 @@ add_message_files(DIRECTORY msg FILES
   LicensePlateStamped.msg
   VehicleAttribs.msg
   VehicleAttribsStamped.msg
+  Landmark.msg
+  LandmarkStamped.msg
 )
 
 add_service_files(FILES

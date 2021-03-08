@@ -19,6 +19,7 @@
  * @file image_topic.cpp
  */
 
+#include "dynamic_vino_lib/inputs/image_topic.h"
 #include "dynamic_vino_lib/inputs/realsense_camera_topic.h"
 #include "dynamic_vino_lib/slog.h"
 #include <cv_bridge/cv_bridge.h>
