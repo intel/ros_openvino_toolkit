@@ -136,7 +136,7 @@ if (SUPPORT_SSE41 EQUAL 0)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
 endif()
 
-set(DEPENDENCIES realsense2 ${OpenCV_LIBS} cpu_extension)
+set(DEPENDENCIES realsense2 ${OpenCV_LIBS})
 
 add_library(${PROJECT_NAME} SHARED
   src/services/frame_processing_server.cpp
