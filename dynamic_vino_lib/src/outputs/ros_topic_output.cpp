@@ -46,6 +46,8 @@ Outputs::RosTopicOutput::RosTopicOutput(std::string pipeline_name) : pipeline_na
       "/openvino_toolkit/" + pipeline_name_ + "/detected_license_plates", 16);
   pub_vehicle_attribs_ = nh_.advertise<people_msgs::VehicleAttribsStamped>(
       "/openvino_toolkit/" + pipeline_name_ + "/detected_vehicles_attribs", 16);
+  pub_landmarks_ = nh_.advertise<people_msgs::LandmarkStamped>(
+      "/openvino_toolkit/" + pipeline_name_ + "/detected_landmarks", 16);
 
   emotions_topic_ = NULL;
   faces_topic_ = NULL;
@@ -58,6 +60,7 @@ Outputs::RosTopicOutput::RosTopicOutput(std::string pipeline_name) : pipeline_na
   person_attribs_topic_ = NULL;
   license_plate_topic_ = NULL;
   vehicle_attribs_topic_ = NULL;
+  landmarks_topic_ = NULL;
 }
 
 void Outputs::RosTopicOutput::feedFrame(const cv::Mat& frame)

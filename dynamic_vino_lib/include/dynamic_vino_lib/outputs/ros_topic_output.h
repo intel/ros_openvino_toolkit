@@ -42,6 +42,8 @@
 #include <people_msgs/VehicleAttribs.h>
 #include <people_msgs/LicensePlateStamped.h>
 #include <people_msgs/LicensePlate.h>
+#include <people_msgs/Landmark.h>
+#include <people_msgs/LandmarkStamped.h>
 #include <ros/ros.h>
 
 #include <memory>
@@ -90,6 +92,12 @@ public:
    * @param[in] results a bundle of person attributes detection results.
    */
   void accept(const std::vector<dynamic_vino_lib::PersonAttribsDetectionResult>&) override;
+  /**
+   * @brief Generate ros topic infomation according to
+   * the landmark detection result.
+   * @param[in] results a bundle of person landmarks detection result.
+   */
+  void accept(const std::vector<dynamic_vino_lib::LandmarksDetectionResult>&) override;
   /**
    * @brief Generate ros topic infomation according to
    * the face reidentification result.
@@ -169,6 +177,8 @@ protected:
   std::shared_ptr<people_msgs::LicensePlateStamped> license_plate_topic_;
   ros::Publisher pub_vehicle_attribs_;
   std::shared_ptr<people_msgs::VehicleAttribsStamped> vehicle_attribs_topic_;
+  ros::Publisher pub_landmarks_;
+  std::shared_ptr<people_msgs::LandmarkStamped> landmarks_topic_;
 };
 }  // namespace Outputs
 #endif  // DYNAMIC_VINO_LIB_OUTPUTS_ROS_TOPIC_OUTPUT_H
