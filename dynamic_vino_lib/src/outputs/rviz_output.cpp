@@ -95,9 +95,30 @@ void Outputs::RvizOutput::handleOutput()
   image_window_output_->setPipeline(getPipeline());
   image_window_output_->decorateFrame();
   cv::Mat frame = image_window_output_->getFrame();
-  std_msgs::Header header = getPipeline()->getInputDevice()->getLockedHeader();
+  std_msgs::Header header = getHeader();
+  // std_msgs::Header header = getPipeline()->getInputDevice()->getLockedHeader();
   std::shared_ptr<cv_bridge::CvImage> cv_ptr = std::make_shared<cv_bridge::CvImage>(header, "bgr8", frame);
   sensor_msgs::Image image_msg;
   image_topic_ = cv_ptr->toImageMsg();
   pub_image_.publish(image_topic_);
 }
+
+#if 1   // deprecated
+/**
+ * Don't use this inferface to create new time stamp, it'd better use camera/topic
+ * time stamp.
+ */
+std_msgs::Header Outputs::RvizOutput::getHeader()
+{
+  std_msgs::Header header;
+  //deprecated!!
+  header.frame_id = "rviz_output";
+
+  std::chrono::high_resolution_clock::time_point tp =
+      std::chrono::high_resolution_clock::now();
+  int64 ns = tp.time_since_epoch().count();
+  header.stamp.sec = ns / 1000000000;
+  header.stamp.nsec = ns % 1000000000;
+  return header;
+}
+#endif  // depreated 
