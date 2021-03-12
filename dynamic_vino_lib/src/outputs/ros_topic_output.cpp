@@ -282,8 +282,8 @@ void Outputs::RosTopicOutput::accept(const std::vector<dynamic_vino_lib::ObjectD
 
 void Outputs::RosTopicOutput::accept(const std::vector<dynamic_vino_lib::LandmarksDetectionResult>& results)
 {
-  landmarks_topic_ = std::make_shared<people_msgs::msg::LandmarkStamped>();
-  people_msgs::msg::Landmark landmark;
+  landmarks_topic_ = std::make_shared<people_msgs::LandmarkStamped>();
+  people_msgs::Landmark landmark;
   for (auto& r : results)
   {
     // slog::info << ">";
@@ -295,7 +295,7 @@ void Outputs::RosTopicOutput::accept(const std::vector<dynamic_vino_lib::Landmar
     std::vector<cv::Point> landmark_points = r.getLandmarks();
     for (auto pt : landmark_points)
     {
-      geometry_msgs::msg::Point point;
+      geometry_msgs::Point point;
       point.x = pt.x;
       point.y = pt.y;
       landmark.landmark_points.push_back(point);
