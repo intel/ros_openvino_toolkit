@@ -81,9 +81,9 @@ Currently, the inference feature list is supported:
 - Person Reidentification:
 ```/ros_openvino_toolkit/reidentified_persons```([people_msgs::ReidentificationStamped](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/msg/ReidentificationStamped.msg))
 - Vehicle Detection:
-```/ros_openvino_toolkit/detected_license_plates```([people_msgs::msg::VehicleAttribsStamped](https://github.com/intel/ros2_openvino_toolkit/blob/devel/people_msgs/msg/VehicleAttribsStamped.msg)
+```/ros_openvino_toolkit/detected_license_plates```([people_msgs::VehicleAttribsStamped](https://github.com/intel/ros2_openvino_toolkit/blob/devel/people_msgs/msg/VehicleAttribsStamped.msg)
 - Vehicle License Detection:
-```/ros_openvino_toolkit/detected_license_plates```([people_msgs::msg::LicensePlateStamped](https://github.com/intel/ros2_openvino_toolkit/blob/devel/people_msgs/msg/LicensePlateStamped.msg)
+```/ros_openvino_toolkit/detected_license_plates```([people_msgs::LicensePlateStamped](https://github.com/intel/ros2_openvino_toolkit/blob/devel/people_msgs/msg/LicensePlateStamped.msg)
 - Rviz Output:
 ```/ros_openvino_toolkit/image_rviz```([sensor_msgs::Image](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Image.html))
 
