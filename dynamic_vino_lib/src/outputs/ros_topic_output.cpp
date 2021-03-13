@@ -306,8 +306,8 @@ void Outputs::RosTopicOutput::accept(const std::vector<dynamic_vino_lib::Landmar
 
 void Outputs::RosTopicOutput::handleOutput()
 {
-  // std_msgs::Header header = getHeader();
-  auto header = getPipeline()->getInputDevice()->getLockedHeader();
+  std_msgs::Header header = getHeader();
+  // auto header = getPipeline()->getInputDevice()->getLockedHeader();
   if (vehicle_attribs_topic_ != nullptr)
   {
     people_msgs::VehicleAttribsStamped vehicle_attribs_msg;
@@ -414,7 +414,7 @@ void Outputs::RosTopicOutput::handleOutput()
   }
 }
 
-#if 0   // deprecated
+#if 1   // deprecated
 /**
  * Don't use this inferface to create new time stamp, it'd better use camera/topic
  * time stamp.
