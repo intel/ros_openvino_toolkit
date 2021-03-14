@@ -24,6 +24,7 @@ Models::LandmarksDetectionModel::LandmarksDetectionModel(const std::string& mode
 {
 }
 
+#if 0
 void Models::LandmarksDetectionModel::setLayerProperty(InferenceEngine::CNNNetReader::Ptr net_reader)
 {
   // set input property
@@ -54,6 +55,7 @@ void Models::LandmarksDetectionModel::checkLayerProperty(const InferenceEngine::
     throw std::logic_error("Landmarks Detection Network expects networks having one output");
   }
 }
+#endif
 
 const std::string Models::LandmarksDetectionModel::getModelCategory() const
 {

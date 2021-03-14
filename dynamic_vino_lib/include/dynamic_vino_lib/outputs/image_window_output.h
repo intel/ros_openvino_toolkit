@@ -134,7 +134,7 @@ public:
 
 private:
   unsigned findOutput(const cv::Rect&);
-  // void initOutputs(unsigned size);
+  void initOutputs(unsigned size);
   /**
    * @brief Calculate the axises of the coordinates for showing
    * the image window.
