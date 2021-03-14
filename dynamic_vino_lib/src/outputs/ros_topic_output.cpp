@@ -54,7 +54,7 @@ Outputs::RosTopicOutput::RosTopicOutput(std::string pipeline_name) : pipeline_na
   age_gender_topic_ = NULL;
   headpose_topic_ = NULL;
   detected_objects_topic_ = NULL;
-  person_reid_msg_ptr_ = NULL;
+  person_reid_topic_ = NULL;
   segmented_objects_topic_ = NULL;
   face_reid_topic_ = NULL;
   person_attribs_topic_ = NULL;
@@ -139,7 +139,7 @@ void Outputs::RosTopicOutput::accept(const std::vector<dynamic_vino_lib::FaceRei
 
 void Outputs::RosTopicOutput::accept(const std::vector<dynamic_vino_lib::PersonReidentificationResult>& results)
 {
-  person_reid_msg_ptr_ = std::make_shared<people_msgs::ReidentificationStamped>();
+  person_reid_topic_ = std::make_shared<people_msgs::ReidentificationStamped>();
   people_msgs::Reidentification person;
   for (auto& r : results)
   {
@@ -150,7 +150,7 @@ void Outputs::RosTopicOutput::accept(const std::vector<dynamic_vino_lib::PersonR
     person.roi.width = loc.width;
     person.roi.height = loc.height;
     person.identity = r.getPersonID();
-    person_reid_msg_ptr_->reidentified_vector.push_back(person);
+    person_reid_topic_->reidentified_vector.push_back(person);
   }
 }
 
@@ -332,13 +332,13 @@ void Outputs::RosTopicOutput::handleOutput()
     pub_person_attribs_.publish(person_attribute_msg);
     person_attribs_topic_ = nullptr;
   }
-  if (person_reid_msg_ptr_ != nullptr)
+  if (person_reid_topic_ != nullptr)
   {
     people_msgs::ReidentificationStamped person_reid_msg;
     person_reid_msg.header = header;
-    person_reid_msg.reidentified_vector.swap(person_reid_msg_ptr_->reidentified_vector);
+    person_reid_msg.reidentified_vector.swap(person_reid_topic_->reidentified_vector);
     pub_person_reid_.publish(person_reid_msg);
-    person_reid_msg_ptr_ = nullptr;
+    person_reid_topic_ = nullptr;
   }
   if (segmented_objects_topic_ != nullptr)
   {
