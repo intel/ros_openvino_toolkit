@@ -258,10 +258,10 @@ PipelineManager::parseInference(const Params::ParamManager::PipelineRawData& par
     {
       object = createPersonAttribsDetection(infer);
     }
-    else if (infer.name == kInferTpye_LandmarksDetection)
-    {
-      object = createLandmarksDetection(infer);
-    }
+    // else if (infer.name == kInferTpye_LandmarksDetection)
+    // {
+    //   object = createLandmarksDetection(infer);
+    // }
     else if (infer.name == kInferTpye_VehicleAttribsDetection)
     {
       object = createVehicleAttribsDetection(infer);
@@ -430,6 +430,20 @@ PipelineManager::createPersonAttribsDetection(const Params::ParamManager::Infere
 
   return attribs_inference_ptr;
 }
+
+// std::shared_ptr<dynamic_vino_lib::BaseInference>
+// PipelineManager::createLandmarksDetection(
+//   const Params::ParamManager::InferenceRawData & infer)
+// {
+//   auto model = std::make_shared<Models::LandmarksDetectionModel>(infer.model, infer.batch);
+//   model->modelInit();
+//   auto engine = engine_manager_.createEngine(infer.engine, model);
+//   auto landmarks_inference_ptr =  std::make_shared<dynamic_vino_lib::LandmarksDetection>();
+//   landmarks_inference_ptr->loadNetwork(model);
+//   landmarks_inference_ptr->loadEngine(engine);
+
+//   return landmarks_inference_ptr;
+// }
 
 void PipelineManager::threadPipeline(const char* name)
 {
