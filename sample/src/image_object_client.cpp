@@ -43,7 +43,8 @@ int main(int argc, char** argv)
   ros::ServiceClient client = n.serviceClient<object_msgs::DetectObject>("/openvino_toolkit/service");
 
   object_msgs::DetectObject srv;
-  srv.request.image_paths = image_path;
+  //TODO (Corsair-cxs) It's unfinished, I only do it for build success.
+  srv.request.image_paths.front() = image_path;
 
   if (client.call(srv))
   {
