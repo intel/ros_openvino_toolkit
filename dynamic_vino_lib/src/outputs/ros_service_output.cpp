@@ -88,7 +88,7 @@ void Outputs::RosServiceOutput::setServiceResponse(
   slog::info << "in Reidentification service::Response ...";
   if (person_reid_topic_ != nullptr)
   {
-    response->reidentification.reidentified_vector = person_reid_msg_ptr_->reidentified_vector;
+    response->reidentification.reidentified_vector = person_reid_topic_->reidentified_vector;
   }
 }
 
@@ -130,6 +130,6 @@ void Outputs::RosServiceOutput::clearData()
   age_gender_topic_ = nullptr;
   emotions_topic_ = nullptr;
   headpose_topic_ = nullptr;
-  segmented_object_topic_ = nullptr;
+  // segmented_object_topic_ = nullptr;
   person_reid_topic_ = nullptr;
 }
