@@ -40,7 +40,7 @@
 
 #include <cpp/ie_cnn_net_reader.h>
 #include <cpp/ie_infer_request.hpp>
-#include <ie_device.hpp>
+// #include <ie_device.hpp>
 #include <ie_plugin_dispatcher.hpp>
 #include <ie_plugin_ptr.hpp>
 
@@ -64,6 +64,8 @@ inline std::string& trim(std::string& s)
   return s;
 }
 
+// TargetDevice is not in openvino2020.3.341
+#if 0 
 /**
 * @brief Converts string to TargetDevice
 * @param deviceName - string value representing device
@@ -111,6 +113,7 @@ static UNUSED InferenceEngine::InferenceEnginePluginPtr selectPlugin(const std::
 {
   return selectPlugin(pluginDirs, plugin, getDeviceFromStr(device));
 }
+#endif
 
 /**
  * @brief Gets filename without extension
@@ -228,6 +231,8 @@ inline void printPluginVersion(InferenceEngine::InferenceEnginePluginPtr ptr, st
   stream << pluginVersion << std::endl;
 }
 
+// TargetDevice is not in openvino2020
+#if 0
 static UNUSED std::vector<std::vector<size_t>> blobToImageOutputArray(InferenceEngine::TBlob<float>::Ptr output,
                                                                       size_t* pWidth, size_t* pHeight,
                                                                       size_t* pChannels)
@@ -269,6 +274,7 @@ static UNUSED std::vector<std::vector<size_t>> blobToImageOutputArray(InferenceE
 
   return outArray;
 }
+#endif
 
 /**
  * @class Color
@@ -642,6 +648,9 @@ static UNUSED void printPerformanceCounts(InferenceEngine::InferRequest request,
   printPerformanceCounts(perfomanceMap, stream);
 }
 
+
+// TargetDevice is not in openvino2020
+#if 0
 /**
  * @deprecated
  */
@@ -651,6 +660,7 @@ static UNUSED void printPerformanceCountsPlugin(InferenceEngine::InferenceEngine
   plugin->GetPerformanceCounts(perfomanceMap, nullptr);
   printPerformanceCounts(perfomanceMap, stream);
 }
+#endif
 
 /**
  * @brief This class represents an object that is found by an object detection
