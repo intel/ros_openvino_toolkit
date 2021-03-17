@@ -166,7 +166,7 @@ protected:
   ros::Publisher pub_object_;
   std::shared_ptr<object_msgs::ObjectsInBoxes> detected_objects_topic_;
   ros::Publisher pub_person_reid_;
-  std::shared_ptr<people_msgs::ReidentificationStamped> person_reid_msg_ptr_;
+  std::shared_ptr<people_msgs::ReidentificationStamped> person_reid_topic_;
   ros::Publisher pub_segmented_object_;
   std::shared_ptr<people_msgs::ObjectsInMasks> segmented_objects_topic_;
   ros::Publisher pub_face_reid_;

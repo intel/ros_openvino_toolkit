@@ -117,8 +117,8 @@ private:
   createVehicleAttribsDetection(const Params::ParamManager::InferenceRawData& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference>
   createLicensePlateDetection(const Params::ParamManager::InferenceRawData& infer);
-  std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createLandmarksDetection(const Params::ParamManager::InferenceRawData& infer);
+  // std::shared_ptr<dynamic_vino_lib::BaseInference>
+  // createLandmarksDetection(const Params::ParamManager::InferenceRawData& infer);
 
   std::map<std::string, PipelineData> pipelines_;
   Engines::EngineManager engine_manager_;
