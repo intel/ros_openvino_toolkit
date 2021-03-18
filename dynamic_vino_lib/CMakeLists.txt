@@ -36,6 +36,7 @@ find_package(
   sensor_msgs
   object_msgs
   people_msgs
+  pipeline_srv_msgs
   image_transport
   cv_bridge
   InferenceEngine
