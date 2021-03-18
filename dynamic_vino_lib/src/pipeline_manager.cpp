@@ -250,10 +250,10 @@ PipelineManager::parseInference(const Params::ParamManager::PipelineRawData& par
     {
       object = createPersonReidentification(infer);
     }
-    else if (infer.name == kInferTpye_FaceReidentification)
-    {
-      object = createFaceReidentification(infer);
-    }
+    // else if (infer.name == kInferTpye_FaceReidentification)
+    // {
+    //   object = createFaceReidentification(infer);
+    // }
     else if (infer.name == kInferTpye_PersonAttribsDetection)
     {
       object = createPersonAttribsDetection(infer);

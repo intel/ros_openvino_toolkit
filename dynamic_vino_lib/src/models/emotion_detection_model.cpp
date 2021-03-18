@@ -24,11 +24,10 @@
 #include "dynamic_vino_lib/slog.h"
 
 // Validated Emotions Detection Network
-// Models::EmotionDetectionModel::EmotionDetectionModel(const std::string& model_loc, int input_num, int output_num,
-//                                                      int max_batch_size)
-//   : BaseModel(model_loc, input_num, output_num, max_batch_size)
-// {
-// }
+Models::EmotionDetectionModel::EmotionDetectionModel(const std::string& model_loc, int max_batch_size)
+  : BaseModel(model_loc, max_batch_size)
+{
+}
 
 bool Models::EmotionDetectionModel::updateLayerProperty(InferenceEngine::CNNNetReader::Ptr net_reader)
 {
