@@ -68,5 +68,5 @@ jobs:
         export CPU_EXTENSION_LIB+=/opt/intel/openvino_2020.3.341/deployment_tools/inference_engine/lib/intel64/libinference_engine.so
         export GFLAGS_LIB+=/usr/lib/x86_64-linux-gnu/libgflags_nothreads.a
         env
-        catkin_make
+        catkin_make_isolated
           

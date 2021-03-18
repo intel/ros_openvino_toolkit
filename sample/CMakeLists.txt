@@ -29,6 +29,7 @@ find_package(
   cv_bridge
   object_msgs
   people_msgs
+  pipeline_srv_msgs
   vino_param_lib
   dynamic_vino_lib
 )

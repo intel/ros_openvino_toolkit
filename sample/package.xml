@@ -34,6 +34,7 @@ limitations under the License.
   <build_depend>cv_bridge</build_depend>
   <build_depend>object_msgs</build_depend>
   <build_depend>people_msgs</build_depend>
+  <build_depend>pipeline_srv_msgs</build_depend>
  
   <run_depend>roscpp</run_depend>
   <run_depend>roslint</run_depend>
@@ -44,4 +45,5 @@ limitations under the License.
   <run_depend>vino_param_lib</run_depend>
   <run_depend>object_msgs</run_depend>
   <run_depend>people_msgs</run_depend>
+  <run_depend>pipeline_srv_msgs</run_depend>
 </package>
