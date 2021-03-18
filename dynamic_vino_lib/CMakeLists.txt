@@ -188,12 +188,6 @@ add_library(${PROJECT_NAME} SHARED
   src/outputs/ros_service_output.cpp
 )
 
-add_dependencies(${PROJECT_NAME}
- ${${PROJECT_NAME}_EXPORTED_TARGETS}
- ${catkin_EXPORTED_TARGETS}
- "object_msgs"
-)
-
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
   ${DEPENDENCIES}
