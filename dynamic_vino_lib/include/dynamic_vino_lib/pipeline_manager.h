@@ -109,8 +109,8 @@ private:
   createObjectSegmentation(const Params::ParamManager::InferenceRawData& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference>
   createPersonReidentification(const Params::ParamManager::InferenceRawData& infer);
-  std::shared_ptr<dynamic_vino_lib::BaseInference>
-  createFaceReidentification(const Params::ParamManager::InferenceRawData& infer);
+  // std::shared_ptr<dynamic_vino_lib::BaseInference>
+  // createFaceReidentification(const Params::ParamManager::InferenceRawData& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference>
   createPersonAttribsDetection(const Params::ParamManager::InferenceRawData& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference>

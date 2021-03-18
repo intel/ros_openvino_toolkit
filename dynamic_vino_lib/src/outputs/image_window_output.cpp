@@ -380,3 +380,12 @@ void Outputs::ImageWindowOutput::handleOutput()
   cv::imshow(output_name_, frame_);
   cv::waitKey(1);
 }
+void Outputs::ImageWindowOutput::initOutputs(unsigned size)
+{
+  outputs_.resize(size);
+  for (unsigned i = 0; i < size; i++)
+  {
+    outputs_[i].desc = "";
+    outputs_[i].scalar = cv::Scalar(255, 0, 0);
+  }
+}
