@@ -15,8 +15,8 @@ limitations under the License.
 
 <package>
   <name>dynamic_vino_sample</name>
-  <version>0.3.0</version>
-  <description>a ROS2 wrapper package for Intel OpenVINO</description>
+  <version>0.9.0</version>
+  <description>a ROS wrapper package for Intel OpenVINO</description>
   <author email="wei.zhi.liu@intel.com">Weizhi Liu</author>
   <author email="chao1.li@intel.com">Chao Li</author>
   <author email="hongkun.chen@intel.com">Hongkun Chen</author>
