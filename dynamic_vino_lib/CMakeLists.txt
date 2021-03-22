@@ -36,6 +36,7 @@ find_package(
   sensor_msgs
   object_msgs
   people_msgs
+  pipeline_srv_msgs
   image_transport
   cv_bridge
   InferenceEngine
@@ -186,12 +187,6 @@ add_library(${PROJECT_NAME} SHARED
   src/outputs/rviz_output.cpp
   src/outputs/base_output.cpp
   src/outputs/ros_service_output.cpp
-)
-
-add_dependencies(${PROJECT_NAME}
- ${${PROJECT_NAME}_EXPORTED_TARGETS}
- ${catkin_EXPORTED_TARGETS}
- "object_msgs"
 )
 
 target_link_libraries(${PROJECT_NAME}

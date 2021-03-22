@@ -29,6 +29,7 @@ find_package(
   cv_bridge
   object_msgs
   people_msgs
+  pipeline_srv_msgs
   vino_param_lib
   dynamic_vino_lib
 )
@@ -97,78 +98,78 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-# add_executable(pipeline_with_params
-#   src/pipeline_with_params.cpp
-# )
+add_executable(pipeline_with_params
+  src/pipeline_with_params.cpp
+)
 
-# add_dependencies(pipeline_with_params
-#   ${${PROJECT_NAME}_EXPORTED_TARGETS}
-#   ${catkin_EXPORTED_TARGETS}
-#   ${dynamic_vino_lib_TARGETS}
-# )
+add_dependencies(pipeline_with_params
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${dynamic_vino_lib_TARGETS}
+)
 
-# target_link_libraries(pipeline_with_params
-#   ${catkin_LIBRARIES}
-#   gflags
-#   ${vino_param_lib_LIBRARIES}
-#   ${InferenceEngine_LIBRARIES}
-#   ${OpenCV_LIBRARIES}
-# )
+target_link_libraries(pipeline_with_params
+  ${catkin_LIBRARIES}
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
 
-# add_executable(image_people_server
-#   src/image_people_server.cpp
-# )
+add_executable(image_people_server
+  src/image_people_server.cpp
+)
 
-# add_dependencies(image_people_server
-#   ${${PROJECT_NAME}_EXPORTED_TARGETS}
-#   ${catkin_EXPORTED_TARGETS}
-#   ${dynamic_vino_lib_TARGETS}
-# )
+add_dependencies(image_people_server
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${dynamic_vino_lib_TARGETS}
+)
 
-# target_link_libraries(image_people_server
-#   ${catkin_LIBRARIES}
-#   gflags
-#   ${vino_param_lib_LIBRARIES}
-#   ${InferenceEngine_LIBRARIES}
-#   ${OpenCV_LIBRARIES}
-# )
+target_link_libraries(image_people_server
+  ${catkin_LIBRARIES}
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
 
 
-# add_executable(image_people_client
-#   src/image_people_client.cpp
-# )
+add_executable(image_people_client
+  src/image_people_client.cpp
+)
 
-# add_dependencies(image_people_client
-#   ${${PROJECT_NAME}_EXPORTED_TARGETS}
-#   ${catkin_EXPORTED_TARGETS}
-#   ${dynamic_vino_lib_TARGETS}
-# )
+add_dependencies(image_people_client
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${dynamic_vino_lib_TARGETS}
+)
 
-# target_link_libraries(image_people_client
-#   ${catkin_LIBRARIES}
-#   gflags
-#   ${vino_param_lib_LIBRARIES}
-#   ${InferenceEngine_LIBRARIES}
-#   ${OpenCV_LIBRARIES}
-# )
+target_link_libraries(image_people_client
+  ${catkin_LIBRARIES}
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
 
-# add_executable(image_object_server
-#   src/image_object_server.cpp
-# )
+add_executable(image_object_server
+  src/image_object_server.cpp
+)
 
-# add_dependencies(image_object_server
-#   ${${PROJECT_NAME}_EXPORTED_TARGETS}
-#   ${catkin_EXPORTED_TARGETS}
-#   ${dynamic_vino_lib_TARGETS}
-# )
+add_dependencies(image_object_server
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${dynamic_vino_lib_TARGETS}
+)
 
-# target_link_libraries(image_object_server
-#   ${catkin_LIBRARIES}
-#   gflags
-#   ${vino_param_lib_LIBRARIES}
-#   ${InferenceEngine_LIBRARIES}
-#   ${OpenCV_LIBRARIES}
-# )
+target_link_libraries(image_object_server
+  ${catkin_LIBRARIES}
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
 
 
 add_executable(image_object_client
@@ -208,23 +209,23 @@ target_link_libraries(image_segmentation_client
   ${OpenCV_LIBRARIES}
 )
 
-# add_executable(image_segmentation_server
-#   src/image_segmentation_server.cpp
-# )
+add_executable(image_segmentation_server
+  src/image_segmentation_server.cpp
+)
 
-# add_dependencies(image_segmentation_server
-#   ${${PROJECT_NAME}_EXPORTED_TARGETS}
-#   ${catkin_EXPORTED_TARGETS}
-#   ${dynamic_vino_lib_TARGETS}
-# )
+add_dependencies(image_segmentation_server
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${dynamic_vino_lib_TARGETS}
+)
 
-# target_link_libraries(image_segmentation_server
-#   ${catkin_LIBRARIES}
-#   gflags
-#   ${vino_param_lib_LIBRARIES}
-#   ${InferenceEngine_LIBRARIES}
-#   ${OpenCV_LIBRARIES}
-# )
+target_link_libraries(image_segmentation_server
+  ${catkin_LIBRARIES}
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
 
 
 add_executable(image_reidentification_client
@@ -245,23 +246,23 @@ target_link_libraries(image_reidentification_client
   ${OpenCV_LIBRARIES}
 )
 
-# add_executable(image_reidentification_server
-#   src/image_reidentification_server.cpp
-# )
+add_executable(image_reidentification_server
+  src/image_reidentification_server.cpp
+)
 
-# add_dependencies(image_reidentification_server
-#   ${${PROJECT_NAME}_EXPORTED_TARGETS}
-#   ${catkin_EXPORTED_TARGETS}
-#   ${dynamic_vino_lib_TARGETS}
-# )
+add_dependencies(image_reidentification_server
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${dynamic_vino_lib_TARGETS}
+)
 
-# target_link_libraries(image_reidentification_server
-#   ${catkin_LIBRARIES}
-#   gflags
-#   ${vino_param_lib_LIBRARIES}
-#   ${InferenceEngine_LIBRARIES}
-#   ${OpenCV_LIBRARIES}
-# )
+target_link_libraries(image_reidentification_server
+  ${catkin_LIBRARIES}
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
 
 add_executable(pipeline_service_client
   src/pipeline_service_client.cpp

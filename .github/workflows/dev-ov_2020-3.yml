@@ -26,10 +26,18 @@ jobs:
         required-ros-distributions: melodic
     - run: "source /opt/ros/melodic/setup.bash"
     
-    # install openvino 2020.3
-    - name: install openvino 2020.3
+    # install librealsense
+    - name: Install librealsense
       run: |
-        sudo apt update && sudo apt install curl gnupg2 lsb-release
+        sudo apt-key adv --keyserver keys.gnupg.net --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE || sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE
+        sudo add-apt-repository "deb http://realsense-hw-public.s3.amazonaws.com/Debian/apt-repo bionic main" -u
+        sudo apt update
+        sudo apt-get install librealsense2-dev
+
+    # install openvino 2020.3
+    - name: install openvino 2020.3 and librealsense
+      run: |
+        sudo apt install curl gnupg2 lsb-release
         curl -s https://apt.repos.intel.com/openvino/2020/GPG-PUB-KEY-INTEL-OPENVINO-2020 |sudo apt-key add -
         echo "deb https://apt.repos.intel.com/openvino/2020 all main" | sudo tee /etc/apt/sources.list.d/intel-openvino-2020.list
         sudo apt update
@@ -68,5 +76,5 @@ jobs:
         export CPU_EXTENSION_LIB+=/opt/intel/openvino_2020.3.341/deployment_tools/inference_engine/lib/intel64/libinference_engine.so
         export GFLAGS_LIB+=/usr/lib/x86_64-linux-gnu/libgflags_nothreads.a
         env
-        catkin_make
+        catkin_make_isolated
           
