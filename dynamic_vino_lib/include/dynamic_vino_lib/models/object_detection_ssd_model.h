@@ -21,6 +21,8 @@
 #define DYNAMIC_VINO_LIB_MODELS_OBJECT_DETECTION_SSD_MODEL_H
 #include <string>
 #include "dynamic_vino_lib/models/base_model.h"
+#include "dynamic_vino_lib/inferences/object_detection.h"
+#include "dynamic_vino_lib/engines/engine_manager.h"
 namespace Models
 {
 /**
