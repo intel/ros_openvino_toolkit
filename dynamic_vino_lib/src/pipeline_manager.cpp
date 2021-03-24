@@ -335,7 +335,7 @@ PipelineManager::createObjectDetection(const Params::ParamManager::InferenceRawD
 {
   std::shared_ptr<Models::ObjectDetectionModel> object_detection_model;
   std::shared_ptr<dynamic_vino_lib::ObjectDetection> object_inference_ptr;
-  slog::debug << "for test in createObjectDetection()" << slog::endl;
+  slog::debug << "for test in createObjectDetection(), model_path =" << infer.model << slog::endl;
   if (infer.model_type == kInferTpye_ObjectDetectionTypeSSD)
   {
     object_detection_model = std::make_shared<Models::ObjectDetectionSSDModel>(infer.model, infer.batch);

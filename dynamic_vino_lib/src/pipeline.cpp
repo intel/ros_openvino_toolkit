@@ -255,12 +255,13 @@ void Pipeline::setCallback()
       return;
     };
     pair.second->getEngine()->getRequest()->SetCompletionCallback(callb);
+    slog::debug << "Set Callback for Detection: " << detection_name << slog::endl;
   }
 }
 
 void Pipeline::callback(const std::string& detection_name)
 {
-  // slog::info<<"Hello callback ----> " << detection_name <<slog::endl;
+  slog::debug <<"Hello callback ----> " << detection_name <<slog::endl;
   auto detection_ptr = name_to_detection_map_[detection_name];
   detection_ptr->fetchResults();
   // set output
