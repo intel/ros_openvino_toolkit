@@ -22,6 +22,11 @@ project(dynamic_vino_lib)
 #add_definitions(-DUSE_IE_CORE)
 ####################################
 
+####################################
+## uncomment below line to get verbose log
+## add_definitions(-DLOG_LEVEL_DEBUG)
+####################################
+
 message(STATUS "Looking for inference engine configuration file at: ${CMAKE_PREFIX_PATH}")
 find_package(InferenceEngine REQUIRED)
 if (NOT InferenceEngine_FOUND)
