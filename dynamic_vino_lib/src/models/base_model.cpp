@@ -31,6 +31,7 @@
 Models::BaseModel::BaseModel(const std::string& model_loc, int max_batch_size)
   : model_loc_(model_loc), max_batch_size_(max_batch_size), ModelAttribute(model_loc)
 {
+  slog::debug << "model location:  " << model_loc_ << slog::endl;
   if (model_loc.empty())
   {
     throw std::logic_error("model file name is empty!");
@@ -41,7 +42,8 @@ Models::BaseModel::BaseModel(const std::string& model_loc, int max_batch_size)
 
 void Models::BaseModel::modelInit()
 {
-  slog::info << "Loading network files" << slog::endl;
+  slog::info << "Loading network files: " << model_loc_ << slog::endl;
+
   // Read network model
   net_reader_->ReadNetwork(model_loc_);
   // Extract model name and load it's weights
@@ -57,9 +59,7 @@ void Models::BaseModel::modelInit()
   // Set batch size to given max_batch_size_
   slog::info << "Batch size is set to  " << max_batch_size_ << slog::endl;
   net_reader_->getNetwork().setBatchSize(max_batch_size_);
-  /** DEPRECATED!
-  checkLayerProperty(net_reader_);
-  setLayerProperty(net_reader_); */
+
   updateLayerProperty(net_reader_);
 }
 

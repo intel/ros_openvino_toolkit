@@ -100,6 +100,11 @@ void operator>>(const YAML::Node& node, ParamManager::InferenceRawData& infer)
   YAML_PARSE(node, "batch", infer.batch)
   YAML_PARSE(node, "confidence_threshold", infer.confidence_threshold)
   YAML_PARSE(node, "enable_roi_constraint", infer.enable_roi_constraint)
+
+  if (infer.model_type.size() == 0) {
+    infer.model_type = "SSD";
+  }
+
   slog::info << "Inference Params:name=" << infer.name << slog::endl;
 }
 
@@ -261,3 +266,4 @@ ParamManager::PipelineRawData ParamManager::getPipeline(const std::string& name)
   throw std::logic_error("No parameters found for pipeline [" + name + "]");
 }
 }  // namespace Params
+
