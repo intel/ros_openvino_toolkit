@@ -181,7 +181,7 @@ std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> PipelineManager::par
     std::shared_ptr<Outputs::BaseOutput> object = nullptr;
     if (name == kOutputTpye_RosTopic)
     {
-      // object = std::make_shared<Outputs::RosTopicOutput>(pdata.params.name, pdata.parent_node);
+      object = std::make_shared<Outputs::RosTopicOutput>(pdata.params.name);
     }
     else if (name == kOutputTpye_ImageWindow)
     {
@@ -189,7 +189,7 @@ std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> PipelineManager::par
     }
     else if (name == kOutputTpye_RViz)
     {
-      // object = std::make_shared<Outputs::RvizOutput>(pdata.params.name, pdata.parent_node);
+      object = std::make_shared<Outputs::RvizOutput>(pdata.params.name);
     }
     else if (name == kOutputTpye_RosService)
     {
