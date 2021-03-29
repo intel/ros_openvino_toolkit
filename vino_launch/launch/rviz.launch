@@ -1,6 +1,7 @@
+<?xml version="1.0"?>
 <launch>
-    <arg name="default_rviz" value="$(find vino_launch)/param/rviz/default.rviz" />
-    <node name="rviz" pkg="rviz" type="rviz" required="true" output="screen">
-          <param name="default_rviz" value="$(arg default_rviz)" />
+    <arg name="rviz_name" default="default" />
+    <node name="rviz" pkg="rviz" type="rviz"
+          args="-d $(find vino_launch)/param/rviz/$(arg rviz_name).rviz" required="true">
     </node>
 </launch>
