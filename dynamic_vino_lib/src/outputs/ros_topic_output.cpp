@@ -266,17 +266,17 @@ void Outputs::RosTopicOutput::accept(const std::vector<dynamic_vino_lib::ObjectD
 {
   detected_objects_topic_ = std::make_shared<object_msgs::ObjectsInBoxes>();
 
-  object_msgs::ObjectInBox hp;
+  object_msgs::ObjectInBox object;
   for (auto r : results)
   {
     auto loc = r.getLocation();
-    hp.roi.x_offset = loc.x;
-    hp.roi.y_offset = loc.y;
-    hp.roi.width = loc.width;
-    hp.roi.height = loc.height;
-    hp.object.object_name = r.getLabel();
-    hp.object.probability = r.getConfidence();
-    detected_objects_topic_->objects_vector.push_back(hp);
+    object.roi.x_offset = loc.x;
+    object.roi.y_offset = loc.y;
+    object.roi.width = loc.width;
+    object.roi.height = loc.height;
+    object.object.object_name = r.getLabel();
+    object.object.probability = r.getConfidence();
+    detected_objects_topic_->objects_vector.push_back(object);
   }
 }
 
