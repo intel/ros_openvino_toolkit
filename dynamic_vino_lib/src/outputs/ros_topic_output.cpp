@@ -394,14 +394,14 @@ void Outputs::RosTopicOutput::handleOutput()
     pub_object_.publish(object_msg);
     detected_objects_topic_ = nullptr;
   }
-  if (detected_objects_topic_ != nullptr)
+  if (landmarks_topic_ != nullptr)
   {
-    object_msgs::ObjectsInBoxes object_msg;
-    object_msg.header = header;
-    object_msg.objects_vector.swap(detected_objects_topic_->objects_vector);
+    people_msgs::LandmarkStamped landmarks_msg;
+    landmarks_msg.header = header;
+    landmarks_msg.landmarks.swap(landmarks_topic_->landmarks);
 
-    pub_object_.publish(object_msg);
-    detected_objects_topic_ = nullptr;
+    pub_landmarks_.publish(landmarks_msg);
+    landmarks_topic_ = nullptr;
   }
   if (face_reid_topic_ != nullptr)
   {
