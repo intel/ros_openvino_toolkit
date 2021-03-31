@@ -1,6 +1,5 @@
 <launch>
   <arg name="param_file" value="$(find vino_launch)/param/pipeline_object_topic.yaml" />
-  <arg name="default_rviz" value="$(find vino_launch)/param/rviz/default.rviz" />
 
   <group>
      <arg name="color_width" default="640" />
@@ -16,8 +15,5 @@
         <param name="param_file" value="$(arg param_file)" />   
         <remap from ="/openvino_toolkit/detected_objects" to = "/ros_openvino_toolkit/detected_objects" />
         <remap from ="/openvino_toolkit/images" to = "/ros_openvino_toolkit/image_rviz" />
-  </node>
-  <node name="rviz" pkg="rviz" type="rviz" required="true" output="screen">
-        <param name="default_rviz" value="$(arg default_rviz)" />
   </node>
 </launch>
