@@ -121,15 +121,26 @@ bool dynamic_vino_lib::ObjectSegmentation::fetchResults()
   const auto do_data = do_blob->buffer().as<float*>();
   const auto masks_blob = request->GetBlob(mask_output.c_str());
   const auto masks_data = masks_blob->buffer().as<float*>();
-  const size_t output_w = masks_blob->getTensorDesc().getDims().at(3);
-  const size_t output_h = masks_blob->getTensorDesc().getDims().at(2);
-  const size_t output_des = masks_blob->getTensorDesc().getDims().at(1);
-  const size_t output_extra = masks_blob->getTensorDesc().getDims().at(0);
-
+  const InferenceEngine::SizeVector& outSizeVector = masks_blob->getTensorDesc().getDims();
+  int output_des, output_h, output_w;
+  switch(outSizeVector.size()) {
+      case 3:
+          output_des = 0;
+          output_h = outSizeVector[1];
+          output_w = outSizeVector[2];
+          break;
+      case 4:
+          output_des = outSizeVector[1];
+          output_h = outSizeVector[2];
+          output_w = outSizeVector[3];
+          break;
+      default:
+          throw std::runtime_error("Unexpected output blob shape. Only 4D and 3D output blobs are"
+              "supported.");
+  }
   slog::debug << "output w " << output_w << slog::endl;
   slog::debug << "output h " << output_h << slog::endl;
   slog::debug << "output description " << output_des << slog::endl;
-  slog::debug << "output extra " << output_extra << slog::endl;
 
   const float* detections = request->GetBlob(detection_output)->buffer().as<float*>();
   std::vector<std::string>& labels = valid_model_->getLabels();
