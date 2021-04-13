@@ -132,9 +132,9 @@ bool Models::ObjectSegmentationModel::updateLayerProperty(const InferenceEngine:
   inputInfo.setLayout(InferenceEngine::Layout::NHWC);
   inputInfo.setPrecision(InferenceEngine::Precision::U8);
 
-  // InferenceEngine::InputInfo::Ptr input_info = input_info_map.begin()->second;
-  // addInputInfo("input", input_info_map.begin()->first.c_str());
-  addInputInfo("input", inputShapes.begin()->first);
+  // InferenceEngine::InputInfo::Ptr input_info = input_info_.begin()->second;
+  addInputInfo("input", input_info_.begin()->first.c_str());
+  // addInputInfo("input", inputShapes.begin()->first);
 
   InferenceEngine::OutputsDataMap outputsDataMap = network.getOutputsInfo();
   if (outputsDataMap.size() != 1)
