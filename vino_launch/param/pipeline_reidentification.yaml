@@ -1,32 +1,26 @@
 Pipelines:
 - name: object
-  # inputs: [StandardCamera]
-  inputs: [Image]
-  input_path: /home/cxs/Pictures/teams.png
-  # input_path: /home/cxs/my_code/ros_vino_ws/src/ros_openvino_toolkit/data/images/team.jpg
+  inputs: [StandardCamera]
   infers:
     - name: ObjectDetection
-      model: /home/cxs/intel/openvino_2020.3.194/deployment_tools/open_model_zoo/tools/downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml
-      # model: /home/cxs/intel/openvino_2020.3.194/deployment_tools/open_model_zoo/tools/downloader/intel/face-detection-adas-0001/FP16/face-detection-adas-0001.xml
+      model: /opt/openvino_toolkit/models/person-detection/output/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml
       engine: CPU
       label: to/be/set/xxx.labels
       batch: 1
       confidence_threshold: 0.5
       enable_roi_constraint: true # set enable_roi_constraint to false if you don't want to make the inferred ROI (region of interest) constrained into the camera frame
     - name: PersonReidentification
-      model: /home/cxs/intel/openvino_2020.3.194/deployment_tools/open_model_zoo/tools/downloader/intel/intel/person-reidentification-retail-0249/FP32/person-reidentification-retail-0249.xml
+      model: /opt/openvino_toolkit/models/person-reidentification/output/intel/person-reidentification-retail-0076/FP32/person-reidentification-retail-0076.xml
       engine: CPU
       label: to/be/set/xxx.labels
       batch: 1
       confidence_threshold: 0.7
-  outputs: [ImageWindow, RViz]
+  outputs: [ImageWindow, RViz, RosTopic]
   connects:
-    - left: Image
-    # - left: StandardCamera
+    - left: StandardCamera
       right: [ObjectDetection]
     - left: ObjectDetection
-      # right: [ImageWindow, RViz, RosTopic]
-      right: [PersonReidentification,ImageWindow, RViz, RosTopic]
+      right: [PersonReidentification]
     - left: PersonReidentification
       right: [ImageWindow, RViz, RosTopic]
 
