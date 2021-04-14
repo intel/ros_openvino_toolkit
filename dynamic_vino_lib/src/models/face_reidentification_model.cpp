@@ -25,7 +25,7 @@ Models::FaceReidentificationModel::FaceReidentificationModel(const std::string& 
 {
 }
 
-void Models::FaceReidentificationModel::setLayerProperty(InferenceEngine::CNNNetReader::Ptr net_reader)
+bool Models::FaceReidentificationModel::updateLayerProperty(InferenceEngine::CNNNetReader::Ptr net_reader)
 {
   // set input property
   InferenceEngine::InputsDataMap input_info_map(net_reader->getNetwork().getInputsInfo());
@@ -40,11 +40,12 @@ void Models::FaceReidentificationModel::setLayerProperty(InferenceEngine::CNNNet
   // set input and output layer name
   input_ = input_info_map.begin()->first;
   output_ = output_info_map.begin()->first;
+  return true;
 }
 
-void Models::FaceReidentificationModel::checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr& net_reader)
-{
-}
+// void Models::FaceReidentificationModel::checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr& net_reader)
+// {
+// }
 
 const std::string Models::FaceReidentificationModel::getModelCategory() const
 {
