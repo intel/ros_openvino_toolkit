@@ -3,7 +3,7 @@ Pipelines:
   inputs: [Image]
   infers:
     - name: ObjectSegmentation
-      model: /opt/ros_openvino_toolkit/models/public/deeplabv3/FP32/deeplabv3.xml
+      model: /opt/openvino_toolkit/models/public/deeplabv3/FP16/deeplabv3.xml
       engine: CPU
       label: to/be/set/xxx.labels
       batch: 1
