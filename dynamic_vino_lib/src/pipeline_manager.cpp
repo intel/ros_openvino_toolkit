@@ -250,10 +250,10 @@ PipelineManager::parseInference(const Params::ParamManager::PipelineRawData& par
     {
       object = createPersonReidentification(infer);
     }
-    // else if (infer.name == kInferTpye_FaceReidentification)
-    // {
-    //   object = createFaceReidentification(infer);
-    // }
+    else if (infer.name == kInferTpye_FaceReidentification)
+    {
+      object = createFaceReidentification(infer);
+    }
     else if (infer.name == kInferTpye_PersonAttribsDetection)
     {
       object = createPersonAttribsDetection(infer);
@@ -425,6 +425,20 @@ PipelineManager::createPersonAttribsDetection(const Params::ParamManager::Infere
   model->modelInit();
   auto engine = engine_manager_.createEngine(infer.engine, model);
   auto attribs_inference_ptr = std::make_shared<dynamic_vino_lib::PersonAttribsDetection>(infer.confidence_threshold);
+  attribs_inference_ptr->loadNetwork(model);
+  attribs_inference_ptr->loadEngine(engine);
+
+  return attribs_inference_ptr;
+}
+
+std::shared_ptr<dynamic_vino_lib::BaseInference>
+PipelineManager::createFaceReidentification(const Params::ParamManager::InferenceRawData& infer)
+{
+  auto model = std::make_shared<Models::FaceReidentificationModel>(infer.model, infer.batch);
+  slog::debug << "for test in createFaceReidentification()" << slog::endl;
+  model->modelInit();
+  auto engine = engine_manager_.createEngine(infer.engine, model);
+  auto attribs_inference_ptr = std::make_shared<dynamic_vino_lib::FaceReidentification>(infer.confidence_threshold);
   attribs_inference_ptr->loadNetwork(model);
   attribs_inference_ptr->loadEngine(engine);
 
