@@ -13,7 +13,7 @@ The OpenVINO™ (Open visual inference and neural network optimization) toolkit 
 ## Design Architecture
 From the view of hirarchical architecture design, the package is divided into different functional components, as shown in below picture. 
 
-![OpenVINO_Architecture](https://github.com/intel/ros_openvino_toolkit/blob/devel/data/images/design_arch.PNG "OpenVINO RunTime Architecture")
+![OpenVINO_Architecture](./data/images/design_arch.PNG "OpenVINO RunTime Architecture")
 
 - **Intel® OpenVINO™ toolkit** is leveraged to provide deep learning basic implementation for data inference. is free software that helps developers and data scientists speed up computer vision workloads, streamline deep learning inference and deployments,
 and enable easy, heterogeneous execution across Intel® platforms from edge to cloud. It helps to:
@@ -28,11 +28,11 @@ and enable easy, heterogeneous execution across Intel® platforms from edge to c
 ## Logic Flow
 From the view of logic implementation, the package introduces the definitions of parameter manager, pipeline and pipeline manager. The below picture depicts how these entities co-work together when the corresponding program is launched.
 
-![Logic_Flow](https://github.com/intel/ros_openvino_toolkit/blob/devel/data/images/impletation_logic.PNG "OpenVINO RunTime Logic Flow")
+![Logic_Flow](./data/images/impletation_logic.PNG "OpenVINO RunTime Logic Flow")
 
 Once a corresponding program is launched with a specified .yaml config file passed in the .launch file or via commandline, _**parameter manager**_ analyzes the configurations about pipeline and the whole framework, then shares the parsed configuration information with pipeline procedure. A _**pipeline instance**_ is created by following the configuration info and is added into _**pipeline manager**_ for lifecycle control and inference action triggering.
 
-The contents in **.yaml config file** should be well structured and follow the supported rules and entity names. Please see [the configuration guidance](https://github.com/intel/ros_openvino_toolkit/blob/devel/doc/YAML_CONFIGURATION_GUIDE.md) for how to create or edit the config files.
+The contents in **.yaml config file** should be well structured and follow the supported rules and entity names. Please see [the configuration guidance](./doc/EN/YAML_CONFIGURATION_GUIDE.md) for how to create or edit the config files.
 
 **Pipeline** fulfills the whole data handling process: initiliazing Input Component for image data gathering and formating; building up the structured inference network and passing the formatted data through the inference network; transfering the inference results and handling output, etc.
 
@@ -73,21 +73,21 @@ Currently, the inference feature list is supported:
 - Face Detection:
 ```/ros_openvino_toolkit/face_detection```([object_msgs::ObjectsInBoxes](https://github.com/intel/object_msgs/blob/master/msg/ObjectsInBoxes.msg))
 - Emotion Recognition:
-```/ros_openvino_toolkit/emotions_recognition```([people_msgs::EmotionsStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/EmotionsStamped.msg))
+```/ros_openvino_toolkit/emotions_recognition```([people_msgs::EmotionsStamped](./people_msgs/msg/EmotionsStamped.msg))
 - Age and Gender Recognition:
-```/ros_openvino_toolkit/age_genders_Recognition```([people_msgs::AgeGenderStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/AgeGenderStamped.msg))
+```/ros_openvino_toolkit/age_genders_Recognition```([people_msgs::AgeGenderStamped](./people_msgs/msg/AgeGenderStamped.msg))
 - Head Pose Estimation:
-```/ros_openvino_toolkit/headposes_estimation```([people_msgs::HeadPoseStamped](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/msg/HeadPoseStamped.msg))
+```/ros_openvino_toolkit/headposes_estimation```([people_msgs::HeadPoseStamped](./people_msgs/msg/HeadPoseStamped.msg))
 - Object Detection:
 ```/ros_openvino_toolkit/detected_objects```([object_msgs::ObjectsInBoxes](https://github.com/intel/object_msgs/blob/master/msg/ObjectsInBoxes.msg))
 - Object Segmentation:
-```/ros_openvino_toolkit/segmented_obejcts```([people_msgs::ObjectsInMasks](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/msg/ObjectsInMasks.msg))
+```/ros_openvino_toolkit/segmented_obejcts```([people_msgs::ObjectsInMasks](./people_msgs/msg/ObjectsInMasks.msg))
 - Person Reidentification:
-```/ros_openvino_toolkit/reidentified_persons```([people_msgs::ReidentificationStamped](https://github.com/intel/ros_openvino_toolkit/blob/devel/people_msgs/msg/ReidentificationStamped.msg))
+```/ros_openvino_toolkit/reidentified_persons```([people_msgs::ReidentificationStamped](./people_msgs/msg/ReidentificationStamped.msg))
 - Vehicle Detection:
-```/ros_openvino_toolkit/detected_license_plates```([people_msgs::VehicleAttribsStamped](https://github.com/intel/ros2_openvino_toolkit/blob/devel/people_msgs/msg/VehicleAttribsStamped.msg)
+```/ros_openvino_toolkit/detected_license_plates```([people_msgs::VehicleAttribsStamped](./people_msgs/msg/VehicleAttribsStamped.msg)
 - Vehicle License Detection:
-```/ros_openvino_toolkit/detected_license_plates```([people_msgs::LicensePlateStamped](https://github.com/intel/ros2_openvino_toolkit/blob/devel/people_msgs/msg/LicensePlateStamped.msg)
+```/ros_openvino_toolkit/detected_license_plates```([people_msgs::LicensePlateStamped](./people_msgs/msg/LicensePlateStamped.msg)
 - Rviz Output:
 ```/ros_openvino_toolkit/image_rviz```([sensor_msgs::Image](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Image.html))
 
@@ -97,11 +97,11 @@ Currently, the inference feature list is supported:
 - Face Detection Service:
 ```/detect_face``` ([object_msgs::DetectObject](https://github.com/intel/object_msgs/blob/master/srv/DetectObject.srv))
 - Age & Gender Detection Service:
-```/detect_age_gender``` ([people_msgs::AgeGender](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/srv/AgeGenderSrv.srv))
+```/detect_age_gender``` ([people_msgs::AgeGender](./people_msgs/srv/AgeGenderSrv.srv))
 - Headpose Detection Service:
-```/detect_head_pose``` ([people_msgs::HeadPose](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/srv/HeadPoseSrv.srv))
+```/detect_head_pose``` ([people_msgs::HeadPose](./people_msgs/srv/HeadPoseSrv.srv))
 - Emotion Detection Service:
-```/detect_emotion``` ([people_msgs::Emotion](https://github.com/intel/ros_openvino_toolkit/blob/master/people_msgs/srv/EmotionSrv.srv))
+```/detect_emotion``` ([people_msgs::Emotion](./people_msgs/srv/EmotionSrv.srv))
 
 
 ### RViz
@@ -111,27 +111,27 @@ To show in RViz tool, add an image marker with the composited topic:
 
 ### Image Window
 OpenCV based image window is natively supported by the package.
-To enable window, Image Window output should be added into the output choices in .yaml config file. see [the config file guidance](https://github.com/intel/ros_openvino_toolkit/blob/devel/doc/YAML_CONFIGURATION_GUIDE.md) for checking/adding this feature in your launching.
+To enable window, Image Window output should be added into the output choices in .yaml config file. see [the config file guidance](./doc/EN/YAML_CONFIGURATION_GUIDE.md) for checking/adding this feature in your launching.
 
 ## Demo Result Snapshots
 See below pictures for the demo result snapshots.
 * face detection input from standard camera
-![face_detection_demo_image](https://github.com/intel/ros_openvino_toolkit/blob/devel/data/images/face_detection.png "face detection demo image")
+![face_detection_demo_image](./data/images/face_detection.png "face detection demo image")
 
 * object detection input from realsense camera
-![object_detection_demo_realsense](https://github.com/intel/ros_openvino_toolkit/blob/devel/data/images/object_detection.gif "object detection demo realsense")
+![object_detection_demo_realsense](./data/images/object_detection.gif "object detection demo realsense")
 
 * object segmentation input from video
-![object_segmentation_demo_video](https://github.com/intel/ros_openvino_toolkit/blob/devel/data/images/object_segmentation.gif "object segmentation demo video")
+![object_segmentation_demo_video](./data/images/object_segmentation.gif "object segmentation demo video")
 
 * Person Reidentification input from standard camera
-![person_reidentification_demo_video](https://github.com/intel/ros2_openvino_toolkit/blob/devel/data/images/person-reidentification.gif "person reidentification demo video")
+![person_reidentification_demo_video](./data/images/person-reidentification.gif "person reidentification demo video")
 
 # Installation & Launching
-**NOTE:** Intel releases 2 different series of OpenVINO Toolkit, we call them as [OpenSource Version](https://github.com/opencv/dldt/) and [Tarball Version](https://software.intel.com/en-us/openvino-toolkit). This guidelie uses OpenSource Version as the installation and launching example. **If you want to use Tarball version, please follow [the guide for Tarball Version](https://github.com/intel/ros_openvino_toolkit/blob/devel/doc/BINARY_VERSION_README.md).**
+**NOTE:** Intel releases 2 different series of OpenVINO Toolkit, we call them as [OpenSource Version](https://github.com/opencv/dldt/) and [Tarball Version](https://software.intel.com/en-us/openvino-toolkit). This guidelie uses OpenSource Version as the installation and launching example. **If you want to use Tarball version, please follow [the guide for Tarball Version](./doc/EN/BINARY_VERSION_README.md).**
 
 ## Dependencies Installation
-One-step installation scripts are provided for the dependencies' installation. Please see [the guide](https://github.com/intel/ros_openvino_toolkit/blob/devel/doc/OPEN_SOURCE_CODE_README.md) for details.
+One-step installation scripts are provided for the dependencies' installation. Please see [the guide](./doc/EN/OPEN_SOURCE_CODE_README.md) for details.
 
 ## Launching
 * Preparation
@@ -149,7 +149,7 @@ One-step installation scripts are provided for the dependencies' installation. P
 		sudo ldconfig
 		rm 97-usbboot.rules
 		```
-	* download [Object Detection model](https://github.com/intel/ros_openvino_toolkit/tree/devel/doc/OBJECT_DETECTION.md)
+	* download [Object Detection model](./doc/EN/OBJECT_DETECTION.md)
 	* download and convert a trained model to produce an optimized Intermediate Representation (IR) of the model 
 		```bash
 		#object segmentation model
