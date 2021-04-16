@@ -43,7 +43,7 @@
 #include "dynamic_vino_lib/models/head_pose_detection_model.h"
 #include "dynamic_vino_lib/models/object_detection_ssd_model.h"
 // #include "dynamic_vino_lib/models/object_detection_yolov2voc_model.h"
-// #include "dynamic_vino_lib/models/face_reidentification_model.h"
+#include "dynamic_vino_lib/models/face_reidentification_model.h"
 #include "dynamic_vino_lib/models/person_attribs_detection_model.h"
 #include "dynamic_vino_lib/models/vehicle_attribs_detection_model.h"
 #include "dynamic_vino_lib/models/license_plate_detection_model.h"
@@ -258,10 +258,10 @@ PipelineManager::parseInference(const Params::ParamManager::PipelineRawData& par
     {
       object = createPersonAttribsDetection(infer);
     }
-    // else if (infer.name == kInferTpye_LandmarksDetection)
-    // {
-    //   object = createLandmarksDetection(infer);
-    // }
+    else if (infer.name == kInferTpye_LandmarksDetection)
+    {
+      object = createLandmarksDetection(infer);
+    }
     else if (infer.name == kInferTpye_VehicleAttribsDetection)
     {
       object = createVehicleAttribsDetection(infer);
@@ -445,19 +445,19 @@ PipelineManager::createFaceReidentification(const Params::ParamManager::Inferenc
   return attribs_inference_ptr;
 }
 
-// std::shared_ptr<dynamic_vino_lib::BaseInference>
-// PipelineManager::createLandmarksDetection(
-//   const Params::ParamManager::InferenceRawData & infer)
-// {
-//   auto model = std::make_shared<Models::LandmarksDetectionModel>(infer.model, infer.batch);
-//   model->modelInit();
-//   auto engine = engine_manager_.createEngine(infer.engine, model);
-//   auto landmarks_inference_ptr =  std::make_shared<dynamic_vino_lib::LandmarksDetection>();
-//   landmarks_inference_ptr->loadNetwork(model);
-//   landmarks_inference_ptr->loadEngine(engine);
+std::shared_ptr<dynamic_vino_lib::BaseInference>
+PipelineManager::createLandmarksDetection(
+  const Params::ParamManager::InferenceRawData & infer)
+{
+  auto model = std::make_shared<Models::LandmarksDetectionModel>(infer.model, infer.batch);
+  model->modelInit();
+  auto engine = engine_manager_.createEngine(infer.engine, model);
+  auto landmarks_inference_ptr =  std::make_shared<dynamic_vino_lib::LandmarksDetection>();
+  landmarks_inference_ptr->loadNetwork(model);
+  landmarks_inference_ptr->loadEngine(engine);
 
-//   return landmarks_inference_ptr;
-// }
+  return landmarks_inference_ptr;
+}
 
 void PipelineManager::threadPipeline(const char* name)
 {

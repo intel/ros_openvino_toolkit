@@ -42,6 +42,7 @@ public:
    * @brief Get the name of this detection model.
    * @return Name of the model.
    */
+  bool updateLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
   const std::string getModelCategory() const override;
 
 protected:
