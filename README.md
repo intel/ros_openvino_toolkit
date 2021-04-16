@@ -1,5 +1,3 @@
-> **Getting started guides(English):** <https://github.com/intel/ros_openvino_toolkit/tree/dev-ov2020.3/doc/EN>
-> 
 > **中文文档入口:** <https://github.com/intel/ros_openvino_toolkit/tree/dev-ov2020.3/doc/ZH-CN>
 
 # Introduction
