@@ -18,14 +18,14 @@
  */
 #include <string>
 #include "dynamic_vino_lib/models/landmarks_detection_model.h"
+#include "dynamic_vino_lib/slog.h"
 // Validated Landmarks Detection Network
 Models::LandmarksDetectionModel::LandmarksDetectionModel(const std::string& model_loc, int max_batch_size)
   : BaseModel(model_loc, max_batch_size)
 {
 }
 
-#if 0
-void Models::LandmarksDetectionModel::setLayerProperty(InferenceEngine::CNNNetReader::Ptr net_reader)
+bool Models::LandmarksDetectionModel::updateLayerProperty(InferenceEngine::CNNNetReader::Ptr net_reader)
 {
   // set input property
   InferenceEngine::InputsDataMap input_info_map(net_reader->getNetwork().getInputsInfo());
@@ -40,22 +40,22 @@ void Models::LandmarksDetectionModel::setLayerProperty(InferenceEngine::CNNNetRe
   // set input and output layer name
   input_ = input_info_map.begin()->first;
   output_ = output_info_map.begin()->first;
+  return true;
 }
 
-void Models::LandmarksDetectionModel::checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr& net_reader)
-{
-  InferenceEngine::InputsDataMap input_info_map(net_reader->getNetwork().getInputsInfo());
-  if (input_info_map.size() != 1)
-  {
-    throw std::logic_error("Landmarks Detection topology should have only one input");
-  }
-  InferenceEngine::OutputsDataMap output_info_map(net_reader->getNetwork().getOutputsInfo());
-  if (output_info_map.size() != 1)
-  {
-    throw std::logic_error("Landmarks Detection Network expects networks having one output");
-  }
-}
-#endif
+// void Models::LandmarksDetectionModel::checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr& net_reader)
+// {
+//   InferenceEngine::InputsDataMap input_info_map(net_reader->getNetwork().getInputsInfo());
+//   if (input_info_map.size() != 1)
+//   {
+//     throw std::logic_error("Landmarks Detection topology should have only one input");
+//   }
+//   InferenceEngine::OutputsDataMap output_info_map(net_reader->getNetwork().getOutputsInfo());
+//   if (output_info_map.size() != 1)
+//   {
+//     throw std::logic_error("Landmarks Detection Network expects networks having one output");
+//   }
+// }
 
 const std::string Models::LandmarksDetectionModel::getModelCategory() const
 {
