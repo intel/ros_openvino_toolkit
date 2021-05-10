@@ -27,35 +27,40 @@ Models::LandmarksDetectionModel::LandmarksDetectionModel(const std::string& mode
 
 bool Models::LandmarksDetectionModel::updateLayerProperty(InferenceEngine::CNNNetReader::Ptr net_reader)
 {
-  // set input property
+  //INPUT
   InferenceEngine::InputsDataMap input_info_map(net_reader->getNetwork().getInputsInfo());
-  InferenceEngine::InputInfo::Ptr input_info = input_info_map.begin()->second;
-  input_info->setPrecision(InferenceEngine::Precision::U8);
-  input_info->getInputData()->setLayout(InferenceEngine::Layout::NCHW);
-  // set output property
+  auto input_layerName = input_info_map.begin()->first;
+  auto input_layerData = input_info_map.begin()->second;
+  auto input_layerDims = input_layerData->getTensorDesc().getDims();
+
+  if (input_layerDims.size() == 4) 
+  {
+      input_layerData->setLayout(InferenceEngine::Layout::NCHW);
+      input_layerData->setPrecision(InferenceEngine::Precision::U8);
+  } 
+  else if (input_layerDims.size() == 2) 
+  {
+      input_layerData->setLayout(InferenceEngine::Layout::NC);
+      input_layerData->setPrecision(InferenceEngine::Precision::FP32);
+  } 
+  else 
+  {
+      throw std::runtime_error("Unknow type of input layer layout. Expected either 4 or 2 dimensional inputs");
+  }
+
+  // OUTPUT
   InferenceEngine::OutputsDataMap output_info_map(net_reader->getNetwork().getOutputsInfo());
-  InferenceEngine::DataPtr& output_data_ptr = output_info_map.begin()->second;
-  output_data_ptr->setPrecision(InferenceEngine::Precision::FP32);
-  output_data_ptr->setLayout(InferenceEngine::Layout::NCHW);
+  auto output_layerName = output_info_map.begin()->first;
+  auto output_layerData = output_info_map.begin()->second;
+  auto output_layerDims = output_layerData->getTensorDesc().getDims();
+
+  output_layerData->setPrecision(InferenceEngine::Precision::FP32);
+  // output_layerData->setLayout(InferenceEngine::Layout::NCHW);
   // set input and output layer name
-  input_ = input_info_map.begin()->first;
-  output_ = output_info_map.begin()->first;
+  input_ = input_layerName;
+  output_ = output_layerName;
   return true;
 }
-
-// void Models::LandmarksDetectionModel::checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr& net_reader)
-// {
-//   InferenceEngine::InputsDataMap input_info_map(net_reader->getNetwork().getInputsInfo());
-//   if (input_info_map.size() != 1)
-//   {
-//     throw std::logic_error("Landmarks Detection topology should have only one input");
-//   }
-//   InferenceEngine::OutputsDataMap output_info_map(net_reader->getNetwork().getOutputsInfo());
-//   if (output_info_map.size() != 1)
-//   {
-//     throw std::logic_error("Landmarks Detection Network expects networks having one output");
-//   }
-// }
 
 const std::string Models::LandmarksDetectionModel::getModelCategory() const
 {
