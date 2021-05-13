@@ -38,13 +38,13 @@ namespace Input
 class ImageTopic : public BaseInputDevice
 {
 public:
-  ros::NodeHandle nh_;
-  image_transport::Subscriber sub_;
   bool initialize() override;
   bool initialize(size_t width, size_t height) override;
   bool read(cv::Mat* frame) override;
 
 private:
+  ros::NodeHandle nh_;
+  image_transport::Subscriber sub_;
   cv::Mat image_;
   MutexCounter image_count_;
 
