@@ -36,6 +36,7 @@
 #include "dynamic_vino_lib/inputs/realsense_camera.h"
 #include "dynamic_vino_lib/inputs/realsense_camera_topic.h"
 #include "dynamic_vino_lib/inputs/standard_camera.h"
+#include "dynamic_vino_lib/inputs/ip_camera.h"
 #include "dynamic_vino_lib/inputs/video_input.h"
 #include "dynamic_vino_lib/models/age_gender_detection_model.h"
 #include "dynamic_vino_lib/models/emotion_detection_model.h"
@@ -131,17 +132,17 @@ PipelineManager::parseInputDevice(const PipelineData& pdata)
     {
       device = std::make_shared<Input::StandardCamera>();
     }
-    // else if (name == kInputType_IpCamera)
-    // {
-    //   if (pdata.params.input_meta != "")
-    //   {
-    //     device = std::make_shared<Input::IpCamera>(pdata.params.input_meta);
-    //   }
-    // }
-    // else if (name == kInputType_CameraTopic || name == kInputType_ImageTopic)
-    // {
-    //   device = std::make_shared<Input::RealSenseCameraTopic>(pdata.parent_node);
-    // }
+    else if (name == kInputType_IpCamera)
+    {
+      if (pdata.params.input_meta != "")
+      {
+        device = std::make_shared<Input::IpCamera>(pdata.params.input_meta);
+      }
+    }
+    else if (name == kInputType_CameraTopic || name == kInputType_ImageTopic)
+    {
+      device = std::make_shared<Input::ImageTopic>();
+    }
     else if (name == kInputType_Video)
     {
       if (pdata.params.input_meta != "")
