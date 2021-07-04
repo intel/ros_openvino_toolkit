@@ -103,6 +103,8 @@ private:
   createEmotionRecognition(const Params::ParamManager::InferenceRawData& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference>
   createHeadPoseEstimation(const Params::ParamManager::InferenceRawData& infer);
+  std::shared_ptr<dynamic_vino_lib::BaseInference> 
+  createHumanPoseEstimation(const Params::ParamManager::InferenceRawData& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference>
   createObjectDetection(const Params::ParamManager::InferenceRawData& infer);
   std::shared_ptr<dynamic_vino_lib::BaseInference>

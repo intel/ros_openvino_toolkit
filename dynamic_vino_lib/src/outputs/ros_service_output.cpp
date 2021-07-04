@@ -74,6 +74,16 @@ void Outputs::RosServiceOutput::setServiceResponse(boost::shared_ptr<people_msgs
   }
 }
 
+void Outputs::RosServiceOutput::setServiceResponse(boost::shared_ptr<people_msgs::HumanPoseSrv::Response> response)
+{
+  slog::info << "in Human Pose Estimation service::Response ...";
+  if (human_pose_topic_ != nullptr) 
+  {
+    response->humanposes = human_pose_topic_->humanposes;
+  }
+  slog::info << "DONE!" << slog::endl;
+}
+
 void Outputs::RosServiceOutput::setServiceResponse(boost::shared_ptr<people_msgs::ObjectsInMasksSrv::Response> response)
 {
   slog::info << "in ObjectsInMasks service::Response ...";

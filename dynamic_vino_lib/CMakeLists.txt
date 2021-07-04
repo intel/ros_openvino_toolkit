@@ -168,6 +168,8 @@ add_library(${PROJECT_NAME} SHARED
   src/inferences/landmarks_detection.cpp
   src/inferences/vehicle_attribs_detection.cpp
   src/inferences/license_plate_detection.cpp
+  src/inferences/peak.cpp
+  src/inferences/human_pose_estimation.cpp
   src/inputs/realsense_camera.cpp
   src/inputs/image_topic.cpp
   src/inputs/standard_camera.cpp
@@ -180,6 +182,7 @@ add_library(${PROJECT_NAME} SHARED
   src/models/face_detection_model.cpp
   src/models/head_pose_detection_model.cpp
   src/models/object_detection_ssd_model.cpp
+  src/models/human_pose_estimation_model.cpp
   # src/models/object_detection_yolov2voc_model.cpp
   src/models/object_segmentation_model.cpp
   src/models/person_reidentification_model.cpp

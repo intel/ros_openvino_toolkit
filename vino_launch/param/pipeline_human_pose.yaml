@@ -1,0 +1,28 @@
+Pipelines:
+- name: people
+  inputs: [StandardCamera]
+  # inputs: [Image]
+  # input_path: /home/cxs/my_code/ros_vino_ws/src/ros_openvino_toolkit/data/images/dldl.jpg
+  # inputs: [Video]
+  # input_path: /home/cxs/Videos/MOT16-06-raw.webm
+  infers:
+    - name: HumanPoseEstimation
+      model: /opt/openvino_toolkit/models/intel/human-pose-estimation-0001/FP32/human-pose-estimation-0001.xml
+      engine: CPU
+      label: to/be/set/xxx.labels
+      batch: 1
+      min_peaks_distance: 3.0
+      mid_points_score_threshold: 0.05
+      found_mid_points_ratio_threshold: 0.8
+      min_joints_number: 3
+      min_subset_score: 0.2
+  outputs: [ImageWindow, RosTopic, RViz]
+  connects:
+    # - left: Image
+    # - left: Video
+    - left: StandardCamera
+      right: [HumanPoseEstimation]
+    - left: HumanPoseEstimation
+      right: [ImageWindow, RosTopic, RViz]
+
+OpenvinoCommon:

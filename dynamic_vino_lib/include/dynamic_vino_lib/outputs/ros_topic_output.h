@@ -32,6 +32,8 @@
 #include <people_msgs/EmotionsStamped.h>
 #include <people_msgs/HeadPose.h>
 #include <people_msgs/HeadPoseStamped.h>
+#include <people_msgs/HumanPose.h>
+#include <people_msgs/HumanPoseStamped.h>
 #include <people_msgs/ObjectInMask.h>
 #include <people_msgs/ObjectsInMasks.h>
 #include <people_msgs/Reidentification.h>
@@ -142,6 +144,12 @@ public:
   void accept(const std::vector<dynamic_vino_lib::HeadPoseResult>&) override;
   /**
    * @brief Generate ros topic infomation according to
+   * the human pose estimation result.
+   * @param[in] An human pose estimation result objetc.
+   */
+  void accept(const std::vector<dynamic_vino_lib::HumanPoseResult>&) override;
+  /**
+   * @brief Generate ros topic infomation according to
    * the headpose detection result.
    * @param[in] An head pose detection result objetc.
    */
@@ -163,6 +171,8 @@ protected:
   std::shared_ptr<people_msgs::AgeGenderStamped> age_gender_topic_;
   ros::Publisher pub_headpose_;
   std::shared_ptr<people_msgs::HeadPoseStamped> headpose_topic_;
+  ros::Publisher pub_human_pose_;
+  std::shared_ptr<people_msgs::HumanPoseStamped> human_pose_topic_;
   ros::Publisher pub_object_;
   std::shared_ptr<object_msgs::ObjectsInBoxes> detected_objects_topic_;
   ros::Publisher pub_person_reid_;

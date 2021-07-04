@@ -29,6 +29,8 @@
 #include "dynamic_vino_lib/inferences/head_pose_detection.h"
 #include "dynamic_vino_lib/inferences/face_reidentification.h"
 #include "dynamic_vino_lib/inferences/person_attribs_detection.h"
+#include "dynamic_vino_lib/inferences/peak.h"
+#include "dynamic_vino_lib/inferences/human_pose_estimation.h"
 #include "dynamic_vino_lib/inferences/vehicle_attribs_detection.h"
 #include "dynamic_vino_lib/inferences/license_plate_detection.h"
 #include "dynamic_vino_lib/inferences/landmarks_detection.h"
@@ -42,6 +44,7 @@
 #include "dynamic_vino_lib/models/emotion_detection_model.h"
 #include "dynamic_vino_lib/models/face_detection_model.h"
 #include "dynamic_vino_lib/models/head_pose_detection_model.h"
+#include "dynamic_vino_lib/models/human_pose_estimation_model.h"
 #include "dynamic_vino_lib/models/object_detection_ssd_model.h"
 // #include "dynamic_vino_lib/models/object_detection_yolov2voc_model.h"
 #include "dynamic_vino_lib/models/face_reidentification_model.h"
@@ -239,6 +242,10 @@ PipelineManager::parseInference(const Params::ParamManager::PipelineRawData& par
     {
       object = createHeadPoseEstimation(infer);
     }
+    else if (infer.name == kInferTpye_HumanPoseEstimation) 
+    {
+      object = createHumanPoseEstimation(infer);
+    }
     else if (infer.name == kInferTpye_ObjectDetection)
     {
       object = createObjectDetection(infer);
@@ -329,6 +336,22 @@ PipelineManager::createHeadPoseEstimation(const Params::ParamManager::InferenceR
   infer->loadEngine(engine);
 
   return infer;
+}
+
+std::shared_ptr<dynamic_vino_lib::BaseInference>
+PipelineManager::createHumanPoseEstimation(
+  const Params::ParamManager::InferenceRawData & infer_param)
+{
+  auto model = std::make_shared<Models::HumanPoseEstimationModel>(infer_param.model, infer_param.batch);
+  model->modelInit();
+  auto engine = engine_manager_.createEngine(infer_param.engine, model);
+  auto infer = std::make_shared<dynamic_vino_lib::HumanPoseEstimation>();
+  infer->loadNetwork(model);
+  infer->loadEngine(engine);
+
+  // auto infer =  std::make_shared<dynamic_vino_lib::GazeEstimation>();
+  return infer;
+
 }
 
 std::shared_ptr<dynamic_vino_lib::BaseInference>

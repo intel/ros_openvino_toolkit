@@ -31,6 +31,9 @@ add_message_files(DIRECTORY msg FILES
   EmotionsStamped.msg
   HeadPose.msg
   HeadPoseStamped.msg
+  HumanPose.msg
+  HumanPoseKeypoint.msg
+  HumanPoseStamped.msg
   PersonsStamped.msg
   ObjectInMask.msg
   ObjectsInMasks.msg
@@ -50,6 +53,7 @@ add_service_files(FILES
   AgeGenderSrv.srv
   EmotionSrv.srv
   HeadPoseSrv.srv
+  HumanPoseSrv.srv
   PeopleSrv.srv
   ReidentificationSrv.srv
   ObjectsInMasksSrv.srv

@@ -102,6 +102,12 @@ public:
    */
   void accept(const std::vector<dynamic_vino_lib::HeadPoseResult>&) override;
   /**
+ * @brief Generate image window output content according to
+ * the human pose estimation result.
+ * @param[in] An human pose estimation result objetc.
+ */
+  void accept(const std::vector<dynamic_vino_lib::HumanPoseResult> &) override;
+  /**
    * @brief Generate image window output content according to
    * the headpose detection result.
    * @param[in] An age gender detection result objetc.
@@ -161,6 +167,7 @@ private:
     cv::Point pa_top;     // for person attributes, top position
     cv::Point pa_bottom;  // for person attributes, bottom position
     std::vector<cv::Point> landmarks;
+    std::vector<dynamic_vino_lib::HumanPoseKeypoint> kp; // for humanpose, keypoints
   };
 
   std::vector<OutputData> outputs_;
