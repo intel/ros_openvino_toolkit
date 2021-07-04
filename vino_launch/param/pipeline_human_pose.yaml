@@ -1,8 +1,8 @@
 Pipelines:
 - name: people
-  inputs: [StandardCamera]
-  # inputs: [Image]
-  # input_path: /home/cxs/my_code/ros_vino_ws/src/ros_openvino_toolkit/data/images/dldl.jpg
+  # inputs: [StandardCamera]
+  inputs: [Image]
+  input_path: /home/cxs/my_code/ros_vino_ws/src/ros_openvino_toolkit/data/images/teams2.png
   # inputs: [Video]
   # input_path: /home/cxs/Videos/MOT16-06-raw.webm
   infers:
@@ -18,9 +18,9 @@ Pipelines:
       min_subset_score: 0.2
   outputs: [ImageWindow, RosTopic, RViz]
   connects:
-    # - left: Image
+    - left: Image
     # - left: Video
-    - left: StandardCamera
+    # - left: StandardCamera
       right: [HumanPoseEstimation]
     - left: HumanPoseEstimation
       right: [ImageWindow, RosTopic, RViz]
