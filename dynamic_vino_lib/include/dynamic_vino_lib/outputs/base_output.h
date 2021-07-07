@@ -30,6 +30,8 @@
 #include "dynamic_vino_lib/inferences/emotions_detection.h"
 #include "dynamic_vino_lib/inferences/face_detection.h"
 #include "dynamic_vino_lib/inferences/head_pose_detection.h"
+#include "dynamic_vino_lib/inferences/peak.h"
+#include "dynamic_vino_lib/inferences/human_pose_estimation.h"
 #include "dynamic_vino_lib/inferences/object_segmentation.h"
 #include "dynamic_vino_lib/inferences/person_reidentification.h"
 #include "dynamic_vino_lib/inferences/landmarks_detection.h"
@@ -47,6 +49,7 @@
 #include <people_msgs/PeopleSrvResponse.h>
 #include <people_msgs/ReidentificationSrvResponse.h>
 #include <people_msgs/ObjectsInMasksSrvResponse.h>
+#include <people_msgs/HumanPoseSrv.h>
 
 class Pipeline;
 namespace Outputs
@@ -128,6 +131,12 @@ public:
   {
   }
   /**
+  * @brief Generate output content according to the human pose estimation result.
+  */
+  virtual void accept(const std::vector<dynamic_vino_lib::HumanPoseResult> &)
+  {
+  }
+  /**
    * @brief Generate output content according to the object segmentation result.
    */
   virtual void accept(const std::vector<dynamic_vino_lib::ObjectSegmentationResult>&)
@@ -165,6 +174,9 @@ public:
   {
   }
   virtual void setServiceResponse(boost::shared_ptr<people_msgs::HeadPoseSrvResponse> response)
+  {
+  }
+  virtual void setServiceResponse(boost::shared_ptr<people_msgs::HumanPoseSrvResponse> response) 
   {
   }
   virtual void setServiceResponse(boost::shared_ptr<people_msgs::PeopleSrvResponse> response)

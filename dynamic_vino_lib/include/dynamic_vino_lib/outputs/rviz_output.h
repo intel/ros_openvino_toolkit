@@ -96,6 +96,12 @@ public:
    */
   void accept(const std::vector<dynamic_vino_lib::HeadPoseResult>&) override;
   /**
+   * @brief Generate  rviz output content according to
+   * the human pose estimation result.
+   * @param[in] An object segmentation result objetc.
+   */
+  void accept(const std::vector<dynamic_vino_lib::HumanPoseResult> &) override;
+  /**
    * @brief Generate rviz output content according to
    * the headpose detection result.
    * @param[in] An age gender detection result objetc.

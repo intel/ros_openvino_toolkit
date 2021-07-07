@@ -87,6 +87,7 @@ public:
   {
     return location_;
   }
+  inline void setLocation(const cv::Rect& location) { location_ = location; }
 
 private:
   cv::Rect location_;

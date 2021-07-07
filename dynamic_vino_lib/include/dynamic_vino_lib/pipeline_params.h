@@ -53,6 +53,7 @@ const char kInferTpye_FaceDetection[] = "FaceDetection";
 const char kInferTpye_AgeGenderRecognition[] = "AgeGenderRecognition";
 const char kInferTpye_EmotionRecognition[] = "EmotionRecognition";
 const char kInferTpye_HeadPoseEstimation[] = "HeadPoseEstimation";
+const char kInferTpye_HumanPoseEstimation[] = "HumanPoseEstimation";
 const char kInferTpye_ObjectDetection[] = "ObjectDetection";
 const char kInferTpye_ObjectSegmentation[] = "ObjectSegmentation";
 const char kInferTpye_PersonReidentification[] = "PersonReidentification";

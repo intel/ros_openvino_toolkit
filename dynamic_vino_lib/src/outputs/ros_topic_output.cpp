@@ -32,6 +32,7 @@ Outputs::RosTopicOutput::RosTopicOutput(std::string pipeline_name) : pipeline_na
   pub_age_gender_ =
       nh_.advertise<people_msgs::AgeGenderStamped>("/openvino_toolkit/" + pipeline_name_ + "/age_genders", 16);
   pub_headpose_ = nh_.advertise<people_msgs::HeadPoseStamped>("/openvino_toolkit/" + pipeline_name_ + "/headposes", 16);
+  pub_human_pose_ = nh_.advertise<people_msgs::HumanPoseStamped>("/openvino_toolkit/" + pipeline_name_ + "/human_poses", 16);
   pub_object_ =
       nh_.advertise<object_msgs::ObjectsInBoxes>("/openvino_toolkit/" + pipeline_name_ + "/detected_objects", 16);
   pub_person_reid_ = nh_.advertise<people_msgs::ReidentificationStamped>(
@@ -61,6 +62,7 @@ Outputs::RosTopicOutput::RosTopicOutput(std::string pipeline_name) : pipeline_na
   license_plate_topic_ = NULL;
   vehicle_attribs_topic_ = NULL;
   landmarks_topic_ = NULL;
+  human_pose_topic_ = NULL;
 }
 
 void Outputs::RosTopicOutput::feedFrame(const cv::Mat& frame)
@@ -262,6 +264,42 @@ void Outputs::RosTopicOutput::accept(const std::vector<dynamic_vino_lib::HeadPos
   }
 }
 
+void Outputs::RosTopicOutput::accept(const std::vector<dynamic_vino_lib::HumanPoseResult>& results)
+{
+  human_pose_topic_ = std::make_shared<people_msgs::HumanPoseStamped>();
+
+  for (auto r : results)
+  {
+    people_msgs::HumanPose hp;
+
+    auto loc = r.getLocation();
+    hp.roi.x_offset = loc.x;
+    hp.roi.y_offset = loc.y;
+    hp.roi.width = loc.width;
+    hp.roi.height = loc.height;
+    hp.score = r.getScore();
+
+    auto p = people_msgs::HumanPoseKeypoint();// geometry_msgs::Point();
+    p.position.z = -1;
+    for (auto kp : r.keypoints)
+    {
+      p.position.x = kp.x;
+      p.position.y = kp.y;
+      if (kp.x >= 0)
+      {
+        p.score = kp.score;
+      }
+      else
+      {
+        p.score = 0;
+      }
+
+      hp.keypoints.push_back(p);
+    }
+    human_pose_topic_->humanposes.push_back(hp);
+  }
+}
+
 void Outputs::RosTopicOutput::accept(const std::vector<dynamic_vino_lib::ObjectDetectionResult>& results)
 {
   detected_objects_topic_ = std::make_shared<object_msgs::ObjectsInBoxes>();
@@ -384,6 +422,15 @@ void Outputs::RosTopicOutput::handleOutput()
 
     pub_headpose_.publish(headpose_msg);
     headpose_topic_ = nullptr;
+  }
+  if (human_pose_topic_ != nullptr)
+  {
+    people_msgs::HumanPoseStamped human_pose_msg;
+    human_pose_msg.header = header;
+    human_pose_msg.humanposes.swap(human_pose_topic_->humanposes);
+
+    pub_human_pose_.publish(human_pose_msg);
+    human_pose_topic_ = nullptr;
   }
   if (detected_objects_topic_ != nullptr)
   {
