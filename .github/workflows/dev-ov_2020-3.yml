@@ -21,7 +21,7 @@ jobs:
     - uses: actions/checkout@v2
 
     # install ros melodic
-    - uses: ros-tooling/setup-ros@0.1.1
+    - uses: ros-tooling/setup-ros@v0.2
       with:
         required-ros-distributions: melodic
     - run: "source /opt/ros/melodic/setup.bash"
@@ -30,7 +30,7 @@ jobs:
     - name: Install librealsense
       run: |
         sudo apt-key adv --keyserver keys.gnupg.net --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE || sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE
-        sudo add-apt-repository "deb http://realsense-hw-public.s3.amazonaws.com/Debian/apt-repo bionic main" -u
+        sudo add-apt-repository "deb https://librealsense.intel.com/Debian/apt-repo bionic main" -u
         sudo apt update
         sudo apt-get install librealsense2-dev
 
