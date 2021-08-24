@@ -1,7 +1,7 @@
 <launch>
   <arg name="param_file" value="$(find vino_launch)/param/pipeline_reidentification.yaml" />
 
-  <node pkg="dynamic_vino_sample" type="pipeline_with_params"
+  <node pkg="vino_sample" type="pipeline_with_params"
         name="pipeline_with_params" output="screen">
         <param name="param_file" value="$(arg param_file)" />
         <remap from ="/openvino_toolkit/reidentified_persons" to = "/ros_openvino_toolkit/reidentified_persons" />

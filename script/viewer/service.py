@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from pipeline_srv_msgs.srv import *
+from vino_pipeline_srv_msgs.srv import *
 import rospy
 import sys
 from pipeTree import TreeNode
