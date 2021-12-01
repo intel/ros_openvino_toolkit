@@ -123,7 +123,7 @@ public:
     // std::map<std::string, std::string>::iterator it;
     auto it = attr_.output_names.find(name);
 
-    
+
     if (it == attr_.output_names.end())
     {
       slog::warn << "No output named: " << name << slog::endl;
