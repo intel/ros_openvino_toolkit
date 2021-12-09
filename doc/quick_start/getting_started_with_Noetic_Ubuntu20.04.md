@@ -53,11 +53,13 @@ sudo python3 downloader.py --name age-gender-recognition-retail-0013
 sudo python3 downloader.py --name emotions-recognition-retail-0003
 sudo python3 downloader.py --name head-pose-estimation-adas-0001
 sudo python3 downloader.py --name person-detection-retail-0013
+sudo python3 downloader.py --name person-reidentification-retail-0277
 sudo python3 downloader.py --name landmarks-regression-retail-0009
 sudo python3 downloader.py --name face-reidentification-retail-0095
 sudo python3 downloader.py --name vehicle-attributes-recognition-barrier-0039
 sudo python3 downloader.py --name license-plate-recognition-barrier-0001
 ```
+
 * If the model (tensorflow, caffe, MXNet, ONNX, Kaldi)need to be converted to intermediate representation (For example the model for object detection)
   * vehicle-license-plate-detection-barrier-0123
   ```
@@ -74,25 +76,54 @@ sudo python3 downloader.py --name license-plate-recognition-barrier-0001
 
 * copy label files (execute once)
 ```
- sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/openvino_toolkit/models/emotions-recognition/output/intel/emotions-recognition-retail-0003/FP32/
- sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/models/face_detection/output/intel/face-detection-adas-0001/FP32/
- sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/models/face_detection/output/intel/face-detection-adas-0001/FP16/
- sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_segmentation/frozen_inference_graph.labels /opt/openvino_toolkit/models/semantic-segmentation/output/FP32/
- sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_segmentation/frozen_inference_graph.labels /opt/openvino_toolkit/models/semantic-segmentation/output/FP16/
- sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_detection/vehicle-license-plate-detection-barrier-0106.labels /opt/openvino_toolkit/models/vehicle-license-plate-detection/output/intel/vehicle-license-plate-detection-barrier-0106/FP32
- sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/models/face_detection/output/intel/face-detection-adas-0001/FP32/
- sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/models/face_detection/output/intel/face-detection-adas-0001/FP16/
+ cd /opt/openvino_toolkit/models
+sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels intel/emotions-recognition-retail-0003/FP16/
+sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels intel/face-detection-adas-0001/FP16/
+sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_detection/vehicle-license-plate-detection-barrier-0106.labels public/vehicle-license-plate-detection-barrier-0123/FP16/
+sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels public/mobilenet-ssd/FP16/
+sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_segmentation/frozen_inference_graph.labels public/deeplabv3/FP16/
+mv public/deeplabv3/FP16/frozen_inference_graph.labels  public/deeplabv3/FP16/deeplabv3.labels
 ```
 
 * Before launch, check the parameter configuration in ros_openvino_toolkit/vino_launch/param/xxxx.yaml, make sure the paramter like model path, label path, inputs are right.
-* run face detection sample code input from StandardCamera.
-```
-roslaunch vino_launch pipeline_people.launch.py
-```
-
+  * run face detection sample code input from StandardCamera.
+  ```
+  roslaunch vino_launch pipeline_people.launch
+  ```
+  * run person reidentification sample code input from StandardCamera.
+  ```
+  roslaunch vino_launch pipeline_face_reidentification.launch
+  ```
+  * run person reidentification sample code input from StandardCamera
+  ```
+  roslaunch vino_launch pipeline_reidentification.launch
+  ```
+  * run face detection sample code input from Image.
+  ```
+  roslaunch vino_launch pipeline_image.launch
+  ```
+  * run object sample
+  ```
+  roslaunch vino_launch pipeline_object.launch
+  ```
+  * run object topic sample
+  ```
+  roslaunch vino_launch pipeline_object_topic.launch
+  ```
+  * run object segmentation sample code input from RealSenseCameraTopic.
+  ```
+  roslaunch vino_launch pipeline_segmentation.launch
+  ```
+  * run vehicle detection sample code input from StandardCamera.
+  ```
+  roslaunch vino_launch pipeline_vehicle_detection.launch
+  ```
+  * run video sample
+  ```
+  roslaunch vino_launch pipeline_video.launch
+  ```
 
 # More Information
-* 
 
 ###### *Any security issue should be reported using process at https://01.org/security*
 
