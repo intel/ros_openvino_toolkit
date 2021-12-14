@@ -1,9 +1,9 @@
 Pipelines:
 - name: object
-  inputs: [ImageTopic]
+  inputs: [RealSenseCamera] #[ImageTopic]
   infers:
     - name: ObjectDetection
-      model: /opt/openvino_toolkit/models/public/mobilenet-ssd/FP16/mobilenet-ssd.xml
+      model: /opt/openvino_toolkit/models/public/ssd_mobilenet_v2_coco/FP16/ssd_mobilenet_v2_coco.xml
       engine: CPU
       label: to/be/set/xxx.labels
       batch: 1
@@ -11,7 +11,7 @@ Pipelines:
       enable_roi_constraint: true # set enable_roi_constraint to false if you don't want to make the inferred ROI (region of interest) constrained into the camera frame
   outputs: [ImageWindow, RosTopic, RViz]
   connects:
-    - left: ImageTopic
+    - left: RealSenseCamera #ImageTopic
       right: [ObjectDetection]
     - left: ObjectDetection
       right: [ImageWindow]
