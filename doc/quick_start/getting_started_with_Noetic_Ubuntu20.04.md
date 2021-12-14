@@ -20,6 +20,13 @@ mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
 git clone https://github.com/intel/ros_openvino_toolkit -b dev-ov2021.4
 git clone https://github.com/intel/object_msgs
+git clone https://github.com/IntelRealSense/realsense-ros.git
+cd realsense-ros
+git checkout `git tag | sort -V | grep -P "^2.\d+\.\d+" | tail -1`
+```
+* Install dependencies
+```
+sudo apt-get install ros-noetic-ddynamic-reconfigure
 ```
 * Build package
 ```
@@ -48,29 +55,35 @@ sudo python3 downloader.py --print_all
 * Download the optimized Intermediate Representation (IR) of model (execute once):
 ```
 cd /opt/openvino_toolkit/models/
-sudo python3 downloader.py --name face-detection-adas-0001
-sudo python3 downloader.py --name age-gender-recognition-retail-0013
-sudo python3 downloader.py --name emotions-recognition-retail-0003
-sudo python3 downloader.py --name head-pose-estimation-adas-0001
-sudo python3 downloader.py --name person-detection-retail-0013
-sudo python3 downloader.py --name person-reidentification-retail-0277
-sudo python3 downloader.py --name landmarks-regression-retail-0009
-sudo python3 downloader.py --name face-reidentification-retail-0095
-sudo python3 downloader.py --name vehicle-attributes-recognition-barrier-0039
-sudo python3 downloader.py --name license-plate-recognition-barrier-0001
+sudo python3 downloader/downloader.py --name face-detection-adas-0001
+sudo python3 downloader/downloader.py --name age-gender-recognition-retail-0013
+sudo python3 downloader/downloader.py --name emotions-recognition-retail-0003
+sudo python3 downloader/downloader.py --name head-pose-estimation-adas-0001
+sudo python3 downloader/downloader.py --name person-detection-retail-0013
+sudo python3 downloader/downloader.py --name person-reidentification-retail-0277
+sudo python3 downloader/downloader.py --name landmarks-regression-retail-0009
+sudo python3 downloader/downloader.py --name face-reidentification-retail-0095
+sudo python3 downloader/downloader.py --name vehicle-attributes-recognition-barrier-0039
+sudo python3 downloader/downloader.py --name license-plate-recognition-barrier-0001
 ```
 
 * If the model (tensorflow, caffe, MXNet, ONNX, Kaldi)need to be converted to intermediate representation (For example the model for object detection)
+  * ssd_mobilenet_v2_coco
+  ```
+  cd /opt/openvino_toolkit/models/
+  sudo python3 downloader/downloader.py --name ssd_mobilenet_v2_coco
+  sudo python3 /opt/intel/openvino_2021/deployment_tools/open_model_zoo/tools/downloader/converter.py --name=ssd_mobilenet_v2_coco --mo /opt/intel/openvino_2021/deployment_tools/model_optimizer/mo.py
+  ```
   * vehicle-license-plate-detection-barrier-0123
   ```
   cd /opt/openvino_toolkit/models/
-  sudo python3 ./downloader.py --name vehicle-license-plate-detection-barrier-0123
+  sudo python3 downloader/downloader.py --name vehicle-license-plate-detection-barrier-0123
   sudo python3 /opt/intel/openvino_2021/deployment_tools/open_model_zoo/tools/downloader/converter.py --name=vehicle-license-plate-detection-barrier-0123 --mo /opt/intel/openvino_2021/deployment_tools/model_optimizer/mo.py 
   ```
   * deeplabv3
   ```
   cd /opt/openvino_toolkit/models/
-  sudo python3 ./downloader.py --name deeplabv3
+  sudo python3 downloader/downloader.py --name deeplabv3
   sudo python3 /opt/intel/openvino_2021/deployment_tools/open_model_zoo/tools/downloader/converter.py --name=deeplabv3 --mo /opt/intel/openvino_2021/deployment_tools/model_optimizer/mo.py 
   ```
 
@@ -126,4 +139,5 @@ mv public/deeplabv3/FP16/frozen_inference_graph.labels  public/deeplabv3/FP16/de
 # More Information
 
 ###### *Any security issue should be reported using process at https://01.org/security*
+
 
