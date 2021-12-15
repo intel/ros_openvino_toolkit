@@ -20,6 +20,7 @@ mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
 git clone https://github.com/intel/ros_openvino_toolkit -b dev-ov2021.4
 git clone https://github.com/intel/object_msgs
+git clone https://github.com/ros-perception/vision_opencv.git -b melodic
 git clone https://github.com/IntelRealSense/realsense-ros.git
 cd realsense-ros
 git checkout `git tag | sort -V | grep -P "^2.\d+\.\d+" | tail -1`
@@ -88,9 +89,11 @@ sudo python3 downloader/downloader.py --name license-plate-recognition-barrier-0
   ```
 
 * copy label files (execute once)
+* Before launch, copy label files to the same model path, make sure the model path and label path match the ros_openvino_toolkit/vino_launch/param/xxxx.yaml.
 ```
  cd /opt/openvino_toolkit/models
 sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels intel/emotions-recognition-retail-0003/FP32/
+sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels intel/emotions-recognition-retail-0003/FP16/
 sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels intel/face-detection-adas-0001/FP16/
 sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_detection/vehicle-license-plate-detection-barrier-0106.labels public/vehicle-license-plate-detection-barrier-0123/FP16/
 sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels public/ssd_mobilenet_v2_coco/FP16/
