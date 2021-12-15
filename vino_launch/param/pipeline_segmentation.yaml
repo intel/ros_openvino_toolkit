@@ -1,6 +1,6 @@
 Pipelines:
 - name: segmentation
-  inputs: [RealSenseCameraTopic]
+  inputs: [RealSenseCamera]
   infers:
     - name: ObjectSegmentation
       model: /opt/openvino_toolkit/models/public/deeplabv3/FP16/deeplabv3.xml
@@ -10,7 +10,7 @@ Pipelines:
       confidence_threshold: 0.5
   outputs: [ImageWindow, RosTopic, RViz]
   connects:
-    - left: RealSenseCameraTopic
+    - left: RealSenseCamera
       right: [ObjectSegmentation]
     - left: ObjectSegmentation
       right: [ImageWindow]

@@ -17,4 +17,5 @@
         <remap from ="/openvino_toolkit/images" to = "/ros_openvino_toolkit/image_rviz" />
         <remap from ="/camera/color/image_raw" to = "/usb_cam/image_raw" />
   </node>
+  <include file="$(find usb_cam)/launch/usb_cam-test.launch"/>
 </launch>

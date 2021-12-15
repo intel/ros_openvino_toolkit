@@ -18,7 +18,7 @@ Pipelines:
     - name: EmotionRecognition
       model: /opt/openvino_toolkit/models/intel/emotions-recognition-retail-0003/FP16/emotions-recognition-retail-0003.xml
       engine: CPU
-      label: /opt/openvino_toolkit/models/emotions-recognition/FP32/emotions-recognition-retail-0003.labels
+      label: /opt/openvino_toolkit/models/intel/emotions-recognition-retail-0003/FP16/emotions-recognition-retail-0003.labels
       batch: 16
     - name: HeadPoseEstimation
       model: /opt/openvino_toolkit/models/intel/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001.xml
