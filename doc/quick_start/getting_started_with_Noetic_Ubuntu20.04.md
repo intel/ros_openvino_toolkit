@@ -88,14 +88,16 @@ sudo python3 downloader/downloader.py --name license-plate-recognition-barrier-0
   ```
 
 * copy label files (execute once)
+* Before launch, copy label files to the same model path, make sure the model path and label path match the ros_openvino_toolkit/vino_launch/param/xxxx.yaml.
 ```
  cd /opt/openvino_toolkit/models
 sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels intel/emotions-recognition-retail-0003/FP16/
+sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels intel/emotions-recognition-retail-0003/FP32/
 sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels intel/face-detection-adas-0001/FP16/
 sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_detection/vehicle-license-plate-detection-barrier-0106.labels public/vehicle-license-plate-detection-barrier-0123/FP16/
 sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels public/mobilenet-ssd/FP16/
 sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_segmentation/frozen_inference_graph.labels public/deeplabv3/FP16/
-mv public/deeplabv3/FP16/frozen_inference_graph.labels  public/deeplabv3/FP16/deeplabv3.labels
+sudo mv public/deeplabv3/FP16/frozen_inference_graph.labels  public/deeplabv3/FP16/deeplabv3.labels
 ```
 
 * Before launch, check the parameter configuration in ros_openvino_toolkit/vino_launch/param/xxxx.yaml, make sure the paramter like model path, label path, inputs are right.
@@ -123,7 +125,7 @@ mv public/deeplabv3/FP16/frozen_inference_graph.labels  public/deeplabv3/FP16/de
   ```
   roslaunch vino_launch pipeline_object_topic.launch
   ```
-  * run object segmentation sample code input from RealSenseCameraTopic.
+  * run object segmentation sample code input from RealSenseCamera.
   ```
   roslaunch vino_launch pipeline_segmentation.launch
   ```
