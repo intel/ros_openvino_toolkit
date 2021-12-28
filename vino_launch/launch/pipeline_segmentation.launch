@@ -1,5 +1,5 @@
 <launch>
-  <arg name="param_file" value="$(find vino_launch)/param/pipeline_segmentation.yaml" />
+  <arg name="param_file" default="$(find vino_launch)/param/pipeline_segmentation.yaml" />
 
   <group>
      <arg name="color_width" default="640" />
