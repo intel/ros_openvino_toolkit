@@ -28,8 +28,8 @@
 #include "vino_core_lib/slog.h"
 
 // Validated Base Network
-Models::BaseModel::BaseModel(const std::string& model_loc, int max_batch_size)
-  : model_loc_(model_loc), max_batch_size_(max_batch_size), ModelAttribute(model_loc)
+Models::BaseModel::BaseModel(const std::string& label_loc, const std::string& model_loc, int max_batch_size)
+  : label_loc_(label_loc), model_loc_(model_loc), max_batch_size_(max_batch_size), ModelAttribute(model_loc)
 {
   slog::debug << "model location:  " << model_loc_ << slog::endl;
   if (model_loc.empty())
@@ -54,7 +54,8 @@ void Models::BaseModel::modelInit()
   ///std::string bin_file_name = raw_name + ".bin";
   ///net_reader_->ReadWeights(bin_file_name);
   // Read labels (if any)
-  std::string label_file_name = raw_name + ".labels";
+  std::string label_file_name = label_loc_.substr(0, last_index);
+  //std::string label_file_name = raw_name + ".labels";
   loadLabelsFromFile(label_file_name);
 
   // Set batch size to given max_batch_size_
@@ -85,7 +86,7 @@ bool Models::BaseModel::updateLayerProperty(
 }
 #endif
 
-Models::ObjectDetectionModel::ObjectDetectionModel(const std::string& model_loc, int max_batch_size)
-  : BaseModel(model_loc, max_batch_size)
+Models::ObjectDetectionModel::ObjectDetectionModel(const std::string& label_loc, const std::string& model_loc, int max_batch_size)
+  : BaseModel(label_loc, model_loc, max_batch_size)
 {
 }
