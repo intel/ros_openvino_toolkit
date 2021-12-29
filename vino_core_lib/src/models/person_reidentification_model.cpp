@@ -20,8 +20,8 @@
 #include "vino_core_lib/models/person_reidentification_model.h"
 #include "vino_core_lib/slog.h"
 // Validated Object Detection Network
-Models::PersonReidentificationModel::PersonReidentificationModel(const std::string& model_loc, int max_batch_size)
-  : BaseModel(model_loc, max_batch_size)
+Models::PersonReidentificationModel::PersonReidentificationModel(const std::string& label_loc, const std::string& model_loc, int max_batch_size)
+  : BaseModel(label_loc, model_loc, max_batch_size)
 {
 }
 

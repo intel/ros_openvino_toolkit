@@ -27,8 +27,8 @@
 #include "vino_core_lib/slog.h"
 
 // Validated Head Pose Network
-Models::HeadPoseDetectionModel::HeadPoseDetectionModel(const std::string& model_loc, int max_batch_size)
-  : BaseModel(model_loc, max_batch_size)
+Models::HeadPoseDetectionModel::HeadPoseDetectionModel(const std::string& label_loc, const std::string& model_loc, int max_batch_size)
+  : BaseModel(label_loc, model_loc, max_batch_size)
 {
 }
 

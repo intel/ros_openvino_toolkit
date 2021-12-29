@@ -26,8 +26,8 @@
 #include "vino_core_lib/slog.h"
 
 // Validated Age Gender Classification Network
-Models::AgeGenderDetectionModel::AgeGenderDetectionModel(const std::string& model_loc, int max_batch_size)
-  : BaseModel(model_loc, max_batch_size)
+Models::AgeGenderDetectionModel::AgeGenderDetectionModel(const std::string& label_loc, const std::string& model_loc, int max_batch_size)
+  : BaseModel(label_loc, model_loc, max_batch_size)
 {
 }
 bool Models::AgeGenderDetectionModel::updateLayerProperty(InferenceEngine::CNNNetwork& net_reader)

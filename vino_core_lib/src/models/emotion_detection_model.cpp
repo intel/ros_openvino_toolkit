@@ -24,8 +24,8 @@
 #include "vino_core_lib/slog.h"
 
 // Validated Emotions Detection Network
-Models::EmotionDetectionModel::EmotionDetectionModel(const std::string& model_loc, int max_batch_size)
-  : BaseModel(model_loc, max_batch_size)
+Models::EmotionDetectionModel::EmotionDetectionModel(const std::string& label_loc, const std::string& model_loc, int max_batch_size)
+  : BaseModel(label_loc, model_loc, max_batch_size)
 {
 }
 
@@ -36,7 +36,7 @@ bool Models::EmotionDetectionModel::updateLayerProperty(InferenceEngine::CNNNetw
   InferenceEngine::InputsDataMap input_info_map(net_reader.getInputsInfo());
   if (input_info_map.size() != 1)
   {
-    slog::warn << "This model seems not Emotion-Detection-like, which should have only one input,"
+    slog::warn << "This model seems not Age-Gender-like, which should have only one input,"
                << " but we got " << std::to_string(input_info_map.size()) << "inputs" << slog::endl;
     return false;
   }
@@ -54,10 +54,10 @@ bool Models::EmotionDetectionModel::updateLayerProperty(InferenceEngine::CNNNetw
                << "outputs" << slog::endl;
     return false;
   }
-  InferenceEngine::DataPtr& output_data_ptr = output_info_map.begin()->second;
+  /// InferenceEngine::DataPtr& output_data_ptr = output_info_map.begin()->second;
   /// slog::info << "Emotions layer: " << output_data_ptr->getCreatorLayer().lock()->name << slog::endl;
-  output_data_ptr->setPrecision(InferenceEngine::Precision::FP32);
-  output_data_ptr->setLayout(InferenceEngine::Layout::NCHW);
+  /// output_data_ptr->setPrecision(InferenceEngine::Precision::FP32);
+  /// output_data_ptr->setLayout(InferenceEngine::Layout::NCHW);
   addOutputInfo("output", output_info_map.begin()->first);
   printAttribute();
   return true; ///verifyOutputLayer(output_data_ptr);
