@@ -1,13 +1,13 @@
 Pipelines:
 - name: object
   inputs: [Video]
-  input_path: /home/cxs/Videos/vehicle_detection.mp4 
+  input_path: /home/ubuntu20/jiawei/ros-ov/ros_openvino_ws/src/ros_openvino_toolkit/data/car_cut.mp4 
   infers:
     - name: ObjectDetection
       model: /opt/openvino_toolkit/models/public/vehicle-license-plate-detection-barrier-0123/FP16/vehicle-license-plate-detection-barrier-0123.xml
       engine: CPU
       model_type: SSD
-      label: to/be/set/xxx.labels
+      label: /opt/openvino_toolkit/models/public/vehicle-license-plate-detection-barrier-0123/FP16/vehicle-license-plate-detection-barrier-0106.labels
       batch: 1
       enable_roi_constraint: true # set enable_roi_constraint to false if you don't want to make the inferred ROI (region of interest) constrained into the camera frame
     - name: VehicleAttribsDetection

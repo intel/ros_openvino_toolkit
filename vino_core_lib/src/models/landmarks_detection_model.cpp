@@ -20,8 +20,8 @@
 #include "vino_core_lib/models/landmarks_detection_model.h"
 #include "vino_core_lib/slog.h"
 // Validated Landmarks Detection Network
-Models::LandmarksDetectionModel::LandmarksDetectionModel(const std::string& model_loc, int max_batch_size)
-  : BaseModel(model_loc, max_batch_size)
+Models::LandmarksDetectionModel::LandmarksDetectionModel(const std::string& label_loc, const std::string& model_loc, int max_batch_size)
+  : BaseModel(label_loc, model_loc, max_batch_size)
 {
 }
 
