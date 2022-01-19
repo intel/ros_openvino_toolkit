@@ -61,9 +61,10 @@ public:
  * @param[in] input_num The number of input the network should have.
  * @param[in] output_num The number of output the network should have.
  * @param[in] batch_size The number of batch size (default: 1) the network should have.
+ * @param[in] label_loc The location of label' s .label file
  * @return Whether the input device is successfully turned on.
  */
-  BaseModel(const std::string& model_loc, int batch_size = 1);
+  BaseModel(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
 
   /**
  * @brief Get the maximum batch size of the model.
@@ -127,13 +128,14 @@ protected:
 private:
   int max_batch_size_;
   std::string model_loc_;
+  std::string label_loc_;
   cv::Size frame_size_;
 };
 
 class ObjectDetectionModel : public BaseModel
 {
 public:
-  ObjectDetectionModel(const std::string& model_loc, int batch_size = 1);
+  ObjectDetectionModel(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
   virtual bool fetchResults(const std::shared_ptr<Engines::Engine>& engine,
                             std::vector<vino_core_lib::ObjectDetectionResult>& result,
                             const float& confidence_thresh = 0.3, const bool& enable_roi_constraint = false) = 0;

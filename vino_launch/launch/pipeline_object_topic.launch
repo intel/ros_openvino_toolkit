@@ -1,5 +1,5 @@
 <launch>
-  <arg name="param_file" value="$(find vino_launch)/param/pipeline_object_topic.yaml" />
+  <arg name="param_file" default="$(find vino_launch)/param/pipeline_object_topic.yaml" />
 
   <!-- <group>
      <arg name="color_width" default="640" />
@@ -17,5 +17,4 @@
         <remap from ="/openvino_toolkit/images" to = "/ros_openvino_toolkit/image_rviz" />
         <remap from ="/camera/color/image_raw" to = "/usb_cam/image_raw" />
   </node>
-  <include file="$(find usb_cam)/launch/usb_cam-test.launch"/>
 </launch>
