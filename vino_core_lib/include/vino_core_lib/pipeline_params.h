@@ -18,8 +18,8 @@
  * @brief a header file with declaration of Pipeline class
  * @file pipeline_param.h
  */
-#ifndef VINO_CORE_LIB_PIPELINE_PARAMS_H
-#define VINO_CORE_LIB_PIPELINE_PARAMS_H
+#ifndef VINO_CORE_LIB__PIPELINE_PARAMS_H
+#define VINO_CORE_LIB__PIPELINE_PARAMS_H
 
 #include <atomic>
 #include <future>
@@ -35,11 +35,12 @@
 #include "opencv2/opencv.hpp"
 #include "vino_param_lib/param_manager.h"
 
-
 const char kInputType_Image[] = "Image";
 const char kInputType_Video[] = "Video";
 const char kInputType_StandardCamera[] = "StandardCamera";
+const char kInputType_IpCamera[] = "IpCamera";
 const char kInputType_CameraTopic[] = "RealSenseCameraTopic";
+const char kInputType_ImageTopic[] = "ImageTopic";
 const char kInputType_RealSenseCamera[] = "RealSenseCamera";
 const char kInputType_ServiceImage[] = "ServiceImage";
 
@@ -55,7 +56,13 @@ const char kInferTpye_HeadPoseEstimation[] = "HeadPoseEstimation";
 const char kInferTpye_ObjectDetection[] = "ObjectDetection";
 const char kInferTpye_ObjectSegmentation[] = "ObjectSegmentation";
 const char kInferTpye_PersonReidentification[] = "PersonReidentification";
-
+const char kInferTpye_ObjectDetectionTypeSSD[] = "SSD";
+const char kInferTpye_ObjectDetectionTypeYolov2voc[] = "yolov2-voc";
+const char kInferTpye_LandmarksDetection[] = "LandmarksDetection";
+const char kInferTpye_FaceReidentification[] = "FaceReidentification";
+const char kInferTpye_PersonAttribsDetection[] = "PersonAttribsDetection";
+const char kInferTpye_VehicleAttribsDetection[] = "VehicleAttribsDetection";
+const char kInferTpye_LicensePlateDetection[] = "LicensePlateDetection";
 /**
  * @class PipelineParams
  * @brief This class is a pipeline parameter management that stores parameters
@@ -63,22 +70,22 @@ const char kInferTpye_PersonReidentification[] = "PersonReidentification";
  */
 class PipelineParams
 {
- public:
+public:
   explicit PipelineParams(const std::string& name);
-  explicit PipelineParams(const Params::ParamManager::PipelineParams& params);
-  static Params::ParamManager::PipelineParams getPipeline(
-      const std::string& name);
-  PipelineParams& operator=(const Params::ParamManager::PipelineParams& params);
+  explicit PipelineParams(const Params::ParamManager::PipelineRawData& params);
+  Params::ParamManager::PipelineRawData getPipeline(const std::string& name);
+  PipelineParams& operator=(const Params::ParamManager::PipelineRawData& params);
   void update();
-  void update(const Params::ParamManager::PipelineParams& params);
+  void update(const Params::ParamManager::PipelineRawData& params);
   bool isOutputTo(std::string& name);
   bool isGetFps();
+  std::string findFilterConditions(const std::string& input, const std::string& output);
 
   const std::string kInputType_Image = "Image";
   const std::string kOutputTpye_RViz = "RViz";
 
- private:
-  Params::ParamManager::PipelineParams params_;
+private:
+  Params::ParamManager::PipelineRawData params_;
 };
 
-#endif  // VINO_CORE_LIB_PIPELINE_PARAMS_H
+#endif  // VINO_CORE_LIB__PIPELINE_PARAMS_H

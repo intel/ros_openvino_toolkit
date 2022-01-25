@@ -26,47 +26,36 @@
 
 #include <vino_people_msgs/ObjectsInMasksSrv.h>
 
-
-
-int main(int argc, char ** argv)
+int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "image_segmentation_client"); 
+  ros::init(argc, argv, "image_segmentation_client");
 
   ros::NodeHandle n;
 
   ros::ServiceClient client = n.serviceClient<vino_people_msgs::ObjectsInMasksSrv>("/openvino_toolkit/service");
 
-
   vino_people_msgs::ObjectsInMasksSrv srv;
 
   if (client.call(srv))
   {
-    ROS_INFO("Request service success!"); 
-    
-    for (unsigned int i = 0; i < srv.response.segmentation.objects_vector.size(); i++) {
+    ROS_INFO("Request service success!");
+
+    for (unsigned int i = 0; i < srv.response.segmentation.objects_vector.size(); i++)
+    {
       std::stringstream ss;
-      ss << srv.response.segmentation.objects_vector[i].object_name << ": " <<
-        srv.response.segmentation.objects_vector[i].probability * 100 << "%";
-      ROS_INFO("%d: object: %s", i,
-        srv.response.segmentation.objects_vector[i].object_name.c_str());
-      ROS_INFO( "prob: %f",
-        srv.response.segmentation.objects_vector[i].probability);
-      ROS_INFO(
-        "location: (%d, %d, %d, %d)",
-        srv.response.segmentation.objects_vector[i].roi.x_offset, srv.response.segmentation.objects_vector[i].roi.y_offset,
-        srv.response.segmentation.objects_vector[i].roi.width,srv.response.segmentation.objects_vector[i].roi.height);
+      ss << srv.response.segmentation.objects_vector[i].object_name << ": "
+         << srv.response.segmentation.objects_vector[i].probability * 100 << "%";
+      ROS_INFO("%d: object: %s", i, srv.response.segmentation.objects_vector[i].object_name.c_str());
+      ROS_INFO("prob: %f", srv.response.segmentation.objects_vector[i].probability);
+      ROS_INFO("location: (%d, %d, %d, %d)", srv.response.segmentation.objects_vector[i].roi.x_offset,
+               srv.response.segmentation.objects_vector[i].roi.y_offset,
+               srv.response.segmentation.objects_vector[i].roi.width,
+               srv.response.segmentation.objects_vector[i].roi.height);
     }
-   
   }
-   else 
+  else
   {
-    ROS_ERROR("Failed to request service \"openvino_toolkit/service\" "); return -1;
+    ROS_ERROR("Failed to request service \"openvino_toolkit/service\" ");
+    return -1;
   }
-
-    
-   
-
 }
-
-
- 

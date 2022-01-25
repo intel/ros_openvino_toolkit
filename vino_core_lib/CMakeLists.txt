@@ -12,12 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cmake_minimum_required (VERSION 2.8.3)
+cmake_minimum_required (VERSION 3.0.2)
 
 project(vino_core_lib)
 
+####################################
+## to use new InferenceEngine API (InferenceEngine::Core),
+## then, uncomment below line
+#add_definitions(-DUSE_IE_CORE)
+####################################
+
+####################################
+## uncomment below line to get verbose log
+## add_definitions(-DLOG_LEVEL_DEBUG)
+####################################
+
 message(STATUS "Looking for inference engine configuration file at: ${CMAKE_PREFIX_PATH}")
-find_package(InferenceEngine 1.1)
+find_package(InferenceEngine REQUIRED)
 if (NOT InferenceEngine_FOUND)
     message(FATAL_ERROR "")
 endif()
@@ -30,6 +41,7 @@ find_package(
   sensor_msgs
   object_msgs
   vino_people_msgs
+  vino_pipeline_srv_msgs
   image_transport
   cv_bridge
   InferenceEngine
@@ -66,13 +78,13 @@ include_directories (
     ${CMAKE_CURRENT_SOURCE_DIR}/../vino_param_lib/include
 )
 
-if (NOT DEFINED ENV{CPU_EXTENSION_LIB})
-  message(FATAL_ERROR "Please set ENV CPU_EXTENSION_LIB with 'export CPU_EXTENSION_LIB=<path-to-libcpu_extension.so>'")
-endif()
-set (CpuExtension_lib $ENV{CPU_EXTENSION_LIB})
-add_library(cpu_extension SHARED IMPORTED)
-set_target_properties(cpu_extension PROPERTIES
-  IMPORTED_LOCATION $ENV{CPU_EXTENSION_LIB})
+#if (NOT DEFINED ENV{CPU_EXTENSION_LIB})
+#  message(FATAL_ERROR "Please set ENV CPU_EXTENSION_LIB with 'export CPU_EXTENSION_LIB=<path-to-libcpu_extension.so>'")
+#endif()
+#set (CpuExtension_lib $ENV{CPU_EXTENSION_LIB})
+#add_library(cpu_extension SHARED IMPORTED)
+#set_target_properties(cpu_extension PROPERTIES
+#  IMPORTED_LOCATION $ENV{CPU_EXTENSION_LIB})
 
 # Flags
 if(UNIX OR APPLE)
@@ -107,7 +119,7 @@ if(UNIX OR APPLE)
 
   # Generic flags.
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fno-operator-names -Wformat -Wformat-security -Wall")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
  # Add OpenMP support
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
@@ -130,15 +142,18 @@ if (SUPPORT_SSE41 EQUAL 0)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
 endif()
 
-set(DEPENDENCIES realsense2 ${OpenCV_LIBS} cpu_extension)
+set(DEPENDENCIES realsense2 ${OpenCV_LIBS})
 
 add_library(${PROJECT_NAME} SHARED
   src/services/frame_processing_server.cpp
-  src/factory.cpp
+  src/services/pipeline_processing_server.cpp
+  #src/services/test.cpp
   src/pipeline.cpp
   src/pipeline_params.cpp
   src/pipeline_manager.cpp
   src/engines/engine.cpp
+  src/engines/engine_manager.cpp
+  src/inferences/base_filter.cpp
   src/inferences/base_inference.cpp
   src/inferences/emotions_detection.cpp
   src/inferences/age_gender_detection.cpp
@@ -147,9 +162,16 @@ add_library(${PROJECT_NAME} SHARED
   src/inferences/object_detection.cpp
   src/inferences/object_segmentation.cpp
   src/inferences/person_reidentification.cpp
+  src/inferences/face_reidentification.cpp
+  src/inferences/base_reidentification.cpp
+  src/inferences/person_attribs_detection.cpp
+  src/inferences/landmarks_detection.cpp
+  src/inferences/vehicle_attribs_detection.cpp
+  src/inferences/license_plate_detection.cpp
   src/inputs/realsense_camera.cpp
-  src/inputs/realsense_camera_topic.cpp
+  src/inputs/image_topic.cpp
   src/inputs/standard_camera.cpp
+  src/inputs/ip_camera.cpp
   src/inputs/video_input.cpp
   src/inputs/image_input.cpp
   src/models/base_model.cpp
@@ -157,20 +179,20 @@ add_library(${PROJECT_NAME} SHARED
   src/models/age_gender_detection_model.cpp
   src/models/face_detection_model.cpp
   src/models/head_pose_detection_model.cpp
-  src/models/object_detection_model.cpp
+  src/models/object_detection_ssd_model.cpp
+  # src/models/object_detection_yolov2voc_model.cpp
   src/models/object_segmentation_model.cpp
   src/models/person_reidentification_model.cpp
+  src/models/face_reidentification_model.cpp
+  src/models/person_attribs_detection_model.cpp
+  src/models/landmarks_detection_model.cpp
+  src/models/vehicle_attribs_detection_model.cpp
+  src/models/license_plate_detection_model.cpp
   src/outputs/image_window_output.cpp
   src/outputs/ros_topic_output.cpp
   src/outputs/rviz_output.cpp
   src/outputs/base_output.cpp
   src/outputs/ros_service_output.cpp
-)
-
-add_dependencies(${PROJECT_NAME}
-  ${${PROJECT_NAME}_EXPORTED_TARGETS}
-  ${catkin_EXPORTED_TARGETS}
-  "object_msgs"
 )
 
 target_link_libraries(${PROJECT_NAME}

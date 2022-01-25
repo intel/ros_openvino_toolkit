@@ -19,8 +19,8 @@
  * @file realsense_camera.h
  */
 
-#ifndef VINO_CORE_LIB_INPUTS_REALSENSE_CAMERA_H
-#define VINO_CORE_LIB_INPUTS_REALSENSE_CAMERA_H
+#ifndef VINO_CORE_LIB__INPUTS__REALSENSE_CAMERA_H
+#define VINO_CORE_LIB__INPUTS__REALSENSE_CAMERA_H
 
 #include <librealsense2/rs.hpp>
 #include <opencv2/opencv.hpp>
@@ -34,22 +34,13 @@ namespace Input
  */
 class RealSenseCamera : public BaseInputDevice
 {
- public:
+public:
   /**
    * @brief Initialize the input device, turn the
    * camera on and get ready to read frames.
    * @return Whether the input device is successfully turned on.
    */
   bool initialize() override;
-  /**
-   * @brief (Only work for standard camera)
-   * Initialize camera by its index when multiple standard camera is connected.
-   * @return Whether the input device is successfully turned on.
-   */
-  bool initialize(int t) override
-  {
-    return true;
-  };
   /**
    * @brief Initialize the input device with given width and height.
    * @return Whether the input device is successfully turned on.
@@ -60,13 +51,16 @@ class RealSenseCamera : public BaseInputDevice
    * @return Whether the next frame is successfully read.
    */
   bool read(cv::Mat* frame) override;
-  void config() override;
 
- private:
+private:
+  void bypassFewFramesOnceInited();
+  std::string getCameraSN();
+
   rs2::config cfg_;
   rs2::pipeline pipe_;
   bool first_read_ = true;
+  static int rscamera_count;
 };
 }  // namespace Input
 
-#endif  // VINO_CORE_LIB_INPUTS_REALSENSE_CAMERA_H
+#endif  // VINO_CORE_LIB__INPUTS__REALSENSE_CAMERA_H

@@ -1,0 +1,36 @@
+Pipelines:
+- name: object
+  inputs: [Video]
+  input_path: /home/ubuntu20/jiawei/ros-ov/ros_openvino_ws/src/ros_openvino_toolkit/data/car_cut.mp4 
+  infers:
+    - name: ObjectDetection
+      model: /opt/openvino_toolkit/models/public/vehicle-license-plate-detection-barrier-0123/FP16/vehicle-license-plate-detection-barrier-0123.xml
+      engine: CPU
+      model_type: SSD
+      label: /opt/openvino_toolkit/models/public/vehicle-license-plate-detection-barrier-0123/FP16/vehicle-license-plate-detection-barrier-0106.labels
+      batch: 1
+      enable_roi_constraint: true # set enable_roi_constraint to false if you don't want to make the inferred ROI (region of interest) constrained into the camera frame
+    - name: VehicleAttribsDetection
+      model: /opt/openvino_toolkit/models/intel/vehicle-attributes-recognition-barrier-0039/FP16/vehicle-attributes-recognition-barrier-0039.xml
+      engine: CPU
+      label: to/be/set/xxx.labels
+      batch: 1
+    - name: LicensePlateDetection
+      model: /opt/openvino_toolkit/models/intel/license-plate-recognition-barrier-0001/FP16/license-plate-recognition-barrier-0001.xml
+      engine: CPU
+      label: to/be/set/xxx.labels
+      batch: 1
+  outputs: [ImageWindow, RViz, RosTopic]
+  connects:
+    - left: Video
+      right: [ObjectDetection]
+    - left: ObjectDetection
+      right: [{VehicleAttribsDetection: label == vehicle && confidence >= 0.8}, {LicensePlateDetection: label == license && confidence >= 0.8}]
+    - left: ObjectDetection
+      right: [ImageWindow, RosTopic, RViz] 
+    - left: VehicleAttribsDetection
+      right: [ImageWindow, RosTopic, RViz]
+    - left: LicensePlateDetection
+      right: [ImageWindow, RosTopic, RViz]
+
+OpenvinoCommon:

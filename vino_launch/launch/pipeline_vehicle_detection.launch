@@ -1,0 +1,9 @@
+<launch>
+  <arg name="param_file" default="$(find vino_launch)/param/pipeline_vehicle_detection.yaml" />
+  
+  <node pkg="vino_sample" type="pipeline_with_params"
+        name="pipeline_with_params" output="screen">
+        <param name="param_file" value="$(arg param_file)" />   
+        <remap from ="/openvino_toolkit/images" to = "/ros_openvino_toolkit/image_rviz" />
+  </node>
+</launch>

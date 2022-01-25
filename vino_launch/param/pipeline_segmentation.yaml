@@ -1,16 +1,16 @@
 Pipelines:
 - name: segmentation
-  inputs: [RealSenseCameraTopic]
+  inputs: [RealSenseCamera]
   infers:
     - name: ObjectSegmentation
-      model: /opt/models/mask_rcnn_inception_v2_coco_2018_01_28/output/frozen_inference_graph.xml
+      model: /opt/openvino_toolkit/models/public/deeplabv3/FP16/deeplabv3.xml
       engine: CPU
-      label: to/be/set/xxx.labels
+      label: /opt/openvino_toolkit/models/public/deeplabv3/FP16/deeplabv3.labels
       batch: 1
+      confidence_threshold: 0.5
   outputs: [ImageWindow, RosTopic, RViz]
-  confidence_threshold: 0.2
   connects:
-    - left: RealSenseCameraTopic
+    - left: RealSenseCamera
       right: [ObjectSegmentation]
     - left: ObjectSegmentation
       right: [ImageWindow]
@@ -20,4 +20,3 @@ Pipelines:
       right: [RViz]
 
 OpenvinoCommon:
-

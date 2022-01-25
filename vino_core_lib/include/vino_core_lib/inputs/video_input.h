@@ -18,8 +18,8 @@
  * @brief A header file with declaration for Video class
  * @file video_input.h
  */
-#ifndef VINO_CORE_LIB_INPUTS_VIDEO_INPUT_H
-#define VINO_CORE_LIB_INPUTS_VIDEO_INPUT_H
+#ifndef VINO_CORE_LIB__INPUTS__VIDEO_INPUT_H
+#define VINO_CORE_LIB__INPUTS__VIDEO_INPUT_H
 
 #include <opencv2/opencv.hpp>
 #include <string>
@@ -33,7 +33,7 @@ namespace Input
  */
 class Video : public BaseInputDevice
 {
- public:
+public:
   explicit Video(const std::string&);
   /**
    * @brief Read a video file from the file path.
@@ -41,15 +41,6 @@ class Video : public BaseInputDevice
    * @return Whether the input device is successfully turned on.
    */
   bool initialize() override;
-  /**
-   * @brief (Only work for standard camera)
-   * No implementation for Video class.
-   * @return Whether the input device is successfully turned on.
-   */
-  bool initialize(int t) override
-  {
-    return initialize();
-  };
   /**
    * @brief Initialize the input device with given width and height.
    * No implementation for Video class.
@@ -61,12 +52,11 @@ class Video : public BaseInputDevice
    * @return Whether the next frame is successfully read.
    */
   bool read(cv::Mat* frame) override;
-  void config() override;
 
- private:
+private:
   cv::VideoCapture cap;
   std::string video_;
 };
 }  // namespace Input
 
-#endif  // VINO_CORE_LIB_INPUTS_VIDEO_INPUT_H
+#endif  // VINO_CORE_LIB__INPUTS__VIDEO_INPUT_H

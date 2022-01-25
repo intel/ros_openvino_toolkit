@@ -18,8 +18,8 @@
  * @brief a header file with declaration of Pipeline class
  * @file pipeline.h
  */
-#ifndef VINO_CORE_LIB_PIPELINE_H
-#define VINO_CORE_LIB_PIPELINE_H
+#ifndef VINO_CORE_LIB__PIPELINE_H
+#define VINO_CORE_LIB__PIPELINE_H
 
 #include <atomic>
 #include <future>
@@ -43,7 +43,7 @@
  */
 class Pipeline
 {
- public:
+public:
   explicit Pipeline(const std::string& name = "pipeline");
   /**
    * @brief Add input device to the pipeline.
@@ -51,8 +51,7 @@ class Pipeline
    * @param[in] input_device the input device instance to be added.
    * @return whether the add operation is successful
    */
-  bool add(const std::string& name,
-           std::shared_ptr<Input::BaseInputDevice> input_device);
+  bool add(const std::string& name, std::shared_ptr<Input::BaseInputDevice> input_device);
   /**
    * @brief Add inference network to the pipeline.
    * @param[in] parent name of the parent device or inference.
@@ -68,8 +67,7 @@ class Pipeline
    * @param[in] inference the inference instance to be added.
    * @return whether the add operation is successful
    */
-  bool add(const std::string & name, 
-           std::shared_ptr<vino_core_lib::BaseInference> inference);
+  bool add(const std::string& name, std::shared_ptr<vino_core_lib::BaseInference> inference);
   /**
    * @brief Add output device to the pipeline.
    * @param[in] parent name of the parent inference.
@@ -77,16 +75,14 @@ class Pipeline
    * @param[in] output the output instance to be added.
    * @return whether the add operation is successful
    */
-  bool add(const std::string& parent, const std::string& name,
-           std::shared_ptr<Outputs::BaseOutput> output);
+  bool add(const std::string& parent, const std::string& name, std::shared_ptr<Outputs::BaseOutput> output);
   /**
    * @brief Add output device to the pipeline.
    * @param[in] name name of the current output device.
    * @param[in] output the output instance to be added.
    * @return whether the add operation is successful
    */
-  bool add(const std::string& name,
-           std::shared_ptr<Outputs::BaseOutput> output);
+  bool add(const std::string& name, std::shared_ptr<Outputs::BaseOutput> output);
   /**
    * @brief Add inference network-output device edge to the pipeline.
    * @param[in] parent name of the parent inference.
@@ -99,7 +95,7 @@ class Pipeline
    * @param[in]  name of the instance.
    * @return the category order of this instance.
    */
-  void addConnect(const std::string & parent, const std::string & name);
+  void addConnect(const std::string& parent, const std::string& name);
   /**
    * @brief Do the inference once.
    * Data flow from input device to inference network, then to output device.
@@ -118,6 +114,14 @@ class Pipeline
   void setCallback();
 
   void printPipeline();
+  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> getOutputHandle()
+  {
+    return name_to_output_map_;
+  }
+  void setParams(PipelineParams pipeline_params)
+  {
+    params_ = std::make_shared<PipelineParams>(pipeline_params);
+  }
   const std::shared_ptr<PipelineParams> getParameters()
   {
     return params_;
@@ -126,7 +130,10 @@ class Pipeline
   {
     return input_device_;
   }
-  
+  const std::multimap<std::string, std::string> getPipelineDetail()
+  {
+    return next_;
+  }
   /**
   * @brief Get real time FPS (frames per second).
   */
@@ -134,12 +141,13 @@ class Pipeline
   {
     return fps_;
   }
-  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> getOutputHandle()
+
+  std::string findFilterConditions(const std::string& input, const std::string& output)
   {
-    return name_to_output_map_;
+    return params_->findFilterConditions(input, output);
   }
 
- private:
+private:
   void initInferenceCounter();
   void increaseInferenceCounter();
   void decreaseInferenceCounter();
@@ -162,11 +170,8 @@ class Pipeline
   std::shared_ptr<Input::BaseInputDevice> input_device_;
   std::string input_device_name_;
   std::multimap<std::string, std::string> next_;
-  std::map<std::string, std::shared_ptr<vino_core_lib::BaseInference>>
-      name_to_detection_map_;
-  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>>
-      name_to_output_map_;
-
+  std::map<std::string, std::shared_ptr<vino_core_lib::BaseInference>> name_to_detection_map_;
+  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> name_to_output_map_;
   std::set<std::string> output_names_;
   int width_ = 0;
   int height_ = 0;
@@ -176,6 +181,8 @@ class Pipeline
   std::mutex counter_mutex_;
   std::condition_variable cv_;
   int fps_ = 0;
+  int frame_cnt_ = 0;
+  std::chrono::time_point<std::chrono::high_resolution_clock> t_start_;
 };
 
-#endif  // vino_core_lib_PIPELINE_H_
+#endif  // VINO_CORE_LIB__PIPELINE_H

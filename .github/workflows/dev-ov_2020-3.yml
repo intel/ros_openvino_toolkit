@@ -1,0 +1,80 @@
+name: dev-ov.2020.3-CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the dev-ov2020.3 branch
+on:
+  push:
+    branches: [ dev-ov2020.3 ]
+  pull_request:
+    branches: [ dev-ov2020.3 ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-18.04
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    # install ros melodic
+    - uses: ros-tooling/setup-ros@v0.2
+      with:
+        required-ros-distributions: melodic
+    - run: "source /opt/ros/melodic/setup.bash"
+    
+    # install librealsense
+    - name: Install librealsense
+      run: |
+        sudo apt-key adv --keyserver keys.gnupg.net --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE || sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE
+        sudo add-apt-repository "deb https://librealsense.intel.com/Debian/apt-repo bionic main" -u
+        sudo apt update
+        sudo apt-get install librealsense2-dev
+
+    # install openvino 2020.3
+    - name: install openvino 2020.3 and librealsense
+      run: |
+        sudo apt install curl gnupg2 lsb-release
+        curl -s https://apt.repos.intel.com/openvino/2020/GPG-PUB-KEY-INTEL-OPENVINO-2020 |sudo apt-key add -
+        echo "deb https://apt.repos.intel.com/openvino/2020 all main" | sudo tee /etc/apt/sources.list.d/intel-openvino-2020.list
+        sudo apt update
+        sudo apt-cache search openvino
+        sudo apt-get install -y \
+          intel-openvino-runtime-ubuntu18-2020.3.341 \
+          intel-openvino-ie-samples-2020.3.341 \
+          intel-openvino-omz-dev-2020.3.341 \
+          intel-openvino-omz-tools-2020.3.341 \
+          intel-openvino-gstreamer-rt-ubuntu-bionic-2020.3.341 \
+          intel-openvino-gva-dev-ubuntu-bionic-2020.3.341 \
+          intel-openvino-gva-rt-ubuntu-bionic-2020.3.341 \
+          intel-openvino-ie-bin-python-tools-ubuntu-bionic-2020.3.341 \
+          intel-openvino-ie-rt-core-ubuntu-bionic-2020.3.341 \
+          intel-openvino-ie-rt-cpu-ubuntu-bionic-2020.3.341 \
+          intel-openvino-ie-rt-gna-ubuntu-bionic-2020.3.341 \
+          intel-openvino-ie-rt-gpu-ubuntu-bionic-2020.3.341 \
+          intel-openvino-ie-rt-hddl-ubuntu-bionic-2020.3.341 \
+          intel-openvino-ie-rt-vpu-ubuntu-bionic-2020.3.341 \
+          intel-openvino-ie-sdk-ubuntu-bionic-2020.3.341 \
+          intel-openvino-opencv-lib-ubuntu-bionic-2020.3.341
+        sudo apt-get install -y libgflags-dev
+        ls -lh /opt/intel/openvino
+        source /opt/intel/openvino/bin/setupvars.sh
+        
+    # build ros openvino toolkit
+    - name: build ros openvino toolkit
+      run: |
+        mkdir -p ~/catkin_ws/src
+        cp -rf ${GITHUB_WORKSPACE} ~/catkin_ws/src
+        cd ~/catkin_ws/src
+        git clone https://github.com/intel/object_msgs.git
+        cd ~/catkin_ws/
+        source /opt/ros/melodic/setup.bash
+        source /opt/intel/openvino/bin/setupvars.sh
+        export CPU_EXTENSION_LIB+=/opt/intel/openvino_2020.3.341/deployment_tools/inference_engine/lib/intel64/libinference_engine.so
+        export GFLAGS_LIB+=/usr/lib/x86_64-linux-gnu/libgflags_nothreads.a
+        env
+        catkin_make_isolated
+          

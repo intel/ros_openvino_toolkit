@@ -19,8 +19,8 @@
  * @file face_detection_model.h
  */
 
-#ifndef VINO_CORE_LIB_MODELS_FACE_DETECTION_MODEL_H
-#define VINO_CORE_LIB_MODELS_FACE_DETECTION_MODEL_H
+#ifndef VINO_CORE_LIB__MODELS__FACE_DETECTION_MODEL_H
+#define VINO_CORE_LIB__MODELS__FACE_DETECTION_MODEL_H
 
 #include <string>
 #include "vino_core_lib/models/base_model.h"
@@ -31,42 +31,17 @@ namespace Models
  * @class FaceDetectionModel
  * @brief This class generates the face detection model.
  */
-class FaceDetectionModel : public BaseModel
+class FaceDetectionModel : public ObjectDetectionModel
 {
- public:
-  FaceDetectionModel(const std::string&, int, int, int);
-  inline const int getMaxProposalCount()
-  {
-    return max_proposal_count_;
-  }
-  inline const int getObjectSize()
-  {
-    return object_size_;
-  }
-  inline const std::string getInputName()
-  {
-    return input_;
-  }
-  inline const std::string getOutputName()
-  {
-    return output_;
-  }
+public:
+  FaceDetectionModel(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
+  // void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr &) override;
   /**
    * @brief Get the name of this detection model.
    * @return Name of the model.
    */
-  const std::string getModelName() const override;
-
- protected:
-  void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr&) override;
-  void setLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
-
- private:
-  int max_proposal_count_;
-  int object_size_;
-  std::string input_;
-  std::string output_;
+  const std::string getModelCategory() const override;
 };
 }  // namespace Models
 
-#endif  // VINO_CORE_LIB_MODELS_FACE_DETECTION_MODEL_H
+#endif  // VINO_CORE_LIB__MODELS__FACE_DETECTION_MODEL_H

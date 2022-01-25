@@ -23,30 +23,18 @@
 // StandardCamera
 bool Input::StandardCamera::initialize()
 {
-  setInitStatus(cap.open(0));
-  setWidth((size_t)cap.get(CV_CAP_PROP_FRAME_WIDTH));
-  setHeight((size_t)cap.get(CV_CAP_PROP_FRAME_HEIGHT));
-  return isInit();
-}
-
-bool Input::StandardCamera::initialize(int camera_num)
-{
-  setInitStatus(cap.open(camera_num));
-  setWidth((size_t)cap.get(CV_CAP_PROP_FRAME_WIDTH));
-  setHeight((size_t)cap.get(CV_CAP_PROP_FRAME_HEIGHT));
-  return isInit();
+  return initialize(640, 480);
 }
 
 bool Input::StandardCamera::initialize(size_t width, size_t height)
 {
+  auto id = getCameraId();
+  setInitStatus(cap.open(id));
+  cap.set(cv::CAP_PROP_FRAME_WIDTH, width);
+  cap.set(cv::CAP_PROP_FRAME_HEIGHT, height);
   setWidth(width);
   setHeight(height);
-  setInitStatus(cap.open(0));
-  if (isInit())
-  {
-    cap.set(CV_CAP_PROP_FRAME_WIDTH, width);
-    cap.set(CV_CAP_PROP_FRAME_HEIGHT, height);
-  }
+
   return isInit();
 }
 
@@ -57,11 +45,33 @@ bool Input::StandardCamera::read(cv::Mat* frame)
     return false;
   }
   cap.grab();
+  // setHeader("standard_camera_frame");
   return cap.retrieve(*frame);
 }
 
-void Input::StandardCamera::config()
+int Input::StandardCamera::getCameraId()
 {
-  // TODO(weizhi): config
-}
+  // In case this function is invoked more than once.
+  if (camera_id_ >= 0)
+  {
+    return camera_id_;
+  }
 
+  static int STANDARD_CAMERA_COUNT = -1;
+  int fd;  // A file descriptor to the video device
+  struct v4l2_capability cap;
+  char file[20];
+  // if it is a realsense camera then skip it until we meet a standard camera
+  do
+  {
+    STANDARD_CAMERA_COUNT++;
+    sprintf(file, "/dev/video%d", STANDARD_CAMERA_COUNT);  // format filename
+    fd = open(file, O_RDWR);
+    ioctl(fd, VIDIOC_QUERYCAP, &cap);
+    close(fd);
+    std::cout << "!!camera: " << cap.card << std::endl;
+  } while (!strcmp((char*)cap.card, "Intel(R) RealSense(TM) Depth Ca"));
+
+  camera_id_ = STANDARD_CAMERA_COUNT;
+  return STANDARD_CAMERA_COUNT;
+}

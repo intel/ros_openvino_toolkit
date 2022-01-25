@@ -15,7 +15,7 @@ limitations under the License.
 
 <package>
   <name>vino_launch</name>
-  <version>0.3.0</version>
+  <version>0.9.0</version>
   <description>This launch project for OpenVINO</description>
   <author email="wei.zhi.liu@intel.com">Weizhi Liu</author>
   <author email="chao1.li@intel.com">Chao Li</author>

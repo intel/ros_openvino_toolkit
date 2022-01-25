@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.2)
 
 project(vino_people_msgs)
 
 find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
+  object_msgs
   geometry_msgs
   message_generation
-  object_msgs
 )
 
 add_message_files(DIRECTORY msg FILES
@@ -36,6 +36,14 @@ add_message_files(DIRECTORY msg FILES
   ObjectsInMasks.msg
   Reidentification.msg
   ReidentificationStamped.msg
+  PersonAttribute.msg
+  PersonAttributeStamped.msg
+  LicensePlate.msg
+  LicensePlateStamped.msg
+  VehicleAttribs.msg
+  VehicleAttribsStamped.msg
+  Landmark.msg
+  LandmarkStamped.msg
 )
 
 add_service_files(FILES

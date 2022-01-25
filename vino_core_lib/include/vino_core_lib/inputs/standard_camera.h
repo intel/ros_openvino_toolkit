@@ -19,11 +19,17 @@
  * @file standard_camera.h
  */
 
-#ifndef VINO_CORE_LIB_INPUTS_STANDARD_CAMERA_H
-#define VINO_CORE_LIB_INPUTS_STANDARD_CAMERA_H
+#ifndef VINO_CORE_LIB__INPUTS__STANDARD_CAMERA_H
+#define VINO_CORE_LIB__INPUTS__STANDARD_CAMERA_H
 
 #include <opencv2/opencv.hpp>
+
 #include "vino_core_lib/inputs/base_input.h"
+#include <stdio.h>
+#include <linux/videodev2.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
 
 namespace Input
 {
@@ -33,7 +39,7 @@ namespace Input
  */
 class StandardCamera : public BaseInputDevice
 {
- public:
+public:
   /**
    * @brief Initialize the input device,
    * for cameras, it will turn the camera on and get ready to read frames,
@@ -41,12 +47,6 @@ class StandardCamera : public BaseInputDevice
    * @return Whether the input device is successfully turned on.
    */
   bool initialize() override;
-  /**
-   * @brief (Only work for standard camera)
-   * Initialize camera by its index when multiple standard camera is connected.
-   * @return Whether the input device is successfully turned on.
-   */
-  bool initialize(int t) override;
   /**
    * @brief Initialize the input device with given width and height.
    * @return Whether the input device is successfully turned on.
@@ -57,10 +57,11 @@ class StandardCamera : public BaseInputDevice
    * @return Whether the next frame is successfully read.
    */
   bool read(cv::Mat* frame) override;
-  void config() override;
 
- private:
+private:
+  int getCameraId();
   cv::VideoCapture cap;
+  int camera_id_ = -1;
 };
 }  // namespace Input
-#endif  // VINO_CORE_LIB_INPUTS_STANDARD_CAMERA_H
+#endif  // VINO_CORE_LIB__INPUTS__STANDARD_CAMERA_H

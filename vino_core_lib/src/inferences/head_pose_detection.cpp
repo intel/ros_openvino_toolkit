@@ -26,37 +26,33 @@
 #include "vino_core_lib/outputs/base_output.h"
 
 // HeadPoseResult
-vino_core_lib::HeadPoseResult::HeadPoseResult(const cv::Rect& location)
-    : Result(location)
+vino_core_lib::HeadPoseResult::HeadPoseResult(const cv::Rect& location) : Result(location)
 {
 }
 
 // Head Pose Detection
-vino_core_lib::HeadPoseDetection::HeadPoseDetection()
-    : vino_core_lib::BaseInference()
+vino_core_lib::HeadPoseDetection::HeadPoseDetection() : vino_core_lib::BaseInference()
 {
 }
 
 vino_core_lib::HeadPoseDetection::~HeadPoseDetection() = default;
 
-void vino_core_lib::HeadPoseDetection::loadNetwork(
-    std::shared_ptr<Models::HeadPoseDetectionModel> network)
+void vino_core_lib::HeadPoseDetection::loadNetwork(std::shared_ptr<Models::HeadPoseDetectionModel> network)
 {
   valid_model_ = network;
   setMaxBatchSize(network->getMaxBatchSize());
 }
 
-bool vino_core_lib::HeadPoseDetection::enqueue(
-    const cv::Mat& frame, const cv::Rect& input_frame_loc)
+bool vino_core_lib::HeadPoseDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
 {
   if (getEnqueuedNum() == 0)
   {
     results_.clear();
   }
-  bool succeed = vino_core_lib::BaseInference::enqueue<uint8_t>(
-      frame, input_frame_loc, 1, getResultsLength(),
-      valid_model_->getInputName());
-  if (!succeed) return false;
+  bool succeed = vino_core_lib::BaseInference::enqueue<uint8_t>(frame, input_frame_loc, 1, getResultsLength(),
+                                                                   valid_model_->getInputName());
+  if (!succeed)
+    return false;
   Result r(input_frame_loc);
   results_.emplace_back(r);
   return true;
@@ -70,14 +66,12 @@ bool vino_core_lib::HeadPoseDetection::submitRequest()
 bool vino_core_lib::HeadPoseDetection::fetchResults()
 {
   bool can_fetch = vino_core_lib::BaseInference::fetchResults();
-  if (!can_fetch) return false;
+  if (!can_fetch)
+    return false;
   auto request = getEngine()->getRequest();
-  InferenceEngine::Blob::Ptr angle_r =
-      request->GetBlob(valid_model_->getOutputOutputAngleR());
-  InferenceEngine::Blob::Ptr angle_p =
-      request->GetBlob(valid_model_->getOutputOutputAngleP());
-  InferenceEngine::Blob::Ptr angle_y =
-      request->GetBlob(valid_model_->getOutputOutputAngleY());
+  InferenceEngine::Blob::Ptr angle_r = request->GetBlob(valid_model_->getOutputOutputAngleR());
+  InferenceEngine::Blob::Ptr angle_p = request->GetBlob(valid_model_->getOutputOutputAngleP());
+  InferenceEngine::Blob::Ptr angle_y = request->GetBlob(valid_model_->getOutputOutputAngleY());
 
   for (int i = 0; i < getResultsLength(); ++i)
   {
@@ -88,27 +82,41 @@ bool vino_core_lib::HeadPoseDetection::fetchResults()
   return true;
 }
 
-const int vino_core_lib::HeadPoseDetection::getResultsLength() const
+int vino_core_lib::HeadPoseDetection::getResultsLength() const
 {
   return static_cast<int>(results_.size());
 }
 
-const vino_core_lib::Result*
-vino_core_lib::HeadPoseDetection::getLocationResult(int idx) const
+const vino_core_lib::Result* vino_core_lib::HeadPoseDetection::getLocationResult(int idx) const
 {
   return &(results_[idx]);
 }
 
 const std::string vino_core_lib::HeadPoseDetection::getName() const
 {
-  return valid_model_->getModelName();
+  return valid_model_->getModelCategory();
 }
 
-const void vino_core_lib::HeadPoseDetection::observeOutput(
-    const std::shared_ptr<Outputs::BaseOutput>& output)
+void vino_core_lib::HeadPoseDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
 {
   if (output != nullptr)
   {
     output->accept(results_);
   }
+}
+
+const std::vector<cv::Rect>
+vino_core_lib::HeadPoseDetection::getFilteredROIs(const std::string filter_conditions) const
+{
+  if (!filter_conditions.empty())
+  {
+    slog::err << "Headpose detection does not support filtering now! "
+              << "Filter conditions: " << filter_conditions << slog::endl;
+  }
+  std::vector<cv::Rect> filtered_rois;
+  for (auto res : results_)
+  {
+    filtered_rois.push_back(res.getLocation());
+  }
+  return filtered_rois;
 }

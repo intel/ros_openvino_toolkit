@@ -19,30 +19,49 @@
  * @file ros_handler.h
  */
 
-#ifndef DYNAMIC_VINO_LIB_INPUTS_ROS_HANDLER_H
-#define DYNAMIC_VINO_LIB_INPUTS_ROS_HANDLER_H
+#ifndef VINO_CORE_LIB__INPUTS__ROS_HANDLER_H
+#define VINO_CORE_LIB__INPUTS__ROS_HANDLER_H
 
 #include <ros/ros.h>
 
 namespace Input
 {
-
-class Ros2Handler
+class RosHandler
 {
- public:
+public:
   void setHandler(const std::shared_ptr<ros::NodeHandle>& node)
   {
     node_ = node;
   }
+
   std::shared_ptr<ros::NodeHandle> getHandler() const
   {
     return node_;
   }
 
- private:
+  // inline void setHeader(std::string frame_id)
+  // {
+  //   header_.frame_id = frame_id;
+  // #if true //directly use RCLCPP api for time stamp generation.
+  //   header_.stamp = ros::Time::now();
+  // #else
+  //   std::chrono::high_resolution_clock::time_point tp = std::chrono::high_resolution_clock::now();
+  //   int64 ns = tp.time_since_epoch().count();
+  //   header_.stamp.sec = ns / 1000000000;
+  //   header_.stamp.nanosec = ns % 1000000000;
+  // #endif
+  // }
+
+  // inline void setHeader(std_msgs::Header header)
+  // {
+  //   header_ = header;
+  // }
+
+private:
   std::shared_ptr<ros::NodeHandle> node_;
+  // std_msgs::Header header_;
 };
 
 }  // namespace Input
 
-#endif  // DYNAMIC_VINO_LIB_INPUTS_ROS_HANDLER_H
+#endif  // VINO_CORE_LIB__INPUTS__ROS_HANDLER_H

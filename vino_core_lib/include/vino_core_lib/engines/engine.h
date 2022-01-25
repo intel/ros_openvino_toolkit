@@ -18,8 +18,8 @@
  * @brief A header file with declaration for NetworkEngine class
  * @file engine.h
  */
-#ifndef VINO_CORE_LIB_ENGINES_ENGINE_H
-#define VINO_CORE_LIB_ENGINES_ENGINE_H
+#ifndef VINO_CORE_LIB__ENGINES__ENGINE_H
+#define VINO_CORE_LIB__ENGINES__ENGINE_H
 
 #pragma once
 
@@ -35,12 +35,20 @@ namespace Engines
 {
 class Engine
 {
- public:
+public:
+#if (defined(USE_OLD_E_PLUGIN_API))
   /**
+   * DEPRECATED! instead of using Engine(InferenceEngine::InferRequest::Ptr &)
    * @brief Create an NetworkEngine instance
    * from a inference plugin and an inference network.
    */
   Engine(InferenceEngine::InferencePlugin, Models::BaseModel::Ptr);
+#endif
+
+  /**
+   * @brief Using an Inference Request to initialize the inference Engine.
+   */
+  Engine(InferenceEngine::InferRequest::Ptr&);
   /**
    * @brief Get the inference request this instance holds.
    * @return The inference request this instance holds.
@@ -60,9 +68,9 @@ class Engine
     request_->SetCompletionCallback(callbackToSet);
   }
 
- private:
-  InferenceEngine::InferRequest::Ptr request_;
+private:
+  InferenceEngine::InferRequest::Ptr request_ = nullptr;
 };
 }  // namespace Engines
 
-#endif  // VINO_CORE_LIB_ENGINES_ENGINE_H
+#endif  // VINO_CORE_LIB__ENGINES__ENGINE_H

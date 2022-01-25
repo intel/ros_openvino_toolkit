@@ -19,8 +19,8 @@
  * @file age_gender_detection_model.h
  */
 
-#ifndef VINO_CORE_LIB_MODELS_AGE_GENDER_DETECTION_MODEL_H
-#define VINO_CORE_LIB_MODELS_AGE_GENDER_DETECTION_MODEL_H
+#ifndef VINO_CORE_LIB__MODELS__AGE_GENDER_DETECTION_MODEL_H
+#define VINO_CORE_LIB__MODELS__AGE_GENDER_DETECTION_MODEL_H
 
 #include <string>
 #include "vino_core_lib/models/base_model.h"
@@ -33,23 +33,20 @@ namespace Models
  */
 class AgeGenderDetectionModel : public BaseModel
 {
- public:
-  AgeGenderDetectionModel(const std::string&, int, int, int);
+public:
+  AgeGenderDetectionModel(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
   /**
    * @brief Get the input name.
    * @return Input name.
    */
-  inline const std::string getInputName() const
-  {
-    return input_;
-  }
+
   /**
    * @brief Get the age from the detection reuslt.
    * @return Detected age.
    */
   inline const std::string getOutputAgeName() const
   {
-    return output_age_;
+    return getOutputName("age");
   }
   /**
    * @brief Get the gender from the detection reuslt.
@@ -57,23 +54,17 @@ class AgeGenderDetectionModel : public BaseModel
    */
   inline const std::string getOutputGenderName() const
   {
-    return output_gender_;
+    return getOutputName("gender");
   }
   /**
    * @brief Get the name of this detection model.
    * @return Name of the model.
    */
-  const std::string getModelName() const override;
+  const std::string getModelCategory() const override;
 
- protected:
-  void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr&) override;
-  void setLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
-
- private:
-  std::string input_;
-  std::string output_age_;
-  std::string output_gender_;
+protected:
+  bool updateLayerProperty(InferenceEngine::CNNNetwork&) override;
 };
 }  // namespace Models
 
-#endif  // VINO_CORE_LIB_MODELS_AGE_GENDER_DETECTION_MODEL_H
+#endif  // VINO_CORE_LIB__MODELS__AGE_GENDER_DETECTION_MODEL_H

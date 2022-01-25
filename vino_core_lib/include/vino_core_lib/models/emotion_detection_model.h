@@ -19,8 +19,8 @@
  * @file emotion_detection_model.h
  */
 
-#ifndef VINO_CORE_LIB_MODELS_EMOTION_DETECTION_MODEL_H
-#define VINO_CORE_LIB_MODELS_EMOTION_DETECTION_MODEL_H
+#ifndef VINO_CORE_LIB__MODELS__EMOTION_DETECTION_MODEL_H
+#define VINO_CORE_LIB__MODELS__EMOTION_DETECTION_MODEL_H
 
 #include <string>
 #include "vino_core_lib/models/base_model.h"
@@ -33,30 +33,19 @@ namespace Models
  */
 class EmotionDetectionModel : public BaseModel
 {
- public:
-  EmotionDetectionModel(const std::string&, int, int, int);
-  inline const std::string getInputName()
-  {
-    return input_;
-  }
-  inline const std::string getOutputName()
-  {
-    return output_;
-  }
+public:
+  EmotionDetectionModel(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
+
   /**
    * @brief Get the name of this detection model.
    * @return Name of the model.
    */
-  const std::string getModelName() const override;
+  const std::string getModelCategory() const override;
+  bool updateLayerProperty(InferenceEngine::CNNNetwork&) override;
 
- protected:
-  void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr&) override;
-  void setLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
-
- private:
-  std::string input_;
-  std::string output_;
+private:
+  bool verifyOutputLayer(const InferenceEngine::DataPtr& ptr);
 };
 }  // namespace Models
 
-#endif  // VINO_CORE_LIB_MODELS_EMOTION_DETECTION_MODEL_H
+#endif  // VINO_CORE_LIB__MODELS__EMOTION_DETECTION_MODEL_H

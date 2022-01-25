@@ -42,7 +42,6 @@
 #include <vino_param_lib/param_manager.h>
 #include "vino_core_lib/common.h"
 #include "vino_core_lib/engines/engine.h"
-#include "vino_core_lib/factory.h"
 #include "vino_core_lib/inferences/age_gender_detection.h"
 #include "vino_core_lib/inferences/base_inference.h"
 #include "vino_core_lib/inferences/emotions_detection.h"
@@ -75,8 +74,9 @@ bool parseAndCheckCommandLine(int argc, char** argv)
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "image_object_servier");
-  
-  if (!parseAndCheckCommandLine(argc, argv))  return 0;
+
+  if (!parseAndCheckCommandLine(argc, argv))
+    return 0;
 
   ros::param::param<std::string>("~param_file", FLAGS_config, "/param/pipeline_people.yaml");
 
@@ -84,14 +84,12 @@ int main(int argc, char** argv)
 
   std::string service_name = "/openvino_toolkit/service";
   slog::info << "service name=" << service_name << slog::endl;
-    // ----- Parsing and validation of input args-----------------------
+  // ----- Parsing and validation of input args-----------------------
 
+  auto node =
+      std::make_shared<vino_service::FrameProcessingServer<object_msgs::DetectObject>>(service_name, FLAGS_config);
 
-  auto node = std::make_shared<vino_service::FrameProcessingServer
-    <object_msgs::DetectObject>>(service_name, FLAGS_config);
-  
   slog::info << "Waiting for service request..." << slog::endl;
   ros::spin();
   slog::info << "--------------End of Excution--------------" << FLAGS_config << slog::endl;
-
 }

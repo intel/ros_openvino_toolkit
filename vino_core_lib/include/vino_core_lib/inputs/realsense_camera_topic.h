@@ -19,8 +19,8 @@
  * @file realsense_camera.h
  */
 
-#ifndef VINO_CORE_LIB_INPUTS_REALSENSE_CAMERA_TOPIC_H
-#define VINO_CORE_LIB_INPUTS_REALSENSE_CAMERA_TOPIC_H
+#ifndef VINO_CORE_LIB__INPUTS__REALSENSE_CAMERA_TOPIC_H
+#define VINO_CORE_LIB__INPUTS__REALSENSE_CAMERA_TOPIC_H
 
 #include <image_transport/image_transport.h>
 #include <nodelet/nodelet.h>
@@ -31,37 +31,18 @@
 #include <memory>
 
 #include "vino_core_lib/inputs/base_input.h"
+#include "vino_core_lib/inputs/image_topic.h"
 
 namespace Input
 {
 /**
+ * DEPRECATED!
+ * Using the new class ImageTopic to handle all image topics.
  * @class RealSenseCameraTopic
  * @brief Class for recieving a realsense camera topic as input.
  */
-class RealSenseCameraTopic : public BaseInputDevice
-{
- public:
-  RealSenseCameraTopic();
-  bool initialize() override;
-  bool initialize(int t) override
-  {
-    return true;
-  };
-  bool initialize(size_t width, size_t height) override
-  {
-    return true;
-  };
-  bool read(cv::Mat* frame) override;
-  void config() override;
+typedef ImageTopic RealSenseCameraTopic;
 
- private:
-  ros::NodeHandle nh_;
-  image_transport::Subscriber sub_;
-  cv::Mat image;
-  cv::Mat last_image;
-
-  void cb(const sensor_msgs::ImageConstPtr& image_msg);
-};
 }  // namespace Input
 
-#endif  // VINO_CORE_LIB_INPUTS_REALSENSE_CAMERA_TOPIC_H_
+#endif  // VINO_CORE_LIB__INPUTS__REALSENSE_CAMERA_TOPIC_H_
