@@ -18,8 +18,8 @@
  * @brief A header file with declaration for BaseInput Class
  * @file base_input.h
  */
-#ifndef VINO_CORE_LIB_INPUTS_BASE_INPUT_H
-#define VINO_CORE_LIB_INPUTS_BASE_INPUT_H
+#ifndef VINO_CORE_LIB__INPUTS__BASE_INPUT_H
+#define VINO_CORE_LIB__INPUTS__BASE_INPUT_H
 
 #include <opencv2/opencv.hpp>
 #include "vino_core_lib/inputs/ros_handler.h"
@@ -31,9 +31,14 @@
  */
 namespace Input
 {
-class BaseInputDevice : public Ros2Handler
+struct Config
 {
- public:
+  std::string path;
+};
+
+class BaseInputDevice : public RosHandler
+{
+public:
   /**
    * @brief Initialize the input device,
    * for cameras, it will turn the camera on and get ready to read frames,
@@ -41,12 +46,6 @@ class BaseInputDevice : public Ros2Handler
    * @return Whether the input device is successfully turned on.
    */
   virtual bool initialize() = 0;
-  /**
-   * @brief (Only work for standard camera)
-   * Initialize camera by its index when multiple standard camera is connected.
-   * @return Whether the input device is successfully turned on.
-   */
-  virtual bool initialize(int) = 0;
   /**
    * @brief Initialize the input device with given width and height.
    * @return Whether the input device is successfully turned on.
@@ -57,7 +56,13 @@ class BaseInputDevice : public Ros2Handler
    * @return Whether the next frame is successfully read.
    */
   virtual bool read(cv::Mat* frame) = 0;
-  virtual void config() = 0;  //< TODO
+  virtual bool readService(cv::Mat* frame, std::string config_path)
+  {
+    return true;
+  }
+  virtual void config(const Config&)
+  {
+  }
   virtual ~BaseInputDevice() = default;
   /**
    * @brief Get the width of the frame read from input device.
@@ -107,28 +112,11 @@ class BaseInputDevice : public Ros2Handler
   {
     is_init_ = is_init;
   }
-  /**
-   * @brief Set the frame_id of input device for ROSTopic outputs.
-   * @param[in] frame_id The frame_id of input device.
-   */
-  inline void setFrameID(std::string frame_id)
-  {
-    frame_id_ = frame_id;
-  }
-  /**
-   * @brief Get the frame_id of input device.
-   * @return Frame_id of input device.
-   */
-  inline std::string getFrameID()
-  {
-    return frame_id_;
-  }
 
- private:
-  size_t width_ = 0;
-  size_t height_ = 0;
+private:
+  size_t width_ = 0;   // 0 means using the original size
+  size_t height_ = 0;  // 0 means using the original size
   bool is_init_ = false;
-  std::string frame_id_;
 };
 }  // namespace Input
-#endif  // VINO_CORE_LIB_INPUTS_BASE_INPUT_H
+#endif  // VINO_CORE_LIB__INPUTS__BASE_INPUT_H

@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.2)
 
 project(vino_sample)
 
 message(STATUS "Looking for inference engine configuration file at: ${CMAKE_PREFIX_PATH}")
-find_package(InferenceEngine 1.1)
+find_package(InferenceEngine)
 if (NOT InferenceEngine_FOUND)
     message(FATAL_ERROR "")
 endif()
@@ -29,6 +29,7 @@ find_package(
   cv_bridge
   object_msgs
   vino_people_msgs
+  vino_pipeline_srv_msgs
   vino_param_lib
   vino_core_lib
 )
@@ -66,7 +67,7 @@ include_directories (
   ${InferenceEngine_INCLUDE_DIRS}/../build/samples/thirdparty/gflags/include
   ${InferenceEngine_INCLUDE_DIRS}/../samples
   ${InferenceEngine_DIR}/../src
-  ${vino_core_lib_INCLUDE_DIRS}
+  #${vino_core_lib_INCLUDE_DIRS}
   ${vino_param_lib_INCLUDE_DIRS}
 )
 
@@ -79,21 +80,21 @@ else()
     return()
 endif()
 
-if (NOT DEFINED ENV{CPU_EXTENSION_LIB})
-  message(FATAL_ERROR "Please set ENV CPU_EXTENSION_LIB with 'export CPU_EXTENSION_LIB=<path-to-libcpu_extension.so>'")
-endif()
-set (CpuExtension_lib $ENV{CPU_EXTENSION_LIB})
-add_library(cpu_extension SHARED IMPORTED)
-set_target_properties(cpu_extension PROPERTIES
-  IMPORTED_LOCATION $ENV{CPU_EXTENSION_LIB})
+#if (NOT DEFINED ENV{CPU_EXTENSION_LIB})
+#  message(FATAL_ERROR "Please set ENV CPU_EXTENSION_LIB with 'export CPU_EXTENSION_LIB=<path-to-libcpu_extension.so>'")
+#endif()
+#set (CpuExtension_lib $ENV{CPU_EXTENSION_LIB})
+#add_library(cpu_extension SHARED IMPORTED)
+#set_target_properties(cpu_extension PROPERTIES
+#  IMPORTED_LOCATION $ENV{CPU_EXTENSION_LIB})
 
-if (NOT DEFINED ENV{GFLAGS_LIB})
-  message(FATAL_ERROR "Please set ENV GFLAGS_LIB with 'export GFLAGS_LIB=<path-to-libgflags_nothreads.a>'")
-endif()
-set (Gflags_lib $ENV{GFLAGS_LIB})
-add_library(gflags STATIC IMPORTED)
-set_target_properties(gflags PROPERTIES
-  IMPORTED_LOCATION $ENV{GFLAGS_LIB})
+#if (NOT DEFINED ENV{GFLAGS_LIB})
+#  message(FATAL_ERROR "Please set ENV GFLAGS_LIB with 'export GFLAGS_LIB=<path-to-libgflags_nothreads.a>'")
+#endif()
+#set (Gflags_lib $ENV{GFLAGS_LIB})
+#add_library(gflags STATIC IMPORTED)
+#set_target_properties(gflags PROPERTIES
+#  IMPORTED_LOCATION $ENV{GFLAGS_LIB})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
@@ -109,7 +110,6 @@ add_dependencies(pipeline_with_params
 
 target_link_libraries(pipeline_with_params
   ${catkin_LIBRARIES}
-  cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -128,7 +128,6 @@ add_dependencies(image_people_server
 
 target_link_libraries(image_people_server
   ${catkin_LIBRARIES}
-  cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -148,7 +147,6 @@ add_dependencies(image_people_client
 
 target_link_libraries(image_people_client
   ${catkin_LIBRARIES}
-  cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -167,7 +165,6 @@ add_dependencies(image_object_server
 
 target_link_libraries(image_object_server
   ${catkin_LIBRARIES}
-  cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -187,7 +184,6 @@ add_dependencies(image_object_client
 
 target_link_libraries(image_object_client
   ${catkin_LIBRARIES}
-  cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -207,7 +203,6 @@ add_dependencies(image_segmentation_client
 
 target_link_libraries(image_segmentation_client
   ${catkin_LIBRARIES}
-  cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -226,7 +221,6 @@ add_dependencies(image_segmentation_server
 
 target_link_libraries(image_segmentation_server
   ${catkin_LIBRARIES}
-  cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -246,7 +240,6 @@ add_dependencies(image_reidentification_client
 
 target_link_libraries(image_reidentification_client
   ${catkin_LIBRARIES}
-  cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
@@ -265,13 +258,29 @@ add_dependencies(image_reidentification_server
 
 target_link_libraries(image_reidentification_server
   ${catkin_LIBRARIES}
-  cpu_extension
   gflags
   ${vino_param_lib_LIBRARIES}
   ${InferenceEngine_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )
 
+add_executable(pipeline_service_client
+  src/pipeline_service_client.cpp
+)
+
+add_dependencies(pipeline_service_client
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${vino_core_lib_TARGETS}
+)
+
+target_link_libraries(pipeline_service_client
+  ${catkin_LIBRARIES}
+  gflags
+  ${vino_param_lib_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
 
 if(UNIX OR APPLE)
   # Linker flags.

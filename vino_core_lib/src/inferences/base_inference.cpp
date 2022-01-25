@@ -34,25 +34,59 @@ vino_core_lib::BaseInference::BaseInference() = default;
 
 vino_core_lib::BaseInference::~BaseInference() = default;
 
-void vino_core_lib::BaseInference::loadEngine(
-    const std::shared_ptr<Engines::Engine> engine)
+void vino_core_lib::BaseInference::loadEngine(const std::shared_ptr<Engines::Engine> engine)
 {
   engine_ = engine;
 }
 
 bool vino_core_lib::BaseInference::submitRequest()
 {
-  if (engine_->getRequest() == nullptr) return false;
-  if (!enqueued_frames) return false;
-  enqueued_frames = 0;
+  if (engine_->getRequest() == nullptr)
+  {
+    return false;
+  }
+  if (!enqueued_frames_)
+  {
+    return false;
+  }
+  enqueued_frames_ = 0;
   results_fetched_ = false;
   engine_->getRequest()->StartAsync();
   return true;
 }
 
+bool vino_core_lib::BaseInference::SynchronousRequest()
+{
+  if (engine_->getRequest() == nullptr)
+  {
+    return false;
+  }
+  if (!enqueued_frames_)
+  {
+    return false;
+  }
+  enqueued_frames_ = 0;
+  results_fetched_ = false;
+  engine_->getRequest()->Infer();
+  return true;
+}
+
 bool vino_core_lib::BaseInference::fetchResults()
 {
-  if (results_fetched_) return false;
+  if (results_fetched_)
+  {
+    return false;
+  }
   results_fetched_ = true;
   return true;
+}
+
+void vino_core_lib::BaseInference::addCandidatedModel(std::shared_ptr<Models::BaseModel> model)
+{
+  slog::info << "TESTING in addCandidatedModel()" << slog::endl;
+  if (model != nullptr)
+  {
+    slog::info << "adding new Model Candidate..." << slog::endl;
+    candidated_models_.push_back(model);
+  }
 }

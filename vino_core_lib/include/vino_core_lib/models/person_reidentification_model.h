@@ -16,8 +16,8 @@
  * @brief A header file with declaration for PersonReidentificationModel Class
  * @file face_detection_model.h
  */
-#ifndef VINO_CORE_LIB__MODELS__PERSON_REIDENTIFICATION_MODEL_HPP_
-#define VINO_CORE_LIB__MODELS__PERSON_REIDENTIFICATION_MODEL_HPP_
+#ifndef VINO_CORE_LIB__MODELS__PERSON_REIDENTIFICATION_MODEL_H
+#define VINO_CORE_LIB__MODELS__PERSON_REIDENTIFICATION_MODEL_H
 #include <string>
 #include "vino_core_lib/models/base_model.h"
 namespace Models
@@ -29,20 +29,27 @@ namespace Models
 class PersonReidentificationModel : public BaseModel
 {
 public:
-  PersonReidentificationModel(const std::string &, int, int, int);
-  inline const std::string getInputName() {return input_;}
-  inline const std::string getOutputName() {return output_;}
+  PersonReidentificationModel(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
+  inline const std::string getInputName()
+  {
+    return input_;
+  }
+  inline const std::string getOutputName()
+  {
+    return output_;
+  }
   /**
    * @brief Get the name of this detection model.
    * @return Name of the model.
    */
-  const std::string getModelName() const override;
+  const std::string getModelCategory() const override;
 
 protected:
-  void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr &) override;
-  void setLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
+  bool updateLayerProperty(InferenceEngine::CNNNetwork&) override;
+  // void checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr &) override;
+  // void setLayerProperty(InferenceEngine::CNNNetReader::Ptr) override;
   std::string input_;
   std::string output_;
 };
 }  // namespace Models
-#endif  // VINO_CORE_LIB__MODELS__PERSON_REIDENTIFICATION_MODEL_HPP_
+#endif  // VINO_CORE_LIB__MODELS__PERSON_REIDENTIFICATION_MODEL_H

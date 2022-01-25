@@ -18,8 +18,8 @@
  * @brief A header file with declaration for Image class
  * @file file_input.h
  */
-#ifndef VINO_CORE_LIB_INPUTS_IMAGE_INPUT_H
-#define VINO_CORE_LIB_INPUTS_IMAGE_INPUT_H
+#ifndef VINO_CORE_LIB__INPUTS__IMAGE_INPUT_H
+#define VINO_CORE_LIB__INPUTS__IMAGE_INPUT_H
 
 #include <opencv2/opencv.hpp>
 #include <string>
@@ -33,7 +33,7 @@ namespace Input
  */
 class Image : public BaseInputDevice
 {
- public:
+public:
   explicit Image(const std::string&);
   /**
    * @brief Read an image file from the file path.
@@ -42,15 +42,6 @@ class Image : public BaseInputDevice
    */
   bool initialize() override;
   /**
-   * @brief (Only work for standard camera)
-   * No implementation for Image class.
-   * @return Whether the input device is successfully turned on.
-   */
-  bool initialize(int t) override
-  {
-    return initialize();
-  };
-  /**
    * @brief Initialize the input device with given width and height.
    * No implementation for Image class.
    * @return Whether the input device is successfully turned on.
@@ -58,18 +49,19 @@ class Image : public BaseInputDevice
   bool initialize(size_t width, size_t height) override
   {
     return initialize();
-  };
+  }
   /**
    * @brief Read next frame, and give the value to argument frame.
    * @return Whether the next frame is successfully read.
    */
   bool read(cv::Mat* frame) override;
-  void config() override;
 
- private:
+  void config(const Config&) override;
+
+private:
   cv::Mat image_;
   std::string file_;
 };
 }  // namespace Input
 
-#endif  // VINO_CORE_LIB_INPUTS_IMAGE_INPUT_H
+#endif  // VINO_CORE_LIB__INPUTS__IMAGE_INPUT_H

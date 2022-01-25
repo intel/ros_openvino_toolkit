@@ -20,6 +20,7 @@
  */
 
 #include "vino_core_lib/inputs/image_input.h"
+#include "vino_core_lib/slog.h"
 #include <string>
 
 // Image
@@ -30,7 +31,6 @@ Input::Image::Image(const std::string& file)
 
 bool Input::Image::initialize()
 {
-  setFrameID("image_frame");
   image_ = cv::imread(file_);
   if (image_.data != NULL)
   {
@@ -52,10 +52,16 @@ bool Input::Image::read(cv::Mat* frame)
     return false;
   }
   *frame = image_;
+  // setHeader("image_frame");
   return true;
 }
 
-void Input::Image::config()
+void Input::Image::config(const Input::Config& config)
 {
-  // TODO(weizhi): config
+  if (config.path != "")
+  {
+    file_.assign(config.path);
+    initialize();
+    slog::info << "Image Input device was reinitialized with new file:" << config.path.c_str() << slog::endl;
+  }
 }

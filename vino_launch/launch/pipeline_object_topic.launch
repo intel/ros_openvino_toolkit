@@ -1,8 +1,7 @@
 <launch>
-  <arg name="param_file" value="$(find vino_launch)/param/pipeline_object_topic.yaml" />
-  <arg name="default_rviz" value="$(find vino_launch)/param/rviz/default.rviz" />
+  <arg name="param_file" default="$(find vino_launch)/param/pipeline_object_topic.yaml" />
 
-  <group>
+  <!-- <group>
      <arg name="color_width" default="640" />
      <arg name="color_height" default="480" />
 
@@ -10,14 +9,12 @@
          <arg name="color_width" value="$(arg color_width)" />
          <arg name="color_height" value="$(arg color_height)" />
      </include>
-  </group>
+  </group> -->
   <node pkg="vino_sample" type="pipeline_with_params"
         name="pipeline_with_params" output="screen">
         <param name="param_file" value="$(arg param_file)" />   
         <remap from ="/openvino_toolkit/detected_objects" to = "/ros_openvino_toolkit/detected_objects" />
         <remap from ="/openvino_toolkit/images" to = "/ros_openvino_toolkit/image_rviz" />
-  </node>
-  <node name="rviz" pkg="rviz" type="rviz" required="true" output="screen">
-        <param name="default_rviz" value="$(arg default_rviz)" />
+        <remap from ="/camera/color/image_raw" to = "/usb_cam/image_raw" />
   </node>
 </launch>

@@ -19,8 +19,8 @@
  * @file head_pose_detection_model.h
  */
 
-#ifndef VINO_CORE_LIB_OUTPUTS_BASE_OUTPUT_H
-#define VINO_CORE_LIB_OUTPUTS_BASE_OUTPUT_H
+#ifndef VINO_CORE_LIB__OUTPUTS__BASE_OUTPUT_H
+#define VINO_CORE_LIB__OUTPUTS__BASE_OUTPUT_H
 
 #include <string>
 #include <vector>
@@ -30,11 +30,23 @@
 #include "vino_core_lib/inferences/emotions_detection.h"
 #include "vino_core_lib/inferences/face_detection.h"
 #include "vino_core_lib/inferences/head_pose_detection.h"
-#include "vino_core_lib/inferences/object_detection.h"
 #include "vino_core_lib/inferences/object_segmentation.h"
 #include "vino_core_lib/inferences/person_reidentification.h"
+#include "vino_core_lib/inferences/landmarks_detection.h"
+#include "vino_core_lib/inferences/face_reidentification.h"
+#include "vino_core_lib/inferences/person_attribs_detection.h"
+#include "vino_core_lib/inferences/vehicle_attribs_detection.h"
+#include "vino_core_lib/inferences/license_plate_detection.h"
 #include "vino_core_lib/services/frame_processing_server.h"
 #include "opencv2/opencv.hpp"
+
+#include <object_msgs/DetectObjectResponse.h>
+#include <vino_people_msgs/AgeGenderSrvResponse.h>
+#include <vino_people_msgs/EmotionSrvResponse.h>
+#include <vino_people_msgs/HeadPoseSrvResponse.h>
+#include <vino_people_msgs/PeopleSrvResponse.h>
+#include <vino_people_msgs/ReidentificationSrvResponse.h>
+#include <vino_people_msgs/ObjectsInMasksSrvResponse.h>
 
 class Pipeline;
 namespace Outputs
@@ -47,23 +59,53 @@ namespace Outputs
  */
 class BaseOutput
 {
- public:
-  // BaseOutput() = default;
-  BaseOutput()
+public:
+  explicit BaseOutput()
   {
-  };
+  }
+  explicit BaseOutput(std::string output_name) : output_name_(output_name)
+  {
+  }
+  /**
+   * @brief Generate output content according to the license plate detection result.
+   */
+  virtual void accept(const std::vector<vino_core_lib::LicensePlateDetectionResult>&)
+  {
+  }
+  /**
+   * @brief Generate output content according to the vehicle attributes detection result.
+   */
+  virtual void accept(const std::vector<vino_core_lib::VehicleAttribsDetectionResult>&)
+  {
+  }
+  /**
+  * @brief Generate output content according to the person atrribute detection result.
+  */
+  virtual void accept(const std::vector<vino_core_lib::PersonAttribsDetectionResult>&)
+  {
+  }
+  /**
+  * @brief Generate output content according to the face reidentification result.
+  */
+  virtual void accept(const std::vector<vino_core_lib::FaceReidentificationResult>&)
+  {
+  }
+  /**
+   * @brief Generate output content according to the landmarks detection result.
+   */
+  virtual void accept(const std::vector<vino_core_lib::LandmarksDetectionResult>&)
+  {
+  }
   /**
   * @brief Generate output content according to the face detection result.
   */
-  virtual void accept(
-      const std::vector<vino_core_lib::ObjectDetectionResult>&) 
+  virtual void accept(const std::vector<vino_core_lib::ObjectDetectionResult>&)
   {
   }
   /**
    * @brief Generate output content according to the face detection result.
    */
-  virtual void accept(
-      const std::vector<vino_core_lib::FaceDetectionResult>&)
+  virtual void accept(const std::vector<vino_core_lib::FaceDetectionResult>&)
   {
   }
   /**
@@ -94,7 +136,7 @@ class BaseOutput
   /**
   * @brief Generate output content according to the person reidentification result.
   */
-  virtual void accept(const std::vector<vino_core_lib::PersonReidentificationResult> &)
+  virtual void accept(const std::vector<vino_core_lib::PersonReidentificationResult>&)
   {
   }
   /**
@@ -110,29 +152,40 @@ class BaseOutput
   virtual void handleOutput() = 0;
 
   void setPipeline(Pipeline* const pipeline);
-  virtual void setServiceResponse(
-    boost::shared_ptr<object_msgs::DetectObjectResponse> response) {}
-  virtual void setServiceResponseForFace(
-    boost::shared_ptr<object_msgs::DetectObjectResponse> response) {}
-  virtual void setServiceResponse(
-    boost::shared_ptr<vino_people_msgs::AgeGenderSrvResponse> response) {}
-  virtual void setServiceResponse(
-    boost::shared_ptr<vino_people_msgs::EmotionSrvResponse> response) {}
-  virtual void setServiceResponse(
-    boost::shared_ptr<vino_people_msgs::HeadPoseSrvResponse> response) {}
-  virtual void setServiceResponse(
-    boost::shared_ptr<vino_people_msgs::PeopleSrvResponse> response) {}
-  virtual void setServiceResponse(
-    boost::shared_ptr<vino_people_msgs::ReidentificationSrvResponse> response) {}
-  virtual void setServiceResponse(
-    boost::shared_ptr<vino_people_msgs::ObjectsInMasksSrvResponse> response) {}
+  virtual void setServiceResponse(boost::shared_ptr<object_msgs::DetectObjectResponse> response)
+  {
+  }
+  virtual void setServiceResponseForFace(boost::shared_ptr<object_msgs::DetectObjectResponse> response)
+  {
+  }
+  virtual void setServiceResponse(boost::shared_ptr<vino_people_msgs::AgeGenderSrvResponse> response)
+  {
+  }
+  virtual void setServiceResponse(boost::shared_ptr<vino_people_msgs::EmotionSrvResponse> response)
+  {
+  }
+  virtual void setServiceResponse(boost::shared_ptr<vino_people_msgs::HeadPoseSrvResponse> response)
+  {
+  }
+  virtual void setServiceResponse(boost::shared_ptr<vino_people_msgs::PeopleSrvResponse> response)
+  {
+  }
+  virtual void setServiceResponse(boost::shared_ptr<vino_people_msgs::ReidentificationSrvResponse> response)
+  {
+  }
+  virtual void setServiceResponse(boost::shared_ptr<vino_people_msgs::ObjectsInMasksSrvResponse> response)
+  {
+  }
   Pipeline* getPipeline() const;
   cv::Mat getFrame() const;
-  virtual void clearData() {}
+  virtual void clearData()
+  {
+  }
 
- protected:
+protected:
   cv::Mat frame_;
   Pipeline* pipeline_;
+  std::string output_name_;
 };
 }  // namespace Outputs
-#endif  // VINO_CORE_LIB_OUTPUTS_BASE_OUTPUT_H
+#endif  // VINO_CORE_LIB__OUTPUTS__BASE_OUTPUT_H

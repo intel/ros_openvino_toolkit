@@ -19,11 +19,14 @@
 
 void Outputs::BaseOutput::setPipeline(Pipeline* const pipeline)
 {
-  //pipeline->printPipeline();
+  // pipeline->printPipeline();
   pipeline_ = pipeline;
 }
 
-Pipeline* Outputs::BaseOutput::getPipeline() const { return pipeline_; }
+Pipeline* Outputs::BaseOutput::getPipeline() const
+{
+  return pipeline_;
+}
 
 cv::Mat Outputs::BaseOutput::getFrame() const
 {

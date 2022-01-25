@@ -1,0 +1,46 @@
+Pipelines:
+
+- name: pipe1
+  inputs: [StandardCamera]
+  infers:
+    - name: ObjectDetection
+      model: /opt/openvino_toolkit/models/public/mobilenet-ssd/FP16/mobilenet-ssd.xml
+      engine: CPU
+      label: to/be/set/xxx.labels
+      batch: 16
+  outputs: [ImageWindow, RosTopic, RViz]
+  confidence_threshold: 0.5
+  connects:
+    - left: StandardCamera
+      right: [ObjectDetection]
+    - left: ObjectDetection
+      right: [ImageWindow]
+    - left: ObjectDetection
+      right: [RosTopic]
+    - left: ObjectDetection
+      right: [RViz]
+
+
+- name: pipe2
+  inputs: [RealSenseCamera]
+  infers:
+    - name: ObjectDetection
+      model: /opt/openvino_toolkit/models/public/mobilenet-ssd/FP16/mobilenet-ssd.xml
+      engine: CPU
+      label: to/be/set/xxx.labels
+      batch: 16
+  outputs: [ImageWindow, RosTopic, RViz]
+  confidence_threshold: 0.5
+  connects:
+    - left: RealSenseCamera
+      right: [ObjectDetection]
+    - left: ObjectDetection
+      right: [ImageWindow]
+    - left: ObjectDetection
+      right: [RosTopic]
+    - left: ObjectDetection
+      right: [RViz]
+
+
+
+OpenvinoCommon:

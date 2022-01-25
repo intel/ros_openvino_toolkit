@@ -22,6 +22,7 @@
 #include <string>
 
 #include "vino_core_lib/inputs/video_input.h"
+#include "vino_core_lib/slog.h"
 
 // Video
 Input::Video::Video(const std::string& video)
@@ -32,8 +33,8 @@ Input::Video::Video(const std::string& video)
 bool Input::Video::initialize()
 {
   setInitStatus(cap.open(video_));
-  setWidth((size_t)cap.get(CV_CAP_PROP_FRAME_WIDTH));
-  setHeight((size_t)cap.get(CV_CAP_PROP_FRAME_HEIGHT));
+  setWidth((size_t)cap.get(cv::CAP_PROP_FRAME_WIDTH));
+  setHeight((size_t)cap.get(cv::CAP_PROP_FRAME_HEIGHT));
   return isInit();
 }
 
@@ -44,8 +45,8 @@ bool Input::Video::initialize(size_t width, size_t height)
   setInitStatus(cap.open(video_));
   if (isInit())
   {
-    cap.set(CV_CAP_PROP_FRAME_WIDTH, width);
-    cap.set(CV_CAP_PROP_FRAME_HEIGHT, height);
+    cap.set(cv::CAP_PROP_FRAME_WIDTH, width);
+    cap.set(cv::CAP_PROP_FRAME_HEIGHT, height);
   }
   return isInit();
 }
@@ -57,10 +58,6 @@ bool Input::Video::read(cv::Mat* frame)
     return false;
   }
   cap.grab();
+  // setHeader("video_frame");
   return cap.retrieve(*frame);
-}
-
-void Input::Video::config()
-{
-  // TODO(weizhi): config
 }

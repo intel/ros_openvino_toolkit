@@ -18,8 +18,8 @@
  * @brief a header file with declaration of Pipeline Manager class
  * @file pipeline_manager.hpp
  */
-#ifndef VINO_CORE_LIB__PIPELINE_MANAGER_HPP_
-#define VINO_CORE_LIB__PIPELINE_MANAGER_HPP_
+#ifndef VINO_CORE_LIB__PIPELINE_MANAGER_H
+#define VINO_CORE_LIB__PIPELINE_MANAGER_H
 
 #include <atomic>
 #include <future>
@@ -31,81 +31,97 @@
 
 #include <vino_param_lib/param_manager.h>
 #include "vino_core_lib/pipeline.h"
+#include "vino_core_lib/engines/engine_manager.h"
 
 /**
  * @class PipelineManager
  * @brief This class manages the lifecycles of pipelines.
  */
-class PipelineManager {
- public:
+class PipelineManager
+{
+public:
   /**
   * @brief Get the singleton instance of PipelineManager class.
   * The instance will be created when first call.
   * @return The reference of PipelineManager instance.
   */
-  static PipelineManager& getInstance() {
+  static PipelineManager& getInstance()
+  {
     static PipelineManager manager_;
     return manager_;
   };
 
-  std::shared_ptr<Pipeline> createPipeline(
-      const Params::ParamManager::PipelineParams& params);
+  std::shared_ptr<Pipeline> createPipeline(const Params::ParamManager::PipelineRawData& params);
   void removePipeline(const std::string& name);
-  PipelineManager& updatePipeline(
-      const std::string& name,
-      const Params::ParamManager::PipelineParams& params);
-  
+  PipelineManager& updatePipeline(const std::string& name, const Params::ParamManager::PipelineRawData& params);
+
   void runAll();
   void stopAll();
   void joinAll();
 
-  enum PipelineState {
-    PipelineState_ThreadNotCreated,
-    PipelineState_ThreadStopped,
-    PipelineState_ThreadRunning,
-    PipelineState_Error
+  enum PipelineState
+  {
+    PipelineState_ThreadNotCreated = 0,
+    PipelineState_ThreadStopped = 1,
+    PipelineState_ThreadRunning = 2,
+    PipelineState_ThreadPasued = 3,
+    PipelineState_Error = 4
   };
-  struct PipelineData {
-    Params::ParamManager::PipelineParams params;
+
+  struct PipelineData
+  {
+    Params::ParamManager::PipelineRawData params;
     std::shared_ptr<Pipeline> pipeline;
     std::vector<std::shared_ptr<ros::NodeHandle>> spin_nodes;
     std::shared_ptr<std::thread> thread;
     PipelineState state;
   };
-  
+  void runService();
   std::map<std::string, PipelineData> getPipelines()
   {
     return pipelines_;
   }
+  std::map<std::string, PipelineData>* getPipelinesPtr()
+  {
+    return &pipelines_;
+  }
 
-
- private:
+private:
   PipelineManager(){};
   PipelineManager(PipelineManager const&);
   void operator=(PipelineManager const&);
   void threadPipeline(const char* name);
-  std::map<std::string, std::shared_ptr<Input::BaseInputDevice>>
-  parseInputDevice(const Params::ParamManager::PipelineParams& params);
-  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> parseOutput(
-      const Params::ParamManager::PipelineParams& params);
+  std::map<std::string, std::shared_ptr<Input::BaseInputDevice>> parseInputDevice(const PipelineData& params);
+  std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> parseOutput(const PipelineData& pdata);
   std::map<std::string, std::shared_ptr<vino_core_lib::BaseInference>>
-  parseInference(const Params::ParamManager::PipelineParams& params);
-  std::shared_ptr<vino_core_lib::BaseInference> createFaceDetection(
-      const Params::ParamManager::InferenceParams& infer);
-  std::shared_ptr<vino_core_lib::BaseInference> createAgeGenderRecognition(
-      const Params::ParamManager::InferenceParams& infer);
-  std::shared_ptr<vino_core_lib::BaseInference> createEmotionRecognition(
-      const Params::ParamManager::InferenceParams& infer);
-  std::shared_ptr<vino_core_lib::BaseInference> createHeadPoseEstimation(
-      const Params::ParamManager::InferenceParams& infer);
-  std::shared_ptr<vino_core_lib::BaseInference> createObjectDetection(
-      const Params::ParamManager::InferenceParams& infer);
-  std::shared_ptr<vino_core_lib::BaseInference> createObjectSegmentation(
-      const Params::ParamManager::InferenceParams& infer);
-  std::shared_ptr<vino_core_lib::BaseInference> createPersonReidentification(
-      const Params::ParamManager::InferenceParams& infer);
+  parseInference(const Params::ParamManager::PipelineRawData& params);
+  std::shared_ptr<vino_core_lib::BaseInference>
+  createFaceDetection(const Params::ParamManager::InferenceRawData& infer);
+  std::shared_ptr<vino_core_lib::BaseInference>
+  createAgeGenderRecognition(const Params::ParamManager::InferenceRawData& infer);
+  std::shared_ptr<vino_core_lib::BaseInference>
+  createEmotionRecognition(const Params::ParamManager::InferenceRawData& infer);
+  std::shared_ptr<vino_core_lib::BaseInference>
+  createHeadPoseEstimation(const Params::ParamManager::InferenceRawData& infer);
+  std::shared_ptr<vino_core_lib::BaseInference>
+  createObjectDetection(const Params::ParamManager::InferenceRawData& infer);
+  std::shared_ptr<vino_core_lib::BaseInference>
+  createObjectSegmentation(const Params::ParamManager::InferenceRawData& infer);
+  std::shared_ptr<vino_core_lib::BaseInference>
+  createPersonReidentification(const Params::ParamManager::InferenceRawData& infer);
+  std::shared_ptr<vino_core_lib::BaseInference>
+  createFaceReidentification(const Params::ParamManager::InferenceRawData& infer);
+  std::shared_ptr<vino_core_lib::BaseInference>
+  createPersonAttribsDetection(const Params::ParamManager::InferenceRawData& infer);
+  std::shared_ptr<vino_core_lib::BaseInference>
+  createVehicleAttribsDetection(const Params::ParamManager::InferenceRawData& infer);
+  std::shared_ptr<vino_core_lib::BaseInference>
+  createLicensePlateDetection(const Params::ParamManager::InferenceRawData& infer);
+  std::shared_ptr<vino_core_lib::BaseInference>
+  createLandmarksDetection(const Params::ParamManager::InferenceRawData& infer);
+
   std::map<std::string, PipelineData> pipelines_;
-  std::map<std::string, InferenceEngine::InferencePlugin> plugins_for_devices_;
+  Engines::EngineManager engine_manager_;
 };
 
-#endif  // VINO_CORE_LIB__PIPELINE_MANAGER_HPP_
+#endif  // VINO_CORE_LIB__PIPELINE_MANAGER_H

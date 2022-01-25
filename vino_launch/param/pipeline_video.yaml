@@ -1,20 +1,25 @@
 Pipelines:
 - name: segmentation
   inputs: [Video]
-  input_path: /home/intel/Videos/2018-09-26-101439.webm 
+  input_path: /home/ubuntu20/jiawei/ros-ov/ros_openvino_ws/src/ros_openvino_toolkit/data/car_cut.mp4 
   infers:
     - name: ObjectSegmentation
-      model: /opt/models/mask_rcnn_inception_v2_coco_2018_01_28/output/frozen_inference_graph.xml
+      model: /opt/openvino_toolkit/models/public/deeplabv3/FP16/deeplabv3.xml
       engine: CPU
-      label: to/be/set/xxx.labels
+      label: /opt/openvino_toolkit/models/public/deeplabv3/FP16/deeplabv3.labels
       batch: 1
+      confidence_threshold: 0.5
   outputs: [ImageWindow, RosTopic, RViz]
-  confidence_threshold: 0.2
   connects:
     - left: Video
       right: [ObjectSegmentation]
     - left: ObjectSegmentation
-      right: [ImageWindow, RosTopic, RViz]
+      right: [ImageWindow]
+    - left: ObjectSegmentation
+      right: [RosTopic]
+    - left: ObjectSegmentation
+      right: [RViz]
+
+
 
 OpenvinoCommon:
-

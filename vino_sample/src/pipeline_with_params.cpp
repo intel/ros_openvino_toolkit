@@ -42,7 +42,6 @@
 #include <vino_param_lib/param_manager.h>
 #include "vino_core_lib/common.h"
 #include "vino_core_lib/engines/engine.h"
-#include "vino_core_lib/factory.h"
 #include "vino_core_lib/inferences/age_gender_detection.h"
 #include "vino_core_lib/inferences/base_inference.h"
 #include "vino_core_lib/inferences/emotions_detection.h"
@@ -81,20 +80,18 @@ bool parseAndCheckCommandLine(int argc, char** argv)
 
 int main(int argc, char** argv)
 {
+  ros::init(argc, argv, "sample_with_params");
 
-  ros::init(argc, argv, "sample_with_params"); 
-  
   // register signal SIGINT and signal handler
   signal(SIGINT, signalHandler);
 
   std::string FLAGS_config;
-  ros::param::param<std::string>("~param_file", FLAGS_config, "/param/pipeline_people.yaml");
+  ros::param::param<std::string>("~param_file", FLAGS_config, "/param/pipeline_object_oss.yaml");
   slog::info << "FLAGS_config=" << FLAGS_config << slog::endl;
 
   try
   {
-    std::cout << "InferenceEngine: "
-              << InferenceEngine::GetInferenceEngineVersion() << std::endl;
+    std::cout << "InferenceEngine: " << InferenceEngine::GetInferenceEngineVersion() << std::endl;
 
     // ----- Parsing and validation of input args-----------------------
     if (!parseAndCheckCommandLine(argc, argv))
@@ -112,15 +109,15 @@ int main(int argc, char** argv)
       throw std::logic_error("Pipeline parameters should be set!");
     }
 
-    for (auto & p : pipelines) {
+    for (auto& p : pipelines)
+    {
       PipelineManager::getInstance().createPipeline(p);
     }
-   
+
     PipelineManager::getInstance().runAll();
     PipelineManager::getInstance().joinAll();
 
     slog::info << "Execution successful" << slog::endl;
-   
   }
   catch (const std::exception& error)
   {
