@@ -357,3 +357,5 @@ int Models::ObjectDetectionYolov2Model::getEntryIndex(int side, int lcoords, int
   int loc = location % (side * side);
   return n * side * side * (lcoords + lclasses + 1) + entry * side * side + loc;
 }
+
+REG_MODEL(ObjectDetectionYolov2Model, "ObjectDetection_Yolov2voc");

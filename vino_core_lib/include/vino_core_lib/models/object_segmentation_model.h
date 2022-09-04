@@ -19,6 +19,7 @@
 #define VINO_CORE_LIB__MODELS__OBJECT_SEGMENTATION_MODEL_H
 #include <string>
 #include "vino_core_lib/models/base_model.h"
+#include "vino_core_lib/models/model_factory.h"
 namespace Models
 {
 /**

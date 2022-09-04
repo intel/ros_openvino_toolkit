@@ -24,6 +24,7 @@
 
 #include <string>
 #include "vino_core_lib/models/base_model.h"
+#include "vino_core_lib/models/model_factory.h"
 
 namespace Models
 {
@@ -33,16 +34,35 @@ namespace Models
  */
 class FaceDetectionModel : public ObjectDetectionModel
 {
+class ObjectDetectionResult;
+class FaceDetectionResult;
+
 public:
   FaceDetectionModel() {};
-
+  
   FaceDetectionModel(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
+  
+  bool fetchResults(const std::shared_ptr<Engines::Engine>& engine,
+                    std::vector<vino_core_lib::ObjectDetectionResult>& results, const float& confidence_thresh = 0.3,
+                    const bool& enable_roi_constraint = false) override;
+  
+  bool fetchResults(const std::shared_ptr<Engines::Engine>& engine,
+                    std::vector<vino_core_lib::FaceDetectionResult>& results, const float& confidence_thresh = 0.3,
+                    const bool& enable_roi_constraint = false);
+
+  bool enqueue(const std::shared_ptr<Engines::Engine>& engine, const cv::Mat& frame,
+               const cv::Rect& input_frame_loc) override;
+
+  bool matToBlob(const cv::Mat& orig_image, const cv::Rect&, float scale_factor, int batch_index,
+                 const std::shared_ptr<Engines::Engine>& engine) override;
 
   /**
    * @brief Get the name of this detection model.
    * @return Name of the model.
    */
   const std::string getModelCategory() const override;
+
+  bool updateLayerProperty(InferenceEngine::CNNNetwork&) override;
 };
 }  // namespace Models
 

@@ -21,6 +21,7 @@
 #define VINO_CORE_LIB__MODELS__OBJECT_DETECTION_SSD_MODEL_H
 #include <string>
 #include "vino_core_lib/models/base_model.h"
+#include "vino_core_lib/models/model_factory.h"
 #include "vino_core_lib/inferences/object_detection.h"
 #include "vino_core_lib/engines/engine_manager.h"
 namespace Models

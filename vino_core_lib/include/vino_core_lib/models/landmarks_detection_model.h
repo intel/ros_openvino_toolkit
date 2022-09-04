@@ -20,6 +20,7 @@
 #define VINO_CORE_LIB__MODELS__LANDMARKS_DETECTION_MODEL_H
 #include <string>
 #include "vino_core_lib/models/base_model.h"
+#include "vino_core_lib/models/model_factory.h"
 namespace Models
 {
 /**

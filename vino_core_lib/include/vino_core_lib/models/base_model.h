@@ -41,6 +41,7 @@ class Engine;
 namespace vino_core_lib
 {
 class ObjectDetectionResult;
+class FaceDetectionResult;
 }
 
 namespace Models
@@ -68,6 +69,19 @@ public:
  * @return Whether the input device is successfully turned on.
  */
   BaseModel(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
+  
+  /**
+ * @brief Initialize the class with given .xml, .bin and .labels file. It will
+ * also check whether the number of input and output are fit.
+ * @param[in] model_loc The location of model' s .xml file
+ * (model' s bin file should be the same as .xml file except for extension)
+ * @param[in] input_num The number of input the network should have.
+ * @param[in] output_num The number of output the network should have.
+ * @param[in] batch_size The number of batch size (default: 1) the network should have.
+ * @param[in] label_loc The location of label' s .label file
+ * @return Whether the input device is successfully turned on.
+ */
+  void init(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
 
   /**
  * @brief Get the maximum batch size of the model.
