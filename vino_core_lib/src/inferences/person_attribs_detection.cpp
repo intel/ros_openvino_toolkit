@@ -36,7 +36,6 @@ vino_core_lib::PersonAttribsDetection::PersonAttribsDetection(double attribs_con
 {
 }
 
-vino_core_lib::PersonAttribsDetection::~PersonAttribsDetection() = default;
 void vino_core_lib::PersonAttribsDetection::loadNetwork(
     const std::shared_ptr<Models::PersonAttribsDetectionModel> network)
 {

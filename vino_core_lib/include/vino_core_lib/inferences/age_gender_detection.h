@@ -45,7 +45,9 @@ namespace vino_core_lib
 class AgeGenderResult : public Result
 {
 public:
-  explicit AgeGenderResult(const cv::Rect& location);
+  explicit AgeGenderResult(const cv::Rect& location) : Result(location)
+  {
+  }
   /**
    * @brief Get the age of the detected person from the result.
    * @return The predictea age.
@@ -77,8 +79,9 @@ class AgeGenderDetection : public BaseInference
 {
 public:
   using Result = vino_core_lib::AgeGenderResult;
-  AgeGenderDetection();
-  ~AgeGenderDetection() override;
+
+  AgeGenderDetection(){};
+  ~AgeGenderDetection() override {};
   /**
    * @brief Load the age gender detection model.
    */

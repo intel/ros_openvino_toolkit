@@ -29,12 +29,6 @@ vino_core_lib::LicensePlateDetectionResult::LicensePlateDetectionResult(const cv
 {
 }
 
-// LicensePlateDetection
-vino_core_lib::LicensePlateDetection::LicensePlateDetection() : vino_core_lib::BaseInference()
-{
-}
-
-vino_core_lib::LicensePlateDetection::~LicensePlateDetection() = default;
 void vino_core_lib::LicensePlateDetection::loadNetwork(
     const std::shared_ptr<Models::LicensePlateDetectionModel> network)
 {

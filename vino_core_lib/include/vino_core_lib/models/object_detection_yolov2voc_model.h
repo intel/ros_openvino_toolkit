@@ -32,6 +32,8 @@ class ObjectDetectionYolov2Model : public ObjectDetectionModel
   using Result = vino_core_lib::ObjectDetectionResult;
 
 public:
+  ObjectDetectionYolov2Model() {};
+
   ObjectDetectionYolov2Model(const std::string& model_loc, int batch_size = 1);
 
   bool fetchResults(const std::shared_ptr<Engines::Engine>& engine,

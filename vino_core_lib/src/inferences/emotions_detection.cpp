@@ -34,13 +34,6 @@ vino_core_lib::EmotionsResult::EmotionsResult(const cv::Rect& location) : Result
 {
 }
 
-// Emotions Detection
-vino_core_lib::EmotionsDetection::EmotionsDetection() : vino_core_lib::BaseInference()
-{
-}
-
-vino_core_lib::EmotionsDetection::~EmotionsDetection() = default;
-
 void vino_core_lib::EmotionsDetection::loadNetwork(const std::shared_ptr<Models::EmotionDetectionModel> network)
 {
   valid_model_ = network;

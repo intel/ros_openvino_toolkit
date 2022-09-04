@@ -54,8 +54,9 @@ class LicensePlateDetection : public BaseInference
 {
 public:
   using Result = vino_core_lib::LicensePlateDetectionResult;
-  LicensePlateDetection();
-  ~LicensePlateDetection() override;
+  LicensePlateDetection() {};
+  ~LicensePlateDetection() override {};
+
   /**
    * @brief Load the license plate detection model.
    */

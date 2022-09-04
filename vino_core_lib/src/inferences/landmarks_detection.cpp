@@ -28,12 +28,6 @@ vino_core_lib::LandmarksDetectionResult::LandmarksDetectionResult(const cv::Rect
 {
 }
 
-// LandmarksDetection
-vino_core_lib::LandmarksDetection::LandmarksDetection() : vino_core_lib::BaseInference()
-{
-}
-
-vino_core_lib::LandmarksDetection::~LandmarksDetection() = default;
 void vino_core_lib::LandmarksDetection::loadNetwork(const std::shared_ptr<Models::LandmarksDetectionModel> network)
 {
   valid_model_ = network;

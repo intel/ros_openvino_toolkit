@@ -27,7 +27,7 @@
 #include "vino_core_lib/inferences/base_reidentification.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
-// namespace
+// namespace-
 namespace vino_core_lib
 {
 /**
@@ -38,7 +38,7 @@ class FaceReidentificationResult : public Result
 {
 public:
   friend class FaceReidentification;
-  explicit FaceReidentificationResult(const cv::Rect& location);
+  explicit FaceReidentificationResult(const cv::Rect& location) : Result(location) {}
   std::string getFaceID() const
   {
     return face_id_;
@@ -57,7 +57,8 @@ class FaceReidentification : public BaseInference
 public:
   using Result = vino_core_lib::FaceReidentificationResult;
   explicit FaceReidentification(double);
-  ~FaceReidentification() override;
+  FaceReidentification() {};
+  ~FaceReidentification() override {};
   /**
    * @brief Load the face reidentification model.
    */

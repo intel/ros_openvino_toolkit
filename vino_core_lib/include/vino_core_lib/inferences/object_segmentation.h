@@ -72,7 +72,8 @@ class ObjectSegmentation : public BaseInference
 public:
   using Result = vino_core_lib::ObjectSegmentationResult;
   explicit ObjectSegmentation(double);
-  ~ObjectSegmentation() override;
+  ObjectSegmentation() {};
+  ~ObjectSegmentation() override {};
   /**
    * @brief Load the object segmentation model.
    */

@@ -30,13 +30,6 @@ vino_core_lib::HeadPoseResult::HeadPoseResult(const cv::Rect& location) : Result
 {
 }
 
-// Head Pose Detection
-vino_core_lib::HeadPoseDetection::HeadPoseDetection() : vino_core_lib::BaseInference()
-{
-}
-
-vino_core_lib::HeadPoseDetection::~HeadPoseDetection() = default;
-
 void vino_core_lib::HeadPoseDetection::loadNetwork(std::shared_ptr<Models::HeadPoseDetectionModel> network)
 {
   valid_model_ = network;

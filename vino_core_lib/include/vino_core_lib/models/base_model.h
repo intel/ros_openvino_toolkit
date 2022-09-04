@@ -53,6 +53,9 @@ class BaseModel : public ModelAttribute
 {
 public:
   using Ptr = std::shared_ptr<BaseModel>;
+
+  BaseModel() {};
+
   /**
  * @brief Initialize the class with given .xml, .bin and .labels file. It will
  * also check whether the number of input and output are fit.
@@ -135,7 +138,10 @@ private:
 class ObjectDetectionModel : public BaseModel
 {
 public:
+  ObjectDetectionModel() {};
+  
   ObjectDetectionModel(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
+
   virtual bool fetchResults(const std::shared_ptr<Engines::Engine>& engine,
                             std::vector<vino_core_lib::ObjectDetectionResult>& result,
                             const float& confidence_thresh = 0.3, const bool& enable_roi_constraint = false) = 0;

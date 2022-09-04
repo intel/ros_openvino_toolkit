@@ -137,7 +137,9 @@ public:
   using Result = vino_core_lib::ObjectDetectionResult;
   using Filter = vino_core_lib::ObjectDetectionResultFilter;
   explicit ObjectDetection(bool, double);
-  ~ObjectDetection() override;
+  ObjectDetection(){};
+  ~ObjectDetection() override {};
+
   /**
    * @brief Load the face detection model.
    */

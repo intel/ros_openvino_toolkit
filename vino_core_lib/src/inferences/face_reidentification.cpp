@@ -24,10 +24,6 @@
 #include "vino_core_lib/outputs/base_output.h"
 #include "vino_core_lib/slog.h"
 
-// FaceReidentificationResult
-vino_core_lib::FaceReidentificationResult::FaceReidentificationResult(const cv::Rect& location) : Result(location)
-{
-}
 
 // FaceReidentification
 vino_core_lib::FaceReidentification::FaceReidentification(double match_thresh) : vino_core_lib::BaseInference()
@@ -35,7 +31,6 @@ vino_core_lib::FaceReidentification::FaceReidentification(double match_thresh) :
   face_tracker_ = std::make_shared<vino_core_lib::Tracker>(1000, match_thresh, 0.3);
 }
 
-vino_core_lib::FaceReidentification::~FaceReidentification() = default;
 void vino_core_lib::FaceReidentification::loadNetwork(
     const std::shared_ptr<Models::FaceReidentificationModel> network)
 {

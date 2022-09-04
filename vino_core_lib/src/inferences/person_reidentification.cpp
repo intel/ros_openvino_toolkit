@@ -37,7 +37,6 @@ vino_core_lib::PersonReidentification::PersonReidentification(double match_thres
   person_tracker_ = std::make_shared<vino_core_lib::Tracker>(1000, match_thresh, 0.3);
 }
 
-vino_core_lib::PersonReidentification::~PersonReidentification() = default;
 void vino_core_lib::PersonReidentification::loadNetwork(
     const std::shared_ptr<Models::PersonReidentificationModel> network)
 {

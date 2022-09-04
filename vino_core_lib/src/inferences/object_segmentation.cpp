@@ -38,8 +38,6 @@ vino_core_lib::ObjectSegmentation::ObjectSegmentation(double show_output_thresh)
 {
 }
 
-vino_core_lib::ObjectSegmentation::~ObjectSegmentation() = default;
-
 void vino_core_lib::ObjectSegmentation::loadNetwork(const std::shared_ptr<Models::ObjectSegmentationModel> network)
 {
   slog::info << "Loading Network: " << network->getModelCategory() << slog::endl;

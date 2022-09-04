@@ -71,7 +71,8 @@ class PersonAttribsDetection : public BaseInference
 public:
   using Result = vino_core_lib::PersonAttribsDetectionResult;
   explicit PersonAttribsDetection(double);
-  ~PersonAttribsDetection() override;
+  PersonAttribsDetection() {};
+  ~PersonAttribsDetection() override {};
   /**
    * @brief Load the person attributes detection model.
    */

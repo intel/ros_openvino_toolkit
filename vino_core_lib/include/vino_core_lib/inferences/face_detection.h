@@ -58,6 +58,8 @@ class FaceDetection : public ObjectDetection
 {
 public:
   explicit FaceDetection(bool, double);
+  FaceDetection(){};
+  ~FaceDetection() override {};
 };
 }  // namespace vino_core_lib
 #endif  // VINO_CORE_LIB__INFERENCES__FACE_DETECTION_H

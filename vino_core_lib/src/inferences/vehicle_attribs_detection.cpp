@@ -30,12 +30,6 @@ vino_core_lib::VehicleAttribsDetectionResult::VehicleAttribsDetectionResult(cons
 {
 }
 
-// VehicleAttribsDetection
-vino_core_lib::VehicleAttribsDetection::VehicleAttribsDetection() : vino_core_lib::BaseInference()
-{
-}
-
-vino_core_lib::VehicleAttribsDetection::~VehicleAttribsDetection() = default;
 void vino_core_lib::VehicleAttribsDetection::loadNetwork(
     const std::shared_ptr<Models::VehicleAttribsDetectionModel> network)
 {

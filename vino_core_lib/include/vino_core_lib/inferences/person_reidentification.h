@@ -56,7 +56,8 @@ class PersonReidentification : public BaseInference
 public:
   using Result = vino_core_lib::PersonReidentificationResult;
   explicit PersonReidentification(double);
-  ~PersonReidentification() override;
+  PersonReidentification() {};
+  ~PersonReidentification() override {};
   /**
    * @brief Load the face detection model.
    */

@@ -33,8 +33,9 @@
 
 namespace Outputs
 {
-class BaseOuput;
+  class BaseOuput;
 }
+
 namespace vino_core_lib
 {
 /**
@@ -68,8 +69,8 @@ class EmotionsDetection : public BaseInference
 {
 public:
   using Result = vino_core_lib::EmotionsResult;
-  EmotionsDetection();
-  ~EmotionsDetection() override;
+  EmotionsDetection() {};
+  ~EmotionsDetection() override {};
   /**
    * @brief Load the emotin detection model.
    */

@@ -41,8 +41,6 @@ vino_core_lib::ObjectDetection::ObjectDetection(bool enable_roi_constraint, doub
   result_filter_->init();
 }
 
-vino_core_lib::ObjectDetection::~ObjectDetection() = default;
-
 void vino_core_lib::ObjectDetection::loadNetwork(std::shared_ptr<Models::ObjectDetectionModel> network)
 {
   valid_model_ = network;

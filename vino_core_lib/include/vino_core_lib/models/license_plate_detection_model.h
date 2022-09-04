@@ -29,7 +29,10 @@ namespace Models
 class LicensePlateDetectionModel : public BaseModel
 {
 public:
+  LicensePlateDetectionModel() {};
+
   LicensePlateDetectionModel(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
+
   inline const std::string getInputName()
   {
     return input_;
