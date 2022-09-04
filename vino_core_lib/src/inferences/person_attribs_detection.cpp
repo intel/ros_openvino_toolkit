@@ -24,32 +24,42 @@
 #include "vino_core_lib/outputs/base_output.h"
 #include "vino_core_lib/slog.h"
 
+using namespace vino_core_lib;
+
 // PersonAttribsDetectionResult
-vino_core_lib::PersonAttribsDetectionResult::PersonAttribsDetectionResult(const cv::Rect& location)
+PersonAttribsDetectionResult::PersonAttribsDetectionResult(const cv::Rect& location)
   : Result(location)
 {
 }
 
 // PersonAttribsDetection
-vino_core_lib::PersonAttribsDetection::PersonAttribsDetection(double attribs_confidence)
-  : attribs_confidence_(attribs_confidence), vino_core_lib::BaseInference()
+PersonAttribsDetection::PersonAttribsDetection(double attribs_confidence)
+  : attribs_confidence_(attribs_confidence), BaseInference()
 {
 }
 
-void vino_core_lib::PersonAttribsDetection::loadNetwork(
-    const std::shared_ptr<Models::PersonAttribsDetectionModel> network)
+void PersonAttribsDetection::loadNetwork(std::shared_ptr<Models::BaseModel> network)
 {
-  valid_model_ = network;
+  slog::info << "Loading Network: " << network->getModelCategory() << slog::endl;
+  valid_model_ = std::dynamic_pointer_cast<Models::PersonAttribsDetectionModel>(network);
+
   setMaxBatchSize(network->getMaxBatchSize());
 }
 
-bool vino_core_lib::PersonAttribsDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
+// void PersonAttribsDetection::loadNetwork(
+//     const std::shared_ptr<Models::PersonAttribsDetectionModel> network)
+// {
+//   valid_model_ = network;
+//   setMaxBatchSize(network->getMaxBatchSize());
+// }
+
+bool PersonAttribsDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
 {
   if (getEnqueuedNum() == 0)
   {
     results_.clear();
   }
-  if (!vino_core_lib::BaseInference::enqueue<u_int8_t>(frame, input_frame_loc, 1, 0, valid_model_->getInputName()))
+  if (!BaseInference::enqueue<u_int8_t>(frame, input_frame_loc, 1, 0, valid_model_->getInputName()))
   {
     return false;
   }
@@ -58,14 +68,14 @@ bool vino_core_lib::PersonAttribsDetection::enqueue(const cv::Mat& frame, const 
   return true;
 }
 
-bool vino_core_lib::PersonAttribsDetection::submitRequest()
+bool PersonAttribsDetection::submitRequest()
 {
-  return vino_core_lib::BaseInference::submitRequest();
+  return BaseInference::submitRequest();
 }
 /*
-bool vino_core_lib::PersonAttribsDetection::fetchResults()
+bool PersonAttribsDetection::fetchResults()
 {
-  bool can_fetch = vino_core_lib::BaseInference::fetchResults();
+  bool can_fetch = BaseInference::fetchResults();
   if (!can_fetch) {return false;}
   bool found_result = false;
   InferenceEngine::InferRequest::Ptr request = getEngine()->getRequest();
@@ -86,9 +96,9 @@ bool vino_core_lib::PersonAttribsDetection::fetchResults()
   return true;
 }
 */
-bool vino_core_lib::PersonAttribsDetection::fetchResults()
+bool PersonAttribsDetection::fetchResults()
 {
-  bool can_fetch = vino_core_lib::BaseInference::fetchResults();
+  bool can_fetch = BaseInference::fetchResults();
   if (!can_fetch)
   {
     return false;
@@ -135,22 +145,22 @@ bool vino_core_lib::PersonAttribsDetection::fetchResults()
   return true;
 }
 
-int vino_core_lib::PersonAttribsDetection::getResultsLength() const
+int PersonAttribsDetection::getResultsLength() const
 {
   return static_cast<int>(results_.size());
 }
 
-const vino_core_lib::Result* vino_core_lib::PersonAttribsDetection::getLocationResult(int idx) const
+const Result* PersonAttribsDetection::getLocationResult(int idx) const
 {
   return &(results_[idx]);
 }
 
-const std::string vino_core_lib::PersonAttribsDetection::getName() const
+const std::string PersonAttribsDetection::getName() const
 {
   return valid_model_->getModelCategory();
 }
 
-void vino_core_lib::PersonAttribsDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
+void PersonAttribsDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
 {
   if (output != nullptr)
   {
@@ -159,7 +169,7 @@ void vino_core_lib::PersonAttribsDetection::observeOutput(const std::shared_ptr<
 }
 
 const std::vector<cv::Rect>
-vino_core_lib::PersonAttribsDetection::getFilteredROIs(const std::string filter_conditions) const
+PersonAttribsDetection::getFilteredROIs(const std::string filter_conditions) const
 {
   if (!filter_conditions.empty())
   {
@@ -173,3 +183,6 @@ vino_core_lib::PersonAttribsDetection::getFilteredROIs(const std::string filter_
   }
   return filtered_rois;
 }
+
+using namespace vino_core_lib;
+REG_INFERENCE(PersonAttribsDetection, "PersonAttribsDetection");

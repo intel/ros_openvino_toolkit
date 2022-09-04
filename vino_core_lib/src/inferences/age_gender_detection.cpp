@@ -28,11 +28,22 @@
 
 using namespace vino_core_lib;
 
-void AgeGenderDetection::loadNetwork(std::shared_ptr<Models::AgeGenderDetectionModel> network)
+// AgeGenderResult
+AgeGenderResult::AgeGenderResult(const cv::Rect& location) : Result(location) {}
+
+void AgeGenderDetection::loadNetwork(std::shared_ptr<Models::BaseModel> network)
 {
-  valid_model_ = network;
+  valid_model_ = std::dynamic_pointer_cast<Models::AgeGenderDetectionModel>(network);
+
   setMaxBatchSize(network->getMaxBatchSize());
 }
+
+// // AgeGender Detection
+// void AgeGenderDetection::loadNetwork(std::shared_ptr<Models::AgeGenderDetectionModel> network)
+// {
+//   valid_model_ = network;
+//   setMaxBatchSize(network->getMaxBatchSize());
+// }
 
 bool AgeGenderDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
 {
@@ -40,10 +51,8 @@ bool AgeGenderDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_fra
   {
     results_.clear();
   }
-
-  bool succeed = BaseInference::enqueue<float>(frame, input_frame_loc, 1, getResultsLength(), 
-                                                valid_model_->getInputName());
-
+  bool succeed = BaseInference::enqueue<float>(frame, input_frame_loc, 1, getResultsLength(),
+                                                                 valid_model_->getInputName());
   if (!succeed) return false;
 
   Result r(input_frame_loc);
@@ -70,7 +79,9 @@ bool AgeGenderDetection::fetchResults()
   {
     results_[i].age_ = ageBlob->buffer().as<float*>()[i] * 100;
     results_[i].male_prob_ = genderBlob->buffer().as<float*>()[i * 2 + 1];
-  }  return true;
+  }
+  
+  return true;
 }
 
 int AgeGenderDetection::getResultsLength() const
@@ -104,13 +115,12 @@ AgeGenderDetection::getFilteredROIs(const std::string filter_conditions) const
     slog::err << "Age gender detection does not support filtering now! "
               << "Filter conditions: " << filter_conditions << slog::endl;
   }
-
   std::vector<cv::Rect> filtered_rois;
-
   for (auto res : results_)
   {
     filtered_rois.push_back(res.getLocation());
   }
-
   return filtered_rois;
 }
+
+REG_INFERENCE(AgeGenderDetection, "AgeGenderRecognition");

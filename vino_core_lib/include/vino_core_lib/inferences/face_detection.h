@@ -33,6 +33,7 @@
 #include "vino_core_lib/engines/engine.h"
 #include "vino_core_lib/inferences/base_inference.h"
 #include "vino_core_lib/inferences/object_detection.h"
+#include "vino_core_lib/inferences/inference_factory.h"
 #include "vino_core_lib/models/face_detection_model.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
@@ -44,11 +45,44 @@ namespace vino_core_lib
  * @class FaceDetectionResult
  * @brief Class for storing and processing face detection result.
  */
-class FaceDetectionResult : public ObjectDetectionResult
+class FaceDetectionResult : public Result
 {
 public:
+  friend class ObjectDetection;
   explicit FaceDetectionResult(const cv::Rect& location);
+  std::string getLabel() const
+  {
+    return label_;
+  }
+
+  void setLabel(const std::string& label)
+  {
+    label_ = label;
+  }
+  /**
+   * @brief Get the confidence that the detected area is a face.
+   * @return The confidence value.
+   */
+  float getConfidence() const
+  {
+    return confidence_;
+  }
+
+  void setConfidence(const float& con)
+  {
+    confidence_ = con;
+  }
+
+  bool operator<(const FaceDetectionResult& s2) const
+  {
+    return this->confidence_ > s2.confidence_;
+  }
+
+private:
+  std::string label_ = "";
+  float confidence_ = -1;
 };
+
 
 /**
  * @class FaceDetection

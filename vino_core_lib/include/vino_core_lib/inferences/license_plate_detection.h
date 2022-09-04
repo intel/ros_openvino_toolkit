@@ -24,6 +24,7 @@
 #include "vino_core_lib/models/license_plate_detection_model.h"
 #include "vino_core_lib/engines/engine.h"
 #include "vino_core_lib/inferences/base_inference.h"
+#include "vino_core_lib/inferences/inference_factory.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
 // namespace
@@ -58,9 +59,14 @@ public:
   ~LicensePlateDetection() override {};
 
   /**
+   * @brief Load the face detection model.
+   */
+  void loadNetwork(std::shared_ptr<Models::BaseModel>) override;
+  
+  /**
    * @brief Load the license plate detection model.
    */
-  void loadNetwork(std::shared_ptr<Models::LicensePlateDetectionModel>);
+  // void loadNetwork(std::shared_ptr<Models::LicensePlateDetectionModel>);
   /**
    * @brief Enqueue a frame to this class.
    * The frame will be buffered but not infered yet.

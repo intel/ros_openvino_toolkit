@@ -25,9 +25,10 @@
 #include "vino_core_lib/engines/engine.h"
 #include "vino_core_lib/inferences/base_inference.h"
 #include "vino_core_lib/inferences/base_reidentification.h"
+#include "vino_core_lib/inferences/inference_factory.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
-// namespace-
+// namespace
 namespace vino_core_lib
 {
 /**
@@ -38,7 +39,7 @@ class FaceReidentificationResult : public Result
 {
 public:
   friend class FaceReidentification;
-  explicit FaceReidentificationResult(const cv::Rect& location) : Result(location) {}
+  explicit FaceReidentificationResult(const cv::Rect& location);
   std::string getFaceID() const
   {
     return face_id_;
@@ -58,11 +59,17 @@ public:
   using Result = vino_core_lib::FaceReidentificationResult;
   explicit FaceReidentification(double);
   FaceReidentification() {};
-  ~FaceReidentification() override {};
+  ~FaceReidentification() override;
+
+  /**
+   * @brief Load the face detection model.
+   */
+  void loadNetwork(std::shared_ptr<Models::BaseModel>) override;
+  
   /**
    * @brief Load the face reidentification model.
    */
-  void loadNetwork(std::shared_ptr<Models::FaceReidentificationModel>);
+  // void loadNetwork(std::shared_ptr<Models::FaceReidentificationModel>);
   /**
    * @brief Enqueue a frame to this class.
    * The frame will be buffered but not infered yet.

@@ -23,24 +23,34 @@
 #include "vino_core_lib/inferences/landmarks_detection.h"
 #include "vino_core_lib/outputs/base_output.h"
 
+using namespace vino_core_lib;
+
 // LandmarksDetectionResult
-vino_core_lib::LandmarksDetectionResult::LandmarksDetectionResult(const cv::Rect& location) : Result(location)
+LandmarksDetectionResult::LandmarksDetectionResult(const cv::Rect& location) : Result(location)
 {
 }
 
-void vino_core_lib::LandmarksDetection::loadNetwork(const std::shared_ptr<Models::LandmarksDetectionModel> network)
+void LandmarksDetection::loadNetwork(std::shared_ptr<Models::BaseModel> network)
 {
-  valid_model_ = network;
+  valid_model_ = std::dynamic_pointer_cast<Models::LandmarksDetectionModel>(network);
+
   setMaxBatchSize(network->getMaxBatchSize());
 }
 
-bool vino_core_lib::LandmarksDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
+// // LandmarksDetection
+// void LandmarksDetection::loadNetwork(const std::shared_ptr<Models::LandmarksDetectionModel> network)
+// {
+//   valid_model_ = network;
+//   setMaxBatchSize(network->getMaxBatchSize());
+// }
+
+bool LandmarksDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
 {
   if (getEnqueuedNum() == 0)
   {
     results_.clear();
   }
-  if (!vino_core_lib::BaseInference::enqueue<u_int8_t>(frame, input_frame_loc, 1, 0, valid_model_->getInputName()))
+  if (!BaseInference::enqueue<u_int8_t>(frame, input_frame_loc, 1, 0, valid_model_->getInputName()))
   {
     return false;
   }
@@ -49,14 +59,14 @@ bool vino_core_lib::LandmarksDetection::enqueue(const cv::Mat& frame, const cv::
   return true;
 }
 
-bool vino_core_lib::LandmarksDetection::submitRequest()
+bool LandmarksDetection::submitRequest()
 {
-  return vino_core_lib::BaseInference::submitRequest();
+  return BaseInference::submitRequest();
 }
 
-bool vino_core_lib::LandmarksDetection::fetchResults()
+bool LandmarksDetection::fetchResults()
 {
-  bool can_fetch = vino_core_lib::BaseInference::fetchResults();
+  bool can_fetch = BaseInference::fetchResults();
   if (!can_fetch)
   {
     return false;
@@ -87,22 +97,22 @@ bool vino_core_lib::LandmarksDetection::fetchResults()
   return true;
 }
 
-int vino_core_lib::LandmarksDetection::getResultsLength() const
+int LandmarksDetection::getResultsLength() const
 {
   return static_cast<int>(results_.size());
 }
 
-const vino_core_lib::Result* vino_core_lib::LandmarksDetection::getLocationResult(int idx) const
+const Result* LandmarksDetection::getLocationResult(int idx) const
 {
   return &(results_[idx]);
 }
 
-const std::string vino_core_lib::LandmarksDetection::getName() const
+const std::string LandmarksDetection::getName() const
 {
   return valid_model_->getModelCategory();
 }
 
-void vino_core_lib::LandmarksDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
+void LandmarksDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
 {
   if (output != nullptr)
   {
@@ -111,7 +121,7 @@ void vino_core_lib::LandmarksDetection::observeOutput(const std::shared_ptr<Outp
 }
 
 const std::vector<cv::Rect>
-vino_core_lib::LandmarksDetection::getFilteredROIs(const std::string filter_conditions) const
+LandmarksDetection::getFilteredROIs(const std::string filter_conditions) const
 {
   if (!filter_conditions.empty())
   {
@@ -125,3 +135,6 @@ vino_core_lib::LandmarksDetection::getFilteredROIs(const std::string filter_cond
   }
   return filtered_rois;
 }
+
+using namespace vino_core_lib;
+REG_INFERENCE(LandmarksDetection, "LandmarksDetection");

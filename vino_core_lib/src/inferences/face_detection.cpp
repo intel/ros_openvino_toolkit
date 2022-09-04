@@ -28,13 +28,18 @@
 #include "vino_core_lib/outputs/base_output.h"
 #include "vino_core_lib/slog.h"
 
+using namespace vino_core_lib;
+
 // FaceDetectionResult
-vino_core_lib::FaceDetectionResult::FaceDetectionResult(const cv::Rect& location) : ObjectDetectionResult(location)
+FaceDetectionResult::FaceDetectionResult(const cv::Rect& location) : Result(location)
 {
 }
 
 // FaceDetection
-vino_core_lib::FaceDetection::FaceDetection(bool enable_roi_constraint, double show_output_thresh)
+FaceDetection::FaceDetection(bool enable_roi_constraint, double show_output_thresh)
   : ObjectDetection(enable_roi_constraint, show_output_thresh)
 {
 }
+
+using namespace vino_core_lib;
+REG_INFERENCE(FaceDetection, "face_detection");

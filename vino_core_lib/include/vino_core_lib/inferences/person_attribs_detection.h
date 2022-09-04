@@ -24,6 +24,7 @@
 #include "vino_core_lib/models/person_attribs_detection_model.h"
 #include "vino_core_lib/engines/engine.h"
 #include "vino_core_lib/inferences/base_inference.h"
+#include "vino_core_lib/inferences/inference_factory.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
 // namespace
@@ -73,10 +74,16 @@ public:
   explicit PersonAttribsDetection(double);
   PersonAttribsDetection() {};
   ~PersonAttribsDetection() override {};
+
+  /**
+   * @brief Load the face detection model.
+   */
+  void loadNetwork(std::shared_ptr<Models::BaseModel>) override;
+  
   /**
    * @brief Load the person attributes detection model.
    */
-  void loadNetwork(std::shared_ptr<Models::PersonAttribsDetectionModel>);
+  // void loadNetwork(std::shared_ptr<Models::PersonAttribsDetectionModel>);
   /**
    * @brief Enqueue a frame to this class.
    * The frame will be buffered but not infered yet.

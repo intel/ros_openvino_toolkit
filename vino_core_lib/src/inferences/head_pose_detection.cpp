@@ -25,24 +25,34 @@
 #include <string>
 #include "vino_core_lib/outputs/base_output.h"
 
+using namespace vino_core_lib;
+
 // HeadPoseResult
-vino_core_lib::HeadPoseResult::HeadPoseResult(const cv::Rect& location) : Result(location)
+HeadPoseResult::HeadPoseResult(const cv::Rect& location) : Result(location)
 {
 }
 
-void vino_core_lib::HeadPoseDetection::loadNetwork(std::shared_ptr<Models::HeadPoseDetectionModel> network)
+void HeadPoseDetection::loadNetwork(std::shared_ptr<Models::BaseModel> network)
 {
-  valid_model_ = network;
+  valid_model_ = std::dynamic_pointer_cast<Models::HeadPoseDetectionModel>(network);
+
   setMaxBatchSize(network->getMaxBatchSize());
 }
 
-bool vino_core_lib::HeadPoseDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
+// // Head Pose Detection
+// void HeadPoseDetection::loadNetwork(std::shared_ptr<Models::HeadPoseDetectionModel> network)
+// {
+//   valid_model_ = network;
+//   setMaxBatchSize(network->getMaxBatchSize());
+// }
+
+bool HeadPoseDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
 {
   if (getEnqueuedNum() == 0)
   {
     results_.clear();
   }
-  bool succeed = vino_core_lib::BaseInference::enqueue<uint8_t>(frame, input_frame_loc, 1, getResultsLength(),
+  bool succeed = BaseInference::enqueue<uint8_t>(frame, input_frame_loc, 1, getResultsLength(),
                                                                    valid_model_->getInputName());
   if (!succeed)
     return false;
@@ -51,14 +61,14 @@ bool vino_core_lib::HeadPoseDetection::enqueue(const cv::Mat& frame, const cv::R
   return true;
 }
 
-bool vino_core_lib::HeadPoseDetection::submitRequest()
+bool HeadPoseDetection::submitRequest()
 {
-  return vino_core_lib::BaseInference::submitRequest();
+  return BaseInference::submitRequest();
 }
 
-bool vino_core_lib::HeadPoseDetection::fetchResults()
+bool HeadPoseDetection::fetchResults()
 {
-  bool can_fetch = vino_core_lib::BaseInference::fetchResults();
+  bool can_fetch = BaseInference::fetchResults();
   if (!can_fetch)
     return false;
   auto request = getEngine()->getRequest();
@@ -75,22 +85,22 @@ bool vino_core_lib::HeadPoseDetection::fetchResults()
   return true;
 }
 
-int vino_core_lib::HeadPoseDetection::getResultsLength() const
+int HeadPoseDetection::getResultsLength() const
 {
   return static_cast<int>(results_.size());
 }
 
-const vino_core_lib::Result* vino_core_lib::HeadPoseDetection::getLocationResult(int idx) const
+const Result* HeadPoseDetection::getLocationResult(int idx) const
 {
   return &(results_[idx]);
 }
 
-const std::string vino_core_lib::HeadPoseDetection::getName() const
+const std::string HeadPoseDetection::getName() const
 {
   return valid_model_->getModelCategory();
 }
 
-void vino_core_lib::HeadPoseDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
+void HeadPoseDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
 {
   if (output != nullptr)
   {
@@ -99,7 +109,7 @@ void vino_core_lib::HeadPoseDetection::observeOutput(const std::shared_ptr<Outpu
 }
 
 const std::vector<cv::Rect>
-vino_core_lib::HeadPoseDetection::getFilteredROIs(const std::string filter_conditions) const
+HeadPoseDetection::getFilteredROIs(const std::string filter_conditions) const
 {
   if (!filter_conditions.empty())
   {
@@ -113,3 +123,6 @@ vino_core_lib::HeadPoseDetection::getFilteredROIs(const std::string filter_condi
   }
   return filtered_rois;
 }
+
+using namespace vino_core_lib;
+REG_INFERENCE(HeadPoseDetection, "HeadPoseEstimation");

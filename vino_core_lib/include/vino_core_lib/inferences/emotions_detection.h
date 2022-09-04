@@ -27,13 +27,14 @@
 
 #include "vino_core_lib/engines/engine.h"
 #include "vino_core_lib/inferences/base_inference.h"
+#include "vino_core_lib/inferences/inference_factory.h"
 #include "vino_core_lib/models/emotion_detection_model.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
 
 namespace Outputs
 {
-  class BaseOuput;
+class BaseOuput;
 }
 
 namespace vino_core_lib
@@ -71,10 +72,16 @@ public:
   using Result = vino_core_lib::EmotionsResult;
   EmotionsDetection() {};
   ~EmotionsDetection() override {};
+
+  /**
+   * @brief Load the face detection model.
+   */
+  void loadNetwork(std::shared_ptr<Models::BaseModel>) override;
+  
   /**
    * @brief Load the emotin detection model.
    */
-  void loadNetwork(std::shared_ptr<Models::EmotionDetectionModel>);
+  // void loadNetwork(std::shared_ptr<Models::EmotionDetectionModel>);
   /**
    * @brief Enqueue a frame to this class.
    * The frame will be buffered but not infered yet.

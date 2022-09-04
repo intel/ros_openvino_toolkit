@@ -29,24 +29,34 @@
 #include "vino_core_lib/outputs/base_output.h"
 #include "vino_core_lib/slog.h"
 
+using namespace vino_core_lib;
+
 // EmotionsResult
-vino_core_lib::EmotionsResult::EmotionsResult(const cv::Rect& location) : Result(location)
+EmotionsResult::EmotionsResult(const cv::Rect& location) : Result(location)
 {
 }
 
-void vino_core_lib::EmotionsDetection::loadNetwork(const std::shared_ptr<Models::EmotionDetectionModel> network)
+void EmotionsDetection::loadNetwork(std::shared_ptr<Models::BaseModel> network)
 {
-  valid_model_ = network;
+  valid_model_ = std::dynamic_pointer_cast<Models::EmotionDetectionModel>(network);
+
   setMaxBatchSize(network->getMaxBatchSize());
 }
 
-bool vino_core_lib::EmotionsDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
+// // Emotions Detection
+// void EmotionsDetection::loadNetwork(const std::shared_ptr<Models::EmotionDetectionModel> network)
+// {
+//   valid_model_ = network;
+//   setMaxBatchSize(network->getMaxBatchSize());
+// }
+
+bool EmotionsDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
 {
   if (getEnqueuedNum() == 0)
   {
     results_.clear();
   }
-  bool succeed = vino_core_lib::BaseInference::enqueue<float>(frame, input_frame_loc, 1, getResultsLength(),
+  bool succeed = BaseInference::enqueue<float>(frame, input_frame_loc, 1, getResultsLength(),
                                                                  valid_model_->getInputName());
   if (!succeed)
   {
@@ -59,14 +69,14 @@ bool vino_core_lib::EmotionsDetection::enqueue(const cv::Mat& frame, const cv::R
   return true;
 }
 
-bool vino_core_lib::EmotionsDetection::submitRequest()
+bool EmotionsDetection::submitRequest()
 {
-  return vino_core_lib::BaseInference::submitRequest();
+  return BaseInference::submitRequest();
 }
 
-bool vino_core_lib::EmotionsDetection::fetchResults()
+bool EmotionsDetection::fetchResults()
 {
-  bool can_fetch = vino_core_lib::BaseInference::fetchResults();
+  bool can_fetch = BaseInference::fetchResults();
   if (!can_fetch)
     return false;
   int label_length = static_cast<int>(valid_model_->getLabels().size());
@@ -102,22 +112,22 @@ bool vino_core_lib::EmotionsDetection::fetchResults()
   return true;
 }
 
-int vino_core_lib::EmotionsDetection::getResultsLength() const
+int EmotionsDetection::getResultsLength() const
 {
   return static_cast<int>(results_.size());
 }
 
-const vino_core_lib::Result* vino_core_lib::EmotionsDetection::getLocationResult(int idx) const
+const Result* EmotionsDetection::getLocationResult(int idx) const
 {
   return &(results_[idx]);
 }
 
-const std::string vino_core_lib::EmotionsDetection::getName() const
+const std::string EmotionsDetection::getName() const
 {
   return valid_model_->getModelCategory();
 }
 
-void vino_core_lib::EmotionsDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
+void EmotionsDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
 {
   if (output != nullptr)
   {
@@ -126,7 +136,7 @@ void vino_core_lib::EmotionsDetection::observeOutput(const std::shared_ptr<Outpu
 }
 
 const std::vector<cv::Rect>
-vino_core_lib::EmotionsDetection::getFilteredROIs(const std::string filter_conditions) const
+EmotionsDetection::getFilteredROIs(const std::string filter_conditions) const
 {
   if (!filter_conditions.empty())
   {
@@ -140,3 +150,6 @@ vino_core_lib::EmotionsDetection::getFilteredROIs(const std::string filter_condi
   }
   return filtered_rois;
 }
+
+using namespace vino_core_lib;
+REG_INFERENCE(EmotionsDetection, "EmotionRecognition");

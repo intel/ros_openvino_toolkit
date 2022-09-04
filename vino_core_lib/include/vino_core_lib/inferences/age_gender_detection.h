@@ -27,6 +27,7 @@
 
 #include "vino_core_lib/engines/engine.h"
 #include "vino_core_lib/inferences/base_inference.h"
+#include "vino_core_lib/inferences/inference_factory.h"
 #include "vino_core_lib/models/age_gender_detection_model.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
@@ -45,9 +46,7 @@ namespace vino_core_lib
 class AgeGenderResult : public Result
 {
 public:
-  explicit AgeGenderResult(const cv::Rect& location) : Result(location)
-  {
-  }
+  explicit AgeGenderResult(const cv::Rect& location);
   /**
    * @brief Get the age of the detected person from the result.
    * @return The predictea age.
@@ -79,13 +78,18 @@ class AgeGenderDetection : public BaseInference
 {
 public:
   using Result = vino_core_lib::AgeGenderResult;
-
   AgeGenderDetection(){};
   ~AgeGenderDetection() override {};
+
+  /**
+   * @brief Load the face detection model.
+   */
+  void loadNetwork(std::shared_ptr<Models::BaseModel>) override;
+  
   /**
    * @brief Load the age gender detection model.
    */
-  void loadNetwork(std::shared_ptr<Models::AgeGenderDetectionModel>);
+  // void loadNetwork(std::shared_ptr<Models::AgeGenderDetectionModel>);
   /**
    * @brief Enqueue a frame to this class.
    * The frame will be buffered but not infered yet.
