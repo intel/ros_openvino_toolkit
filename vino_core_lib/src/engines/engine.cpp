@@ -27,7 +27,7 @@ Engines::Engine::Engine(InferenceEngine::InferencePlugin plg, const Models::Base
 }
 #endif
 
-Engines::Engine::Engine(InferenceEngine::InferRequest::Ptr& request)
+Engines::Engine::Engine(ov::InferRequest & request)
 {
   request_ = request;
 }

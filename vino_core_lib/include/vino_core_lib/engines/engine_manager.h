@@ -52,7 +52,7 @@ private:
   std::shared_ptr<Engine> createEngine_beforeV2019R2(const std::string&, const std::shared_ptr<Models::BaseModel>&);
 #endif
 
-  std::shared_ptr<Engine> createEngine_V2019R2_plus(const std::string&, const std::shared_ptr<Models::BaseModel>&);
+  std::shared_ptr<Engine> createEngine_V2022(const std::string&, const std::shared_ptr<Models::BaseModel>&);
 };
 }  // namespace Engines
 
