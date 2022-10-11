@@ -27,11 +27,11 @@
 #include "vino_core_lib/inferences/emotions_detection.h"
 #include "vino_core_lib/inferences/face_detection.h"
 #include "vino_core_lib/inferences/head_pose_detection.h"
-#include "vino_core_lib/inferences/face_reidentification.h"
+// #include "vino_core_lib/inferences/face_reidentification.h"
 #include "vino_core_lib/inferences/person_attribs_detection.h"
 #include "vino_core_lib/inferences/vehicle_attribs_detection.h"
 #include "vino_core_lib/inferences/license_plate_detection.h"
-#include "vino_core_lib/inferences/landmarks_detection.h"
+// #include "vino_core_lib/inferences/landmarks_detection.h"
 #include "vino_core_lib/inputs/image_input.h"
 #include "vino_core_lib/inputs/realsense_camera.h"
 #include "vino_core_lib/inputs/realsense_camera_topic.h"
@@ -44,11 +44,11 @@
 #include "vino_core_lib/models/head_pose_detection_model.h"
 #include "vino_core_lib/models/object_detection_ssd_model.h"
 // #include "vino_core_lib/models/object_detection_yolov2voc_model.h"
-#include "vino_core_lib/models/face_reidentification_model.h"
+// #include "vino_core_lib/models/face_reidentification_model.h"
 #include "vino_core_lib/models/person_attribs_detection_model.h"
 #include "vino_core_lib/models/vehicle_attribs_detection_model.h"
 #include "vino_core_lib/models/license_plate_detection_model.h"
-#include "vino_core_lib/models/landmarks_detection_model.h"
+// #include "vino_core_lib/models/landmarks_detection_model.h"
 #include "vino_core_lib/outputs/image_window_output.h"
 #include "vino_core_lib/outputs/ros_topic_output.h"
 #include "vino_core_lib/outputs/rviz_output.h"
@@ -251,18 +251,18 @@ PipelineManager::parseInference(const Params::ParamManager::PipelineRawData& par
     {
       object = createPersonReidentification(infer);
     }
-    else if (infer.name == kInferTpye_FaceReidentification)
-    {
-      object = createFaceReidentification(infer);
-    }
+    // else if (infer.name == kInferTpye_FaceReidentification)
+    // {
+    //   object = createFaceReidentification(infer);
+    // }
     else if (infer.name == kInferTpye_PersonAttribsDetection)
     {
       object = createPersonAttribsDetection(infer);
     }
-    else if (infer.name == kInferTpye_LandmarksDetection)
-    {
-      object = createLandmarksDetection(infer);
-    }
+    // else if (infer.name == kInferTpye_LandmarksDetection)
+    // {
+    //   object = createLandmarksDetection(infer);
+    // }
     else if (infer.name == kInferTpye_VehicleAttribsDetection)
     {
       object = createVehicleAttribsDetection(infer);
@@ -432,33 +432,33 @@ PipelineManager::createPersonAttribsDetection(const Params::ParamManager::Infere
   return attribs_inference_ptr;
 }
 
-std::shared_ptr<vino_core_lib::BaseInference>
-PipelineManager::createFaceReidentification(const Params::ParamManager::InferenceRawData& infer)
-{
-  auto model = std::make_shared<Models::FaceReidentificationModel>(infer.label, infer.model, infer.batch);
-  slog::debug << "for test in createFaceReidentification()" << slog::endl;
-  model->modelInit();
-  auto engine = engine_manager_.createEngine(infer.engine, model);
-  auto attribs_inference_ptr = std::make_shared<vino_core_lib::FaceReidentification>(infer.confidence_threshold);
-  attribs_inference_ptr->loadNetwork(model);
-  attribs_inference_ptr->loadEngine(engine);
+// std::shared_ptr<vino_core_lib::BaseInference>
+// PipelineManager::createFaceReidentification(const Params::ParamManager::InferenceRawData& infer)
+// {
+//   auto model = std::make_shared<Models::FaceReidentificationModel>(infer.label, infer.model, infer.batch);
+//   slog::debug << "for test in createFaceReidentification()" << slog::endl;
+//   model->modelInit();
+//   auto engine = engine_manager_.createEngine(infer.engine, model);
+//   auto attribs_inference_ptr = std::make_shared<vino_core_lib::FaceReidentification>(infer.confidence_threshold);
+//   attribs_inference_ptr->loadNetwork(model);
+//   attribs_inference_ptr->loadEngine(engine);
 
-  return attribs_inference_ptr;
-}
+//   return attribs_inference_ptr;
+// }
 
-std::shared_ptr<vino_core_lib::BaseInference>
-PipelineManager::createLandmarksDetection(
-  const Params::ParamManager::InferenceRawData & infer)
-{
-  auto model = std::make_shared<Models::LandmarksDetectionModel>(infer.label, infer.model, infer.batch);
-  model->modelInit();
-  auto engine = engine_manager_.createEngine(infer.engine, model);
-  auto landmarks_inference_ptr =  std::make_shared<vino_core_lib::LandmarksDetection>();
-  landmarks_inference_ptr->loadNetwork(model);
-  landmarks_inference_ptr->loadEngine(engine);
+// std::shared_ptr<vino_core_lib::BaseInference>
+// PipelineManager::createLandmarksDetection(
+//   const Params::ParamManager::InferenceRawData & infer)
+// {
+//   auto model = std::make_shared<Models::LandmarksDetectionModel>(infer.label, infer.model, infer.batch);
+//   model->modelInit();
+//   auto engine = engine_manager_.createEngine(infer.engine, model);
+//   auto landmarks_inference_ptr =  std::make_shared<vino_core_lib::LandmarksDetection>();
+//   landmarks_inference_ptr->loadNetwork(model);
+//   landmarks_inference_ptr->loadEngine(engine);
 
-  return landmarks_inference_ptr;
-}
+//   return landmarks_inference_ptr;
+// }
 
 void PipelineManager::threadPipeline(const char* name)
 {

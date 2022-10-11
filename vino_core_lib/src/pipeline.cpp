@@ -245,18 +245,19 @@ void Pipeline::printPipeline()
 
 void Pipeline::setCallback()
 {
-  for (auto& pair : name_to_detection_map_)
-  {
+  for (auto & pair : name_to_detection_map_) {
     std::string detection_name = pair.first;
+    std::function<void(std::__exception_ptr::exception_ptr)> callb;
+    callb = [detection_name, self = this](std::exception_ptr ex)
+      {
+        if (ex)
+          throw ex;
 
-    std::function<void(void)> callb;
-    callb = [detection_name, this]() {
-      this->callback(detection_name);
-      return;
-    };
-    pair.second->getEngine()->getRequest()->SetCompletionCallback(callb);
-    slog::debug << "Set Callback for Detection: " << detection_name << slog::endl;
-  }
+        self->callback(detection_name);
+        return;
+      };
+    pair.second->getEngine()->getRequest().set_callback(callb);
+   }
 }
 
 void Pipeline::callback(const std::string& detection_name)
@@ -294,7 +295,7 @@ void Pipeline::callback(const std::string& detection_name)
             increaseInferenceCounter();
             next_detection_ptr->submitRequest();
             auto request = next_detection_ptr->getEngine()->getRequest();
-            request->Wait(InferenceEngine::IInferRequest::WaitMode::RESULT_READY);
+            request.wait();
           }
         }
       }
