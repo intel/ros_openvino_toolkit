@@ -46,7 +46,7 @@ void Models::BaseModel::modelInit()
 
   // Read network model
   ///net_reader_->ReadNetwork(model_loc_);
-  net_reader_ = engine.ReadNetwork(model_loc_);
+  net_reader_ = engine.read_model(model_loc_);
   // Extract model name and load it's weights
   // remove extension
   size_t last_index = model_loc_.find_last_of(".");
@@ -56,11 +56,11 @@ void Models::BaseModel::modelInit()
   // Read labels (if any)
   std::string label_file_name = label_loc_.substr(0, last_index);
   //std::string label_file_name = raw_name + ".labels";
-  loadLabelsFromFile(label_file_name);
+  loadLabelsFromFile(label_loc_);
 
   // Set batch size to given max_batch_size_
   slog::info << "Batch size is set to  " << max_batch_size_ << slog::endl;
-  net_reader_.setBatchSize(max_batch_size_);
+  // net_reader_.setBatchSize(max_batch_size_);
 
   updateLayerProperty(net_reader_);
 }

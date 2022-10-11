@@ -31,6 +31,7 @@
 #include <fstream>
 
 #include "inference_engine.hpp"
+#include "openvino/openvino.hpp"
 #include "vino_core_lib/models/attributes/base_attribute.h"
 
 namespace Engines
@@ -100,7 +101,7 @@ public:
     return attr_;
   }
 
-  inline InferenceEngine::CNNNetwork getNetReader() const
+  inline std::shared_ptr<ov::Model> getNetReader() const
   {
     return net_reader_;
   }
@@ -111,10 +112,10 @@ protected:
    * @brief Set the layer property (layer layout, layer precision, etc.).
    * @param[in] network_reader The reader of the network to be set.
    */
-  virtual bool updateLayerProperty(InferenceEngine::CNNNetwork& network_reader) = 0;
+  virtual bool updateLayerProperty(std::shared_ptr<ov::Model>& network_reader) = 0;
 
-  InferenceEngine::Core engine;
-  InferenceEngine::CNNNetwork net_reader_;
+  ov::Core engine;
+  std::shared_ptr<ov::Model> net_reader_;
   void setFrameSize(const int& w, const int& h)
   {
     frame_size_.width = w;
