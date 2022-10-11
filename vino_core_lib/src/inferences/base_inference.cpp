@@ -41,7 +41,7 @@ void vino_core_lib::BaseInference::loadEngine(const std::shared_ptr<Engines::Eng
 
 bool vino_core_lib::BaseInference::submitRequest()
 {
-  if (engine_->getRequest() == nullptr)
+  if (!engine_->getRequest())
   {
     return false;
   }
@@ -51,13 +51,13 @@ bool vino_core_lib::BaseInference::submitRequest()
   }
   enqueued_frames_ = 0;
   results_fetched_ = false;
-  engine_->getRequest()->StartAsync();
+  engine_->getRequest().start_async();
   return true;
 }
 
 bool vino_core_lib::BaseInference::SynchronousRequest()
 {
-  if (engine_->getRequest() == nullptr)
+  if (!engine_->getRequest())
   {
     return false;
   }
@@ -67,7 +67,7 @@ bool vino_core_lib::BaseInference::SynchronousRequest()
   }
   enqueued_frames_ = 0;
   results_fetched_ = false;
-  engine_->getRequest()->Infer();
+  engine_->getRequest().infer();
   return true;
 }
 
