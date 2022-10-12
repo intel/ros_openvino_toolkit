@@ -52,7 +52,7 @@ public:
    */
   const std::string getModelCategory() const override;
 
-  bool updateLayerProperty(InferenceEngine::CNNNetwork&) override;
+  bool updateLayerProperty(std::shared_ptr<ov::Model>&) override;
 };
 }  // namespace Models
 #endif  // VINO_CORE_LIB__MODELS__OBJECT_DETECTION_SSD_MODEL_H
