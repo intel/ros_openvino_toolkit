@@ -29,6 +29,7 @@
 #include "vino_core_lib/inferences/base_inference.h"
 #include "vino_core_lib/models/emotion_detection_model.h"
 #include "inference_engine.hpp"
+#include "openvino/openvino.hpp"
 #include "opencv2/opencv.hpp"
 
 namespace Outputs
