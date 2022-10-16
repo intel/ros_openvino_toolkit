@@ -24,24 +24,34 @@ Models::LandmarksDetectionModel::LandmarksDetectionModel(const std::string& labe
   : BaseModel(label_loc, model_loc, max_batch_size)
 {
 }
-
-bool Models::LandmarksDetectionModel::updateLayerProperty(InferenceEngine::CNNNetwork& net_reader)
+ 
+bool Models::LandmarksDetectionModel::updateLayerProperty(std::shared_ptr<ov::Model>& net_reader)
 {
   //INPUT
-  InferenceEngine::InputsDataMap input_info_map(net_reader.getInputsInfo());
-  auto input_layerName = input_info_map.begin()->first;
-  auto input_layerData = input_info_map.begin()->second;
-  auto input_layerDims = input_layerData->getTensorDesc().getDims();
+  auto inputs_info_map = net_reader->inputs();
+  ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(net_reader);
+  std::string input_tensor_name_ = net_reader->input().get_any_name();
+  ov::preprocess::InputInfo& input_info = ppp.input(input_tensor_name_);
+ 
+  auto input_layerName = inputs_info_map[0];
+  auto input_layerData = inputs_info_map[1];
+  addInputInfo("input_layerName", input_layerName.get_any_name());
+  addInputInfo("input_layerData", input_layerData.get_any_name());
+  ov::Shape input_layerDims = input_layerData.get_shape();
 
   if (input_layerDims.size() == 4) 
   {
-      input_layerData->setLayout(InferenceEngine::Layout::NCHW);
-      input_layerData->setPrecision(InferenceEngine::Precision::U8);
+      const ov::Layout tensor_layout{"NCHW"};
+      ppp.input(input_layerData.get_any_name()).tensor().
+          set_element_type(ov::element::u8).
+          set_layout(tensor_layout);
   } 
   else if (input_layerDims.size() == 2) 
   {
-      input_layerData->setLayout(InferenceEngine::Layout::NC);
-      input_layerData->setPrecision(InferenceEngine::Precision::FP32);
+      const ov::Layout tensor_layout{"NC"};
+      ppp.input(input_layerData.get_any_name()).tensor().
+          set_element_type(ov::element::f32).
+          set_layout(tensor_layout);
   } 
   else 
   {
@@ -49,16 +59,17 @@ bool Models::LandmarksDetectionModel::updateLayerProperty(InferenceEngine::CNNNe
   }
 
   // OUTPUT
-  InferenceEngine::OutputsDataMap output_info_map(net_reader.getOutputsInfo());
-  auto output_layerName = output_info_map.begin()->first;
-  auto output_layerData = output_info_map.begin()->second;
-  auto output_layerDims = output_layerData->getTensorDesc().getDims();
+  std::string output_tensor_name = net_reader->output().get_any_name();
+  ov::preprocess::OutputInfo& output_info = ppp.output(output_tensor_name);
+  auto outputs_info_map = net_reader->outputs();  
+  auto output_layerName = outputs_info_map[0];
+  auto output_layerData = outputs_info_map[1];
+  ov::Shape output_layerDims = output_layerData.get_shape();
+  ppp.output(output_layerData.get_any_name()).tensor().set_element_type(ov::element::f32);
 
-  output_layerData->setPrecision(InferenceEngine::Precision::FP32);
-  // output_layerData->setLayout(InferenceEngine::Layout::NCHW);
-  // set input and output layer name
-  input_ = input_layerName;
-  output_ = output_layerName;
+  net_reader = ppp.build();
+  addOutputInfo("output_layerName", output_layerName.get_any_name());
+  addOutputInfo("output_layerData", output_layerData.get_any_name());
   return true;
 }
 
