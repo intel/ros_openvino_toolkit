@@ -25,27 +25,30 @@ Models::FaceReidentificationModel::FaceReidentificationModel(const std::string& 
 {
 }
 
-bool Models::FaceReidentificationModel::updateLayerProperty(InferenceEngine::CNNNetwork& net_reader)
+bool Models::FaceReidentificationModel::updateLayerProperty(std::shared_ptr<ov::Model>& net_reader)
 {
   // set input property
-  InferenceEngine::InputsDataMap input_info_map(net_reader.getInputsInfo());
-  InferenceEngine::InputInfo::Ptr input_info = input_info_map.begin()->second;
-  input_info->setPrecision(InferenceEngine::Precision::U8);
-  input_info->getInputData()->setLayout(InferenceEngine::Layout::NCHW);
+  auto inputs_info_map = net_reader->inputs();
+  ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(net_reader);
+  std::string input_tensor_name_ = net_reader->input().get_any_name();
+  ov::preprocess::InputInfo& input_info = ppp.input(input_tensor_name_);
+
+  const ov::Layout tensor_layout{"NCHW"};
+  input_info.tensor().
+    set_element_type(ov::element::u8).
+    set_layout(tensor_layout);
+  addInputInfo("input", input_tensor_name_);
+  
   // set output property
-  InferenceEngine::OutputsDataMap output_info_map(net_reader.getOutputsInfo());
-  InferenceEngine::DataPtr& output_data_ptr = output_info_map.begin()->second;
-  output_data_ptr->setPrecision(InferenceEngine::Precision::FP32);
-  output_data_ptr->setLayout(InferenceEngine::Layout::NCHW);
-  // set input and output layer name
-  input_ = input_info_map.begin()->first;
-  output_ = output_info_map.begin()->first;
+  auto outputs_info = net_reader->outputs();
+  std::string output_tensor_name = net_reader->output().get_any_name();
+  ov::preprocess::OutputInfo& output_info = ppp.output(output_tensor_name);
+  output_info.tensor().set_element_type(ov::element::f32);
+  addOutputInfo("output", output_tensor_name);
+  net_reader = ppp.build();
+
   return true;
 }
-
-// void Models::FaceReidentificationModel::checkLayerProperty(const InferenceEngine::CNNNetReader::Ptr& net_reader)
-// {
-// }
 
 const std::string Models::FaceReidentificationModel::getModelCategory() const
 {

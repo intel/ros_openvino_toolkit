@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+ 
 /**
  * @brief a header file with declaration of FaceReidentification class and
  * FaceReidentificationResult class
@@ -71,10 +71,13 @@ bool vino_core_lib::FaceReidentification::fetchResults()
     return false;
   }
   bool found_result = false;
-  InferenceEngine::InferRequest::Ptr request = getEngine()->getRequest();
+  ov::InferRequest request = getEngine()->getRequest();
   std::string output = valid_model_->getOutputName();
-  const float* output_values = request->GetBlob(output)->buffer().as<float*>();
-  int result_length = request->GetBlob(output)->getTensorDesc().getDims()[1];
+  ov::Tensor output_tensor = request.get_tensor(output);
+  const float* output_values = output_tensor.data<float>();
+  ov::Shape output_shape = output_tensor.get_shape();
+  int result_length = output_shape[1];
+  
   for (int i = 0; i < getResultsLength(); i++)
   {
     std::vector<float> new_face =
