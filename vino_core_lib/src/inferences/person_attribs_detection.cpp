@@ -63,30 +63,7 @@ bool vino_core_lib::PersonAttribsDetection::submitRequest()
 {
   return vino_core_lib::BaseInference::submitRequest();
 }
-/*
-bool vino_core_lib::PersonAttribsDetection::fetchResults()
-{
-  bool can_fetch = vino_core_lib::BaseInference::fetchResults();
-  if (!can_fetch) {return false;}
-  bool found_result = false;
-  InferenceEngine::InferRequest::Ptr request = getEngine()->getRequest();
-  std::string output = valid_model_->getOutputName();
-  const float * output_values = request->GetBlob(output)->buffer().as<float *>();
-  int net_attrib_length = net_attributes_.size();
-  for (int i = 0; i < getResultsLength(); i++) {
-    results_[i].male_probability_ = output_values[i * net_attrib_length];
-    std::string attrib = "";
-    for (int j = 1; j < net_attrib_length; j++) {
-      attrib += (output_values[i * net_attrib_length + j] > attribs_confidence_) ?
-        net_attributes_[j] + ", " : "";
-    }
-    results_[i].attributes_ = attrib;
-    found_result = true;
-  }
-  if (!found_result) {results_.clear();}
-  return true;
-}
-*/
+
 bool vino_core_lib::PersonAttribsDetection::fetchResults()
 {
   bool can_fetch = vino_core_lib::BaseInference::fetchResults();
@@ -101,9 +78,6 @@ bool vino_core_lib::PersonAttribsDetection::fetchResults()
   std::string top_output = valid_model_->getOutputName("top_output_");
   std::string bottom_output = valid_model_->getOutputName("bottom_output_");
 
-  /*auto attri_values = request->GetBlob(attribute_output)->buffer().as<float*>();
-  auto top_values = request->GetBlob(top_output)->buffer().as<float*>();
-  auto bottom_values = request->GetBlob(bottom_output)->buffer().as<float*>();*/
   ov::Tensor attrib_tensor = request.get_tensor(attribute_output);
   ov::Tensor top_tensor = request.get_tensor(top_output);
   ov::Tensor bottom_tensor = request.get_tensor(bottom_output);

@@ -24,7 +24,6 @@
 #pragma once
 
 #include "vino_core_lib/models/base_model.h"
-#include "inference_engine.hpp"
 #include "openvino/openvino.hpp"
 
 /**

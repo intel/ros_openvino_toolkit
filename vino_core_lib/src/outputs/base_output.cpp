@@ -19,7 +19,6 @@
 
 void Outputs::BaseOutput::setPipeline(Pipeline* const pipeline)
 {
-  // pipeline->printPipeline();
   pipeline_ = pipeline;
 }
 

@@ -47,8 +47,6 @@ void vino_core_lib::LicensePlateDetection::fillSeqBlob()
   ov::Tensor seq_tensor = getEngine()->getRequest().get_tensor(
     valid_model_->getSeqInputName());
   int max_sequence_size = seq_tensor.get_shape()[0];
-  // second input is sequence, which is some relic from the training
-  // it should have the leading 0.0f and rest 1.0f
   float * tensor_data = seq_tensor.data<float>();
   tensor_data[0] = 0.0f;
   std::fill(tensor_data + 1, tensor_data + max_sequence_size, 1.0f);

@@ -341,10 +341,6 @@ PipelineManager::createObjectDetection(const Params::ParamManager::InferenceRawD
   {
     object_detection_model = std::make_shared<Models::ObjectDetectionSSDModel>(infer.label, infer.model, infer.batch);
   }
-  // if (infer.model_type == kInferTpye_ObjectDetectionTypeYolov2voc)
-  // {
-  //   object_detection_model = std::make_shared<Models::ObjectDetectionYolov2Model>(infer.model, infer.batch);
-  // }
 
   slog::debug << "for test in createObjectDetection(), Created SSDModel" << slog::endl;
   object_inference_ptr = std::make_shared<vino_core_lib::ObjectDetection>(

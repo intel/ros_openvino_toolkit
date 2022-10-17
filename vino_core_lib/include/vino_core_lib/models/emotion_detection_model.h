@@ -44,7 +44,6 @@ public:
   bool updateLayerProperty(std::shared_ptr<ov::Model>&) override;
 
 private:
-  // bool verifyOutputLayer(const InferenceEngine::DataPtr& ptr);
   std::string input_tensor_name_;
   std::string output_tensor_name_;
 

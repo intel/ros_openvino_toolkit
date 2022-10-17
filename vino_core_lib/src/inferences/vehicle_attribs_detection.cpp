@@ -72,8 +72,6 @@ bool vino_core_lib::VehicleAttribsDetection::fetchResults()
   }
   bool found_result = false;
   ov::InferRequest request = getEngine()->getRequest();
-  // std::string color_name = valid_model_->getColorOutputName();
-  // std::string type_name = valid_model_->getTypeOutputName();
   std::string color_name = valid_model_->getOutputName("color_output_");
   std::string type_name = valid_model_->getOutputName("type_output_");
   const float * color_values = request.get_tensor(color_name).data<float>();

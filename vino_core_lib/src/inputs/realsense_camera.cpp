@@ -46,7 +46,6 @@ bool Input::RealSenseCamera::initialize(size_t width, size_t height)
   setWidth(width);
   setHeight(height);
 
-  // bypass RealSense's bug: several captured frames after HW is inited are with wrong data.
   bypassFewFramesOnceInited();
 
   return isInit();
@@ -74,7 +73,6 @@ bool Input::RealSenseCamera::read(cv::Mat* frame)
     return false;
   }
 
-  // setHeader("realsense_camera_frame");
   return true;
 }
 

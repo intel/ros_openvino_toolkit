@@ -25,7 +25,6 @@ Models::ObjectDetectionSSDModel::ObjectDetectionSSDModel(const std::string& labe
   : ObjectDetectionModel(label_loc, model_loc, max_batch_size)
 {
   slog::debug << "TESTING: in ObjectDetectionSSDModel" << slog::endl;
-  // addCandidatedAttr(std::make_shared<Models::SSDModelAttr>());
 }
 
 const std::string Models::ObjectDetectionSSDModel::getModelCategory() const
@@ -114,7 +113,6 @@ bool Models::ObjectDetectionSSDModel::fetchResults(const std::shared_ptr<Engines
     float image_id = detections[i * object_size + 0];
     if (image_id < 0)
     {
-      // slog::info << "Found objects: " << i << "|" << results.size() << slog::endl;
       break;
     }
 
@@ -137,8 +135,8 @@ bool Models::ObjectDetectionSSDModel::fetchResults(const std::shared_ptr<Engines
         label_num < labels.size() ? labels[label_num] : std::string("label #") + std::to_string(label_num);
     result.setLabel(label);
     float confidence = detections[i * object_size + 2];
-    if (confidence <= confidence_thresh /* || r.x == 0 */)
-    {  // why r.x needs to be checked?
+    if (confidence <= confidence_thresh)
+    {  
       continue;
     }
     result.setConfidence(confidence);

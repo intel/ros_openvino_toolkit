@@ -68,7 +68,7 @@ bool Models::EmotionDetectionModel::updateLayerProperty(std::shared_ptr<ov::Mode
   addOutputInfo("output", output_tensor_name_);
   
   printAttribute();
-  return true; ///verifyOutputLayer(output_data_ptr);
+  return true; //verifyOutputLayer(output_data_ptr);
 }
 
 const std::string Models::EmotionDetectionModel::getModelCategory() const

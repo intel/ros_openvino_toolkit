@@ -43,7 +43,7 @@ bool Input::IpCamera::read(cv::Mat * frame)
     return false;
   }
   cap.grab();
-  // setHeader("ip_camera_frame");
+
   bool retrieved = cap.retrieve(*frame);
   if (retrieved) 
   {

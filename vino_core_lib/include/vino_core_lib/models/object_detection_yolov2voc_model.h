@@ -53,7 +53,6 @@ public:
 
 protected:
   int getEntryIndex(int side, int lcoords, int lclasses, int location, int entry);
-  // InferenceEngine::InputInfo::Ptr input_info_ = nullptr;
 };
 }  // namespace Models
 #endif  // VINO_CORE_LIB__MODELS__OBJECT_DETECTION_YOLOV2VOC_MODEL_H

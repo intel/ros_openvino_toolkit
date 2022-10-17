@@ -77,16 +77,11 @@ bool vino_core_lib::EmotionsDetection::fetchResults()
   if (!can_fetch)
     return false;
   int label_length = static_cast<int>(valid_model_->getLabels().size());
-  /// std::cout << "label_length = " << label_length << std::endl;
   std::string output_name = valid_model_->getOutputName();
-  /// std::cout << "output_name = " << output_name << std::endl;
   ov::Tensor emotions_tensor = getEngine()->getRequest().get_tensor(output_name);
-  /** emotions vector must have the same size as number of channels
-      in model output. Default output format is NCHW so we check index 1 */
-
   ov::Shape shape = emotions_tensor.get_shape();
   int64 num_of_channels = shape[1];
-  /// std::cout << "num_of_channels " << num_of_channels << std::endl;
+
   if (num_of_channels != label_length)
   {
     slog::err << "Output size (" << num_of_channels << ") of the Emotions Recognition network is not equal "
@@ -97,8 +92,6 @@ bool vino_core_lib::EmotionsDetection::fetchResults()
                            std::to_string(label_length) + ")");
   }
 
-  /** we identify an index of the most probable emotion in output array
-      for idx image to return appropriate emotion name */
   auto emotions_values = emotions_tensor.data<float>();
   for (unsigned int idx = 0; idx < results_.size(); ++idx)
   {

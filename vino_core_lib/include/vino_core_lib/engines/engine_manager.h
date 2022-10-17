@@ -23,7 +23,7 @@
 
 #include "vino_core_lib/models/base_model.h"
 #include "vino_core_lib/engines/engine.h"
-#include "inference_engine.hpp"
+#include "openvino/openvino.hpp"
 
 namespace Engines
 {

@@ -163,14 +163,12 @@ bool vino_core_lib::ObjectSegmentation::fetchResults()
         {
           colored_mask.at<cv::Vec3b>(rowId, colId)[ch] = colors_[classId][ch];
         }
-        // classId = static_cast<std::size_t>(predictions[rowId * output_w + colId]);
       }
       else
       {
         for (int chId = 0; chId < output_des; ++chId)
         {
           float prob = detections[chId * output_h * output_w + rowId * output_w + colId];
-          // float prob = predictions[chId * output_h * output_w + rowId * output_w+ colId];
           if (prob > maxProb)
           {
             classId = chId;

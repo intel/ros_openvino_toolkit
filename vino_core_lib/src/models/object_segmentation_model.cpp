@@ -103,7 +103,6 @@ bool Models::ObjectSegmentationModel::updateLayerProperty(std::shared_ptr<ov::Mo
   inputs_info_ = net_reader->inputs();
   slog::debug<<"input size"<<inputs_info_.size()<<slog::endl;
   if (inputs_info_.size() != 1) {
-    // throw std::runtime_error("Demo supports topologies only with 1 input");
     slog::warn << "This inference sample should have only one input, but we got"
       << std::to_string(inputs_info_.size()) << "inputs"
       << slog::endl;
@@ -125,7 +124,6 @@ bool Models::ObjectSegmentationModel::updateLayerProperty(std::shared_ptr<ov::Mo
   auto outputs_info = net_reader->outputs();
   if (outputs_info.size() != 1)
   {
-    // throw std::runtime_error("Demo supports topologies only with 1 output");
     slog::warn << "This inference sample should have only one output, but we got"
                << std::to_string(outputs_info.size()) << "outputs" << slog::endl;
     return false;
@@ -136,14 +134,12 @@ bool Models::ObjectSegmentationModel::updateLayerProperty(std::shared_ptr<ov::Mo
   ov::preprocess::OutputInfo& output_info = ppp.output(output_tensor_name_);
   output_info.tensor().set_element_type(ov::element::f32);
   net_reader = ppp.build();
-  // ov::set_batch(net_reader_, getMaxBatchSize());
   
   input_shape_ = net_reader->input().get_shape();
 
   std::vector<size_t> &in_size_vector = input_shape_;
   slog::debug<<"channel size"<<in_size_vector[1]<<"dimensional"<<in_size_vector.size()<<slog::endl;
   if (in_size_vector.size() != 4 || in_size_vector[1] != 3) {
-    //throw std::runtime_error("3-channel 4-dimensional model's input is expected");
     slog::warn << "3-channel 4-dimensional model's input is expected, but we got "
       << std::to_string(in_size_vector[1]) << " channels and "
       << std::to_string(in_size_vector.size()) << " dimensions." << slog::endl;
@@ -173,7 +169,6 @@ bool Models::ObjectSegmentationModel::updateLayerProperty(std::shared_ptr<ov::Mo
   {
     slog::err << "output_height or output_width is not set, please check the MaskOutput Info "
               << "is set correctly." << slog::endl;
-    // throw std::runtime_error("output_height or output_width is not set, please check the MaskOutputInfo");
     return false;
   }
 
@@ -183,12 +178,6 @@ bool Models::ObjectSegmentationModel::updateLayerProperty(std::shared_ptr<ov::Mo
   slog::debug << "output name " << output_tensor_name_<< slog::endl;
   addOutputInfo("masks", output_tensor_name_);
   addOutputInfo("detection", output_tensor_name_);
-
-  // const InferenceEngine::CNNLayerPtr output_layer =
-  // network.getLayerByName(outputsDataMap.begin()->first.c_str());
-  ///const InferenceEngine::CNNLayerPtr output_layer = network.getLayerByName(getOutputName("detection").c_str());
-// const int num_classes = output_layer->GetParamAsInt("num_classes");
-// slog::info << "Checking Object Segmentation output ... num_classes=" << num_classes << slog::endl;
 
 #if 0
   if (getLabels().size() != num_classes)
@@ -203,14 +192,7 @@ bool Models::ObjectSegmentationModel::updateLayerProperty(std::shared_ptr<ov::Mo
     }
   }
 #endif
-  /*
-    const InferenceEngine::SizeVector output_dims = data.getTensorDesc().getDims();
-    setMaxProposalCount(static_cast<int>(output_dims[2]));
-    slog::info << "max proposal count is: " << getMaxProposalCount() << slog::endl;
-    auto object_size = static_cast<int>(output_dims[3]);
-    setObjectSize(object_size);
 
-    slog::debug << "model size" << output_dims.size() << slog::endl;*/
   printAttribute();
   slog::info << "This model is SSDNet-like, Layer Property updated!" << slog::endl;
   return true;

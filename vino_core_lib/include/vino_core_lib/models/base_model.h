@@ -29,8 +29,6 @@
 #include <map>
 #include <iostream>
 #include <fstream>
-
-#include "inference_engine.hpp"
 #include "openvino/openvino.hpp"
 #include "vino_core_lib/models/attributes/base_attribute.h"
 

@@ -96,7 +96,6 @@ void Outputs::RvizOutput::handleOutput()
   image_window_output_->decorateFrame();
   cv::Mat frame = image_window_output_->getFrame();
   std_msgs::Header header = getHeader();
-  // std_msgs::Header header = getPipeline()->getInputDevice()->getLockedHeader();
   std::shared_ptr<cv_bridge::CvImage> cv_ptr = std::make_shared<cv_bridge::CvImage>(header, "bgr8", frame);
   sensor_msgs::Image image_msg;
   image_topic_ = cv_ptr->toImageMsg();
