@@ -29,13 +29,13 @@ namespace Engines
 {
 /**
  * @class EngineManager
- * @brief This class is used to create and manage Inference engines.
+ * @brief This class is used to create and manage OpenVINO engines.
  */
 class EngineManager
 {
 public:
   /**
-   * @brief Create InferenceEngine instance by given Engine Name and Network.
+   * @brief Create OpenVINO instance by given Engine Name and Network.
    * @return The shared pointer of created Engine instance.
    */
   std::shared_ptr<Engine> createEngine(const std::string&, const std::shared_ptr<Models::BaseModel>&);

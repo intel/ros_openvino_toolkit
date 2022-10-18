@@ -38,7 +38,7 @@ class Engine
 public:
 #if (defined(USE_OLD_E_PLUGIN_API))
   /**
-   * DEPRECATED! instead of using Engine(InferenceEngine::InferRequest::Ptr &)
+   * DEPRECATED! instead of using Engine(ov::InferRequest &)
    * @brief Create an NetworkEngine instance
    * from a inference plugin and an inference network.
    */
@@ -46,7 +46,7 @@ public:
 #endif
 
   /**
-   * @brief Using an Inference Request to initialize the inference Engine.
+   * @brief Using an Inference Request to initialize the OpenVINO Engine.
    */
   Engine(ov::InferRequest &);
   /**

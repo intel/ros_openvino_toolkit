@@ -91,7 +91,7 @@ int main(int argc, char** argv)
 
   try
   {
-    std::cout << "OpenVINO: " << ov::get_openvino_version << std::endl;
+    std::cout << "OpenVINO: " << ov::get_openvino_version() << std::endl;
 
     // ----- Parsing and validation of input args-----------------------
     if (!parseAndCheckCommandLine(argc, argv))

@@ -86,7 +86,7 @@ add_dependencies(pipeline_with_params
   ${vino_core_lib_TARGETS}
 )
 
-set(OpenCV_LIBRARIES openvino::runtime)
+set(OpenVINO_LIBRARIES openvino::runtime)
 target_link_libraries(pipeline_with_params
   ${catkin_LIBRARIES}
   gflags

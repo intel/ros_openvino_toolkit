@@ -13,7 +13,7 @@
 // limitations under the License.
 
 //
-// @brief a header file with version information about Inference Engine.
+// @brief a header file with version information about OpenVINO.
 // @file version_info.hpp
 //
 

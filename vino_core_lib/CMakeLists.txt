@@ -69,7 +69,7 @@ include_directories (
     include
     ${catkin_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${INTEL_OPENVINO_DIR}
+    ${OPENVINO_DIR}
     ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/gflags/include
     ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/extension/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../vino_param_lib/include
