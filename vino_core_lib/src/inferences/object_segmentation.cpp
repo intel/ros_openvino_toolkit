@@ -122,21 +122,20 @@ bool vino_core_lib::ObjectSegmentation::fetchResults()
   ov::Shape out_shape = output_tensor.get_shape();
   ov::Tensor masks_tensor = infer_request.get_tensor(detection_output.c_str());
   const auto masks_data = masks_tensor.data<float>();
-  int output_des, output_h, output_w;
-  switch(out_shape.size()) {
-      case 3:
-          output_des = 0;
-          output_h = out_shape[1];
-          output_w = out_shape[2];
-          break;
-      case 4:
-          output_des = out_shape[1];
-          output_h = out_shape[2];
-          output_w = out_shape[3];
-          break;
-      default:
-          throw std::runtime_error("Unexpected output blob shape. Only 4D and 3D output blobs are"
-              "supported.");
+
+  size_t output_w, output_h, output_des, output_extra = 0;
+  if (out_shape.size() == 3) {
+    output_w = out_shape[2];
+    output_h = out_shape[1];
+    output_des = out_shape[0];
+  } else if (out_shape.size() == 4) {
+    output_w = out_shape[3];
+    output_h = out_shape[2];
+    output_des = out_shape[1];
+    output_extra = out_shape[0];
+  } else {
+    slog::warn << "unexpected output shape: " <<out_shape << slog::endl;
+    return false;
   }
   slog::debug << "output w " << output_w << slog::endl;
   slog::debug << "output h " << output_h << slog::endl;
