@@ -1,15 +1,15 @@
 # ROS_MELODIC_OpenVINO_Toolkit
 
 **NOTE:** 
-Below steps have been tested on **Ubuntu 20.04**.
+Below steps have been tested on **Ubuntu 18.04**.
 
 ## 1. Environment Setup
-* Install ROS Melodic ([guide](http://wiki.ros.org/melodic/Installation/Ubuntu))
+* Install ROS Melodic ([guide](http://wiki.ros.org/melodic/Installation/Ubuntu)).
 
 * Install Intel® OpenVINO™ Toolkit Version: 2022.1 ([guide](https://docs.openvino.ai/2022.1/openvino_docs_install_guides_installing_openvino_linux.html)). 
-* * Install from an achive file([guide](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/download.html)).
+  * Install from an achive file ([guide](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/download.html)).
 Tips: Both runtime and development tool are needed, `pip` is recommended for installing the development tool ([guide](https://docs.openvino.ai/latest/openvino_docs_install_guides_install_dev_tools.html)).
-* * Install from source code([guide](https://github.com/openvinotoolkit/openvino/wiki/BuildingForLinux)).
+  * Install from source code ([guide](https://github.com/openvinotoolkit/openvino/wiki/BuildingForLinux)).
 
 * Install Intel®  RealSense ™ SDK ([guide](https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md)).
 
@@ -90,17 +90,17 @@ sudo python3 downloader.py --name license-plate-recognition-barrier-0001 --outpu
 * Copy label files (execute once)
 * Before launch, copy label files to the same model path, make sure the model path and label path match the ros_openvino_toolkit/vino_launch/param/xxxx.yaml.
 ```
- sudo cp ~/catkin_ws/src/ros2_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/openvino_toolkit/models/emotions-recognition/output/intel/emotions-recognition-retail-0003/FP32/
- sudo cp ~/catkin_ws/src/ros2_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/openvino_toolkit/models/emotions-recognition/output/intel/emotions-recognition-retail-0003/FP16/
- sudo cp ~/catkin_ws/src/ros2_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/models/face_detection/output/intel/face-detection-adas-0001/FP32/
- sudo cp ~/catkin_ws/src/ros2_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/models/face_detection/output/intel/face-detection-adas-0001/FP16/
- sudo cp ~/catkin_ws/src/ros2_openvino_toolkit/data/labels/object_detection/vehicle-license-plate-detection-barrier-0106.labels /opt/openvino_toolkit/models/vehicle-license-plate-detection/output/convert/intel/vehicle-license-plate-detection-barrier-0106/FP32
+ sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/openvino_toolkit/models/emotions-recognition/output/intel/emotions-recognition-retail-0003/FP32/
+ sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/openvino_toolkit/models/emotions-recognition/output/intel/emotions-recognition-retail-0003/FP16/
+ sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/models/face_detection/output/intel/face-detection-adas-0001/FP32/
+ sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/models/face_detection/output/intel/face-detection-adas-0001/FP16/
+ sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_detection/vehicle-license-plate-detection-barrier-0106.labels /opt/openvino_toolkit/models/vehicle-license-plate-detection/output/convert/intel/vehicle-license-plate-detection-barrier-0106/FP32
  sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels /opt/openvino_toolkit/models/object_detection/mobilenet_ssd/output/convert/public/mobilenet-ssd/FP16
  sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_segmentation/frozen_inference_graph.labels /opt/openvino_toolkit/models/deeplabv3/output/convert/public/deeplabv3/FP16
  sudo mv /opt/openvino_toolkit/models/deeplabv3/output/convert/public/deeplabv3/FP16/frozen_inference_graph.labels  /opt/openvino_toolkit/models/deeplabv3/output/convert/public/deeplabv3/FP16/deeplabv3.labels
 ```
 ### Install OpenVINO 2022.1 by PIP
-* OMZ tools are provided for downloading and converting OMZ models in ov2022([guide](https://pypi.org/project/openvino-dev/)).
+* OMZ tools are provided for downloading and converting OMZ models in ov2022 ([guide](https://pypi.org/project/openvino-dev/)).
 
 * See all available models
 ```
@@ -109,7 +109,7 @@ omz_downloader --print_all
 
 * Download the optimized Intermediate Representation (IR) of model (execute once), for example:
 ```
-omz_downloader --name face-detection-adas-0001 -output_dir /opt/openvino_toolkit/models/face_detection/output
+omz_downloader --name face-detection-adas-0001 --output_dir /opt/openvino_toolkit/models/face_detection/output
 omz_downloader --name age-gender-recognition-retail-0013 --output_dir /opt/openvino_toolkit/models/age-gender-recognition/output
 omz_downloader --name emotions-recognition-retail-0003 --output_dir /opt/openvino_toolkit/models/emotions-recognition/output
 omz_downloader --name head-pose-estimation-adas-0001 --output_dir /opt/openvino_toolkit/models/head-pose-estimation/output
@@ -122,11 +122,11 @@ omz_downloader --name license-plate-recognition-barrier-0001 --output_dir /opt/o
 ```
 * Copy label files (execute once)
 ```
- sudo cp ~/catkin_ws/src/ros2_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/openvino_toolkit/models/emotions-recognition/output/intel/emotions-recognition-retail-0003/FP32/
- sudo cp ~/catkin_ws/src/ros2_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/openvino_toolkit/models/emotions-recognition/output/intel/emotions-recognition-retail-0003/FP16/
- sudo cp ~/catkin_ws/src/ros2_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/models/face_detection/output/intel/face-detection-adas-0001/FP32/
- sudo cp ~/catkin_ws/src/ros2_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/models/face_detection/output/intel/face-detection-adas-0001/FP16/
- sudo cp ~/catkin_ws/src/ros2_openvino_toolkit/data/labels/object_detection/vehicle-license-plate-detection-barrier-0106.labels /opt/openvino_toolkit/models/vehicle-license-plate-detection/output/convert/intel/vehicle-license-plate-detection-barrier-0106/FP32
+ sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/openvino_toolkit/models/emotions-recognition/output/intel/emotions-recognition-retail-0003/FP32/
+ sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/emotions-recognition/FP32/emotions-recognition-retail-0003.labels /opt/openvino_toolkit/models/emotions-recognition/output/intel/emotions-recognition-retail-0003/FP16/
+ sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/models/face_detection/output/intel/face-detection-adas-0001/FP32/
+ sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/face_detection/face-detection-adas-0001.labels /opt/openvino_toolkit/models/face_detection/output/intel/face-detection-adas-0001/FP16/
+ sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_detection/vehicle-license-plate-detection-barrier-0106.labels /opt/openvino_toolkit/models/vehicle-license-plate-detection/output/convert/intel/vehicle-license-plate-detection-barrier-0106/FP32
  sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_detection/mobilenet-ssd.labels /opt/openvino_toolkit/models/object_detection/mobilenet_ssd/output/convert/public/mobilenet-ssd/FP16
  sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_segmentation/frozen_inference_graph.labels /opt/openvino_toolkit/models/deeplabv3/output/convert/public/deeplabv3/FP16
  sudo mv /opt/openvino_toolkit/models/deeplabv3/output/convert/public/deeplabv3/FP16/frozen_inference_graph.labels  /opt/openvino_toolkit/models/deeplabv3/output/convert/public/deeplabv3/FP16/deeplabv3.labels
@@ -150,7 +150,7 @@ omz_downloader --name license-plate-recognition-barrier-0001 --output_dir /opt/o
     omz_converter --name deeplabv3 -d /opt/openvino_toolkit/models/deeplabv3/output -o /opt/openvino_toolkit/models/deeplabv3/output/convert
     ```
 
-* Please check the parameter configuration in ros2_openvino_toolkit/sample/param/xxxx.yaml before lauching, make sure parameters such as model_path, label_path and input_path are set correctly.
+* Please check the parameter configuration in ros_openvino_toolkit/sample/param/xxxx.yaml before lauching, make sure parameters such as model_path, label_path and input_path are set correctly.
   * run face detection sample code input from StandardCamera.
   ```
   roslaunch vino_launch pipeline_people.launch
