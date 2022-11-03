@@ -125,53 +125,27 @@ std::map<std::string, std::shared_ptr<Input::BaseInputDevice>>
 PipelineManager::parseInputDevice(const PipelineData& pdata)
 {
   std::map<std::string, std::shared_ptr<Input::BaseInputDevice>> inputs;
-  for (auto& name : pdata.params.inputs)
+
+  for (auto& input_name : pdata.params.inputs)
   {
-    slog::info << "Parsing InputDvice: " << name << slog::endl;
-    std::shared_ptr<Input::BaseInputDevice> device = nullptr;
-    if (name == kInputType_RealSenseCamera)
+    if (input_name.empty())
     {
-      device = std::make_shared<Input::RealSenseCamera>();
+      continue;
     }
-    else if (name == kInputType_StandardCamera)
-    {
-      device = std::make_shared<Input::StandardCamera>();
-    }
-    else if (name == kInputType_IpCamera)
-    {
-      if (pdata.params.input_meta != "")
-      {
-        device = std::make_shared<Input::IpCamera>(pdata.params.input_meta);
-      }
-    }
-    else if (name == kInputType_CameraTopic || name == kInputType_ImageTopic)
-    {
-      device = std::make_shared<Input::ImageTopic>();
-    }
-    else if (name == kInputType_Video)
-    {
-      if (pdata.params.input_meta != "")
-      {
-        device = std::make_shared<Input::Video>(pdata.params.input_meta);
-      }
-    }
-    else if (name == kInputType_Image)
-    {
-      if (pdata.params.input_meta != "")
-      {
-        device = std::make_shared<Input::Image>(pdata.params.input_meta);
-      }
-    }
-    else
-    {
-      slog::err << "Invalid input device name: " << name << slog::endl;
-    }
+
+    slog::info << "Parsing InputDvice: " << input_name << slog::endl;
+
+    std::shared_ptr<Input::BaseInputDevice> device = REG_INPUT_FACTORY::produce_shared(input_name);
 
     if (device != nullptr)
     {
-      device->initialize();
-      inputs.insert({ name, device });
-      slog::info << " ... Adding one Input device: " << name << slog::endl;
+      device->init(pdata.params.input_meta);
+      inputs.insert({ input_name, device });
+      slog::info << " ... Adding one Input device: " << input_name << slog::endl;
+    }
+    else
+    {
+      slog::err << "Invalid input device input_name: " << input_name << slog::endl;
     }
   }
 
@@ -228,7 +202,7 @@ PipelineManager::parseInference(const Params::ParamManager::PipelineRawData& par
     }
 
     // Model
-    std::shared_ptr<Models::BaseModel> model;
+    std::shared_ptr<Models::BaseModel> model = nullptr;
 
     if(infer_param.model_type.empty() && (infer_param.name.empty()))
     {

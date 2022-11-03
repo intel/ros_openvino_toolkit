@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "vino_core_lib/engines/engine.h"
+#include "vino_core_lib/vino_factory.h"
 #include "vino_core_lib/models/base_model.h"
 #include "vino_core_lib/slog.h"
 #include "inference_engine.hpp"
