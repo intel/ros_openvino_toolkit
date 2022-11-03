@@ -24,7 +24,6 @@
 #include <utility>
 #include <vino_param_lib/param_manager.h>
 
-#include "vino_core_lib/inferences/inference_factory.h"
 #include "vino_core_lib/inferences/age_gender_detection.h"
 #include "vino_core_lib/inferences/emotions_detection.h"
 #include "vino_core_lib/inferences/face_detection.h"
@@ -274,7 +273,7 @@ PipelineManager::parseInference(const Params::ParamManager::PipelineRawData& par
     auto engine = engine_manager_.createEngine(infer_param.engine, model);
 
     slog::info << "Parsing Inference: " << infer_param.name << slog::endl;
-    auto infer = vino_core_lib::InferenceFactory::produce_shared(infer_param.name);
+    auto infer = REG_INFERENCE_FACTORY::produce_shared(infer_param.name);
 
     if(infer != nullptr)
     {

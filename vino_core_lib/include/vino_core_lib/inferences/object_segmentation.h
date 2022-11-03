@@ -27,7 +27,6 @@
 #include "vino_core_lib/models/object_segmentation_model.h"
 #include "vino_core_lib/engines/engine.h"
 #include "vino_core_lib/inferences/base_inference.h"
-#include "vino_core_lib/inferences/inference_factory.h"
 #include "inference_engine.hpp"
 #include "opencv2/opencv.hpp"
 // namespace

@@ -221,4 +221,7 @@ protected:
 };
 }  // namespace vino_core_lib
 
+#define REG_INFERENCE_FACTORY         VinoFactory<std::string, vino_core_lib::BaseInference>
+#define REG_INFERENCE(T, key)  static REG_INFERENCE_FACTORY::TReg<vino_core_lib::T> gs_inference##_(key)
+
 #endif  // VINO_CORE_LIB__INFERENCES__BASE_INFERENCE_H
