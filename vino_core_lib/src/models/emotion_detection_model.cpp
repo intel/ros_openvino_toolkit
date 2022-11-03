@@ -80,4 +80,4 @@ const std::string Models::EmotionDetectionModel::getModelCategory() const
   return "Emotions Detection";
 }
 
-REG_MODEL(EmotionDetectionModel, "EmotionRecognition", EmotionRecognition);
+REG_MODEL(EmotionDetectionModel, "EmotionRecognition");

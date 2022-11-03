@@ -151,7 +151,7 @@ private:
 };
 
 #define REG_MODEL_FACTORY         VinoFactory<std::string, Models::BaseModel>
-#define REG_MODEL(BASE, key, name)  static REG_MODEL_FACTORY::TReg<Models::BASE> gs_model##name##_(key)
+#define REG_MODEL(BASE, key)  static REG_MODEL_FACTORY::TReg<Models::BASE> gs_model##_(key)
 
 class ObjectDetectionModel : public BaseModel
 {

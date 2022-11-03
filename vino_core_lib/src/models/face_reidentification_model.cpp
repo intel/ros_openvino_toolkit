@@ -52,4 +52,4 @@ const std::string Models::FaceReidentificationModel::getModelCategory() const
   return "Face Reidentification";
 }
 
-REG_MODEL(FaceReidentificationModel, "FaceReidentification", FaceReidentification);
+REG_MODEL(FaceReidentificationModel, "FaceReidentification");
