@@ -65,4 +65,4 @@ const std::string Models::VehicleAttribsDetectionModel::getModelCategory() const
   return "Vehicle Attributes Detection";
 }
 
-REG_MODEL(VehicleAttribsDetectionModel, "VehicleAttribsDetection");
+REG_MODEL(VehicleAttribsDetectionModel, "VehicleAttribsDetection", VehicleAttribsDetection);

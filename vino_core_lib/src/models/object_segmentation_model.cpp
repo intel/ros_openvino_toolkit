@@ -213,4 +213,4 @@ bool Models::ObjectSegmentationModel::updateLayerProperty(InferenceEngine::CNNNe
   return true;
 }
 
-REG_MODEL(ObjectSegmentationModel, "ObjectSegmentation");
+REG_MODEL(ObjectSegmentationModel, "ObjectSegmentation", ObjectSegmentation);

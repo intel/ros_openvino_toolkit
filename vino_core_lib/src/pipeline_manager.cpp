@@ -42,7 +42,6 @@
 #include "vino_core_lib/inputs/ip_camera.h"
 #include "vino_core_lib/inputs/video_input.h"
 
-#include "vino_core_lib/models/model_factory.h"
 #include "vino_core_lib/models/age_gender_detection_model.h"
 #include "vino_core_lib/models/emotion_detection_model.h"
 #include "vino_core_lib/models/face_detection_model.h"
@@ -247,7 +246,7 @@ PipelineManager::parseInference(const Params::ParamManager::PipelineRawData& par
         key_name = key_name + "_" + infer_param.model_type;
       }
 
-      model = Models::ModelFactory::produce_shared(key_name);
+      model = REG_MODEL_FACTORY::produce_shared(key_name);
     }
 
     // void Models::BaseModel::init(const std::string& label_loc, const std::string& model_loc, int max_batch_size)

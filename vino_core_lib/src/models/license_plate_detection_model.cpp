@@ -61,4 +61,4 @@ const std::string Models::LicensePlateDetectionModel::getModelCategory() const
   return "Vehicle Attributes Detection";
 }
 
-REG_MODEL(LicensePlateDetectionModel, "LicensePlateDetection");
+REG_MODEL(LicensePlateDetectionModel, "LicensePlateDetection", LicensePlateDetection);

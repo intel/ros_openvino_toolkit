@@ -31,6 +31,7 @@
 #include <fstream>
 
 #include "inference_engine.hpp"
+#include "vino_core_lib/vino_factory.h"
 #include "vino_core_lib/models/attributes/base_attribute.h"
 
 namespace Engines
@@ -148,6 +149,9 @@ private:
   std::string label_loc_;
   cv::Size frame_size_;
 };
+
+#define REG_MODEL_FACTORY         VinoFactory<std::string, Models::BaseModel>
+#define REG_MODEL(BASE, key, name)  static REG_MODEL_FACTORY::TReg<Models::BASE> gs_model##name##_(key)
 
 class ObjectDetectionModel : public BaseModel
 {

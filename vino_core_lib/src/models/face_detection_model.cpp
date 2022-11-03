@@ -76,4 +76,4 @@ bool Models::FaceDetectionModel::updateLayerProperty(InferenceEngine::CNNNetwork
 using namespace Models;
 
 // TODO
-REG_MODEL(FaceDetectionModel, "FaceDetection_SSD");
+REG_MODEL(FaceDetectionModel, "FaceDetection_SSD", FaceDetection_SSD);

@@ -234,4 +234,4 @@ bool Models::ObjectDetectionSSDModel::updateLayerProperty(InferenceEngine::CNNNe
   return true;
 }
 
-REG_MODEL(ObjectDetectionSSDModel, "ObjectDetection_SSD");
+REG_MODEL(ObjectDetectionSSDModel, "ObjectDetection_SSD", ObjectDetection_SSD);
