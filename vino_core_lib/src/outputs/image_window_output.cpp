@@ -29,9 +29,10 @@
 #include "vino_core_lib/outputs/image_window_output.h"
 #include "vino_core_lib/pipeline.h"
 
-Outputs::ImageWindowOutput::ImageWindowOutput(const std::string& output_name, int focal_length)
-  : BaseOutput(output_name), focal_length_(focal_length)
+void Outputs::ImageWindowOutput::doInit(const std::string& output_name, int focal_length)
 {
+  output_name_ = output_name;
+  focal_length_ = focal_length;
   cv::namedWindow(output_name_, cv::WINDOW_AUTOSIZE);
 }
 
@@ -349,3 +350,5 @@ void Outputs::ImageWindowOutput::initOutputs(unsigned size)
     outputs_[i].scalar = cv::Scalar(255, 0, 0);
   }
 }
+
+REG_OUTPUT(ImageWindowOutput, "ImageWindow");

@@ -155,34 +155,26 @@ PipelineManager::parseInputDevice(const PipelineData& pdata)
 std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> PipelineManager::parseOutput(const PipelineData& pdata)
 {
   std::map<std::string, std::shared_ptr<Outputs::BaseOutput>> outputs;
-  for (auto& name : pdata.params.outputs)
+  for (auto& output_name : pdata.params.outputs)
   {
-    slog::info << "Parsing Output: " << name << slog::endl;
-    std::shared_ptr<Outputs::BaseOutput> output = nullptr;
-    if (name == kOutputTpye_RosTopic)
+    if (output_name.empty())
     {
-      output = std::make_shared<Outputs::RosTopicOutput>(pdata.params.name);
+      continue;
     }
-    else if (name == kOutputTpye_ImageWindow)
+
+    slog::info << "Parsing Output: " << output_name << slog::endl;
+
+    std::shared_ptr<Outputs::BaseOutput> output = REG_OUTPUT_FACTORY::produce_shared(output_name);
+    
+    if (output != nullptr)
     {
-      output = std::make_shared<Outputs::ImageWindowOutput>(pdata.params.name);
-    }
-    else if (name == kOutputTpye_RViz)
-    {
-      output = std::make_shared<Outputs::RvizOutput>(pdata.params.name);
-    }
-    else if (name == kOutputTpye_RosService)
-    {
-      output = std::make_shared<Outputs::RosServiceOutput>(pdata.params.name);
+      output->init(pdata.params.name);
+      outputs.insert({ output_name, output });
+      slog::info << " ... Adding one Output: " << output_name << slog::endl;
     }
     else
     {
-      slog::err << "Invalid output name: " << name << slog::endl;
-    }
-    if (output != nullptr)
-    {
-      outputs.insert({ name, output });
-      slog::info << " ... Adding one Output: " << name << slog::endl;
+      slog::err << "Invalid output output_name: " << output_name << slog::endl;
     }
   }
 
