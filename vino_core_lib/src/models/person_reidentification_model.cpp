@@ -43,7 +43,7 @@ bool Models::PersonReidentificationModel::updateLayerProperty(std::shared_ptr<ov
   output_ = output_info_map[0].get_any_name();
 
   model = ppp.build();
-  ov::set_batch(model_, getMaxBatchSize());
+  ov::set_batch(model, getMaxBatchSize());
 
   return true;
 }

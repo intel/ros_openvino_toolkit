@@ -40,7 +40,7 @@ bool Models::ObjectDetectionYolov2Model::updateLayerProperty(const std::shared_p
 
   // set input property
   ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(model);
-  std::string input_tensor_name_ = model->input().get_any_name();
+  input_tensor_name_ = model->input().get_any_name();
   ov::preprocess::InputInfo& input_info = ppp.input(input_tensor_name_);
   const ov::Layout input_tensor_layout{"NCHW"};
   input_info.tensor().

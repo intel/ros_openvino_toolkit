@@ -42,7 +42,7 @@ bool Models::SSDModelAttr::updateLayerProperty(
   }
   
   ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(model);
-  std::string input_tensor_name_ = model->input().get_any_name();
+  input_tensor_name_ = model->input().get_any_name();
   ov::preprocess::InputInfo& input_info = ppp.input(input_tensor_name_);
   input_info.tensor().set_element_type(ov::element::u8);
   addInputInfo("input", input_tensor_name_);

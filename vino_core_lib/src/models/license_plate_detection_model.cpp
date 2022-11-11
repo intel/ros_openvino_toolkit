@@ -45,7 +45,7 @@ bool Models::LicensePlateDetectionModel::updateLayerProperty(std::shared_ptr<ov:
   }
 
   ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(model);
-  std::string input_tensor_name_ = input_info_map[0].get_any_name();
+  input_tensor_name_ = input_info_map[0].get_any_name();
   const ov::Layout tensor_layout{"NCHW"};
   ppp.input(input_tensor_name_).
     tensor().

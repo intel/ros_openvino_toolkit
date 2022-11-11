@@ -44,7 +44,7 @@ bool Models::HeadPoseDetectionModel::updateLayerProperty(std::shared_ptr<ov::Mod
     return false;
   }
   ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(model);
-  std::string input_tensor_name_ = model->input().get_any_name();
+  input_tensor_name_ = model->input().get_any_name();
   ov::preprocess::InputInfo& input_info = ppp.input(input_tensor_name_);
   const ov::Layout input_tensor_layout{"NCHW"};
   input_info.tensor().
@@ -66,7 +66,7 @@ bool Models::HeadPoseDetectionModel::updateLayerProperty(std::shared_ptr<ov::Mod
   }
 
   model = ppp.build();
-  ov::set_batch(model_, getMaxBatchSize());
+  ov::set_batch(model, getMaxBatchSize());
 
   for (const std::string& outName : {output_angle_r_, output_angle_p_, output_angle_y_}) {
     if (find(outputs_name.begin(), outputs_name.end(), outName) == outputs_name.end()) {

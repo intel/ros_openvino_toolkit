@@ -64,7 +64,7 @@ bool Models::EmotionDetectionModel::updateLayerProperty(std::shared_ptr<ov::Mode
   }
 
   model = ppp.build();
-  ov::set_batch(model_, getMaxBatchSize());
+  ov::set_batch(model, getMaxBatchSize());
   addOutputInfo("output", output_tensor_name_);
   
   printAttribute();

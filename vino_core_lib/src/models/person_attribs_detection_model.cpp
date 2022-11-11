@@ -34,7 +34,7 @@ bool Models::PersonAttribsDetectionModel::updateLayerProperty(std::shared_ptr<ov
     throw std::logic_error("Person Attribs topology should have only one input");
   }
   ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(model);
-  std::string input_tensor_name_ = model->input().get_any_name();
+  input_tensor_name_ = model->input().get_any_name();
   ov::preprocess::InputInfo& input_info = ppp.input(input_tensor_name_);
   const ov::Layout tensor_layout{"NCHW"};
   input_info.tensor().

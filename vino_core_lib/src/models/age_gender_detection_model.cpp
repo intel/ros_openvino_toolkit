@@ -96,7 +96,7 @@ bool Models::AgeGenderDetectionModel::updateLayerProperty(std::shared_ptr<ov::Mo
     set_layout(tensor_layout);
 
   model = ppp.build();
-  ov::set_batch(model_, getMaxBatchSize());
+  ov::set_batch(model, getMaxBatchSize());
 
   addOutputInfo("age", age_output_info.get_any_name());
   addOutputInfo("gender", gender_output_info.get_any_name());
