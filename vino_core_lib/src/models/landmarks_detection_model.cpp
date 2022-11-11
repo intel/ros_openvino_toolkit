@@ -25,12 +25,12 @@ Models::LandmarksDetectionModel::LandmarksDetectionModel(const std::string& labe
 {
 }
  
-bool Models::LandmarksDetectionModel::updateLayerProperty(std::shared_ptr<ov::Model>& net_reader)
+bool Models::LandmarksDetectionModel::updateLayerProperty(std::shared_ptr<ov::Model>& model)
 {
   //INPUT
-  auto inputs_info_map = net_reader->inputs();
-  ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(net_reader);
-  std::string input_tensor_name_ = net_reader->input().get_any_name();
+  auto inputs_info_map = model->inputs();
+  ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(model);
+  std::string input_tensor_name_ = model->input().get_any_name();
   ov::preprocess::InputInfo& input_info = ppp.input(input_tensor_name_);
  
   auto input_layerName = inputs_info_map[0];
@@ -59,15 +59,15 @@ bool Models::LandmarksDetectionModel::updateLayerProperty(std::shared_ptr<ov::Mo
   }
 
   // OUTPUT
-  std::string output_tensor_name = net_reader->output().get_any_name();
+  std::string output_tensor_name = model->output().get_any_name();
   ov::preprocess::OutputInfo& output_info = ppp.output(output_tensor_name);
-  auto outputs_info_map = net_reader->outputs();  
+  auto outputs_info_map = model->outputs();  
   auto output_layerName = outputs_info_map[0];
   auto output_layerData = outputs_info_map[1];
   ov::Shape output_layerDims = output_layerData.get_shape();
   ppp.output(output_layerData.get_any_name()).tensor().set_element_type(ov::element::f32);
 
-  net_reader = ppp.build();
+  model = ppp.build();
   addOutputInfo("output_layerName", output_layerName.get_any_name());
   addOutputInfo("output_layerData", output_layerData.get_any_name());
   return true;

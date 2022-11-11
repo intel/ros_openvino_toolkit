@@ -25,12 +25,12 @@ Models::FaceReidentificationModel::FaceReidentificationModel(const std::string& 
 {
 }
 
-bool Models::FaceReidentificationModel::updateLayerProperty(std::shared_ptr<ov::Model>& net_reader)
+bool Models::FaceReidentificationModel::updateLayerProperty(std::shared_ptr<ov::Model>& model)
 {
   // set input property
-  auto inputs_info_map = net_reader->inputs();
-  ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(net_reader);
-  std::string input_tensor_name_ = net_reader->input().get_any_name();
+  auto inputs_info_map = model->inputs();
+  ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(model);
+  std::string input_tensor_name_ = model->input().get_any_name();
   ov::preprocess::InputInfo& input_info = ppp.input(input_tensor_name_);
 
   const ov::Layout tensor_layout{"NCHW"};
@@ -40,12 +40,12 @@ bool Models::FaceReidentificationModel::updateLayerProperty(std::shared_ptr<ov::
   addInputInfo("input", input_tensor_name_);
   
   // set output property
-  auto outputs_info = net_reader->outputs();
-  std::string output_tensor_name = net_reader->output().get_any_name();
+  auto outputs_info = model->outputs();
+  std::string output_tensor_name = model->output().get_any_name();
   ov::preprocess::OutputInfo& output_info = ppp.output(output_tensor_name);
   output_info.tensor().set_element_type(ov::element::f32);
   addOutputInfo("output", output_tensor_name);
-  net_reader = ppp.build();
+  model = ppp.build();
 
   return true;
 }

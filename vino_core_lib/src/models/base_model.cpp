@@ -44,7 +44,7 @@ void Models::BaseModel::modelInit()
   slog::info << "Loading network files: " << model_loc_ << slog::endl;
 
   // Read network model
-  net_reader_ = engine.read_model(model_loc_);
+  model_ = engine.read_model(model_loc_);
   // Extract model name and load it's weights
   // remove extension
   size_t last_index = model_loc_.find_last_of(".");
@@ -56,15 +56,15 @@ void Models::BaseModel::modelInit()
   // Set batch size to given max_batch_size_
   slog::info << "Batch size is set to  " << max_batch_size_ << slog::endl;
 
-  updateLayerProperty(net_reader_);
+  updateLayerProperty(model_);
 }
 
 #if 0
 bool Models::BaseModel::updateLayerProperty(
-  InferenceEngine::CNNNetReader::Ptr net_reader)
+  InferenceEngine::CNNNetReader::Ptr model)
 {
 #if 0
-  if (!updateLayerProperty(net_reader)){
+  if (!updateLayerProperty(model)){
     slog::warn << "The model(name: " << getModelName() << ") failed to update Layer Property!"
       << slog::endl;
     return false;

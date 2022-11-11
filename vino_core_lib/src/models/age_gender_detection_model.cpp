@@ -30,16 +30,16 @@ Models::AgeGenderDetectionModel::AgeGenderDetectionModel(const std::string& labe
   : BaseModel(label_loc, model_loc, max_batch_size)
 {
 }
-bool Models::AgeGenderDetectionModel::updateLayerProperty(std::shared_ptr<ov::Model>& net_reader)
+bool Models::AgeGenderDetectionModel::updateLayerProperty(std::shared_ptr<ov::Model>& model)
 {
   slog::info << "Checking INPUTs for model " << getModelName() << slog::endl;
   // set input property
-  inputs_info_ = net_reader->inputs();
-  ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(net_reader);
-  input_tensor_name_ = net_reader->input().get_any_name();
+  inputs_info_ = model->inputs();
+  ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(model);
+  input_tensor_name_ = model->input().get_any_name();
   ov::preprocess::InputInfo& input_info = ppp.input(input_tensor_name_);
 
-  ov::Shape input_tensor_shape = net_reader->input().get_shape();
+  ov::Shape input_tensor_shape = model->input().get_shape();
   if (inputs_info_.size() != 1) {
     slog::warn << "This model seems not Age-Gender-like, which should have only one input, but we got"
       << std::to_string(input_tensor_shape.size()) << "inputs"
@@ -54,7 +54,7 @@ bool Models::AgeGenderDetectionModel::updateLayerProperty(std::shared_ptr<ov::Mo
     set_layout(tensor_layout);
 
   // set output property
-  outputs_info_ = net_reader->outputs();
+  outputs_info_ = model->outputs();
   if (outputs_info_.size() != 2) {
     slog::warn << "This model seems not Age-Gender-like, which should have and only have 2 outputs, but we got"
       << std::to_string(outputs_info_.size()) << "outputs"
@@ -95,8 +95,8 @@ bool Models::AgeGenderDetectionModel::updateLayerProperty(std::shared_ptr<ov::Mo
     set_element_type(ov::element::f32).
     set_layout(tensor_layout);
 
-  net_reader = ppp.build();
-  ov::set_batch(net_reader_, getMaxBatchSize());
+  model = ppp.build();
+  ov::set_batch(model_, getMaxBatchSize());
 
   addOutputInfo("age", age_output_info.get_any_name());
   addOutputInfo("gender", gender_output_info.get_any_name());

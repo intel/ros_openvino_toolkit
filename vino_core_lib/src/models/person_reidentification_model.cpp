@@ -25,13 +25,13 @@ Models::PersonReidentificationModel::PersonReidentificationModel(const std::stri
 {
 }
 
-bool Models::PersonReidentificationModel::updateLayerProperty(std::shared_ptr<ov::Model>& net_reader)
+bool Models::PersonReidentificationModel::updateLayerProperty(std::shared_ptr<ov::Model>& model)
 {
   slog::info << "Checking Inputs for Model" << getModelName() << slog::endl;
 
-  auto network = net_reader;
-  auto input_info_map = net_reader->inputs();
-  ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(net_reader);
+  auto network = model;
+  auto input_info_map = model->inputs();
+  ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(model);
   input_ = input_info_map[0].get_any_name();
   const ov::Layout input_tensor_layout{"NCHW"};
   ppp.input(input_).
@@ -39,11 +39,11 @@ bool Models::PersonReidentificationModel::updateLayerProperty(std::shared_ptr<ov
     set_element_type(ov::element::u8).
     set_layout(input_tensor_layout);
   // set output property
-  auto output_info_map = net_reader->outputs();
+  auto output_info_map = model->outputs();
   output_ = output_info_map[0].get_any_name();
 
-  net_reader = ppp.build();
-  ov::set_batch(net_reader_, getMaxBatchSize());
+  model = ppp.build();
+  ov::set_batch(model_, getMaxBatchSize());
 
   return true;
 }

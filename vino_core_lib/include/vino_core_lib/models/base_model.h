@@ -99,9 +99,9 @@ public:
     return attr_;
   }
 
-  inline std::shared_ptr<ov::Model> getNetReader() const
+  inline std::shared_ptr<ov::Model> getModel() const
   {
-    return net_reader_;
+    return model_;
   }
 
 protected:
@@ -113,7 +113,7 @@ protected:
   virtual bool updateLayerProperty(std::shared_ptr<ov::Model>& network_reader) = 0;
 
   ov::Core engine;
-  std::shared_ptr<ov::Model> net_reader_;
+  std::shared_ptr<ov::Model> model_;
   void setFrameSize(const int& w, const int& h)
   {
     frame_size_.width = w;

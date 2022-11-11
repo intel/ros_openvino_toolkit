@@ -38,7 +38,7 @@
 #include <algorithm>
 #include <chrono>
 
-///#include <cpp/ie_cnn_net_reader.h>
+///#include <cpp/ie_cnn_model.h>
 ///#include <cpp/ie_infer_request.hpp>
 /// #include <ie_device.hpp>
 ///#include <ie_plugin_dispatcher.hpp>
