@@ -42,4 +42,4 @@ FaceDetection::FaceDetection(bool enable_roi_constraint, double show_output_thre
 }
 
 using namespace vino_core_lib;
-REG_INFERENCE(FaceDetection, "face_detection");
+REG_INFERENCE(FaceDetection, "FaceDetection");
