@@ -24,7 +24,7 @@ project(vino_core_lib)
 
 ####################################
 ## uncomment below line to get verbose log
-## add_definitions(-DLOG_LEVEL_DEBUG)
+# add_definitions(-DLOG_LEVEL_DEBUG)
 ####################################
 
 message(STATUS "Looking for inference engine configuration file at: ${CMAKE_PREFIX_PATH}")
