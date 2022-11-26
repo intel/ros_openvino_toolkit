@@ -51,6 +51,42 @@ bool Models::FaceDetectionModel::enqueue(const std::shared_ptr<Engines::Engine>&
 bool Models::FaceDetectionModel::matToBlob(const cv::Mat& orig_image, const cv::Rect&, float scale_factor,
                                                 int batch_index, const std::shared_ptr<Engines::Engine>& engine)
 {
+  if (engine == nullptr)
+  {
+    slog::err << "A frame is trying to be enqueued in a NULL Engine." << slog::endl;
+    return false;
+  }
+
+  std::string input_name = getInputName();
+  slog::debug << "add input image to blob: " << input_name << slog::endl;
+  InferenceEngine::Blob::Ptr input_blob = engine->getRequest()->GetBlob(input_name);
+
+  InferenceEngine::SizeVector blob_size = input_blob->getTensorDesc().getDims();
+  const int width = blob_size[3];
+  const int height = blob_size[2];
+  const int channels = blob_size[1];
+  u_int8_t* blob_data = input_blob->buffer().as<u_int8_t*>();
+
+  cv::Mat resized_image(orig_image);
+  if (width != orig_image.size().width || height != orig_image.size().height)
+  {
+    cv::resize(orig_image, resized_image, cv::Size(width, height));
+  }
+  int batchOffset = batch_index * width * height * channels;
+
+  for (int c = 0; c < channels; c++)
+  {
+    for (int h = 0; h < height; h++)
+    {
+      for (int w = 0; w < width; w++)
+      {
+        blob_data[batchOffset + c * width * height + h * width + w] =
+            resized_image.at<cv::Vec3b>(h, w)[c] * scale_factor;
+      }
+    }
+  }
+
+  slog::debug << "Convert input image to blob: DONE!" << slog::endl;
   return true;
 }
 
@@ -58,6 +94,59 @@ bool Models::FaceDetectionModel::fetchResults(const std::shared_ptr<Engines::Eng
                                                    std::vector<vino_core_lib::ObjectDetectionResult>& results,
                                                    const float& confidence_thresh, const bool& enable_roi_constraint)
 {
+  slog::debug << "fetching Infer Resulsts from the given SSD model" << slog::endl;
+  if (engine == nullptr)
+  {
+    slog::err << "Trying to fetch results from <null> Engines." << slog::endl;
+    return false;
+  }
+
+  slog::debug << "Fetching Detection Results ..." << slog::endl;
+  InferenceEngine::InferRequest::Ptr request = engine->getRequest();
+  std::string output = getOutputName();
+  const float* detections = request->GetBlob(output)->buffer().as<float*>();
+
+  slog::debug << "Analyzing Detection results..." << slog::endl;
+  auto max_proposal_count = getMaxProposalCount();
+  auto object_size = getObjectSize();
+  slog::debug << "MaxProprosalCount=" << max_proposal_count << ", ObjectSize=" << object_size << slog::endl;
+  for (int i = 0; i < max_proposal_count; i++)
+  {
+    float image_id = detections[i * object_size + 0];
+    if (image_id < 0)
+    {
+      // slog::info << "Found objects: " << i << "|" << results.size() << slog::endl;
+      break;
+    }
+
+    cv::Rect r;
+    auto label_num = static_cast<int>(detections[i * object_size + 1]);
+    std::vector<std::string>& labels = getLabels();
+    auto frame_size = getFrameSize();
+    r.x = static_cast<int>(detections[i * object_size + 3] * frame_size.width);
+    r.y = static_cast<int>(detections[i * object_size + 4] * frame_size.height);
+    r.width = static_cast<int>(detections[i * object_size + 5] * frame_size.width - r.x);
+    r.height = static_cast<int>(detections[i * object_size + 6] * frame_size.height - r.y);
+
+    if (enable_roi_constraint)
+    {
+      r &= cv::Rect(0, 0, frame_size.width, frame_size.height);
+    }
+
+    vino_core_lib::ObjectDetectionResult result(r);
+    std::string label =
+        label_num < labels.size() ? labels[label_num] : std::string("label #") + std::to_string(label_num);
+    result.setLabel(label);
+    float confidence = detections[i * object_size + 2];
+    if (confidence <= confidence_thresh /* || r.x == 0 */)
+    {  // why r.x needs to be checked?
+      continue;
+    }
+    result.setConfidence(confidence);
+
+    results.emplace_back(result);
+  }
+
   return true;
 }
 

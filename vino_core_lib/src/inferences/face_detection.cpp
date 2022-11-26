@@ -41,5 +41,52 @@ FaceDetection::FaceDetection(bool enable_roi_constraint, double show_output_thre
 {
 }
 
+
+// FaceDetectionResultFilter
+FaceDetectionResultFilter::FaceDetectionResultFilter()
+{
+}
+
+void FaceDetectionResultFilter::init()
+{
+  key_to_function_.insert(std::make_pair("label", isValidLabel));
+  key_to_function_.insert(std::make_pair("confidence", isValidConfidence));
+}
+
+void FaceDetectionResultFilter::acceptResults(const std::vector<Result>& results)
+{
+  results_ = results;
+}
+
+std::vector<cv::Rect> FaceDetectionResultFilter::getFilteredLocations()
+{
+  std::vector<cv::Rect> locations;
+  for (auto result : results_)
+  {
+    if (isValidResult(result))
+    {
+      locations.push_back(result.getLocation());
+    }
+  }
+  return locations;
+}
+
+bool FaceDetectionResultFilter::isValidLabel(const Result& result, const std::string& op,
+                                                                 const std::string& target)
+{
+  return stringCompare(result.getLabel(), op, target);
+}
+
+bool FaceDetectionResultFilter::isValidConfidence(const Result& result, const std::string& op,
+                                                                      const std::string& target)
+{
+  return floatCompare(result.getConfidence(), op, stringToFloat(target));
+}
+
+bool FaceDetectionResultFilter::isValidResult(const Result& result)
+{
+  ISVALIDRESULT(key_to_function_, result);
+}
+
 using namespace vino_core_lib;
 REG_INFERENCE(FaceDetection, "FaceDetection");

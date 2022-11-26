@@ -25,11 +25,10 @@
 #include <object_msgs/ObjectInBox.h>
 #include <object_msgs/ObjectsInBoxes.h>
 #include <ros/ros.h>
-
 #include <memory>
-#include <string>
 #include <vector>
-
+#include <string>
+#include <map>
 #include "vino_core_lib/engines/engine.h"
 #include "vino_core_lib/inferences/base_inference.h"
 #include "vino_core_lib/inferences/object_detection.h"
@@ -82,6 +81,54 @@ private:
   float confidence_ = -1;
 };
 
+class FaceDetectionResultFilter : public BaseFilter
+{
+public:
+  using Result = vino_core_lib::ObjectDetectionResult;
+
+  FaceDetectionResultFilter();
+
+  /**
+   * @brief Initiate the object detection result filter.
+   */
+  void init() override;
+  /**
+   * @brief Set the object detection results into filter.
+   * @param[in] The object detection results.
+   */
+  void acceptResults(const std::vector<Result>& results);
+  /**
+   * @brief Get the filtered results' ROIs.
+   * @return The filtered ROIs.
+   */
+  std::vector<cv::Rect> getFilteredLocations() override;
+
+private:
+  /**
+   * @brief Decide whether a result is valid for label filter condition.
+   * @param[in] Result to be decided, filter operator, target label value.
+   * @return True if valid, false if not.
+   */
+  static bool isValidLabel(const Result& result, const std::string& op, const std::string& target);
+  /**
+   * @brief Decide whether a result is valid for confidence filter condition.
+   * @param[in] Result to be decided, filter operator, target confidence value.
+   * @return True if valid, false if not.
+   */
+  static bool isValidConfidence(const Result& result, const std::string& op, const std::string& target);
+
+  /**
+   * @brief Decide whether a result is valid.
+   * @param[in] Result to be decided.
+   * @return True if valid, false if not.
+   */
+  bool isValidResult(const Result& result);
+
+  std::map<std::string, bool (*)(const Result&, const std::string&, const std::string&)> key_to_function_;
+  std::vector<Result> results_;
+};
+
+
 
 /**
  * @class FaceDetection
@@ -90,6 +137,8 @@ private:
 class FaceDetection : public ObjectDetection
 {
 public:
+  using Result = vino_core_lib::FaceDetectionResult;
+  using Filter = vino_core_lib::FaceDetectionResultFilter;
   explicit FaceDetection(bool, double);
   FaceDetection(){};
   ~FaceDetection() override {};

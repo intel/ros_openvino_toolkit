@@ -24,6 +24,8 @@
 
 #include <string>
 #include "vino_core_lib/models/base_model.h"
+#include "vino_core_lib/inferences/face_detection.h"
+#include "vino_core_lib/engines/engine_manager.h"
 
 namespace Models
 {
@@ -33,8 +35,8 @@ namespace Models
  */
 class FaceDetectionModel : public ObjectDetectionModel
 {
-class ObjectDetectionResult;
-class FaceDetectionResult;
+// class ObjectDetectionResult;
+// class FaceDetectionResult;
 
 public:
   FaceDetectionModel() {};
