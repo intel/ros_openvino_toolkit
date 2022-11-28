@@ -141,7 +141,14 @@ public:
   using Result = vino_core_lib::FaceDetectionResult;
   using Filter = vino_core_lib::FaceDetectionResultFilter;
   explicit FaceDetection(bool, double);
-  FaceDetection(){};
+  FaceDetection()
+  {
+    enable_roi_constraint_ = true;
+    show_output_thresh_ = 0.5;
+    result_filter_ = std::make_shared<Filter>();
+    result_filter_->init();
+  };
+
   ~FaceDetection() override {};
 
   /**
