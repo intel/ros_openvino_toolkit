@@ -37,15 +37,12 @@ class FaceDetectionModel : public ObjectDetectionModel
 {
 // class ObjectDetectionResult;
 // class FaceDetectionResult;
+  using Result = vino_core_lib::FaceDetectionResult;
 
 public:
   FaceDetectionModel() {};
   
   FaceDetectionModel(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
-  
-  bool fetchResults(const std::shared_ptr<Engines::Engine>& engine,
-                    std::vector<vino_core_lib::ObjectDetectionResult>& results, const float& confidence_thresh = 0.3,
-                    const bool& enable_roi_constraint = false) override;
   
   bool fetchResults(const std::shared_ptr<Engines::Engine>& engine,
                     std::vector<vino_core_lib::FaceDetectionResult>& results, const float& confidence_thresh = 0.3,

@@ -91,10 +91,10 @@ bool Models::FaceDetectionModel::matToBlob(const cv::Mat& orig_image, const cv::
 }
 
 bool Models::FaceDetectionModel::fetchResults(const std::shared_ptr<Engines::Engine>& engine,
-                                                   std::vector<vino_core_lib::ObjectDetectionResult>& results,
+                                                   std::vector<vino_core_lib::FaceDetectionResult>& results,
                                                    const float& confidence_thresh, const bool& enable_roi_constraint)
 {
-  slog::debug << "fetching Infer Resulsts from the given SSD model" << slog::endl;
+  slog::debug << "fetching Infer Resulsts from the given Face model" << slog::endl;
   if (engine == nullptr)
   {
     slog::err << "Trying to fetch results from <null> Engines." << slog::endl;
@@ -133,7 +133,7 @@ bool Models::FaceDetectionModel::fetchResults(const std::shared_ptr<Engines::Eng
       r &= cv::Rect(0, 0, frame_size.width, frame_size.height);
     }
 
-    vino_core_lib::ObjectDetectionResult result(r);
+    vino_core_lib::FaceDetectionResult result(r);
     std::string label =
         label_num < labels.size() ? labels[label_num] : std::string("label #") + std::to_string(label_num);
     result.setLabel(label);
@@ -147,13 +147,6 @@ bool Models::FaceDetectionModel::fetchResults(const std::shared_ptr<Engines::Eng
     results.emplace_back(result);
   }
 
-  return true;
-}
-
-bool Models::FaceDetectionModel::fetchResults(const std::shared_ptr<Engines::Engine>& engine,
-                                                   std::vector<vino_core_lib::FaceDetectionResult>& results,
-                                                   const float& confidence_thresh, const bool& enable_roi_constraint)
-{
   return true;
 }
 
