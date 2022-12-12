@@ -3,7 +3,7 @@ Pipelines:
   inputs: [StandardCamera]
   infers:
     - name: ObjectDetection
-      model: /opt/openvino_toolkit/models/intel/person-detection-retail-0013/FP16/person-detection-retail-0013.xml
+      model: /opt/openvino_toolkit/models/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml
       engine: CPU
       label: to/be/set/xxx.labels
       batch: 1
