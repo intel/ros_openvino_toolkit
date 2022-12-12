@@ -85,6 +85,12 @@ void Outputs::RvizOutput::accept(const std::vector<vino_core_lib::ObjectSegmenta
 {
   image_window_output_->accept(results);
 }
+
+void Outputs::RvizOutput::accept(const std::vector<vino_core_lib::ObjectSegmentationMaskrcnnResult> & results)
+{
+  image_window_output_->accept(results);
+}
+
 void Outputs::RvizOutput::accept(const std::vector<vino_core_lib::PersonReidentificationResult>& results)
 {
   image_window_output_->accept(results);

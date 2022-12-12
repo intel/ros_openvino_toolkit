@@ -108,6 +108,8 @@ private:
   std::shared_ptr<vino_core_lib::BaseInference>
   createObjectSegmentation(const Params::ParamManager::InferenceRawData& infer);
   std::shared_ptr<vino_core_lib::BaseInference>
+  createObjectSegmentationMaskrcnn(const Params::ParamManager::InferenceRawData & infer);
+  std::shared_ptr<vino_core_lib::BaseInference>
   createPersonReidentification(const Params::ParamManager::InferenceRawData& infer);
   std::shared_ptr<vino_core_lib::BaseInference>
   createFaceReidentification(const Params::ParamManager::InferenceRawData& infer);
