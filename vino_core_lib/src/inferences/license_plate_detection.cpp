@@ -48,8 +48,7 @@ void vino_core_lib::LicensePlateDetection::fillSeqBlob()
     valid_model_->getSeqInputName());
   int max_sequence_size = seq_tensor.get_shape()[0];
   float * tensor_data = seq_tensor.data<float>();
-  tensor_data[0] = 0.0f;
-  std::fill(tensor_data + 1, tensor_data + max_sequence_size, 1.0f);
+  std::fill(tensor_data, tensor_data + max_sequence_size, 1.0f);
 }
 
 bool vino_core_lib::LicensePlateDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
