@@ -90,7 +90,7 @@ public:
     slog::info << "--------------------------------" << slog::endl;
   }
 
-  virtual bool updateLayerProperty(std::shared_ptr<ov::Model>&)
+  virtual bool updateLayerProperty(const std::shared_ptr<ov::Model>&)
   {
     return false;
   }
