@@ -66,6 +66,7 @@ WORKDIR /usr/lib/x86_64-linux-gnu
 RUN ln -sf libboost_python-py36.so libboost_python37.so
 RUN pip install --upgrade pip
 RUN pip install openvino-dev[tensorflow2]==2022.1
+RUN apt-get install -y libcanberra-gtk* git
 
 # build ros openvino toolkit
 # set env before build ros openvino tolkkit
