@@ -14,5 +14,5 @@ human-pose-estimation-0001
 semantic-segmentation-adas-0001
 mobilenet-ssd
 deeplabv3
-face-reidentification-retail-0095.xml
-vehicle-license-plate-detection-barrier-0123.xml
+face-reidentification-retail-0095
+vehicle-license-plate-detection-barrier-0123
