@@ -180,7 +180,8 @@ add_library(${PROJECT_NAME} SHARED
   src/models/face_detection_model.cpp
   src/models/head_pose_detection_model.cpp
   src/models/object_detection_ssd_model.cpp
-  # src/models/object_detection_yolov2voc_model.cpp
+  src/models/object_detection_yolov2voc_model.cpp
+  src/models/object_detection_yolov5_model.cpp
   src/models/object_segmentation_model.cpp
   src/models/person_reidentification_model.cpp
   src/models/face_reidentification_model.cpp

@@ -22,11 +22,11 @@
 #include "vino_core_lib/slog.h"
 // Validated Object Detection Network
 Models::ObjectDetectionYolov2Model::ObjectDetectionYolov2Model(const std::string& model_loc, int max_batch_size)
-  : ObjectDetectionModel(model_loc, max_batch_size)
+  : ObjectDetectionModel("", model_loc, max_batch_size)
 {
 }
 
-bool Models::ObjectDetectionYolov2Model::updateLayerProperty(const InferenceEngine::CNNNetwork& net_reader)
+bool Models::ObjectDetectionYolov2Model::updateLayerProperty(InferenceEngine::CNNNetwork& net_reader)
 {
   slog::info << "Checking INPUTs for model " << getModelName() << slog::endl;
 
@@ -215,6 +215,9 @@ bool Models::ObjectDetectionYolov2Model::fetchResults(const std::shared_ptr<Engi
                                                       std::vector<vino_core_lib::ObjectDetectionResult>& results,
                                                       const float& confidence_thresh, const bool& enable_roi_constraint)
 {
+#if 1
+  return true;
+#else
   try
   {
     if (engine == nullptr)
@@ -349,6 +352,7 @@ bool Models::ObjectDetectionYolov2Model::fetchResults(const std::shared_ptr<Engi
     slog::err << "Unknown/internal exception happened." << slog::endl;
     return false;
   }
+#endif
 }
 
 int Models::ObjectDetectionYolov2Model::getEntryIndex(int side, int lcoords, int lclasses, int location, int entry)

@@ -47,7 +47,18 @@ public:
         if(item == getFactory().getMap().end())
         {
 			slog::err << "VinoFactory:Invalid inference key: " << key << ". Please check your key name and type!" << slog::endl;
-            return nullptr;
+            
+			
+			slog::info << "-----------Factory Map---------------"  << slog::endl;
+
+			for(auto v : getFactory().getMap())
+			{
+				slog::info << "  " << v.first << slog::endl;
+			}
+
+			slog::info << "-------------------------------------"  << slog::endl;
+
+			return nullptr;
         }
 		
         return item->second();
@@ -70,6 +81,19 @@ public:
 
 		if(item == instance.getMap().end())
 		{
+
+			slog::err << "VinoFactory: invalid key for find: " << key << ". Please check your key name and type!" << slog::endl;
+            
+			
+			slog::info << "-----------Factory Map---------------"  << slog::endl;
+
+			for(auto v : getFactory().getMap())
+			{
+				slog::info << "  " << v.first << slog::endl;
+			}
+
+			slog::info << "-------------------------------------"  << slog::endl;
+
 			return nullptr;
 		}
 

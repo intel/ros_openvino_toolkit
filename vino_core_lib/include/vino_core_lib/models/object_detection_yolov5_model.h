@@ -17,8 +17,8 @@
  * @brief A header file with declaration for ObjectDetectionModel Class
  * @file face_detection_model.h
  */
-#ifndef VINO_CORE_LIB__MODELS__OBJECT_DETECTION_YOLOV2VOC_MODEL_H
-#define VINO_CORE_LIB__MODELS__OBJECT_DETECTION_YOLOV2VOC_MODEL_H
+#ifndef VINO_CORE_LIB__MODELS__OBJECT_DETECTION_YOLOV5VOC_MODEL_H
+#define VINO_CORE_LIB__MODELS__OBJECT_DETECTION_YOLOV5VOC_MODEL_H
 #include <string>
 #include "vino_core_lib/models/base_model.h"
 #include "vino_core_lib/inferences/object_detection.h"
@@ -29,14 +29,14 @@ namespace Models
  * @class ObjectDetectionModel
  * @brief This class generates the face detection model.
  */
-class ObjectDetectionYolov2Model : public ObjectDetectionModel
+class ObjectDetectionYolov5Model : public ObjectDetectionModel
 {
   using Result = vino_core_lib::ObjectDetectionResult;
 
 public:
-  ObjectDetectionYolov2Model() {};
+  ObjectDetectionYolov5Model() {};
 
-  ObjectDetectionYolov2Model(const std::string& model_loc, int batch_size = 1);
+  ObjectDetectionYolov5Model(const std::string& model_loc, int batch_size = 1);
 
   bool fetchResults(const std::shared_ptr<Engines::Engine>& engine,
                     std::vector<vino_core_lib::ObjectDetectionResult>& results, const float& confidence_thresh = 0.3,
@@ -58,7 +58,18 @@ public:
 
 protected:
   int getEntryIndex(int side, int lcoords, int lclasses, int location, int entry);
+
+  double sigmoid(double x);
+
+  std::vector<int> getAnchors(int net_grid);
+
+  bool parseYolov5(const InferenceEngine::Blob::Ptr &blob,int net_grid,float cof_threshold,
+                    std::vector<cv::Rect>& o_rect, std::vector<float>& o_rect_cof);
+
+  cv::Rect detet2origin(const cv::Rect& dete_rect,float rate_to,int top,int left);
+
   InferenceEngine::InputInfo::Ptr input_info_ = nullptr;
+  InferenceEngine::OutputsDataMap outputs_data_map_;
 };
 }  // namespace Models
-#endif  // VINO_CORE_LIB__MODELS__OBJECT_DETECTION_YOLOV2VOC_MODEL_H
+#endif  // VINO_CORE_LIB__MODELS__OBJECT_DETECTION_YOLOV5VOC_MODEL_H
