@@ -81,12 +81,18 @@ class HeadPoseDetection : public BaseInference
 {
 public:
   using Result = vino_core_lib::HeadPoseResult;
-  HeadPoseDetection();
-  ~HeadPoseDetection() override;
+  HeadPoseDetection() {};
+  ~HeadPoseDetection() override {};
+
+  /**
+   * @brief Load the face detection model.
+   */
+  void loadNetwork(std::shared_ptr<Models::BaseModel>) override;
+  
   /**
    * @brief Load the headpose detection model.
    */
-  void loadNetwork(std::shared_ptr<Models::HeadPoseDetectionModel>);
+  // void loadNetwork(std::shared_ptr<Models::HeadPoseDetectionModel>);
   /**
    * @brief Enqueue a frame to this class.
    * The frame will be buffered but not infered yet.

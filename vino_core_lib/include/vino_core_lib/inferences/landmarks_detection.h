@@ -54,12 +54,18 @@ class LandmarksDetection : public BaseInference
 {
 public:
   using Result = vino_core_lib::LandmarksDetectionResult;
-  LandmarksDetection();
-  ~LandmarksDetection() override;
+  LandmarksDetection() {};
+  ~LandmarksDetection() override {};
+
+  /**
+   * @brief Load the face detection model.
+   */
+  void loadNetwork(std::shared_ptr<Models::BaseModel>) override;
+  
   /**
    * @brief Load the landmarks detection model.
    */
-  void loadNetwork(std::shared_ptr<Models::LandmarksDetectionModel>);
+  // void loadNetwork(std::shared_ptr<Models::LandmarksDetectionModel>);
   /**
    * @brief Enqueue a frame to this class.
    * The frame will be buffered but not infered yet.

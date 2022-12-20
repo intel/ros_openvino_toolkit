@@ -24,25 +24,29 @@
 #include "vino_core_lib/outputs/base_output.h"
 #include "vino_core_lib/slog.h"
 
+using namespace vino_core_lib;
+
 // LicensePlateDetectionResult
-vino_core_lib::LicensePlateDetectionResult::LicensePlateDetectionResult(const cv::Rect& location) : Result(location)
+LicensePlateDetectionResult::LicensePlateDetectionResult(const cv::Rect& location) : Result(location)
 {
 }
 
-// LicensePlateDetection
-vino_core_lib::LicensePlateDetection::LicensePlateDetection() : vino_core_lib::BaseInference()
+void LicensePlateDetection::loadNetwork(std::shared_ptr<Models::BaseModel> network)
 {
-}
+  valid_model_ = std::dynamic_pointer_cast<Models::LicensePlateDetectionModel>(network);
 
-vino_core_lib::LicensePlateDetection::~LicensePlateDetection() = default;
-void vino_core_lib::LicensePlateDetection::loadNetwork(
-    const std::shared_ptr<Models::LicensePlateDetectionModel> network)
-{
-  valid_model_ = network;
   setMaxBatchSize(network->getMaxBatchSize());
 }
 
-void vino_core_lib::LicensePlateDetection::fillSeqBlob()
+// // LicensePlateDetection
+// void LicensePlateDetection::loadNetwork(
+//     const std::shared_ptr<Models::LicensePlateDetectionModel> network)
+// {
+//   valid_model_ = network;
+//   setMaxBatchSize(network->getMaxBatchSize());
+// }
+
+void LicensePlateDetection::fillSeqBlob()
 {
   InferenceEngine::Blob::Ptr seq_blob = getEngine()->getRequest()->GetBlob(valid_model_->getSeqInputName());
   int max_sequence_size = seq_blob->getTensorDesc().getDims()[0];
@@ -53,13 +57,13 @@ void vino_core_lib::LicensePlateDetection::fillSeqBlob()
   std::fill(blob_data + 1, blob_data + max_sequence_size, 1.0f);
 }
 
-bool vino_core_lib::LicensePlateDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
+bool LicensePlateDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
 {
   if (getEnqueuedNum() == 0)
   {
     results_.clear();
   }
-  if (!vino_core_lib::BaseInference::enqueue<u_int8_t>(frame, input_frame_loc, 1, 0, valid_model_->getInputName()))
+  if (!BaseInference::enqueue<u_int8_t>(frame, input_frame_loc, 1, 0, valid_model_->getInputName()))
   {
     return false;
   }
@@ -69,14 +73,14 @@ bool vino_core_lib::LicensePlateDetection::enqueue(const cv::Mat& frame, const c
   return true;
 }
 
-bool vino_core_lib::LicensePlateDetection::submitRequest()
+bool LicensePlateDetection::submitRequest()
 {
-  return vino_core_lib::BaseInference::submitRequest();
+  return BaseInference::submitRequest();
 }
 
-bool vino_core_lib::LicensePlateDetection::fetchResults()
+bool LicensePlateDetection::fetchResults()
 {
-  bool can_fetch = vino_core_lib::BaseInference::fetchResults();
+  bool can_fetch = BaseInference::fetchResults();
   if (!can_fetch)
   {
     return false;
@@ -107,22 +111,22 @@ bool vino_core_lib::LicensePlateDetection::fetchResults()
   return true;
 }
 
-int vino_core_lib::LicensePlateDetection::getResultsLength() const
+int LicensePlateDetection::getResultsLength() const
 {
   return static_cast<int>(results_.size());
 }
 
-const vino_core_lib::Result* vino_core_lib::LicensePlateDetection::getLocationResult(int idx) const
+const Result* LicensePlateDetection::getLocationResult(int idx) const
 {
   return &(results_[idx]);
 }
 
-const std::string vino_core_lib::LicensePlateDetection::getName() const
+const std::string LicensePlateDetection::getName() const
 {
   return valid_model_->getModelCategory();
 }
 
-void vino_core_lib::LicensePlateDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
+void LicensePlateDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
 {
   if (output != nullptr)
   {
@@ -131,7 +135,7 @@ void vino_core_lib::LicensePlateDetection::observeOutput(const std::shared_ptr<O
 }
 
 const std::vector<cv::Rect>
-vino_core_lib::LicensePlateDetection::getFilteredROIs(const std::string filter_conditions) const
+LicensePlateDetection::getFilteredROIs(const std::string filter_conditions) const
 {
   if (!filter_conditions.empty())
   {
@@ -145,3 +149,6 @@ vino_core_lib::LicensePlateDetection::getFilteredROIs(const std::string filter_c
   }
   return filtered_rois;
 }
+
+using namespace vino_core_lib;
+REG_INFERENCE(LicensePlateDetection, "LicensePlateDetection");

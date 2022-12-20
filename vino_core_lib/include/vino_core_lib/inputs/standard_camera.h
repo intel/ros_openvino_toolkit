@@ -40,6 +40,14 @@ namespace Input
 class StandardCamera : public BaseInputDevice
 {
 public:
+  StandardCamera() {};
+  /**
+   * @brief Initialize the input device,
+   * @brief Initialize the input device, turn the
+   * camera on and get ready to read frames.
+   * @return Whether the input device is successfully setup.
+   */
+  bool init(const std::string &ip_uri) override { initialize();};
   /**
    * @brief Initialize the input device,
    * for cameras, it will turn the camera on and get ready to read frames,

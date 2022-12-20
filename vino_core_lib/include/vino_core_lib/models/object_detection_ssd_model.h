@@ -34,6 +34,8 @@ class ObjectDetectionSSDModel : public ObjectDetectionModel
   using Result = vino_core_lib::ObjectDetectionResult;
 
 public:
+  ObjectDetectionSSDModel() {};
+
   ObjectDetectionSSDModel(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
 
   bool fetchResults(const std::shared_ptr<Engines::Engine>& engine,

@@ -31,6 +31,7 @@
 #include <fstream>
 
 #include "inference_engine.hpp"
+#include "vino_core_lib/vino_factory.h"
 #include "vino_core_lib/models/attributes/base_attribute.h"
 
 namespace Engines
@@ -41,6 +42,7 @@ class Engine;
 namespace vino_core_lib
 {
 class ObjectDetectionResult;
+class FaceDetectionResult;
 }
 
 namespace Models
@@ -53,6 +55,9 @@ class BaseModel : public ModelAttribute
 {
 public:
   using Ptr = std::shared_ptr<BaseModel>;
+
+  BaseModel() {};
+
   /**
  * @brief Initialize the class with given .xml, .bin and .labels file. It will
  * also check whether the number of input and output are fit.
@@ -65,6 +70,19 @@ public:
  * @return Whether the input device is successfully turned on.
  */
   BaseModel(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
+  
+  /**
+ * @brief Initialize the class with given .xml, .bin and .labels file. It will
+ * also check whether the number of input and output are fit.
+ * @param[in] model_loc The location of model' s .xml file
+ * (model' s bin file should be the same as .xml file except for extension)
+ * @param[in] input_num The number of input the network should have.
+ * @param[in] output_num The number of output the network should have.
+ * @param[in] batch_size The number of batch size (default: 1) the network should have.
+ * @param[in] label_loc The location of label' s .label file
+ * @return Whether the input device is successfully turned on.
+ */
+  void init(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
 
   /**
  * @brief Get the maximum batch size of the model.
@@ -132,13 +150,20 @@ private:
   cv::Size frame_size_;
 };
 
+#define REG_MODEL_FACTORY         VinoFactory<std::string, Models::BaseModel>
+#define REG_MODEL(BASE, key)  static REG_MODEL_FACTORY::TReg<Models::BASE> gs_model##_(key)
+
 class ObjectDetectionModel : public BaseModel
 {
 public:
+  ObjectDetectionModel() {};
+  
   ObjectDetectionModel(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
+
   virtual bool fetchResults(const std::shared_ptr<Engines::Engine>& engine,
                             std::vector<vino_core_lib::ObjectDetectionResult>& result,
-                            const float& confidence_thresh = 0.3, const bool& enable_roi_constraint = false) = 0;
+                            const float& confidence_thresh = 0.3, const bool& enable_roi_constraint = false) {};
+
   virtual bool matToBlob(const cv::Mat& orig_image, const cv::Rect&, float scale_factor, int batch_index,
                          const std::shared_ptr<Engines::Engine>& engine) = 0;
 };

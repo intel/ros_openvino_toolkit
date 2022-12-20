@@ -34,7 +34,15 @@ namespace Input
 class Image : public BaseInputDevice
 {
 public:
-  explicit Image(const std::string&);
+  Image() {};
+  Image(const std::string &file) : file_(file) {};
+
+  /**
+   * @brief Read an image file from the file path.
+   * @param[in] An image file path.
+   * @return Whether the input device is successfully setup.
+   */
+  bool init(const std::string &file) override {file_.assign(file); initialize();};
   /**
    * @brief Read an image file from the file path.
    * @param[in] An image file path.

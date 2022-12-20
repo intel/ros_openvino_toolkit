@@ -27,38 +27,47 @@
 #include "vino_core_lib/outputs/base_output.h"
 #include "vino_core_lib/slog.h"
 
+using namespace vino_core_lib;
+
 // ObjectSegmentationResult
-vino_core_lib::ObjectSegmentationResult::ObjectSegmentationResult(const cv::Rect& location) : Result(location)
+ObjectSegmentationResult::ObjectSegmentationResult(const cv::Rect& location) : Result(location)
 {
 }
+
 
 // ObjectSegmentation
-vino_core_lib::ObjectSegmentation::ObjectSegmentation(double show_output_thresh)
-  : show_output_thresh_(show_output_thresh), vino_core_lib::BaseInference()
+ObjectSegmentation::ObjectSegmentation(double show_output_thresh)
+  : show_output_thresh_(show_output_thresh), BaseInference()
 {
 }
 
-vino_core_lib::ObjectSegmentation::~ObjectSegmentation() = default;
-
-void vino_core_lib::ObjectSegmentation::loadNetwork(const std::shared_ptr<Models::ObjectSegmentationModel> network)
+void ObjectSegmentation::loadNetwork(std::shared_ptr<Models::BaseModel> network)
 {
   slog::info << "Loading Network: " << network->getModelCategory() << slog::endl;
-  valid_model_ = network;
+  valid_model_ = std::dynamic_pointer_cast<Models::ObjectSegmentationModel>(network);
+
   setMaxBatchSize(network->getMaxBatchSize());
 }
+
+// void ObjectSegmentation::loadNetwork(const std::shared_ptr<Models::ObjectSegmentationModel> network)
+// {
+//   slog::info << "Loading Network: " << network->getModelCategory() << slog::endl;
+//   valid_model_ = network;
+//   setMaxBatchSize(network->getMaxBatchSize());
+// }
 
 /**
  * Deprecated!
  * This function only support OpenVINO version <=2018R5
  */
-bool vino_core_lib::ObjectSegmentation::enqueue_for_one_input(const cv::Mat& frame, const cv::Rect& input_frame_loc)
+bool ObjectSegmentation::enqueue_for_one_input(const cv::Mat& frame, const cv::Rect& input_frame_loc)
 {
   if (width_ == 0 && height_ == 0)
   {
     width_ = frame.cols;
     height_ = frame.rows;
   }
-  if (!vino_core_lib::BaseInference::enqueue<u_int8_t>(frame, input_frame_loc, 1, 0, valid_model_->getInputName()))
+  if (!BaseInference::enqueue<u_int8_t>(frame, input_frame_loc, 1, 0, valid_model_->getInputName()))
   {
     return false;
   }
@@ -68,7 +77,7 @@ bool vino_core_lib::ObjectSegmentation::enqueue_for_one_input(const cv::Mat& fra
   return true;
 }
 
-bool vino_core_lib::ObjectSegmentation::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
+bool ObjectSegmentation::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
 {
   if (width_ == 0 && height_ == 0)
   {
@@ -98,14 +107,14 @@ bool vino_core_lib::ObjectSegmentation::enqueue(const cv::Mat& frame, const cv::
   return true;
 }
 
-bool vino_core_lib::ObjectSegmentation::submitRequest()
+bool ObjectSegmentation::submitRequest()
 {
-  return vino_core_lib::BaseInference::submitRequest();
+  return BaseInference::submitRequest();
 }
 
-bool vino_core_lib::ObjectSegmentation::fetchResults()
+bool ObjectSegmentation::fetchResults()
 {
-  bool can_fetch = vino_core_lib::BaseInference::fetchResults();
+  bool can_fetch = BaseInference::fetchResults();
   if (!can_fetch)
   {
     return false;
@@ -202,22 +211,22 @@ bool vino_core_lib::ObjectSegmentation::fetchResults()
   return true;
 }
 
-int vino_core_lib::ObjectSegmentation::getResultsLength() const
+int ObjectSegmentation::getResultsLength() const
 {
   return static_cast<int>(results_.size());
 }
 
-const vino_core_lib::Result* vino_core_lib::ObjectSegmentation::getLocationResult(int idx) const
+const Result* ObjectSegmentation::getLocationResult(int idx) const
 {
   return &(results_[idx]);
 }
 
-const std::string vino_core_lib::ObjectSegmentation::getName() const
+const std::string ObjectSegmentation::getName() const
 {
   return valid_model_->getModelCategory();
 }
 
-void vino_core_lib::ObjectSegmentation::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
+void ObjectSegmentation::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
 {
   if (output != nullptr)
   {
@@ -226,7 +235,7 @@ void vino_core_lib::ObjectSegmentation::observeOutput(const std::shared_ptr<Outp
 }
 
 const std::vector<cv::Rect>
-vino_core_lib::ObjectSegmentation::getFilteredROIs(const std::string filter_conditions) const
+ObjectSegmentation::getFilteredROIs(const std::string filter_conditions) const
 {
   if (!filter_conditions.empty())
   {
@@ -240,3 +249,6 @@ vino_core_lib::ObjectSegmentation::getFilteredROIs(const std::string filter_cond
   }
   return filtered_rois;
 }
+
+using namespace vino_core_lib;
+REG_INFERENCE(ObjectSegmentation, "ObjectSegmentation");

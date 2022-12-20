@@ -137,11 +137,18 @@ public:
   using Result = vino_core_lib::ObjectDetectionResult;
   using Filter = vino_core_lib::ObjectDetectionResultFilter;
   explicit ObjectDetection(bool, double);
-  ~ObjectDetection() override;
+  ObjectDetection(){};
+  ~ObjectDetection() override {};
+
   /**
    * @brief Load the face detection model.
    */
-  void loadNetwork(std::shared_ptr<Models::ObjectDetectionModel>);
+  void loadNetwork(std::shared_ptr<Models::BaseModel>) override;
+
+  /**
+   * @brief Load the face detection model.
+   */
+  // void loadNetwork(std::shared_ptr<Models::ObjectDetectionModel>);
   /**
    * @brief Enqueue a frame to this class.
    * The frame will be buffered but not infered yet.

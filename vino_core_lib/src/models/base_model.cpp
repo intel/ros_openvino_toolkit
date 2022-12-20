@@ -40,6 +40,27 @@ Models::BaseModel::BaseModel(const std::string& label_loc, const std::string& mo
   ///net_reader_ = std::make_shared<InferenceEngine::CNNNetReader>();
 }
 
+void Models::BaseModel::init(const std::string& label_loc, const std::string& model_loc, int max_batch_size)
+{
+  label_loc_ = label_loc;
+  model_loc_ = model_loc;
+  max_batch_size_ = max_batch_size;
+  attr_.model_name = model_loc;
+  // TODO
+  // ModelAttribute(model_loc);
+
+  slog::debug << "model location:  " << model_loc_ << slog::endl;
+
+  if (model_loc.empty())
+  {
+    throw std::logic_error("model file name is empty!");
+  }
+
+  modelInit();
+
+  ///net_reader_ = std::make_shared<InferenceEngine::CNNNetReader>();
+}
+
 void Models::BaseModel::modelInit()
 {
   slog::info << "Loading network files: " << model_loc_ << slog::endl;

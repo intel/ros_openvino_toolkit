@@ -233,3 +233,5 @@ bool Models::ObjectDetectionSSDModel::updateLayerProperty(InferenceEngine::CNNNe
   slog::info << "This model is SSDNet-like, Layer Property updated!" << slog::endl;
   return true;
 }
+
+REG_MODEL(ObjectDetectionSSDModel, "ObjectDetection_SSD");

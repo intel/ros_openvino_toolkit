@@ -23,23 +23,25 @@
 
 #include "vino_core_lib/inferences/base_inference.h"
 
+using namespace vino_core_lib;
+
 // Result
-vino_core_lib::Result::Result(const cv::Rect& location)
+Result::Result(const cv::Rect& location)
 {
   location_ = location;
 }
 
 // BaseInference
-vino_core_lib::BaseInference::BaseInference() = default;
+BaseInference::BaseInference() = default;
 
-vino_core_lib::BaseInference::~BaseInference() = default;
+BaseInference::~BaseInference() = default;
 
-void vino_core_lib::BaseInference::loadEngine(const std::shared_ptr<Engines::Engine> engine)
+void BaseInference::loadEngine(const std::shared_ptr<Engines::Engine> engine)
 {
   engine_ = engine;
 }
 
-bool vino_core_lib::BaseInference::submitRequest()
+bool BaseInference::submitRequest()
 {
   if (engine_->getRequest() == nullptr)
   {
@@ -55,7 +57,7 @@ bool vino_core_lib::BaseInference::submitRequest()
   return true;
 }
 
-bool vino_core_lib::BaseInference::SynchronousRequest()
+bool BaseInference::SynchronousRequest()
 {
   if (engine_->getRequest() == nullptr)
   {
@@ -71,7 +73,7 @@ bool vino_core_lib::BaseInference::SynchronousRequest()
   return true;
 }
 
-bool vino_core_lib::BaseInference::fetchResults()
+bool BaseInference::fetchResults()
 {
   if (results_fetched_)
   {
@@ -81,7 +83,7 @@ bool vino_core_lib::BaseInference::fetchResults()
   return true;
 }
 
-void vino_core_lib::BaseInference::addCandidatedModel(std::shared_ptr<Models::BaseModel> model)
+void BaseInference::addCandidatedModel(std::shared_ptr<Models::BaseModel> model)
 {
   slog::info << "TESTING in addCandidatedModel()" << slog::endl;
   if (model != nullptr)

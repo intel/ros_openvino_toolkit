@@ -13,40 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
- * @brief A header file with declaration for FaceDetectionModel Class
+ * @brief A header file with declaration for ObjectDetectionModel Class
  * @file face_detection_model.h
  */
-
-#ifndef VINO_CORE_LIB__MODELS__FACE_DETECTION_MODEL_H
-#define VINO_CORE_LIB__MODELS__FACE_DETECTION_MODEL_H
-
+#ifndef VINO_CORE_LIB__MODELS__OBJECT_DETECTION_YOLOV5VOC_MODEL_H
+#define VINO_CORE_LIB__MODELS__OBJECT_DETECTION_YOLOV5VOC_MODEL_H
 #include <string>
 #include "vino_core_lib/models/base_model.h"
-#include "vino_core_lib/inferences/face_detection.h"
+#include "vino_core_lib/inferences/object_detection.h"
 #include "vino_core_lib/engines/engine_manager.h"
-
 namespace Models
 {
 /**
- * @class FaceDetectionModel
+ * @class ObjectDetectionModel
  * @brief This class generates the face detection model.
  */
-class FaceDetectionModel : public ObjectDetectionModel
+class ObjectDetectionYolov5Model : public ObjectDetectionModel
 {
-// class ObjectDetectionResult;
-// class FaceDetectionResult;
-  using Result = vino_core_lib::FaceDetectionResult;
+  using Result = vino_core_lib::ObjectDetectionResult;
 
 public:
-  FaceDetectionModel() {};
-  
-  FaceDetectionModel(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
-  
+  ObjectDetectionYolov5Model() {};
+
+  ObjectDetectionYolov5Model(const std::string& model_loc, int batch_size = 1);
+
   bool fetchResults(const std::shared_ptr<Engines::Engine>& engine,
-                    std::vector<vino_core_lib::FaceDetectionResult>& results, const float& confidence_thresh = 0.3,
-                    const bool& enable_roi_constraint = false);
+                    std::vector<vino_core_lib::ObjectDetectionResult>& results, const float& confidence_thresh = 0.3,
+                    const bool& enable_roi_constraint = false) override;
 
   bool enqueue(const std::shared_ptr<Engines::Engine>& engine, const cv::Mat& frame,
                const cv::Rect& input_frame_loc) override;
@@ -59,9 +53,23 @@ public:
    * @return Name of the model.
    */
   const std::string getModelCategory() const override;
-
   bool updateLayerProperty(InferenceEngine::CNNNetwork&) override;
+  
+
+protected:
+  int getEntryIndex(int side, int lcoords, int lclasses, int location, int entry);
+
+  double sigmoid(double x);
+
+  std::vector<int> getAnchors(int net_grid);
+
+  bool parseYolov5(const InferenceEngine::Blob::Ptr &blob,int net_grid,float cof_threshold,
+                    std::vector<cv::Rect>& o_rect, std::vector<float>& o_rect_cof);
+
+  cv::Rect detet2origin(const cv::Rect& dete_rect,float rate_to,int top,int left);
+
+  InferenceEngine::InputInfo::Ptr input_info_ = nullptr;
+  InferenceEngine::OutputsDataMap outputs_data_map_;
 };
 }  // namespace Models
-
-#endif  // VINO_CORE_LIB__MODELS__FACE_DETECTION_MODEL_H
+#endif  // VINO_CORE_LIB__MODELS__OBJECT_DETECTION_YOLOV5VOC_MODEL_H

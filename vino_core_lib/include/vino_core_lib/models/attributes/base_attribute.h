@@ -51,6 +51,8 @@ public:
     std::vector<std::string> labels;
   };
 
+  ModelAttribute() {};
+
   ModelAttribute(const std::string model_name)
   {
     attr_.model_name = model_name;

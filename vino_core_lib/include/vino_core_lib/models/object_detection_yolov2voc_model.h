@@ -21,6 +21,8 @@
 #define VINO_CORE_LIB__MODELS__OBJECT_DETECTION_YOLOV2VOC_MODEL_H
 #include <string>
 #include "vino_core_lib/models/base_model.h"
+#include "vino_core_lib/inferences/object_detection.h"
+#include "vino_core_lib/engines/engine_manager.h"
 namespace Models
 {
 /**
@@ -32,6 +34,8 @@ class ObjectDetectionYolov2Model : public ObjectDetectionModel
   using Result = vino_core_lib::ObjectDetectionResult;
 
 public:
+  ObjectDetectionYolov2Model() {};
+
   ObjectDetectionYolov2Model(const std::string& model_loc, int batch_size = 1);
 
   bool fetchResults(const std::shared_ptr<Engines::Engine>& engine,
@@ -50,6 +54,7 @@ public:
    */
   const std::string getModelCategory() const override;
   bool updateLayerProperty(InferenceEngine::CNNNetwork&) override;
+  
 
 protected:
   int getEntryIndex(int side, int lcoords, int lclasses, int location, int entry);

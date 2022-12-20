@@ -49,3 +49,5 @@ const std::string Models::PersonReidentificationModel::getModelCategory() const
 {
   return "Person Reidentification";
 }
+
+REG_MODEL(PersonReidentificationModel, "PersonReidentification");
