@@ -33,7 +33,8 @@ bool Models::ObjectDetectionYolov5Model::updateLayerProperty(InferenceEngine::CN
   auto network = net_reader;
 
   InferenceEngine::InputsDataMap input_info_map(net_reader.getInputsInfo());
-  if (input_info_map.size() != 1)
+
+  if(input_info_map.size() != 1)
   {
     slog::warn << "This model seems not YoloV5-like, YoloV5 has only one input, but we got "
                << std::to_string(input_info_map.size()) << "inputs" << slog::endl;
@@ -45,6 +46,10 @@ bool Models::ObjectDetectionYolov5Model::updateLayerProperty(InferenceEngine::CN
   input_info_->getInputData()->setLayout(InferenceEngine::Layout::NCHW);
 
   addInputInfo("input", input_info_map.begin()->first);
+
+  const InferenceEngine::SizeVector input_dims = input_info_->getTensorDesc().getDims();
+  setInputHeight(input_dims[2]);
+  setInputWidth(input_dims[3]);
 
   InferenceEngine::ICNNNetwork::InputShapes inputShapes = network.getInputShapes();
   InferenceEngine::SizeVector& in_size_vector = inputShapes.begin()->second;
@@ -62,22 +67,46 @@ bool Models::ObjectDetectionYolov5Model::updateLayerProperty(InferenceEngine::CN
   // output configure
   outputs_data_map_ = network.getOutputsInfo();
 
-  if (outputs_data_map_.size() != 1)
-  {
-    slog::warn << "This inference sample should have only one output, but we got"
-               << std::to_string(outputs_data_map_.size()) << "outputs" << slog::endl;
-    return false;
-  }
+  // if (outputs_data_map_.size() != 1)
+  // {
+  //   slog::warn << "This inference sample should have only one output, but we got"
+  //              << std::to_string(outputs_data_map_.size()) << "outputs" << slog::endl;
+  //   return false;
+  // }
+
+  addOutputInfo("output", outputs_data_map_.begin()->first);
 
   for(auto &output : outputs_data_map_) 
   {
-      output.second->setPrecision(InferenceEngine::Precision::FP32);
+    auto output_data_ptr = output.second;
+    output_data_ptr->setPrecision(InferenceEngine::Precision::FP32);
+
+    const InferenceEngine::SizeVector output_dims = output_data_ptr->getTensorDesc().getDims();
+    setMaxProposalCount(static_cast<int>(output_dims[2]));
+    slog::info << "max proposal count is: " << getMaxProposalCount() << slog::endl;
+
+    auto object_size = static_cast<int>(output_dims[3]);
+    // if (object_size != 7)
+    // {
+    //   slog::warn << "This model is NOT SSDNet-like, whose output data for each detected object"
+    //             << "should have 7 dimensions, but was " << std::to_string(object_size) << slog::endl;
+    //   return false;
+    // }
+    setObjectSize(object_size);
+
+    // if (output_dims.size() != 4)
+    // {
+    //   slog::warn << "This model is not SSDNet-like, output dimensions shoulld be 4, but was"
+    //             << std::to_string(output_dims.size()) << slog::endl;
+    //   return false;
+    // }
+
+    // printAttribute();
   }
 
   // InferenceEngine::DataPtr& output_data_ptr = outputs_data_map_.begin()->second;
   // output_data_ptr->setPrecision(InferenceEngine::Precision::FP32);
   slog::info << "Checking YoloV5 Object Detection output ... Name=" << outputs_data_map_.begin()->first << slog::endl;
-  addOutputInfo("output", outputs_data_map_.begin()->first);
 
   // TODO set size
 
@@ -127,17 +156,12 @@ bool Models::ObjectDetectionYolov5Model::matToBlob(const cv::Mat& orig_image, co
   const int height = blob_size[2];
   const int channels = blob_size[1];
 
-  slog::info << "width:    " << width << slog::endl;
-  slog::info << "height:   " << height << slog::endl;
-  slog::info << "channels: " << channels << slog::endl;
-
   if(width != orig_image.size().width || height != orig_image.size().height)
   {
     cv::resize(orig_image, resized_image, cv::Size(width, height));
   }
 
   float* blob_data = blobMapped.as<float*>();
-  // // TODO size is for demo
   size_t img_size = width*height;
 
   //nchw
@@ -161,6 +185,8 @@ bool Models::ObjectDetectionYolov5Model::fetchResults(const std::shared_ptr<Engi
                                                       std::vector<vino_core_lib::ObjectDetectionResult>& results,
                                                       const float& confidence_thresh, const bool& enable_roi_constraint)
 {
+  // TODO xiansen
+  auto confidence_thresh_ = 0.1;
   slog::debug << "fetching Infer Resulsts from the given Yolov5 model" << slog::endl;
 
   if (engine == nullptr)
@@ -174,19 +200,17 @@ bool Models::ObjectDetectionYolov5Model::fetchResults(const std::shared_ptr<Engi
   InferenceEngine::InferRequest::Ptr request = engine->getRequest();
   std::string output = getOutputName();
 
-  // const float* detections = request->GetBlob(output)->buffer().as<float*>();
+  std::vector<cv::Rect> origin_rect;
+  std::vector<float>    origin_rect_cof;
 
-  std::vector<cv::Rect>  origin_rect;
-  std::vector<float> origin_rect_cof;
   int s[3] = {80,40,20};
-
   int index=0;
 
   for (auto &output : outputs_data_map_) 
   {
       auto output_name = output.first;
       InferenceEngine::Blob::Ptr blob = request->GetBlob(output_name);
-      parseYolov5(blob,s[index], confidence_thresh ,origin_rect, origin_rect_cof);
+      parseYolov5(blob,s[index], confidence_thresh_ ,origin_rect, origin_rect_cof);
       ++index;
   }
 
@@ -196,9 +220,9 @@ bool Models::ObjectDetectionYolov5Model::fetchResults(const std::shared_ptr<Engi
   //后处理获得最终检测结果
   std::vector<int> final_id;
   cv::dnn::NMSBoxes(origin_rect, origin_rect_cof,
-                confidence_thresh ,nms_area_threshold,final_id);
-
-    //根据final_id获取最终结果
+                confidence_thresh_ ,nms_area_threshold,final_id);
+  
+    // 根据final_id获取最终结果
     for(int i=0;i<final_id.size();++i)
     {
         cv::Rect resize_rect= origin_rect[final_id[i]];
@@ -213,6 +237,28 @@ bool Models::ObjectDetectionYolov5Model::fetchResults(const std::shared_ptr<Engi
   return true;
 }
 
+std::ostream & operator<<(std::ostream & os,const cv::Rect & rect)
+{
+    os << "[x: " << rect.x << ", y: " << rect.y 
+       << ", width: " << rect.width << ", height: " << rect.height << "]" << std::endl;
+    return os;
+}
+
+template <class T>
+std::ostream & operator<<(std::ostream &os, const std::vector<T> v)
+{
+  os << "{"; 
+
+  for(auto it: v)
+  {
+    os << it << " ,";
+  }
+
+  os << "}\n";
+
+  return os;
+}
+
 //注意此处的阈值是框和物体prob乘积的阈值
 bool Models::ObjectDetectionYolov5Model::parseYolov5(const InferenceEngine::Blob::Ptr &blob, int net_grid, float cof_threshold,
                             std::vector<cv::Rect>& o_rect, std::vector<float>& o_rect_cof)
@@ -222,7 +268,7 @@ bool Models::ObjectDetectionYolov5Model::parseYolov5(const InferenceEngine::Blob
   const float *output_blob = blobMapped.as<float *>();
    //80个类是85,一个类是6,n个类是n+5
    //int item_size = 6;
-   int item_size = 85;
+    int item_size = 85;
     size_t anchor_n = 3;
     for(int n=0;n<anchor_n;++n)
     {
@@ -314,4 +360,4 @@ std::vector<int> Models::ObjectDetectionYolov5Model::getAnchors(int net_grid)
 }
 
 
-REG_MODEL(ObjectDetectionYolov5Model, "ObjectDetection_YOLOV5");
+REG_MODEL(ObjectDetectionYolov5Model, "ObjectDetection_YOLOV5s");
