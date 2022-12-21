@@ -5,21 +5,29 @@ Below steps have been tested on **Ubuntu 18.04** and **Ubuntu 20.04**.
 Supported ROS versions include noetic and melodic.
 
 ## 1. Environment Setup
-* For ROS noetic on ubuntu 20.04:
-  * Install ROS. ([noetic_guide](http://wiki.ros.org/noetic/Installation/Ubuntu))
+ \For ROS noetic on ubuntu 20.04:
+  * Install ROS.</br> 
+  Refer to: [ROS_noetic_install_guide](http://wiki.ros.org/noetic/Installation/Ubuntu)
 
-  * Install Intel® OpenVINO™ Toolkit Version: 2022.1. ([guide](https://docs.openvino.ai/2022.1/openvino_docs_install_guides_installing_openvino_linux.html)) 
-    * Install from an achive file. Both runtime and development tool are needed, `pip` is recommended for installing the development tool. ([guide](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/download.html)) 
+  * Install Intel® OpenVINO™ Toolkit Version: 2022.1.</br>
+  Refer to: [OpenVINO_install_guide](https://docs.openvino.ai/2022.1/openvino_docs_install_guides_installing_openvino_linux.html)
+    * Install from an achive file. Both runtime and development tool are needed, `pip` is recommended for installing the development tool.</br>
+    Refer to: [OpenVINO_devtool_install_guide](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/download.html)
 
-  * Install Intel® RealSense™ SDK. ([guide](https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md))
+  * Install Intel® RealSense™ SDK.</br>
+  Refer to: [RealSense_install_guide](https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md)
 
-* For ROS melodic on ubuntu 18.04:
-  * Install ROS. ([melodic_guide](http://wiki.ros.org/melodic/Installation/Ubuntu))
+For ROS melodic on ubuntu 18.04:
+  * Install ROS.</br> 
+   Refer to: [ROS_melodic_install_guide](http://wiki.ros.org/melodic/Installation/Ubuntu))
 
-  * Install Intel® OpenVINO™ Toolkit Version: 2022.1. ([guide](https://docs.openvino.ai/2022.1/openvino_docs_install_guides_installing_openvino_linux.html)) 
-    * Install from an achive file. Both runtime and development tool are needed, `pip` is recommended for installing the development tool. ([guide](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/download.html)) 
+  * Install Intel® OpenVINO™ Toolkit Version: 2022.1.</br>
+  Refer to: [OpenVINO_install_guide](https://docs.openvino.ai/2022.1/openvino_docs_install_guides_installing_openvino_linux.html)
+    * Install from an achive file. Both runtime and development tool are needed, `pip` is recommended for installing the development tool.</br>
+    Refer to: [OpenVINO_devtool_install_guide](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/download.html)
 
-  * Install Intel® RealSense™ SDK. ([guide](https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md))
+  * Install Intel® RealSense™ SDK.</br>
+  Refer to: [RealSense_install_guide](https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md)
 
 * Install Dependency
   * Install gflags 
@@ -55,7 +63,8 @@ source ./devel_isolated/setup.bash
 
 ## 3. Running the Demo
 ### Install OpenVINO 2022.1 by PIP
-* OMZ tools are provided for downloading and converting models of open_model_zoo in ov2022.([guide](https://pypi.org/project/openvino-dev/))
+* OMZ tools are provided for downloading and converting models of open_model_zoo in ov2022.</br>
+Refer to: [OMZtool_guide](https://pypi.org/project/openvino-dev/)
 
 * See all available models
 ```
@@ -106,7 +115,7 @@ sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_segmentation/fro
 sudo cp ~/catkin_ws/src/ros_openvino_toolkit/data/labels/object_segmentation/frozen_inference_graph.labels /opt/openvino_toolkit/models/intel/semantic-segmentation-adas-0001/FP16/
 ```
 
-* Please check the parameter configuration in ros_openvino_toolkit/sample/param/xxxx.yaml before lauching, make sure parameters such as model_path, label_path and input_path are set correctly.
+* Please check the parameter configuration in ros_openvino_toolkit/sample/param/xxxx.yaml before lauching, make sure parameters such as model_path, label_path and input_path are set correctly.Please refer to the quick start document for [yaml configuration guidance](./yaml_configuration_guide.md) for detailed configuration guidance.
   * run face detection sample code input from StandardCamera.
   ```
   roslaunch vino_launch pipeline_people.launch
