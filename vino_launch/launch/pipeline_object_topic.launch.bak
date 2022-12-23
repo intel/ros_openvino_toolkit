@@ -9,7 +9,11 @@
          <arg name="color_width" value="$(arg color_width)" />
          <arg name="color_height" value="$(arg color_height)" />
      </include>
+<<<<<<< HEAD:vino_launch/launch/pipeline_object_oss_topic.launch
+  </group>
+=======
   </group> -->
+>>>>>>> 128cd0ffa567e04d86e5a218f07e38767ade639f:vino_launch/launch/pipeline_object_topic.launch.bak
   <node pkg="vino_sample" type="pipeline_with_params"
         name="pipeline_with_params" output="screen">
         <param name="param_file" value="$(arg param_file)" />   
