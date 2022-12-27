@@ -45,13 +45,8 @@ bool Input::ImageTopic::initialize(size_t width, size_t height)
 void Input::ImageTopic::cb(const sensor_msgs::Image::ConstPtr& image_msg)
 {
   slog::debug << "Receiving a new image from Camera topic." << slog::endl;
-  // setHeader(image_msg->header);
 
   image_ = cv_bridge::toCvCopy(image_msg, "bgr8")->image;
-  // Suppose Image Topic is sent within BGR order, so the below line would work.
-  // image_ = cv::Mat(image_msg->height, image_msg->width, CV_8UC3,
-  //  const_cast<uchar *>(&image_msg->data[0]), image_msg->step);
-
   image_count_.increaseCounter();
 }
 
@@ -64,7 +59,6 @@ bool Input::ImageTopic::read(cv::Mat* frame)
   }
 
   *frame = image_;
-  // lockHeader();
   image_count_.decreaseCounter();
   return true;
 }

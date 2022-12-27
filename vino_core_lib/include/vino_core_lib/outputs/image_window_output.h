@@ -120,6 +120,12 @@ public:
    */
   void accept(const std::vector<vino_core_lib::ObjectSegmentationResult>&) override;
   /**
+   * @brief Generate image window output content according to
+   * the object segmentation maskrcnn result.
+   * @param[in] An obejct segmentation result objetc.
+   */
+  void accept(const std::vector<vino_core_lib::ObjectSegmentationMaskrcnnResult> &) override;
+  /**
   * @brief Generate image window output content according to
   * the person re-ID result.
   * @param[in] An object segmentation result objetc.
@@ -131,6 +137,7 @@ public:
     * @param[in] An object segmentation result objetc.
     */
   void mergeMask(const std::vector<vino_core_lib::ObjectSegmentationResult>&);
+  void mergeMask(const std::vector<vino_core_lib::ObjectSegmentationMaskrcnnResult> &);
 
 private:
   unsigned findOutput(const cv::Rect&);

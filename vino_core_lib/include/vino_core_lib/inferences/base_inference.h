@@ -28,7 +28,7 @@
 #include "vino_core_lib/engines/engine.h"
 #include "vino_core_lib/models/base_model.h"
 #include "vino_core_lib/slog.h"
-#include "inference_engine.hpp"
+#include "openvino/openvino.hpp"
 #include "opencv2/opencv.hpp"
 
 namespace Outputs
@@ -43,14 +43,14 @@ class BaseOutput;
  * @param[in] batch_index Indicates the batch index for the frame.
  */
 template <typename T>
-void matU8ToBlob(const cv::Mat& orig_image, InferenceEngine::Blob::Ptr& blob, float scale_factor = 1.0,
+void matU8ToBlob(const cv::Mat& orig_image, ov::Tensor & input_tensor, float scale_factor = 1.0,
                  int batch_index = 0)
 {
-  InferenceEngine::SizeVector blob_size = blob->getTensorDesc().getDims();
+  ov::Shape blob_size = input_tensor.get_shape();
   const size_t width = blob_size[3];
   const size_t height = blob_size[2];
   const size_t channels = blob_size[1];
-  T* blob_data = blob->buffer().as<T*>();
+  T * blob_data = input_tensor.data<T>();
 
   cv::Mat resized_image(orig_image);
   if (width != (size_t)orig_image.size().width || height != (size_t)orig_image.size().height)
@@ -198,8 +198,8 @@ protected:
                  << ") processed by inference" << slog::endl;
       return false;
     }
-    InferenceEngine::Blob::Ptr input_blob = engine_->getRequest()->GetBlob(input_name);
-    matU8ToBlob<T>(frame, input_blob, scale_factor, batch_index);
+    ov::Tensor input_tensor = engine_->getRequest().get_tensor(input_name);
+    matU8ToBlob<T>(frame, input_tensor, scale_factor, batch_index);
     enqueued_frames_ += 1;
     return true;
   }

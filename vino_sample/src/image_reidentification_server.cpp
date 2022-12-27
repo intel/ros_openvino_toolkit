@@ -54,7 +54,7 @@
 #include "vino_core_lib/pipeline.h"
 #include "vino_core_lib/pipeline_manager.h"
 #include "vino_core_lib/slog.h"
-#include "inference_engine.hpp"
+#include "openvino/openvino.hpp"
 #include "opencv2/opencv.hpp"
 #include "vino_sample/utility.hpp"
 #include <vino_people_msgs/ReidentificationSrv.h>

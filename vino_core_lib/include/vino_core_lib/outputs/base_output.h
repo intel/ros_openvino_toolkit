@@ -31,6 +31,7 @@
 #include "vino_core_lib/inferences/face_detection.h"
 #include "vino_core_lib/inferences/head_pose_detection.h"
 #include "vino_core_lib/inferences/object_segmentation.h"
+#include "vino_core_lib/inferences/object_segmentation_maskrcnn.h"
 #include "vino_core_lib/inferences/person_reidentification.h"
 #include "vino_core_lib/inferences/landmarks_detection.h"
 #include "vino_core_lib/inferences/face_reidentification.h"
@@ -131,6 +132,12 @@ public:
    * @brief Generate output content according to the object segmentation result.
    */
   virtual void accept(const std::vector<vino_core_lib::ObjectSegmentationResult>&)
+  {
+  }
+  /**
+   * @brief Generate output content according to the object segmentation maskrcnn result.
+   */
+  virtual void accept(const std::vector<vino_core_lib::ObjectSegmentationMaskrcnnResult> &)
   {
   }
   /**

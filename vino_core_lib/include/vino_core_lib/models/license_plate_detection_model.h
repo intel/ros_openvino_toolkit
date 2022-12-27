@@ -53,7 +53,7 @@ public:
   const std::string getModelCategory() const override;
 
 protected:
-  bool updateLayerProperty(InferenceEngine::CNNNetwork&) override;
+  bool updateLayerProperty(std::shared_ptr<ov::Model>&) override;
   // up to 88 items per license plate, ended with "-1"
   const int max_sequence_size_ = 88;
   std::string input_;

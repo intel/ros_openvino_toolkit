@@ -1,9 +1,10 @@
 Pipelines:
 - name: segmentation
   inputs: [Image]
+  input_path: to/be/set/image_path 
   infers:
     - name: ObjectSegmentation
-      model: /opt/openvino_toolkit/models/public/deeplabv3/FP16/deeplabv3.xml
+      model: /opt/openvino_toolkit/models/convert/public/deeplabv3/FP16/deeplabv3.xml
       engine: CPU
       label: to/be/set/xxx.labels
       batch: 1
@@ -14,6 +15,6 @@ Pipelines:
       right: [ObjectSegmentation]
     - left: ObjectSegmentation
       right: [RosService]
-  input_path: "/opt/openvino_toolkit/ros_openvino_toolkit/data/images/car.png"
+
 OpenvinoCommon:
 

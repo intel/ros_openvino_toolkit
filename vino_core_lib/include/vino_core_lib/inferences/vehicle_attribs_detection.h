@@ -24,7 +24,7 @@
 #include "vino_core_lib/models/vehicle_attribs_detection_model.h"
 #include "vino_core_lib/engines/engine.h"
 #include "vino_core_lib/inferences/base_inference.h"
-#include "inference_engine.hpp"
+#include "openvino/openvino.hpp"
 #include "opencv2/opencv.hpp"
 // namespace
 namespace vino_core_lib

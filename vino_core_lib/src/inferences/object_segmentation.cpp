@@ -112,37 +112,36 @@ bool vino_core_lib::ObjectSegmentation::fetchResults()
   }
   bool found_result = false;
   results_.clear();
-  InferenceEngine::InferRequest::Ptr request = getEngine()->getRequest();
+  ov::InferRequest infer_request = getEngine()->getRequest();
   slog::debug << "Analyzing Detection results..." << slog::endl;
   std::string detection_output = valid_model_->getOutputName("detection");
   std::string mask_output = valid_model_->getOutputName("masks");
 
-  const InferenceEngine::Blob::Ptr do_blob = request->GetBlob(detection_output.c_str());
-  const auto do_data = do_blob->buffer().as<float*>();
-  const auto masks_blob = request->GetBlob(mask_output.c_str());
-  const auto masks_data = masks_blob->buffer().as<float*>();
-  const InferenceEngine::SizeVector& outSizeVector = masks_blob->getTensorDesc().getDims();
-  int output_des, output_h, output_w;
-  switch(outSizeVector.size()) {
-      case 3:
-          output_des = 0;
-          output_h = outSizeVector[1];
-          output_w = outSizeVector[2];
-          break;
-      case 4:
-          output_des = outSizeVector[1];
-          output_h = outSizeVector[2];
-          output_w = outSizeVector[3];
-          break;
-      default:
-          throw std::runtime_error("Unexpected output blob shape. Only 4D and 3D output blobs are"
-              "supported.");
+  ov::Tensor output_tensor = infer_request.get_tensor(detection_output);
+  const auto out_data = output_tensor.data<float>();
+  ov::Shape out_shape = output_tensor.get_shape();
+  ov::Tensor masks_tensor = infer_request.get_tensor(detection_output.c_str());
+  const auto masks_data = masks_tensor.data<float>();
+
+  size_t output_w, output_h, output_des, output_extra = 0;
+  if (out_shape.size() == 3) {
+    output_w = out_shape[2];
+    output_h = out_shape[1];
+    output_des = out_shape[0];
+  } else if (out_shape.size() == 4) {
+    output_w = out_shape[3];
+    output_h = out_shape[2];
+    output_des = out_shape[1];
+    output_extra = out_shape[0];
+  } else {
+    slog::warn << "unexpected output shape: " <<out_shape << slog::endl;
+    return false;
   }
   slog::debug << "output w " << output_w << slog::endl;
   slog::debug << "output h " << output_h << slog::endl;
   slog::debug << "output description " << output_des << slog::endl;
 
-  const float* detections = request->GetBlob(detection_output)->buffer().as<float*>();
+  const auto detections = output_tensor.data<float>();
   std::vector<std::string>& labels = valid_model_->getLabels();
   slog::debug << "label size " << labels.size() << slog::endl;
 
@@ -163,14 +162,12 @@ bool vino_core_lib::ObjectSegmentation::fetchResults()
         {
           colored_mask.at<cv::Vec3b>(rowId, colId)[ch] = colors_[classId][ch];
         }
-        // classId = static_cast<std::size_t>(predictions[rowId * output_w + colId]);
       }
       else
       {
         for (int chId = 0; chId < output_des; ++chId)
         {
           float prob = detections[chId * output_h * output_w + rowId * output_w + colId];
-          // float prob = predictions[chId * output_h * output_w + rowId * output_w+ colId];
           if (prob > maxProb)
           {
             classId = chId;

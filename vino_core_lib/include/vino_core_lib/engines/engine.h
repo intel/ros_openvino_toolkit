@@ -24,7 +24,7 @@
 #pragma once
 
 #include "vino_core_lib/models/base_model.h"
-#include "inference_engine.hpp"
+#include "openvino/openvino.hpp"
 
 /**
  * @class NetworkEngine
@@ -38,7 +38,7 @@ class Engine
 public:
 #if (defined(USE_OLD_E_PLUGIN_API))
   /**
-   * DEPRECATED! instead of using Engine(InferenceEngine::InferRequest::Ptr &)
+   * DEPRECATED! instead of using Engine(ov::InferRequest &)
    * @brief Create an NetworkEngine instance
    * from a inference plugin and an inference network.
    */
@@ -46,14 +46,14 @@ public:
 #endif
 
   /**
-   * @brief Using an Inference Request to initialize the inference Engine.
+   * @brief Using an Inference Request to initialize the OpenVINO Engine.
    */
-  Engine(InferenceEngine::InferRequest::Ptr&);
+  Engine(ov::InferRequest &);
   /**
    * @brief Get the inference request this instance holds.
    * @return The inference request this instance holds.
    */
-  inline InferenceEngine::InferRequest::Ptr& getRequest()
+  inline ov::InferRequest & getRequest()
   {
     return request_;
   }
@@ -65,11 +65,11 @@ public:
   template <typename T>
   void setCompletionCallback(const T& callbackToSet)
   {
-    request_->SetCompletionCallback(callbackToSet);
+    request_.set_callback(callbackToSet);
   }
 
 private:
-  InferenceEngine::InferRequest::Ptr request_ = nullptr;
+  ov::InferRequest request_;
 };
 }  // namespace Engines
 

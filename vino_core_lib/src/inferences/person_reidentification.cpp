@@ -73,9 +73,9 @@ bool vino_core_lib::PersonReidentification::fetchResults()
     return false;
   }
   bool found_result = false;
-  InferenceEngine::InferRequest::Ptr request = getEngine()->getRequest();
+  ov::InferRequest request = getEngine()->getRequest();
   std::string output = valid_model_->getOutputName();
-  const float* output_values = request->GetBlob(output)->buffer().as<float*>();
+  const float* output_values = request.get_tensor(output).data<float>();
   for (int i = 0; i < getResultsLength(); i++)
   {
     std::vector<float> new_person = std::vector<float>(output_values + 256 * i, output_values + 256 * i + 256);

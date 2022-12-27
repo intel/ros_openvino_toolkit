@@ -41,10 +41,7 @@ public:
    * @return Name of the model.
    */
   const std::string getModelCategory() const override;
-  bool updateLayerProperty(InferenceEngine::CNNNetwork&) override;
-
-private:
-  bool verifyOutputLayer(const InferenceEngine::DataPtr& ptr);
+  bool updateLayerProperty(std::shared_ptr<ov::Model>&) override;
 };
 }  // namespace Models
 

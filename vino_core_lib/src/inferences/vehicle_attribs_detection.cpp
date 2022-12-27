@@ -71,13 +71,11 @@ bool vino_core_lib::VehicleAttribsDetection::fetchResults()
     return false;
   }
   bool found_result = false;
-  InferenceEngine::InferRequest::Ptr request = getEngine()->getRequest();
-  // std::string color_name = valid_model_->getColorOutputName();
-  // std::string type_name = valid_model_->getTypeOutputName();
+  ov::InferRequest request = getEngine()->getRequest();
   std::string color_name = valid_model_->getOutputName("color_output_");
   std::string type_name = valid_model_->getOutputName("type_output_");
-  const float* color_values = request->GetBlob(color_name)->buffer().as<float*>();
-  const float* type_values = request->GetBlob(type_name)->buffer().as<float*>();
+  const float * color_values = request.get_tensor(color_name).data<float>();
+  const float * type_values = request.get_tensor(type_name).data<float>();
   for (int i = 0; i < getResultsLength(); i++)
   {
     auto color_id = std::max_element(color_values, color_values + 7) - color_values;

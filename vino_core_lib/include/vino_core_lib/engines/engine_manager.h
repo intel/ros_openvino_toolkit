@@ -23,19 +23,19 @@
 
 #include "vino_core_lib/models/base_model.h"
 #include "vino_core_lib/engines/engine.h"
-#include "inference_engine.hpp"
+#include "openvino/openvino.hpp"
 
 namespace Engines
 {
 /**
  * @class EngineManager
- * @brief This class is used to create and manage Inference engines.
+ * @brief This class is used to create and manage OpenVINO engines.
  */
 class EngineManager
 {
 public:
   /**
-   * @brief Create InferenceEngine instance by given Engine Name and Network.
+   * @brief Create OpenVINO instance by given Engine Name and Network.
    * @return The shared pointer of created Engine instance.
    */
   std::shared_ptr<Engine> createEngine(const std::string&, const std::shared_ptr<Models::BaseModel>&);
@@ -52,7 +52,7 @@ private:
   std::shared_ptr<Engine> createEngine_beforeV2019R2(const std::string&, const std::shared_ptr<Models::BaseModel>&);
 #endif
 
-  std::shared_ptr<Engine> createEngine_V2019R2_plus(const std::string&, const std::shared_ptr<Models::BaseModel>&);
+  std::shared_ptr<Engine> createEngine_V2022(const std::string&, const std::shared_ptr<Models::BaseModel>&);
 };
 }  // namespace Engines
 

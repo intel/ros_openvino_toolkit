@@ -17,7 +17,7 @@ cmake_minimum_required (VERSION 3.0.2)
 project(vino_core_lib)
 
 ####################################
-## to use new InferenceEngine API (InferenceEngine::Core),
+## to use new OpenVINO API (ov::core),
 ## then, uncomment below line
 #add_definitions(-DUSE_IE_CORE)
 ####################################
@@ -27,9 +27,8 @@ project(vino_core_lib)
 ## add_definitions(-DLOG_LEVEL_DEBUG)
 ####################################
 
-message(STATUS "Looking for inference engine configuration file at: ${CMAKE_PREFIX_PATH}")
-find_package(InferenceEngine REQUIRED)
-if (NOT InferenceEngine_FOUND)
+find_package(OpenVINO REQUIRED)
+if (NOT OpenVINO_FOUND)
     message(FATAL_ERROR "")
 endif()
 
@@ -44,7 +43,7 @@ find_package(
   vino_pipeline_srv_msgs
   image_transport
   cv_bridge
-  InferenceEngine
+  OpenVINO
 )
 
 # Find OpenCV libray if exists
@@ -65,26 +64,16 @@ catkin_package(
   image_transport
   object_msgs
 )
-
+set(OpenVINO_LIBRARIES openvino::runtime)
 include_directories (
     include
     ${catkin_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${InferenceEngine_INCLUDE_DIRS}
-    ${InferenceEngine_INCLUDE_DIRS}/../samples
-    ${InferenceEngine_DIR}/../src
+    ${OPENVINO_DIR}
     ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/gflags/include
     ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/extension/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../vino_param_lib/include
 )
-
-#if (NOT DEFINED ENV{CPU_EXTENSION_LIB})
-#  message(FATAL_ERROR "Please set ENV CPU_EXTENSION_LIB with 'export CPU_EXTENSION_LIB=<path-to-libcpu_extension.so>'")
-#endif()
-#set (CpuExtension_lib $ENV{CPU_EXTENSION_LIB})
-#add_library(cpu_extension SHARED IMPORTED)
-#set_target_properties(cpu_extension PROPERTIES
-#  IMPORTED_LOCATION $ENV{CPU_EXTENSION_LIB})
 
 # Flags
 if(UNIX OR APPLE)
@@ -142,7 +131,7 @@ if (SUPPORT_SSE41 EQUAL 0)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
 endif()
 
-set(DEPENDENCIES realsense2 ${OpenCV_LIBS})
+set(DEPENDENCIES realsense2 ${OpenCV_LIBS} openvino::runtime)
 
 add_library(${PROJECT_NAME} SHARED
   src/services/frame_processing_server.cpp
@@ -161,6 +150,7 @@ add_library(${PROJECT_NAME} SHARED
   src/inferences/head_pose_detection.cpp
   src/inferences/object_detection.cpp
   src/inferences/object_segmentation.cpp
+  src/inferences/object_segmentation_maskrcnn.cpp
   src/inferences/person_reidentification.cpp
   src/inferences/face_reidentification.cpp
   src/inferences/base_reidentification.cpp
@@ -182,6 +172,7 @@ add_library(${PROJECT_NAME} SHARED
   src/models/object_detection_ssd_model.cpp
   # src/models/object_detection_yolov2voc_model.cpp
   src/models/object_segmentation_model.cpp
+  src/models/object_segmentation_maskrcnn_model.cpp
   src/models/person_reidentification_model.cpp
   src/models/face_reidentification_model.cpp
   src/models/person_attribs_detection_model.cpp

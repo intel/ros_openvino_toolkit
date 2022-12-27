@@ -130,6 +130,5 @@ void Outputs::RosServiceOutput::clearData()
   age_gender_topic_ = nullptr;
   emotions_topic_ = nullptr;
   headpose_topic_ = nullptr;
-  // segmented_object_topic_ = nullptr;
   person_reid_topic_ = nullptr;
 }

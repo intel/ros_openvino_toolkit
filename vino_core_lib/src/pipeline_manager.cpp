@@ -32,6 +32,7 @@
 #include "vino_core_lib/inferences/vehicle_attribs_detection.h"
 #include "vino_core_lib/inferences/license_plate_detection.h"
 #include "vino_core_lib/inferences/landmarks_detection.h"
+#include "vino_core_lib/inferences/object_segmentation_maskrcnn.h"
 #include "vino_core_lib/inputs/image_input.h"
 #include "vino_core_lib/inputs/realsense_camera.h"
 #include "vino_core_lib/inputs/realsense_camera_topic.h"
@@ -49,6 +50,7 @@
 #include "vino_core_lib/models/vehicle_attribs_detection_model.h"
 #include "vino_core_lib/models/license_plate_detection_model.h"
 #include "vino_core_lib/models/landmarks_detection_model.h"
+#include "vino_core_lib/models/object_segmentation_maskrcnn_model.h"
 #include "vino_core_lib/outputs/image_window_output.h"
 #include "vino_core_lib/outputs/ros_topic_output.h"
 #include "vino_core_lib/outputs/rviz_output.h"
@@ -247,6 +249,10 @@ PipelineManager::parseInference(const Params::ParamManager::PipelineRawData& par
     {
       object = createObjectSegmentation(infer);
     }
+    else if (infer.name == kInferTpye_ObjectSegmentationMaskrcnn) 
+    {
+      object = createObjectSegmentationMaskrcnn(infer);
+    }
     else if (infer.name == kInferTpye_PersonReidentification)
     {
       object = createPersonReidentification(infer);
@@ -341,10 +347,6 @@ PipelineManager::createObjectDetection(const Params::ParamManager::InferenceRawD
   {
     object_detection_model = std::make_shared<Models::ObjectDetectionSSDModel>(infer.label, infer.model, infer.batch);
   }
-  // if (infer.model_type == kInferTpye_ObjectDetectionTypeYolov2voc)
-  // {
-  //   object_detection_model = std::make_shared<Models::ObjectDetectionYolov2Model>(infer.model, infer.batch);
-  // }
 
   slog::debug << "for test in createObjectDetection(), Created SSDModel" << slog::endl;
   object_inference_ptr = std::make_shared<vino_core_lib::ObjectDetection>(
@@ -368,6 +370,24 @@ PipelineManager::createObjectSegmentation(const Params::ParamManager::InferenceR
   slog::info << "Segmentation Engine initialized." << slog::endl;
   auto segmentation_inference_ptr = std::make_shared<vino_core_lib::ObjectSegmentation>(infer.confidence_threshold);
   slog::info << "Segmentation Inference instanced." << slog::endl;
+  segmentation_inference_ptr->loadNetwork(model);
+  segmentation_inference_ptr->loadEngine(engine);
+
+  return segmentation_inference_ptr;
+}
+
+std::shared_ptr<vino_core_lib::BaseInference>
+PipelineManager::createObjectSegmentationMaskrcnn(const Params::ParamManager::InferenceRawData & infer)
+{
+  auto model =
+    std::make_shared<Models::ObjectSegmentationMaskrcnnModel>(infer.label, infer.model, infer.batch);
+  model->modelInit();
+  slog::info << "Segmentation model initialized." << slog::endl;
+  auto engine = engine_manager_.createEngine(infer.engine, model);
+  slog::info << "Segmentation Engine initialized." << slog::endl;
+  auto segmentation_inference_ptr = std::make_shared<vino_core_lib::ObjectSegmentationMaskrcnn>(
+    infer.confidence_threshold);
+    slog::info << "Segmentation Inference instanced." << slog::endl;
   segmentation_inference_ptr->loadNetwork(model);
   segmentation_inference_ptr->loadEngine(engine);
 

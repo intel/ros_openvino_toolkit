@@ -25,22 +25,25 @@ Models::PersonReidentificationModel::PersonReidentificationModel(const std::stri
 {
 }
 
-bool Models::PersonReidentificationModel::updateLayerProperty(InferenceEngine::CNNNetwork& netreader)
+bool Models::PersonReidentificationModel::updateLayerProperty(std::shared_ptr<ov::Model>& model)
 {
   slog::info << "Checking Inputs for Model" << getModelName() << slog::endl;
 
-  auto network = netreader;
-
-  InferenceEngine::InputsDataMap input_info_map(network.getInputsInfo());
-
-  InferenceEngine::InputInfo::Ptr input_info = input_info_map.begin()->second;
-  input_info->setPrecision(InferenceEngine::Precision::U8);
-  input_info->getInputData()->setLayout(InferenceEngine::Layout::NCHW);
+  auto network = model;
+  auto input_info_map = model->inputs();
+  ov::preprocess::PrePostProcessor ppp = ov::preprocess::PrePostProcessor(model);
+  input_ = input_info_map[0].get_any_name();
+  const ov::Layout input_tensor_layout{"NCHW"};
+  ppp.input(input_).
+    tensor().
+    set_element_type(ov::element::u8).
+    set_layout(input_tensor_layout);
   // set output property
-  InferenceEngine::OutputsDataMap output_info_map(network.getOutputsInfo());
-  // set input and output layer name
-  input_ = input_info_map.begin()->first;
-  output_ = output_info_map.begin()->first;
+  auto output_info_map = model->outputs();
+  output_ = output_info_map[0].get_any_name();
+
+  model = ppp.build();
+  ov::set_batch(model, getMaxBatchSize());
 
   return true;
 }

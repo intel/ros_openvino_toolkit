@@ -16,9 +16,8 @@ cmake_minimum_required(VERSION 3.0.2)
 
 project(vino_sample)
 
-message(STATUS "Looking for inference engine configuration file at: ${CMAKE_PREFIX_PATH}")
-find_package(InferenceEngine)
-if (NOT InferenceEngine_FOUND)
+find_package(OpenVINO)
+if (NOT OpenVINO_FOUND)
     message(FATAL_ERROR "")
 endif()
 
@@ -62,12 +61,7 @@ include_directories (
   include
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
-  ${InferenceEngine_INCLUDE_DIRS}
-  ${InferenceEngine_INCLUDE_DIRS}/../samples/build/thirdparty/gflags/include
-  ${InferenceEngine_INCLUDE_DIRS}/../build/samples/thirdparty/gflags/include
-  ${InferenceEngine_INCLUDE_DIRS}/../samples
-  ${InferenceEngine_DIR}/../src
-  #${vino_core_lib_INCLUDE_DIRS}
+  ${OpenVINO_DIR}
   ${vino_param_lib_INCLUDE_DIRS}
 )
 
@@ -79,22 +73,6 @@ else()
     message(STATUS "OPENCV is disabled or not found, " ${PROJECT_NAME} " skiped")
     return()
 endif()
-
-#if (NOT DEFINED ENV{CPU_EXTENSION_LIB})
-#  message(FATAL_ERROR "Please set ENV CPU_EXTENSION_LIB with 'export CPU_EXTENSION_LIB=<path-to-libcpu_extension.so>'")
-#endif()
-#set (CpuExtension_lib $ENV{CPU_EXTENSION_LIB})
-#add_library(cpu_extension SHARED IMPORTED)
-#set_target_properties(cpu_extension PROPERTIES
-#  IMPORTED_LOCATION $ENV{CPU_EXTENSION_LIB})
-
-#if (NOT DEFINED ENV{GFLAGS_LIB})
-#  message(FATAL_ERROR "Please set ENV GFLAGS_LIB with 'export GFLAGS_LIB=<path-to-libgflags_nothreads.a>'")
-#endif()
-#set (Gflags_lib $ENV{GFLAGS_LIB})
-#add_library(gflags STATIC IMPORTED)
-#set_target_properties(gflags PROPERTIES
-#  IMPORTED_LOCATION $ENV{GFLAGS_LIB})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
@@ -108,11 +86,12 @@ add_dependencies(pipeline_with_params
   ${vino_core_lib_TARGETS}
 )
 
+set(OpenVINO_LIBRARIES openvino::runtime)
 target_link_libraries(pipeline_with_params
   ${catkin_LIBRARIES}
   gflags
   ${vino_param_lib_LIBRARIES}
-  ${InferenceEngine_LIBRARIES}
+  ${OpenVINO_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )
 
@@ -130,7 +109,7 @@ target_link_libraries(image_people_server
   ${catkin_LIBRARIES}
   gflags
   ${vino_param_lib_LIBRARIES}
-  ${InferenceEngine_LIBRARIES}
+  ${OpenVINO_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )
 
@@ -149,7 +128,7 @@ target_link_libraries(image_people_client
   ${catkin_LIBRARIES}
   gflags
   ${vino_param_lib_LIBRARIES}
-  ${InferenceEngine_LIBRARIES}
+  ${OpenVINO_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )
 
@@ -167,7 +146,7 @@ target_link_libraries(image_object_server
   ${catkin_LIBRARIES}
   gflags
   ${vino_param_lib_LIBRARIES}
-  ${InferenceEngine_LIBRARIES}
+  ${OpenVINO_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )
 
@@ -186,7 +165,7 @@ target_link_libraries(image_object_client
   ${catkin_LIBRARIES}
   gflags
   ${vino_param_lib_LIBRARIES}
-  ${InferenceEngine_LIBRARIES}
+  ${OpenVINO_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )
 
@@ -205,7 +184,7 @@ target_link_libraries(image_segmentation_client
   ${catkin_LIBRARIES}
   gflags
   ${vino_param_lib_LIBRARIES}
-  ${InferenceEngine_LIBRARIES}
+  ${OpenVINO_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )
 
@@ -223,7 +202,7 @@ target_link_libraries(image_segmentation_server
   ${catkin_LIBRARIES}
   gflags
   ${vino_param_lib_LIBRARIES}
-  ${InferenceEngine_LIBRARIES}
+  ${OpenVINO_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )
 
@@ -242,7 +221,7 @@ target_link_libraries(image_reidentification_client
   ${catkin_LIBRARIES}
   gflags
   ${vino_param_lib_LIBRARIES}
-  ${InferenceEngine_LIBRARIES}
+  ${OpenVINO_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )
 
@@ -260,7 +239,7 @@ target_link_libraries(image_reidentification_server
   ${catkin_LIBRARIES}
   gflags
   ${vino_param_lib_LIBRARIES}
-  ${InferenceEngine_LIBRARIES}
+  ${OpenVINO_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )
 
@@ -278,7 +257,7 @@ target_link_libraries(pipeline_service_client
   ${catkin_LIBRARIES}
   gflags
   ${vino_param_lib_LIBRARIES}
-  ${InferenceEngine_LIBRARIES}
+  ${OpenVINO_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )
 

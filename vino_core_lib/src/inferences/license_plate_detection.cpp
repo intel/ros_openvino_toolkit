@@ -44,13 +44,11 @@ void vino_core_lib::LicensePlateDetection::loadNetwork(
 
 void vino_core_lib::LicensePlateDetection::fillSeqBlob()
 {
-  InferenceEngine::Blob::Ptr seq_blob = getEngine()->getRequest()->GetBlob(valid_model_->getSeqInputName());
-  int max_sequence_size = seq_blob->getTensorDesc().getDims()[0];
-  // second input is sequence, which is some relic from the training
-  // it should have the leading 0.0f and rest 1.0f
-  float* blob_data = seq_blob->buffer().as<float*>();
-  blob_data[0] = 0.0f;
-  std::fill(blob_data + 1, blob_data + max_sequence_size, 1.0f);
+  ov::Tensor seq_tensor = getEngine()->getRequest().get_tensor(
+    valid_model_->getSeqInputName());
+  int max_sequence_size = seq_tensor.get_shape()[0];
+  float * tensor_data = seq_tensor.data<float>();
+  std::fill(tensor_data, tensor_data + max_sequence_size, 1.0f);
 }
 
 bool vino_core_lib::LicensePlateDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
@@ -82,9 +80,9 @@ bool vino_core_lib::LicensePlateDetection::fetchResults()
     return false;
   }
   bool found_result = false;
-  InferenceEngine::InferRequest::Ptr request = getEngine()->getRequest();
+  ov::InferRequest request = getEngine()->getRequest();
   std::string output = valid_model_->getOutputName();
-  const float* output_values = request->GetBlob(output)->buffer().as<float*>();
+  const float* output_values = request.get_tensor(output).data<float>();
   for (int i = 0; i < getResultsLength(); i++)
   {
     std::string license = "";

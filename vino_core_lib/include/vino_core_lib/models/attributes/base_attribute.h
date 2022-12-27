@@ -26,7 +26,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "inference_engine.hpp"
+#include "openvino/openvino.hpp"
 #include "vino_core_lib/slog.h"
 
 namespace Models
@@ -90,7 +90,7 @@ public:
     slog::info << "--------------------------------" << slog::endl;
   }
 
-  virtual bool updateLayerProperty(const InferenceEngine::CNNNetwork&)
+  virtual bool updateLayerProperty(const std::shared_ptr<ov::Model>&)
   {
     return false;
   }
@@ -187,6 +187,10 @@ public:
 
 protected:
   ModelAttr attr_;
+  std::string input_tensor_name_;
+  std::string output_tensor_name_;
+  std::vector<ov::Output<ov::Node>> inputs_info_;
+  std::vector<ov::Output<ov::Node>> outputs_info_;
 };
 
 #if 0  // not used

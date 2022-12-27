@@ -68,10 +68,13 @@ bool vino_core_lib::LandmarksDetection::fetchResults()
     return false;
   }
   bool found_result = false;
-  InferenceEngine::InferRequest::Ptr request = getEngine()->getRequest();
+  ov::InferRequest request = getEngine()->getRequest();
   std::string output = valid_model_->getOutputName();
-  const float* output_values = request->GetBlob(output)->buffer().as<float*>();
-  int result_length = request->GetBlob(output)->getTensorDesc().getDims()[1];
+  ov::Tensor output_tensor = request.get_tensor(output);
+  const float* output_values = output_tensor.data<float>();
+  ov::Shape output_shape = output_tensor.get_shape();
+  int result_length = output_shape[1];
+  
   for (int i = 0; i < getResultsLength(); i++)
   {
     std::vector<float> coordinates =

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 //
-// @brief a header file with version information about Inference Engine.
+// @brief a header file with version information about OpenVINO.
 // @file version_info.hpp
 //
 
@@ -50,27 +50,15 @@ inline std::string& trim(std::string& s)
   return s;
 }
 
-static std::ostream& operator<<(std::ostream& os, const InferenceEngine::Version* version)
+static std::ostream & operator<<(std::ostream & os, const ov::Version& version)
 {
   os << "\n\tAPI version ............ ";
-  if (nullptr == version)
-  {
-    os << "UNKNOWN";
-  }
-  else
-  {
-    os << version->apiVersion.major << "." << version->apiVersion.minor;
-    if (nullptr != version->buildNumber)
-    {
-      os << "\n\t"
-         << "Build .................. " << version->buildNumber;
-    }
-    if (nullptr != version->description)
-    {
-      os << "\n\t"
-         << "Description ............ " << version->description;
-    }
-  }
+  os << OPENVINO_VERSION_MAJOR << "." << OPENVINO_VERSION_MINOR << "." << OPENVINO_VERSION_PATCH;
+  os << "\n\t" <<
+    "Build .................. " << version.buildNumber;
+  os << "\n\t" <<
+    "Description ............ " << version.description;
+
   return os;
 }
 

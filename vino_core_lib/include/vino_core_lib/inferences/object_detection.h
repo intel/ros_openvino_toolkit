@@ -29,7 +29,7 @@
 #include "vino_core_lib/engines/engine.h"
 #include "vino_core_lib/inferences/base_inference.h"
 #include "vino_core_lib/inferences/base_filter.h"
-#include "inference_engine.hpp"
+#include "openvino/openvino.hpp"
 #include "opencv2/opencv.hpp"
 // namespace
 namespace vino_core_lib

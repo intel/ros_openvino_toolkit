@@ -68,10 +68,6 @@ bool vino_core_lib::ObjectDetection::enqueue(const cv::Mat& frame, const cv::Rec
     return false;
   }
 
-  // nonsense!!
-  // Result r(input_frame_loc);
-  // results_.clear();
-  // results_.emplace_back(r);
   enqueued_frames_ += 1;
   return true;
 }
