@@ -1,7 +1,7 @@
 # ros openvino toolkit env master ec5b9b9716e4
 
-ARG ROS_VERSION
-FROM osrf/ros:${ROS_VERSION}
+ARG ROS_PRE_INSTALLED_PKG
+FROM osrf/ros:${ROS_PRE_INSTALLED_PKG}
 ARG VERSION
 
 # setting proxy env --option 
@@ -10,8 +10,8 @@ ARG VERSION
 # ENV HTTPS_PROXY="your_proxy"
 # ENV FTP_PROXY="your_proxy"
 
-# maintainer information
-LABEL maintainer="Jiawei Wu <jiawei.wu@intel.com>"
+# author information
+LABEL author="Jiawei Wu <jiawei.wu@intel.com>"
 
 # default shell type
 SHELL ["/bin/bash", "-c"]
@@ -63,7 +63,6 @@ pyyaml \
 requests \
 && apt-get install -y --no-install-recommends libboost-all-dev
 WORKDIR /usr/lib/x86_64-linux-gnu
-RUN ln -sf libboost_python-py36.so libboost_python37.so
 RUN pip install --upgrade pip
 RUN pip install openvino-dev[tensorflow2]==2022.1
 RUN apt-get install -y libcanberra-gtk* git
@@ -74,9 +73,7 @@ WORKDIR /root
 RUN mkdir -p catkin_ws/src
 WORKDIR /root/catkin_ws/src
 RUN git init && git clone -b ros https://github.com/intel/ros_openvino_toolkit \
-&& git clone https://github.com/intel/object_msgs.git \
-&& git clone -b ${VERSION} https://github.com/ros-perception/vision_opencv.git \
-&& git clone -b ros1-legacy https://github.com/IntelRealSense/realsense-ros.git
+&& git clone https://github.com/intel/object_msgs.git
 RUN apt-get install ros-${VERSION}-ddynamic-reconfigure
 WORKDIR /root/catkin_ws/
 RUN source /opt/ros/${VERSION}/setup.bash && source /opt/intel/openvino_2022/setupvars.sh && catkin_make_isolated

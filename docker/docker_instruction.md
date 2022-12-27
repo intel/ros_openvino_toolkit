@@ -11,20 +11,20 @@ Supported ros versions include noetic and melodic.
 ```
 cd ~/ros_openvino_toolkit/docker/Dockerfile
 vi ~/ros_openvino_toolkit/docker/Dockerfile
-docker build --build-arg ROS_VERSION=<EXPECT_ROS_BASE_IMAGE> --build-arg VERSION=<EXPECT_ROS_VERSION> --build-arg "HTTP_PROXY=set_your_proxy" -t ros_openvino_202201 .
+docker build --build-arg ROS_PRE_INSTALLED_PKG=<EXPECT_ROS_PRE_INSTALLED_PKG> --build-arg VERSION=<EXPECT_ROS_VERSION> --build-arg "HTTP_PROXY=set_your_proxy" -t ros_openvino_202201 .
 ```
 For example:
 * Build image for ros_noetic
 ```
 cd ~/ros_openvino_toolkit/docker/Dockerfile
 vi ~/ros_openvino_toolkit/docker/Dockerfile
-docker build --build-arg ROS_VERSION=noetic-desktop-full --build-arg VERSION=noetic --build-arg "HTTP_PROXY=set_your_proxy" -t ros_noetic_openvino_202201 .
+docker build --build-arg ROS_PRE_INSTALLED_PKG=noetic-desktop-full --build-arg VERSION=noetic --build-arg "HTTP_PROXY=set_your_proxy" -t ros_noetic_openvino_202201 .
 ```
 * Build image for ros_melodic
 ```
 cd ~/ros_openvino_toolkit/docker/Dockerfile
 vi ~/ros_openvino_toolkit/docker/Dockerfile
-docker build --build-arg ROS_VERSION=melodic-desktop-full --build-arg VERSION=melodic --build-arg "HTTP_PROXY=set_your_proxy" -t ros_melodic_openvino_202201 .
+docker build --build-arg ROS_PRE_INSTALLED_PKG=melodic-desktop-full --build-arg VERSION=melodic --build-arg "HTTP_PROXY=set_your_proxy" -t ros_melodic_openvino_202201 .
 ```
 
 ## 3. Download and load docker image
