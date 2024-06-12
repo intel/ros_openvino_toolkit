@@ -26,30 +26,39 @@
 #include "vino_core_lib/inferences/object_detection.h"
 #include "vino_core_lib/outputs/base_output.h"
 #include "vino_core_lib/slog.h"
+
+using namespace vino_core_lib;
+
 // ObjectDetectionResult
-vino_core_lib::ObjectDetectionResult::ObjectDetectionResult(const cv::Rect& location) : Result(location)
+ObjectDetectionResult::ObjectDetectionResult(const cv::Rect& location) : Result(location)
 {
 }
 
 // ObjectDetection
-vino_core_lib::ObjectDetection::ObjectDetection(bool enable_roi_constraint, double show_output_thresh)
+ObjectDetection::ObjectDetection(bool enable_roi_constraint, double show_output_thresh)
   : show_output_thresh_(show_output_thresh)
   , enable_roi_constraint_(enable_roi_constraint)
-  , vino_core_lib::BaseInference()
+  , BaseInference()
 {
   result_filter_ = std::make_shared<Filter>();
   result_filter_->init();
 }
 
-vino_core_lib::ObjectDetection::~ObjectDetection() = default;
-
-void vino_core_lib::ObjectDetection::loadNetwork(std::shared_ptr<Models::ObjectDetectionModel> network)
+void ObjectDetection::loadNetwork(std::shared_ptr<Models::BaseModel> network)
 {
-  valid_model_ = network;
+  valid_model_ = std::dynamic_pointer_cast<Models::ObjectDetectionModel>(network);
 
   setMaxBatchSize(network->getMaxBatchSize());
 }
-bool vino_core_lib::ObjectDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
+
+// void ObjectDetection::loadNetwork(std::shared_ptr<Models::ObjectDetectionModel> network)
+// {
+//   valid_model_ = network;
+
+//   setMaxBatchSize(network->getMaxBatchSize());
+// }
+
+bool ObjectDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
 {
   if (valid_model_ == nullptr || getEngine() == nullptr)
   {
@@ -76,9 +85,9 @@ bool vino_core_lib::ObjectDetection::enqueue(const cv::Mat& frame, const cv::Rec
   return true;
 }
 
-bool vino_core_lib::ObjectDetection::fetchResults()
+bool ObjectDetection::fetchResults()
 {
-  bool can_fetch = vino_core_lib::BaseInference::fetchResults();
+  bool can_fetch = BaseInference::fetchResults();
   if (!can_fetch)
   {
     return false;
@@ -90,22 +99,22 @@ bool vino_core_lib::ObjectDetection::fetchResults()
          valid_model_->fetchResults(getEngine(), results_, show_output_thresh_, enable_roi_constraint_);
 }
 
-int vino_core_lib::ObjectDetection::getResultsLength() const
+int ObjectDetection::getResultsLength() const
 {
   return static_cast<int>(results_.size());
 }
 
-const vino_core_lib::ObjectDetection::Result* vino_core_lib::ObjectDetection::getLocationResult(int idx) const
+const ObjectDetection::Result* ObjectDetection::getLocationResult(int idx) const
 {
   return &(results_[idx]);
 }
 
-const std::string vino_core_lib::ObjectDetection::getName() const
+const std::string ObjectDetection::getName() const
 {
   return valid_model_->getModelCategory();
 }
 
-void vino_core_lib::ObjectDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
+void ObjectDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
 {
   if (output != nullptr)
   {
@@ -114,7 +123,7 @@ void vino_core_lib::ObjectDetection::observeOutput(const std::shared_ptr<Outputs
 }
 
 const std::vector<cv::Rect>
-vino_core_lib::ObjectDetection::getFilteredROIs(const std::string filter_conditions) const
+ObjectDetection::getFilteredROIs(const std::string filter_conditions) const
 {
   if (!result_filter_->isValidFilterConditions(filter_conditions))
   {
@@ -131,22 +140,22 @@ vino_core_lib::ObjectDetection::getFilteredROIs(const std::string filter_conditi
 }
 
 // ObjectDetectionResultFilter
-vino_core_lib::ObjectDetectionResultFilter::ObjectDetectionResultFilter()
+ObjectDetectionResultFilter::ObjectDetectionResultFilter()
 {
 }
 
-void vino_core_lib::ObjectDetectionResultFilter::init()
+void ObjectDetectionResultFilter::init()
 {
   key_to_function_.insert(std::make_pair("label", isValidLabel));
   key_to_function_.insert(std::make_pair("confidence", isValidConfidence));
 }
 
-void vino_core_lib::ObjectDetectionResultFilter::acceptResults(const std::vector<Result>& results)
+void ObjectDetectionResultFilter::acceptResults(const std::vector<Result>& results)
 {
   results_ = results;
 }
 
-std::vector<cv::Rect> vino_core_lib::ObjectDetectionResultFilter::getFilteredLocations()
+std::vector<cv::Rect> ObjectDetectionResultFilter::getFilteredLocations()
 {
   std::vector<cv::Rect> locations;
   for (auto result : results_)
@@ -159,27 +168,30 @@ std::vector<cv::Rect> vino_core_lib::ObjectDetectionResultFilter::getFilteredLoc
   return locations;
 }
 
-bool vino_core_lib::ObjectDetectionResultFilter::isValidLabel(const Result& result, const std::string& op,
+bool ObjectDetectionResultFilter::isValidLabel(const Result& result, const std::string& op,
                                                                  const std::string& target)
 {
   return stringCompare(result.getLabel(), op, target);
 }
 
-bool vino_core_lib::ObjectDetectionResultFilter::isValidConfidence(const Result& result, const std::string& op,
+bool ObjectDetectionResultFilter::isValidConfidence(const Result& result, const std::string& op,
                                                                       const std::string& target)
 {
   return floatCompare(result.getConfidence(), op, stringToFloat(target));
 }
 
-bool vino_core_lib::ObjectDetectionResultFilter::isValidResult(const Result& result)
+bool ObjectDetectionResultFilter::isValidResult(const Result& result)
 {
   ISVALIDRESULT(key_to_function_, result);
 }
 
-double vino_core_lib::ObjectDetection::calcIoU(const cv::Rect& box_1, const cv::Rect& box_2)
+double ObjectDetection::calcIoU(const cv::Rect& box_1, const cv::Rect& box_2)
 {
   cv::Rect i = box_1 & box_2;
   cv::Rect u = box_1 | box_2;
 
   return static_cast<double>(i.area()) / static_cast<double>(u.area());
 }
+
+using namespace vino_core_lib;
+REG_INFERENCE(ObjectDetection, "ObjectDetection");

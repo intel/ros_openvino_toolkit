@@ -24,34 +24,43 @@
 #include "vino_core_lib/outputs/base_output.h"
 #include "vino_core_lib/slog.h"
 
+using namespace vino_core_lib;
+
 // PersonReidentificationResult
-vino_core_lib::PersonReidentificationResult::PersonReidentificationResult(const cv::Rect& location)
+PersonReidentificationResult::PersonReidentificationResult(const cv::Rect& location)
   : Result(location)
 {
 }
 
 // PersonReidentification
-vino_core_lib::PersonReidentification::PersonReidentification(double match_thresh)
-  : vino_core_lib::BaseInference()
+PersonReidentification::PersonReidentification(double match_thresh)
+  : BaseInference()
 {
-  person_tracker_ = std::make_shared<vino_core_lib::Tracker>(1000, match_thresh, 0.3);
+  person_tracker_ = std::make_shared<Tracker>(1000, match_thresh, 0.3);
 }
 
-vino_core_lib::PersonReidentification::~PersonReidentification() = default;
-void vino_core_lib::PersonReidentification::loadNetwork(
-    const std::shared_ptr<Models::PersonReidentificationModel> network)
+void PersonReidentification::loadNetwork(std::shared_ptr<Models::BaseModel> network)
 {
-  valid_model_ = network;
+  slog::info << "Loading Network: " << network->getModelCategory() << slog::endl;
+  valid_model_ = std::dynamic_pointer_cast<Models::PersonReidentificationModel>(network);
+
   setMaxBatchSize(network->getMaxBatchSize());
 }
 
-bool vino_core_lib::PersonReidentification::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
+// void PersonReidentification::loadNetwork(
+//     const std::shared_ptr<Models::PersonReidentificationModel> network)
+// {
+//   valid_model_ = network;
+//   setMaxBatchSize(network->getMaxBatchSize());
+// }
+
+bool PersonReidentification::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
 {
   if (getEnqueuedNum() == 0)
   {
     results_.clear();
   }
-  if (!vino_core_lib::BaseInference::enqueue<u_int8_t>(frame, input_frame_loc, 1, 0, valid_model_->getInputName()))
+  if (!BaseInference::enqueue<u_int8_t>(frame, input_frame_loc, 1, 0, valid_model_->getInputName()))
   {
     return false;
   }
@@ -60,14 +69,14 @@ bool vino_core_lib::PersonReidentification::enqueue(const cv::Mat& frame, const 
   return true;
 }
 
-bool vino_core_lib::PersonReidentification::submitRequest()
+bool PersonReidentification::submitRequest()
 {
-  return vino_core_lib::BaseInference::submitRequest();
+  return BaseInference::submitRequest();
 }
 
-bool vino_core_lib::PersonReidentification::fetchResults()
+bool PersonReidentification::fetchResults()
 {
-  bool can_fetch = vino_core_lib::BaseInference::fetchResults();
+  bool can_fetch = BaseInference::fetchResults();
   if (!can_fetch)
   {
     return false;
@@ -90,22 +99,22 @@ bool vino_core_lib::PersonReidentification::fetchResults()
   return true;
 }
 
-int vino_core_lib::PersonReidentification::getResultsLength() const
+int PersonReidentification::getResultsLength() const
 {
   return static_cast<int>(results_.size());
 }
 
-const vino_core_lib::Result* vino_core_lib::PersonReidentification::getLocationResult(int idx) const
+const Result* PersonReidentification::getLocationResult(int idx) const
 {
   return &(results_[idx]);
 }
 
-const std::string vino_core_lib::PersonReidentification::getName() const
+const std::string PersonReidentification::getName() const
 {
   return valid_model_->getModelCategory();
 }
 
-void vino_core_lib::PersonReidentification::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
+void PersonReidentification::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
 {
   if (output != nullptr)
   {
@@ -114,7 +123,7 @@ void vino_core_lib::PersonReidentification::observeOutput(const std::shared_ptr<
 }
 
 const std::vector<cv::Rect>
-vino_core_lib::PersonReidentification::getFilteredROIs(const std::string filter_conditions) const
+PersonReidentification::getFilteredROIs(const std::string filter_conditions) const
 {
   if (!filter_conditions.empty())
   {
@@ -128,3 +137,6 @@ vino_core_lib::PersonReidentification::getFilteredROIs(const std::string filter_
   }
   return filtered_rois;
 }
+
+using namespace vino_core_lib;
+REG_INFERENCE(PersonReidentification, "PersonReidentification");

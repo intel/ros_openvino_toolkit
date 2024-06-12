@@ -25,6 +25,7 @@
 #include <string>
 #include <vector>
 
+#include "vino_core_lib/vino_factory.h"
 #include "vino_core_lib/inferences/age_gender_detection.h"
 #include "vino_core_lib/inferences/base_inference.h"
 #include "vino_core_lib/inferences/emotions_detection.h"
@@ -66,6 +67,8 @@ public:
   explicit BaseOutput(std::string output_name) : output_name_(output_name)
   {
   }
+
+  virtual void init(const std::string& pipeline_name) = 0;
   /**
    * @brief Generate output content according to the license plate detection result.
    */
@@ -188,4 +191,7 @@ protected:
   std::string output_name_;
 };
 }  // namespace Outputs
+
+#define REG_OUTPUT_FACTORY VinoFactory<std::string, Outputs::BaseOutput>
+#define REG_OUTPUT(BASE, key)  static REG_OUTPUT_FACTORY::TReg<Outputs::BASE> gs_output##_(key)
 #endif  // VINO_CORE_LIB__OUTPUTS__BASE_OUTPUT_H

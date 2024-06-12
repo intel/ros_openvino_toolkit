@@ -72,11 +72,18 @@ class ObjectSegmentation : public BaseInference
 public:
   using Result = vino_core_lib::ObjectSegmentationResult;
   explicit ObjectSegmentation(double);
-  ~ObjectSegmentation() override;
+  ObjectSegmentation() {};
+  ~ObjectSegmentation() override {};
+
+  /**
+   * @brief Load the face detection model.
+   */
+  void loadNetwork(std::shared_ptr<Models::BaseModel>) override;
+  
   /**
    * @brief Load the object segmentation model.
    */
-  void loadNetwork(std::shared_ptr<Models::ObjectSegmentationModel>);
+  // void loadNetwork(std::shared_ptr<Models::ObjectSegmentationModel>);
   /**
    * @brief Enqueue a frame to this class.
    * The frame will be buffered but not infered yet.

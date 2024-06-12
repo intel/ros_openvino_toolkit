@@ -26,13 +26,15 @@
 #include "vino_core_lib/inferences/base_reidentification.h"
 #include "vino_core_lib/slog.h"
 
+using namespace vino_core_lib;
+
 // Tracker
-vino_core_lib::Tracker::Tracker(int max_record_size, double same_track_thresh, double new_track_thresh)
+Tracker::Tracker(int max_record_size, double same_track_thresh, double new_track_thresh)
   : max_record_size_(max_record_size), same_track_thresh_(same_track_thresh), new_track_thresh_(new_track_thresh)
 {
 }
 
-int vino_core_lib::Tracker::processNewTrack(const std::vector<float>& feature)
+int Tracker::processNewTrack(const std::vector<float>& feature)
 {
   int most_similar_id;
   double similarity = findMostSimilarTrack(feature, most_similar_id);
@@ -47,7 +49,7 @@ int vino_core_lib::Tracker::processNewTrack(const std::vector<float>& feature)
   return most_similar_id;
 }
 
-double vino_core_lib::Tracker::findMostSimilarTrack(const std::vector<float>& feature, int& most_similar_id)
+double Tracker::findMostSimilarTrack(const std::vector<float>& feature, int& most_similar_id)
 {
   double max_similarity = 0;
   most_similar_id = -1;
@@ -63,7 +65,7 @@ double vino_core_lib::Tracker::findMostSimilarTrack(const std::vector<float>& fe
   return max_similarity;
 }
 
-double vino_core_lib::Tracker::calcSimilarity(const std::vector<float>& feature_a,
+double Tracker::calcSimilarity(const std::vector<float>& feature_a,
                                                  const std::vector<float>& feature_b)
 {
   if (feature_a.size() != feature_b.size())
@@ -91,7 +93,7 @@ double vino_core_lib::Tracker::calcSimilarity(const std::vector<float>& feature_
   return mul_sum / (sqrt(denom_a) * sqrt(denom_b));
 }
 
-void vino_core_lib::Tracker::updateMatchTrack(int track_id, const std::vector<float>& feature)
+void Tracker::updateMatchTrack(int track_id, const std::vector<float>& feature)
 {
   if (recorded_tracks_.find(track_id) != recorded_tracks_.end())
   {
@@ -104,7 +106,7 @@ void vino_core_lib::Tracker::updateMatchTrack(int track_id, const std::vector<fl
   }
 }
 
-void vino_core_lib::Tracker::removeEarlestTrack()
+void Tracker::removeEarlestTrack()
 {
   std::lock_guard<std::mutex> lk(tracks_mtx_);
   int64_t earlest_time = LONG_MAX;
@@ -120,7 +122,7 @@ void vino_core_lib::Tracker::removeEarlestTrack()
   recorded_tracks_.erase(remove_iter);
 }
 
-int vino_core_lib::Tracker::addNewTrack(const std::vector<float>& feature)
+int Tracker::addNewTrack(const std::vector<float>& feature)
 {
   if (recorded_tracks_.size() >= max_record_size_)
   {
@@ -136,13 +138,13 @@ int vino_core_lib::Tracker::addNewTrack(const std::vector<float>& feature)
   return max_track_id_;
 }
 
-int64_t vino_core_lib::Tracker::getCurrentTime()
+int64_t Tracker::getCurrentTime()
 {
   auto tp = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
   return static_cast<int64_t>(tp.time_since_epoch().count());
 }
 
-bool vino_core_lib::Tracker::saveTracksToFile(std::string filepath)
+bool Tracker::saveTracksToFile(std::string filepath)
 {
   std::ofstream outfile(filepath);
   if (!outfile.is_open())
@@ -164,7 +166,7 @@ bool vino_core_lib::Tracker::saveTracksToFile(std::string filepath)
   return true;
 }
 
-bool vino_core_lib::Tracker::loadTracksFromFile(std::string filepath)
+bool Tracker::loadTracksFromFile(std::string filepath)
 {
   std::ifstream infile(filepath);
   if (!infile.is_open())

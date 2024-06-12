@@ -51,3 +51,5 @@ bool Input::IpCamera::read(cv::Mat * frame)
   }
   return retrieved;
 } 
+
+REG_INPUT(IpCamera, "IpCamera");

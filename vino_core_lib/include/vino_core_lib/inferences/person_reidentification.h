@@ -56,11 +56,18 @@ class PersonReidentification : public BaseInference
 public:
   using Result = vino_core_lib::PersonReidentificationResult;
   explicit PersonReidentification(double);
-  ~PersonReidentification() override;
+  PersonReidentification() {};
+  ~PersonReidentification() override {};
+
   /**
    * @brief Load the face detection model.
    */
-  void loadNetwork(std::shared_ptr<Models::PersonReidentificationModel>);
+  void loadNetwork(std::shared_ptr<Models::BaseModel>) override;
+  
+  /**
+   * @brief Load the face detection model.
+   */
+  // void loadNetwork(std::shared_ptr<Models::PersonReidentificationModel>);
   /**
    * @brief Enqueue a frame to this class.
    * The frame will be buffered but not infered yet.

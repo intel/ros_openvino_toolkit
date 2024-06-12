@@ -24,12 +24,6 @@
 #include "vino_core_lib/inputs/video_input.h"
 #include "vino_core_lib/slog.h"
 
-// Video
-Input::Video::Video(const std::string& video)
-{
-  video_.assign(video);
-}
-
 bool Input::Video::initialize()
 {
   setInitStatus(cap.open(video_));
@@ -61,3 +55,5 @@ bool Input::Video::read(cv::Mat* frame)
   // setHeader("video_frame");
   return cap.retrieve(*frame);
 }
+
+REG_INPUT(Video, "Video");

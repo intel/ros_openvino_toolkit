@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "vino_core_lib/engines/engine.h"
+#include "vino_core_lib/vino_factory.h"
 #include "vino_core_lib/models/base_model.h"
 #include "vino_core_lib/slog.h"
 #include "inference_engine.hpp"
@@ -106,6 +107,12 @@ public:
    * running netwrok on target calculation device.
    */
   void loadEngine(std::shared_ptr<Engines::Engine> engine);
+
+  /**
+   * @brief Load the face detection model.
+   */
+  virtual void loadNetwork(std::shared_ptr<Models::BaseModel>) = 0;
+
   /**
    * @brief Get the loaded Engine instance.
    * @return The loaded Engine instance.
@@ -214,5 +221,8 @@ protected:
   bool results_fetched_ = false;
 };
 }  // namespace vino_core_lib
+
+#define REG_INFERENCE_FACTORY         VinoFactory<std::string, vino_core_lib::BaseInference>
+#define REG_INFERENCE(T, key)  static REG_INFERENCE_FACTORY::TReg<vino_core_lib::T> gs_inference##_(key)
 
 #endif  // VINO_CORE_LIB__INFERENCES__BASE_INFERENCE_H

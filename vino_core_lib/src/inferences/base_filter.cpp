@@ -22,16 +22,18 @@
 #include <string>
 #include <vector>
 
-vino_core_lib::BaseFilter::BaseFilter()
+using namespace vino_core_lib;
+
+BaseFilter::BaseFilter()
 {
 }
 
-bool vino_core_lib::BaseFilter::isValidFilterConditions(const std::string& filter_conditions)
+bool BaseFilter::isValidFilterConditions(const std::string& filter_conditions)
 {
   return strip(filter_conditions) != "";
 }
 
-void vino_core_lib::BaseFilter::acceptFilterConditions(const std::string& filter_conditions)
+void BaseFilter::acceptFilterConditions(const std::string& filter_conditions)
 {
   if (striped_conditions_.empty())
   {
@@ -41,7 +43,7 @@ void vino_core_lib::BaseFilter::acceptFilterConditions(const std::string& filter
   }
 }
 
-bool vino_core_lib::BaseFilter::isRelationOperator(const std::string& str)
+bool BaseFilter::isRelationOperator(const std::string& str)
 {
   if (std::find(relation_operators_.begin(), relation_operators_.end(), str) != relation_operators_.end())
   {
@@ -50,7 +52,7 @@ bool vino_core_lib::BaseFilter::isRelationOperator(const std::string& str)
   return false;
 }
 
-bool vino_core_lib::BaseFilter::isLogicOperator(const std::string& str)
+bool BaseFilter::isLogicOperator(const std::string& str)
 {
   if (std::find(logic_operators_.begin(), logic_operators_.end(), str) != logic_operators_.end())
   {
@@ -59,7 +61,7 @@ bool vino_core_lib::BaseFilter::isLogicOperator(const std::string& str)
   return false;
 }
 
-bool vino_core_lib::BaseFilter::isPriorTo(const std::string& operator1, const std::string& operator2)
+bool BaseFilter::isPriorTo(const std::string& operator1, const std::string& operator2)
 {
   if (isRelationOperator(operator1) && isLogicOperator(operator2))
   {
@@ -68,7 +70,7 @@ bool vino_core_lib::BaseFilter::isPriorTo(const std::string& operator1, const st
   return false;
 }
 
-std::string vino_core_lib::BaseFilter::boolToStr(bool value)
+std::string BaseFilter::boolToStr(bool value)
 {
   if (value)
   {
@@ -77,7 +79,7 @@ std::string vino_core_lib::BaseFilter::boolToStr(bool value)
   return "false";
 }
 
-bool vino_core_lib::BaseFilter::strToBool(const std::string& value)
+bool BaseFilter::strToBool(const std::string& value)
 {
   if (!value.compare("true"))
   {
@@ -94,12 +96,12 @@ bool vino_core_lib::BaseFilter::strToBool(const std::string& value)
   return false;
 }
 
-const std::vector<std::string>& vino_core_lib::BaseFilter::getSuffixConditions() const
+const std::vector<std::string>& BaseFilter::getSuffixConditions() const
 {
   return suffix_conditons_;
 }
 
-bool vino_core_lib::BaseFilter::logicOperation(const std::string& logic1, const std::string& op,
+bool BaseFilter::logicOperation(const std::string& logic1, const std::string& op,
                                                   const std::string& logic2)
 {
   if (!op.compare("&&"))
@@ -117,7 +119,7 @@ bool vino_core_lib::BaseFilter::logicOperation(const std::string& logic1, const 
   }
 }
 
-bool vino_core_lib::BaseFilter::stringCompare(const std::string& candidate, const std::string& op,
+bool BaseFilter::stringCompare(const std::string& candidate, const std::string& op,
                                                  const std::string& target)
 {
   if (!op.compare("=="))
@@ -135,7 +137,7 @@ bool vino_core_lib::BaseFilter::stringCompare(const std::string& candidate, cons
   }
 }
 
-bool vino_core_lib::BaseFilter::floatCompare(float candidate, const std::string& op, float target)
+bool BaseFilter::floatCompare(float candidate, const std::string& op, float target)
 {
   if (!op.compare("<="))
   {
@@ -160,7 +162,7 @@ bool vino_core_lib::BaseFilter::floatCompare(float candidate, const std::string&
   }
 }
 
-float vino_core_lib::BaseFilter::stringToFloat(const std::string& candidate)
+float BaseFilter::stringToFloat(const std::string& candidate)
 {
   float result = 0;
   try
@@ -174,7 +176,7 @@ float vino_core_lib::BaseFilter::stringToFloat(const std::string& candidate)
   return result;
 }
 
-std::vector<std::string> vino_core_lib::BaseFilter::split(const std::string& filter_conditions)
+std::vector<std::string> BaseFilter::split(const std::string& filter_conditions)
 {
   std::vector<std::string> seperators;
   seperators.insert(seperators.end(), relation_operators_.begin(), relation_operators_.end());
@@ -209,7 +211,7 @@ std::vector<std::string> vino_core_lib::BaseFilter::split(const std::string& fil
   return infix_conditions;
 }
 
-void vino_core_lib::BaseFilter::infixToSuffix(std::vector<std::string>& infix_conditions)
+void BaseFilter::infixToSuffix(std::vector<std::string>& infix_conditions)
 {
   std::stack<std::string> operator_stack;
   for (auto elem : infix_conditions)
@@ -252,7 +254,7 @@ void vino_core_lib::BaseFilter::infixToSuffix(std::vector<std::string>& infix_co
   }
 }
 
-std::string vino_core_lib::BaseFilter::strip(const std::string& str)
+std::string BaseFilter::strip(const std::string& str)
 {
   std::string stripped_string = "";
   for (auto character : str)

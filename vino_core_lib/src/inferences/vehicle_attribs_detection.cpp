@@ -24,32 +24,37 @@
 #include "vino_core_lib/outputs/base_output.h"
 #include "vino_core_lib/slog.h"
 
+using namespace vino_core_lib;
+
 // VehicleAttribsDetectionResult
-vino_core_lib::VehicleAttribsDetectionResult::VehicleAttribsDetectionResult(const cv::Rect& location)
+VehicleAttribsDetectionResult::VehicleAttribsDetectionResult(const cv::Rect& location)
   : Result(location)
 {
 }
 
-// VehicleAttribsDetection
-vino_core_lib::VehicleAttribsDetection::VehicleAttribsDetection() : vino_core_lib::BaseInference()
+void VehicleAttribsDetection::loadNetwork(std::shared_ptr<Models::BaseModel> network)
 {
-}
+  slog::info << "Loading Network: " << network->getModelCategory() << slog::endl;
+  valid_model_ = std::dynamic_pointer_cast<Models::VehicleAttribsDetectionModel>(network);
 
-vino_core_lib::VehicleAttribsDetection::~VehicleAttribsDetection() = default;
-void vino_core_lib::VehicleAttribsDetection::loadNetwork(
-    const std::shared_ptr<Models::VehicleAttribsDetectionModel> network)
-{
-  valid_model_ = network;
   setMaxBatchSize(network->getMaxBatchSize());
 }
 
-bool vino_core_lib::VehicleAttribsDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
+// VehicleAttribsDetection
+// void VehicleAttribsDetection::loadNetwork(
+//     const std::shared_ptr<Models::VehicleAttribsDetectionModel> network)
+// {
+//   valid_model_ = network;
+//   setMaxBatchSize(network->getMaxBatchSize());
+// }
+
+bool VehicleAttribsDetection::enqueue(const cv::Mat& frame, const cv::Rect& input_frame_loc)
 {
   if (getEnqueuedNum() == 0)
   {
     results_.clear();
   }
-  if (!vino_core_lib::BaseInference::enqueue<u_int8_t>(frame, input_frame_loc, 1, 0, valid_model_->getInputName()))
+  if (!BaseInference::enqueue<u_int8_t>(frame, input_frame_loc, 1, 0, valid_model_->getInputName()))
   {
     return false;
   }
@@ -58,14 +63,14 @@ bool vino_core_lib::VehicleAttribsDetection::enqueue(const cv::Mat& frame, const
   return true;
 }
 
-bool vino_core_lib::VehicleAttribsDetection::submitRequest()
+bool VehicleAttribsDetection::submitRequest()
 {
-  return vino_core_lib::BaseInference::submitRequest();
+  return BaseInference::submitRequest();
 }
 
-bool vino_core_lib::VehicleAttribsDetection::fetchResults()
+bool VehicleAttribsDetection::fetchResults()
 {
-  bool can_fetch = vino_core_lib::BaseInference::fetchResults();
+  bool can_fetch = BaseInference::fetchResults();
   if (!can_fetch)
   {
     return false;
@@ -95,22 +100,22 @@ bool vino_core_lib::VehicleAttribsDetection::fetchResults()
   return true;
 }
 
-int vino_core_lib::VehicleAttribsDetection::getResultsLength() const
+int VehicleAttribsDetection::getResultsLength() const
 {
   return static_cast<int>(results_.size());
 }
 
-const vino_core_lib::Result* vino_core_lib::VehicleAttribsDetection::getLocationResult(int idx) const
+const Result* VehicleAttribsDetection::getLocationResult(int idx) const
 {
   return &(results_[idx]);
 }
 
-const std::string vino_core_lib::VehicleAttribsDetection::getName() const
+const std::string VehicleAttribsDetection::getName() const
 {
   return valid_model_->getModelCategory();
 }
 
-void vino_core_lib::VehicleAttribsDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
+void VehicleAttribsDetection::observeOutput(const std::shared_ptr<Outputs::BaseOutput>& output)
 {
   if (output != nullptr)
   {
@@ -119,7 +124,7 @@ void vino_core_lib::VehicleAttribsDetection::observeOutput(const std::shared_ptr
 }
 
 const std::vector<cv::Rect>
-vino_core_lib::VehicleAttribsDetection::getFilteredROIs(const std::string filter_conditions) const
+VehicleAttribsDetection::getFilteredROIs(const std::string filter_conditions) const
 {
   if (!filter_conditions.empty())
   {
@@ -133,3 +138,6 @@ vino_core_lib::VehicleAttribsDetection::getFilteredROIs(const std::string filter
   }
   return filtered_rois;
 }
+
+using namespace vino_core_lib;
+REG_INFERENCE(VehicleAttribsDetection, "VehicleAttribsDetection");

@@ -76,3 +76,5 @@ const std::string Models::HeadPoseDetectionModel::getModelCategory() const
 {
   return "Head Pose Network";
 }
+
+REG_MODEL(HeadPoseDetectionModel, "HeadPoseEstimation");
