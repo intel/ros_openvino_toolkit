@@ -212,3 +212,5 @@ bool Models::ObjectSegmentationModel::updateLayerProperty(InferenceEngine::CNNNe
   slog::info << "This model is SSDNet-like, Layer Property updated!" << slog::endl;
   return true;
 }
+
+REG_MODEL(ObjectSegmentationModel, "ObjectSegmentation");

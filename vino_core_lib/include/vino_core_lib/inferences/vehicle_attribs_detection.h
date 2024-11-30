@@ -59,12 +59,18 @@ class VehicleAttribsDetection : public BaseInference
 {
 public:
   using Result = vino_core_lib::VehicleAttribsDetectionResult;
-  VehicleAttribsDetection();
-  ~VehicleAttribsDetection() override;
+  VehicleAttribsDetection() {};
+  ~VehicleAttribsDetection() override {};
+
+  /**
+   * @brief Load the face detection model.
+   */
+  void loadNetwork(std::shared_ptr<Models::BaseModel>) override;
+  
   /**
    * @brief Load the vehicle attributes detection model.
    */
-  void loadNetwork(std::shared_ptr<Models::VehicleAttribsDetectionModel>);
+  // void loadNetwork(std::shared_ptr<Models::VehicleAttribsDetectionModel>);
   /**
    * @brief Enqueue a frame to this class.
    * The frame will be buffered but not infered yet.

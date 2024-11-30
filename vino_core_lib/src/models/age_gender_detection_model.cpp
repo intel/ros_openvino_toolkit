@@ -100,3 +100,5 @@ const std::string Models::AgeGenderDetectionModel::getModelCategory() const
 {
   return "Age Gender Detection";
 }
+
+REG_MODEL(AgeGenderDetectionModel, "AgeGenderRecognition");

@@ -25,8 +25,10 @@
 #include <string>
 #include <vector>
 
-Outputs::RosTopicOutput::RosTopicOutput(std::string pipeline_name) : pipeline_name_(pipeline_name)
+void Outputs::RosTopicOutput::init(const std::string& pipeline_name)
 {
+  pipeline_name_ = pipeline_name;
+
   pub_face_ = nh_.advertise<object_msgs::ObjectsInBoxes>("/openvino_toolkit/" + pipeline_name_ + "/faces", 16);
   pub_emotion_ = nh_.advertise<vino_people_msgs::EmotionsStamped>("/openvino_toolkit/" + pipeline_name_ + "/emotions", 16);
   pub_age_gender_ =
@@ -432,3 +434,5 @@ std_msgs::Header Outputs::RosTopicOutput::getHeader()
   return header;
 }
 #endif  // depreated
+
+REG_OUTPUT(RosTopicOutput, "RosTopic");

@@ -36,7 +36,10 @@ namespace Outputs
 class RvizOutput : public BaseOutput
 {
 public:
-  RvizOutput(std::string);
+  RvizOutput() {};
+  RvizOutput(const std::string& pipeline_name) : pipeline_name_(pipeline_name) {};
+
+  void init(const std::string& pipeline_name) override;
   /**
    * @brief Construct frame for rviz
    * @param[in] A frame.
@@ -122,6 +125,7 @@ public:
 
 private:
   std_msgs::Header getHeader();
+  std::string pipeline_name_;
   ros::NodeHandle nh_;
   ros::Publisher pub_image_;
   sensor_msgs::Image::Ptr image_topic_;

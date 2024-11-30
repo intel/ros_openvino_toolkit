@@ -38,6 +38,8 @@ namespace Input
 class ImageTopic : public BaseInputDevice
 {
 public:
+  ImageTopic() {};
+  bool init(const std::string &file) override { initialize();};
   bool initialize() override;
   bool initialize(size_t width, size_t height) override;
   bool read(cv::Mat* frame) override;

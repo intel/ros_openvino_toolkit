@@ -22,6 +22,7 @@
 #define VINO_CORE_LIB__INPUTS__BASE_INPUT_H
 
 #include <opencv2/opencv.hpp>
+#include "vino_core_lib/vino_factory.h"
 #include "vino_core_lib/inputs/ros_handler.h"
 
 /**
@@ -39,6 +40,13 @@ struct Config
 class BaseInputDevice : public RosHandler
 {
 public:
+  BaseInputDevice() = default;
+  virtual ~BaseInputDevice() = default;
+  /**
+   * @brief Initialize the input device,
+   * @return Whether the input device is successfully setup.
+   */
+  virtual bool init(const std::string &str) = 0;
   /**
    * @brief Initialize the input device,
    * for cameras, it will turn the camera on and get ready to read frames,
@@ -63,7 +71,6 @@ public:
   virtual void config(const Config&)
   {
   }
-  virtual ~BaseInputDevice() = default;
   /**
    * @brief Get the width of the frame read from input device.
    * @return The width of the frame read from input device.
@@ -119,4 +126,8 @@ private:
   bool is_init_ = false;
 };
 }  // namespace Input
+
+#define REG_INPUT_FACTORY VinoFactory<std::string, Input::BaseInputDevice>
+#define REG_INPUT(BASE, key)  static REG_INPUT_FACTORY::TReg<Input::BASE> gs_input##_(key)
+
 #endif  // VINO_CORE_LIB__INPUTS__BASE_INPUT_H

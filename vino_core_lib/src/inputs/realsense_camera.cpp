@@ -106,3 +106,5 @@ void Input::RealSenseCamera::bypassFewFramesOnceInited()
   }
   first_read_ = false;
 }
+
+REG_INPUT(RealSenseCamera, "RealSenseCamera");

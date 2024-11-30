@@ -63,7 +63,9 @@ class RosTopicOutput : public BaseOutput
 {
 public:
   RosTopicOutput(){};
-  RosTopicOutput(std::string pipeline_name);
+  RosTopicOutput(const std::string& pipeline_name) : pipeline_name_(pipeline_name){};
+
+  void init(const std::string& pipeline_name) override;
   /**
    * @brief Calculate the camera matrix of a frame.
    * @param[in] A frame.
@@ -149,7 +151,7 @@ public:
 
 private:
   std_msgs::Header getHeader();
-  const std::string pipeline_name_;
+  std::string pipeline_name_;
   const std::string topic_name_;
   cv::Mat frame_;
   ros::NodeHandle nh_;

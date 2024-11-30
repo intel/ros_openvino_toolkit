@@ -82,7 +82,7 @@ bool PipelineParams::isGetFps()
   {
     return false;
   }
-  return std::find(params_.inputs.begin(), params_.inputs.end(), kInputType_Image) == params_.inputs.end();
+  return std::find(params_.inputs.begin(), params_.inputs.end(), "Image") == params_.inputs.end();
 }
 
 std::string PipelineParams::findFilterConditions(const std::string& input, const std::string& output)

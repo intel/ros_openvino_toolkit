@@ -34,6 +34,8 @@ namespace Models
 class EmotionDetectionModel : public BaseModel
 {
 public:
+  EmotionDetectionModel() {};
+
   EmotionDetectionModel(const std::string& label_loc, const std::string& model_loc, int batch_size = 1);
 
   /**

@@ -35,7 +35,11 @@ namespace Outputs
 class ImageWindowOutput : public BaseOutput
 {
 public:
-  explicit ImageWindowOutput(const std::string& window_name, int focal_length = 950);
+  ImageWindowOutput() {};
+  explicit ImageWindowOutput(const std::string& window_name, int focal_length = 950) {doInit(window_name, 950);};
+
+  void init(const std::string& window_name) override {doInit(window_name, 950);};
+  void doInit(const std::string& window_name, int focal_length = 950);
   /**
    * @brief Calculate the camera matrix of a frame for image
    * window output.

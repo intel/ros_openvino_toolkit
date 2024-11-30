@@ -68,3 +68,5 @@ bool Input::ImageTopic::read(cv::Mat* frame)
   image_count_.decreaseCounter();
   return true;
 }
+
+REG_INPUT(ImageTopic, "ImageTopic");

@@ -34,7 +34,15 @@ namespace Input
 class IpCamera : public BaseInputDevice
 {
 public:
-  explicit IpCamera(const std::string & ip_uri) : ip_uri_(ip_uri) {}
+  IpCamera() {};
+  IpCamera(const std::string & ip_uri) : ip_uri_(ip_uri) {}
+  /**
+   * @brief Initialize the input device,
+   * for cameras, it will turn the camera on and get ready to read frames,
+   * for videos, it will open a video file.
+   * @return Whether the input device is successfully setup.
+   */
+  bool init(const std::string &ip_uri) override {ip_uri_.assign(ip_uri); initialize();};
   /**
    * @brief Initialize the input device,
    * for cameras, it will turn the camera on and get ready to read frames,
