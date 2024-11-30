@@ -4,17 +4,20 @@
 from osrf/ros:melodic-desktop-full
 
 # setting proxy env --option 
-ENV http_proxy=http://child-prc.intel.com:913
-ENV https_proxy=http://child-prc.intel.com:913
+# If needed, enable the below ENV setting by correct proxies.
+# ENV HTTP_PROXY="your_proxy"
+# ENV HTTPS_PROXY="your_proxy"
+# ENV FTP_PROXY="your_proxy"
 
 # maintainer information
-LABEL maintainer="Pengqiang Li <pengqiang.li@intel.com>"
+LABEL maintainer="Jiawei Wu <jiawei.wu@intel.com>"
 
 # default shell type
 SHELL ["/bin/bash", "-c"]
 
 # ignore the warning
 ARG DEBIAN_FRONTEND=noninteractive
+ARG APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
 RUN apt-get update && apt-get install --assume-yes apt-utils
 
 #update cmake
@@ -31,7 +34,7 @@ RUN curl -s https://apt.repos.intel.com/openvino/2021/GPG-PUB-KEY-INTEL-OPENVINO
 RUN echo "deb https://apt.repos.intel.com/openvino/2021 all main" | tee /etc/apt/sources.list.d/intel-openvino-2021.list
 RUN apt update
 RUN apt-cache search openvino
-RUN apt-get install -y intel-openvino-dev-ubuntu20-2021.4.582 
+RUN apt-get install -y intel-openvino-dev-ubuntu18-2021.4.582 
 RUN ls -lh /opt/intel/openvino_2021
 RUN source /opt/intel/openvino_2021/bin/setupvars.sh 
 
@@ -64,13 +67,12 @@ RUN ln -sf libboost_python-py36.so libboost_python37.so
 # build ros openvino toolkit
 # set env before build ros openvino tolkkit
 WORKDIR /root
-RUN mkdir -p ros_ws/src
-WORKDIR /root/ros_ws/src
-RUN git init && git clone -b dev-ov2021.4 https://github.com/pqLee/ros_openvino_toolkit.git \
+RUN mkdir -p catkin_ws/src
+WORKDIR /root/catkin_ws/src
+RUN git init && git clone -b master https://github.com/intel/ros_openvino_toolkit \
 && git clone https://github.com/intel/object_msgs.git \
 && git clone -b melodic https://github.com/ros-perception/vision_opencv.git \
-&& git clone https://github.com/intel-ros/realsense.git
-WORKDIR /root/ros_ws/src/realsense
-RUN git checkout 2.1.3
-WORKDIR /root/ros_ws/
+&& git clone -b ros1-legacy https://github.com/IntelRealSense/realsense-ros.git
+RUN apt-get install ros-melodic-ddynamic-reconfigure
+WORKDIR /root/catkin_ws/
 RUN source /opt/ros/melodic/setup.bash && source /opt/intel/openvino_2021/bin/setupvars.sh && catkin_make_isolated
